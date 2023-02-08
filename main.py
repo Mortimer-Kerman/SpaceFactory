@@ -160,7 +160,7 @@ def hud():
     Utiles.forme2(0,hauteur-50,largeur,100,50,200)
 
 
-    draw_burger_menu(x, y)
+    #draw_burger_menu(x, y)
 
     Utiles.place_text(str(list(pygame.mouse.get_pos()))+" "+str(cam),0,hauteur-100,20,(250,250,250),aquire)
         
@@ -175,7 +175,7 @@ def play():
     running = True
     Minerais.place_m()
 
-    burgerMenuButton = Button(gameDisplay, 10, 10, 70, 70, onRelease=p)
+    #burgerMenuButton = Button(gameDisplay, 10, 10, 70, 70, onRelease=p)
  
     while running:#
         print(clock.get_fps())
