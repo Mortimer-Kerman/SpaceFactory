@@ -30,7 +30,10 @@ def Play():
     """
     SaveManager.Load(str(saveFileSelect.get_value()))
     
-    while SaveManager.SaveLoaded():
+    clock = pygame.time.Clock()  
+    
+    running=True
+    while SaveManager.SaveLoaded() and running:
         
         UiManager.FillScreen((47,79,79))
         
@@ -44,6 +47,9 @@ def Play():
         camOffset = [0,0]
         
         for event in pygame.event.get():
+            #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
+            if event.type == pygame.QUIT:
+                running = False
             #action du clavier
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -67,8 +73,11 @@ def Play():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1: # 1 == left button
                     SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))
-                
+                    SaveManager.Save()
+
         SaveManager.TranslateCam(camOffset)
+        print(clock.get_fps())
+        clock.tick()
         
 
 #Lancement de la musique
