@@ -8,31 +8,21 @@ Created on Wed Feb  8 16:13:46 2023
 import pygame
 import pygame_menu
 
-import json
 import random
 
 import TextureManager
 import SaveManager
-
+import UiManager
+import GameItems
 
 pygame.init()#initialisation pygame
 
-largeur, hauteur = pygame.display.list_modes()[0]#auto fullscreen
-screen = pygame.display.set_mode((largeur, hauteur))
+UiManager.Init()
 
 pygame.display.set_caption('SpaceFactory')
 pygame.key.set_repeat(10)
 
-
 TextureManager.LoadAllTextures()
-
-
-try:aquire=pygame.font.Font("./Assets2/font/Aquire.ttf",26)
-except:aquire=pygame.font.get_default_font()
-
-def TranslateCam(offset:list):
-    SaveManager.mainData.camPos[0] += offset[0]
-    SaveManager.mainData.camPos[1] += offset[1]
 
 def Play():
     """
@@ -41,19 +31,24 @@ def Play():
     SaveManager.Load(str(saveFileSelect.get_value()))
     
     while SaveManager.SaveLoaded():
-        screen.fill((47,79,79))
+        
+        UiManager.FillScreen((47,79,79))
+        
+        for item in SaveManager.GetItems():
+            item.Display()
+        
+        UiManager.DisplayUi()
         
         pygame.display.update()
         
         camOffset = [0,0]
         
         for event in pygame.event.get():
-            #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
-            if event.type == pygame.QUIT:
-                SaveManager.Unload()
-                return
             #action du clavier
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    SaveManager.Unload()
+                    return
                 if event.key == pygame.K_UP:
                     camOffset[1]+=5
                 if event.key == pygame.K_DOWN:
@@ -62,14 +57,18 @@ def Play():
                     camOffset[0]-=5
                 if event.key == pygame.K_LEFT:
                     camOffset[0]+=5
-                screen.fill((33,37,39))
+                #UiManager.FillScreen((33,37,39))
             #action de molette de souris
             if event.type == pygame.MOUSEWHEEL:
                 zoom = SaveManager.mainData.zoom
                 zoom+=event.y if event.y+zoom>0 else 0
                 SaveManager.mainData.zoom = zoom
                 
-        TranslateCam(camOffset)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1: # 1 == left button
+                    SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))
+                
+        SaveManager.TranslateCam(camOffset)
         
 
 #Lancement de la musique
@@ -85,4 +84,4 @@ saveFileSelect=menu.add.text_input('Fichier :', default='save',maxchar=10)
 menu.add.button('Jouer', Play)
 menu.add.button('Quitter', pygame_menu.events.EXIT)
 
-menu.mainloop(screen,lambda : bg.draw(screen))
+menu.mainloop(UiManager.screen, lambda : bg.draw(UiManager.screen))

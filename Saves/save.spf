@@ -1,8 +1,91 @@
 {
     "camPos": [
-        0,
-        0
+        -120,
+        -85
     ],
-    "zoom": 100,
-    "seed": -258501574
+    "zoom": 98,
+    "seed": 114157643,
+    "items": [
+        {
+            "name": "lessgo",
+            "pos": [
+                9,
+                5
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                8,
+                4
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                8,
+                5
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                10,
+                6
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                12,
+                5
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                1.0,
+                0.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                2.0,
+                0.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                0.0,
+                0.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                2.0,
+                1.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        }
+    ]
 }

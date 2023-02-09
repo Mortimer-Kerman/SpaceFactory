@@ -9,11 +9,14 @@ import json
 import random
 import os
 
+import GameItems
+
 class Data:
     def __init__(self):
         self.camPos = [0,0]
         self.zoom = 100
         self.seed = random.randint(-(9**9),9**9)
+        self.items = []
         
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent = 4)
@@ -26,6 +29,10 @@ def Load(name:str):
     CreateSave(name)
     if SaveExists(name):
         mainData.__dict__ = json.load(open("Saves/" + name + ".spf", "r"))
+        items = []
+        for item in mainData.items:
+            items.append(GameItems.Item.ReadDictRepresentation(item))
+        mainData.items = items
     print("File loaded!")
     
 def Save():
@@ -54,3 +61,19 @@ def SaveLoaded()->bool:
 
 if not os.path.exists("Saves/"):
     os.makedirs("Saves/")
+
+def TranslateCam(offset:list):
+    mainData.camPos[0] += offset[0]
+    mainData.camPos[1] += offset[1]
+    
+def GetCamPos():
+    return mainData.camPos
+
+def GetZoom():
+    return mainData.zoom
+
+def GetItems()->list:
+    return mainData.items
+
+def PlaceItem(item):
+    mainData.items.append(item)

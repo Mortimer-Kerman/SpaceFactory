@@ -11,6 +11,8 @@ texturesPath = "./Assets2/textures/"
 
 missingTexture = None
 
+aquire = None
+
 loadedTextures = {"no":missingTexture}
 def GetTexture(textureName:str,scale:float=1)->pygame.Surface:
     textureName += ".png"
@@ -25,6 +27,10 @@ def GetTexture(textureName:str,scale:float=1)->pygame.Surface:
     return tex
 
 def LoadAllTextures():
+    global aquire
+    try:aquire=pygame.font.Font("./Assets2/font/Aquire.ttf",26)
+    except:aquire=pygame.font.get_default_font()
+    
     for subdir, dirs, files in os.walk(texturesPath):
         for file in files:
             filepath = os.path.join(subdir, file)
