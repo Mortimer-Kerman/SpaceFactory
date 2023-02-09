@@ -26,5 +26,4 @@ class Item:
         cam[1] += UiManager.height / 2
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):
             return
-        print("displayin")
         UiManager.screen.blit(TextureManager.GetTexture(self.texture, zoom), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))
