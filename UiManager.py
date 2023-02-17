@@ -29,7 +29,7 @@ def DisplayUi():
 
     forme2(0,height-50,width,100,50,200)
     
-    place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()),0,height-100,20,(250,250,250),TextureManager.aquire)
+    place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()) + " " + str(round(SaveManager.clock.get_fps())),0,height-100,20,(250,250,250),TextureManager.aquire)
 
 def GetMouseWorldPos():
     cam = SaveManager.GetCamPos()

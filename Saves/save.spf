@@ -1,16 +1,16 @@
 {
     "camPos": [
-        -120,
-        -85
+        30,
+        -355
     ],
-    "zoom": 98,
-    "seed": 114157643,
+    "zoom": 74,
+    "seed": 78109440,
     "items": [
         {
             "name": "lessgo",
             "pos": [
-                9,
-                5
+                -1.0,
+                0.0
             ],
             "texture": "drill",
             "metadata": null
@@ -18,8 +18,8 @@
         {
             "name": "lessgo",
             "pos": [
-                8,
-                4
+                1.0,
+                6.0
             ],
             "texture": "drill",
             "metadata": null
@@ -27,8 +27,8 @@
         {
             "name": "lessgo",
             "pos": [
-                8,
-                5
+                1.0,
+                7.0
             ],
             "texture": "drill",
             "metadata": null
@@ -36,8 +36,8 @@
         {
             "name": "lessgo",
             "pos": [
-                10,
-                6
+                1.0,
+                5.0
             ],
             "texture": "drill",
             "metadata": null
@@ -45,8 +45,35 @@
         {
             "name": "lessgo",
             "pos": [
-                12,
-                5
+                1.0,
+                4.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                1.0,
+                3.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                1.0,
+                2.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                1.0,
+                1.0
             ],
             "texture": "drill",
             "metadata": null
@@ -63,8 +90,8 @@
         {
             "name": "lessgo",
             "pos": [
-                2.0,
-                0.0
+                -6.0,
+                5.0
             ],
             "texture": "drill",
             "metadata": null
@@ -72,8 +99,8 @@
         {
             "name": "lessgo",
             "pos": [
-                0.0,
-                0.0
+                -3.0,
+                6.0
             ],
             "texture": "drill",
             "metadata": null
@@ -81,8 +108,26 @@
         {
             "name": "lessgo",
             "pos": [
-                2.0,
-                1.0
+                -2.0,
+                2.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                -6.0,
+                9.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                -2.0,
+                5.0
             ],
             "texture": "drill",
             "metadata": null

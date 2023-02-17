@@ -13,7 +13,14 @@ missingTexture = None
 
 aquire = None
 
-loadedTextures = {"no":missingTexture}
+colorFilter = pygame.Surface((100,100))
+colorFilter.set_alpha(50)
+
+def GetColorFilter(color:tuple, scale:float):
+    colorFilter.fill(color)
+    return pygame.transform.scale(colorFilter,(scale,scale))
+
+loadedTextures = {"no":missingTexture,"colorFilter":colorFilter}
 def GetTexture(textureName:str,scale:float=1)->pygame.Surface:
     textureName += ".png"
     if not textureName in loadedTextures.keys():
@@ -23,7 +30,11 @@ def GetTexture(textureName:str,scale:float=1)->pygame.Surface:
             textureName = "no.png"
     tex = loadedTextures[textureName]
     if scale != 1:
-        tex = pygame.transform.scale(tex,(scale,scale))
+        if textureName in zoomedTextures:
+            tex = zoomedTextures[textureName]
+        else:
+            tex = pygame.transform.scale(tex,(scale,scale))
+            zoomedTextures[textureName] = tex
     return tex
 
 def LoadAllTextures():
@@ -38,3 +49,8 @@ def LoadAllTextures():
             print("Loading " + filename)
             loadedTextures[filename] = pygame.image.load(filepath)
     print("All textures loaded!")
+
+zoomedTextures = {}
+
+def RefreshZoom():
+    zoomedTextures.clear()

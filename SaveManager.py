@@ -5,6 +5,7 @@ Created on Wed Feb  8 17:31:39 2023
 @author: 29ray
 """
 
+import pygame
 import json
 import random
 import os
@@ -20,6 +21,8 @@ class Data:
         
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent = 4)
+
+clock = pygame.time.Clock()
 
 saveName = None
 mainData = None

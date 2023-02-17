@@ -24,6 +24,8 @@ pygame.key.set_repeat(10)
 
 TextureManager.LoadAllTextures()
 
+
+
 def Play():
     """
     Lance le jeu
@@ -33,6 +35,20 @@ def Play():
     while SaveManager.SaveLoaded():
         
         UiManager.FillScreen((47,79,79))
+        
+        zoom = SaveManager.GetZoom()*10
+        cam = SaveManager.GetCamPos()
+        
+        #colorFilter = pygame.transform.scale(TextureManager.colorFilter,(zoom,zoom))
+        
+        for posX in range(-1,(UiManager.width//zoom)+1):
+            for posY in range(-1,(UiManager.height//zoom)+1):
+                Xpos = posX*zoom+((cam[0]+(UiManager.width/2))%zoom)
+                Ypos = posY*zoom+((cam[1]+(UiManager.height/2))%zoom)
+                #colorFilter.fill((0,255,128))
+                UiManager.screen.blit(TextureManager.GetTexture("ground", zoom), (Xpos, Ypos))
+                #UiManager.screen.blit(colorFilter, (Xpos, Ypos))
+        
         
         for item in SaveManager.GetItems():
             item.Display()
@@ -63,18 +79,21 @@ def Play():
                 zoom = SaveManager.mainData.zoom
                 zoom+=event.y if event.y+zoom>0 else 0
                 SaveManager.mainData.zoom = zoom
+                TextureManager.RefreshZoom()
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1: # 1 == left button
                     SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))
-                
+        
         SaveManager.TranslateCam(camOffset)
+        
+        SaveManager.clock.tick()
         
 
 #Lancement de la musique
 pygame.mixer.music.load("./Assets2/audio/" + random.choice(["theme.mp3","Genesis.mp3"]))
 pygame.mixer.music.set_volume(0.7)
-pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=200)
+#pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=200)
 
 
 menu = pygame_menu.Menu('Bienvenue', 400, 300, theme=pygame_menu.themes.THEME_DARK)
