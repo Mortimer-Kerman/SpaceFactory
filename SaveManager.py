@@ -80,3 +80,6 @@ def GetItems()->list:
 
 def PlaceItem(item):
     mainData.items.append(item)
+
+def GetSeed()->int:
+    return mainData.seed
