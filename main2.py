@@ -30,12 +30,25 @@ def Play():
     """
     SaveManager.Load(str(saveFileSelect.get_value()))
     
-    clock = pygame.time.Clock()  
     
-    running=True
-    while SaveManager.SaveLoaded() and running:
+    while SaveManager.SaveLoaded():
         
         UiManager.FillScreen((47,79,79))
+        
+        
+        zoom = SaveManager.GetZoom()*10
+        cam = SaveManager.GetCamPos()
+        
+        #colorFilter = pygame.transform.scale(TextureManager.colorFilter,(zoom,zoom))
+        
+        for posX in range(-1,(UiManager.width//zoom)+1):
+            for posY in range(-1,(UiManager.height//zoom)+1):
+                Xpos = posX*zoom+((cam[0]+(UiManager.width/2))%zoom)
+                Ypos = posY*zoom+((cam[1]+(UiManager.height/2))%zoom)
+                #colorFilter.fill((0,255,128))
+                UiManager.screen.blit(TextureManager.GetTexture("ground", zoom), (Xpos, Ypos))
+                #UiManager.screen.blit(colorFilter, (Xpos, Ypos))
+        
         
         for item in SaveManager.GetItems():
             item.Display()
@@ -49,7 +62,8 @@ def Play():
         for event in pygame.event.get():
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
             if event.type == pygame.QUIT:
-                running = False
+                SaveManager.Unload()
+                return
             #action du clavier
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -69,15 +83,14 @@ def Play():
                 zoom = SaveManager.mainData.zoom
                 zoom+=event.y if event.y+zoom>0 else 0
                 SaveManager.mainData.zoom = zoom
+                TextureManager.RefreshZoom()
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1: # 1 == left button
                     SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))
-                    SaveManager.Save()
 
         SaveManager.TranslateCam(camOffset)
-        print(clock.get_fps())
-        clock.tick()
+        SaveManager.clock.tick()
         
 
 #Lancement de la musique
