@@ -99,8 +99,8 @@ def Play():
                     SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))
             
             if event.type == MUSIC_ENDED:
-                pygame.mixer.music.load("./Assets2/audio/" + random.choice(["theme.mp3","Genesis.mp3"]))
-                pygame.mixer.music.play(loops=1, start=0.0, fade_ms=200)
+                pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))
+                pygame.mixer.music.play(start=0.0, fade_ms=200)
 
 
         SaveManager.TranslateCam(camOffset)
@@ -109,11 +109,12 @@ def Play():
 
 MUSIC_ENDED = pygame.USEREVENT
 pygame.mixer.music.set_endevent(MUSIC_ENDED)
+playlist=["theme.mp3","Genesis.mp3","jake-chudnow-moon-men.mp3","buran-voskresenie.mp3"]
 #Lancement de la musique
-pygame.mixer.music.load("./Assets2/audio/" + random.choice(["theme.mp3","Genesis.mp3"]))
+pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))
 
 pygame.mixer.music.set_volume(0.7)
-pygame.mixer.music.play(loops=1, start=0.0, fade_ms=200)
+pygame.mixer.music.play(start=0.0, fade_ms=200)
 
 
 menu = pygame_menu.Menu('Bienvenue', 400, 300, theme=pygame_menu.themes.THEME_DARK)
