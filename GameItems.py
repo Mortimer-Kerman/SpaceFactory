@@ -57,10 +57,11 @@ class Minerais:
         for y in range(int((0-cam[1])//zoom)-1,int((UiManager.height+cam[1])//zoom)+1):
             Minerais.Place(int((0-cam[0])//zoom),y)
             Minerais.Place(int((UiManager.width+cam[0])//zoom),y)
-        #retirer les minerais non affichés
+        #retirer les minerais non affichés (loin du joueur)
         for i in current:
-            if not (-cam[0]+UiManager.width+200>=i[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=i[1]*zoom>=-cam[1]-200):
+            if not (-cam[0]+UiManager.width+1000>=i[0]*zoom>=-cam[0]-1000 and -cam[1]+UiManager.height+1000>=i[1]*zoom>=-cam[1]-1000):
                 current.remove(i)
+        
 
     def Place(x,y):
         cam = SaveManager.GetCamPos()
@@ -70,7 +71,7 @@ class Minerais:
         cam[1] += UiManager.height / 2
         a=Minerais.Type(x,y)
         if a:
-            current.append([x,y,a])
+            if [x,y,a] not in current:current.append([x,y,a])
             UiManager.screen.blit(TextureManager.GetTexture(a, zoom), (x*zoom+cam[0], y*zoom+cam[1]))
 
     def PlaceFromCurrent(a):
