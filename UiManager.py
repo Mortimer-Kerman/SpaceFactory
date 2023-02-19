@@ -22,7 +22,7 @@ def Init():
     global height
     
     width, height = pygame.display.list_modes()[0]
-    screen = pygame.display.set_mode((width, height))
+    screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 
 def FillScreen(color:tuple):
     screen.fill(color)
