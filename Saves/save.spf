@@ -1,9 +1,9 @@
 {
     "camPos": [
-        -35,
-        -215
+        -10,
+        -100
     ],
-    "zoom": 50,
+    "zoom": 59,
     "seed": 78109440,
     "items": [
         {
@@ -128,6 +128,15 @@
             "pos": [
                 -2.0,
                 5.0
+            ],
+            "texture": "drill",
+            "metadata": null
+        },
+        {
+            "name": "lessgo",
+            "pos": [
+                -2.0,
+                3.0
             ],
             "texture": "drill",
             "metadata": null
