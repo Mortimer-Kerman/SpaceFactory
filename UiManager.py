@@ -56,3 +56,13 @@ def forme2(x,y,w,wr,h,o):
     e = x + wr + 5 + o, y - h
     f = x, y - h
     pygame.draw.polygon(screen,(47,48,51),(a,b,c,d,e,f))
+
+def UpdateBackground():
+    zoom = SaveManager.GetZoom()*10
+    cam = SaveManager.GetCamPos()
+    for posX in range(-1,(width//zoom)+1):
+            for posY in range(-1,(height//zoom)+1):
+                Xpos = posX*zoom+((cam[0]+(width/2))%zoom)
+                Ypos = posY*zoom+((cam[1]+(height/2))%zoom)
+                #colorFilter.fill((0,255,128))
+                screen.blit(TextureManager.GetTexture("ground", zoom), (Xpos, Ypos))
