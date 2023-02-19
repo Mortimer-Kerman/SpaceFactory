@@ -38,7 +38,6 @@ def Play():
 
         for m in GameItems.current:
             GameItems.Minerais.PlaceFromCurrent(m)
-        print(len(GameItems.current))
 
         for item in SaveManager.GetItems():
             item.Display()
@@ -71,7 +70,7 @@ def Play():
             #action de molette de souris
             if event.type == pygame.MOUSEWHEEL:
                 zoom = SaveManager.mainData.zoom
-                zoom+=event.y if event.y+zoom>0 else 0
+                zoom+=event.y if event.y+zoom>1 else 0
                 SaveManager.mainData.zoom = zoom
                 TextureManager.RefreshZoom()
                 GameItems.Minerais.SpawnBorder(camOffset)
