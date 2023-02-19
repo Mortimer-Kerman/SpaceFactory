@@ -32,7 +32,7 @@ def Play():
 
     GameItems.Minerais.SpawnAllScreen()
 
-    while SaveManager.SaveLoaded():   
+    while SaveManager.SaveLoaded():
         
         UiManager.UpdateBackground()
 
@@ -77,7 +77,10 @@ def Play():
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1: # 1 == left button
-                    SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))
+                    if not UiManager.IsClickOnUI():
+                        SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))
+                    elif UiManager.UIelements.get("select",None):
+                        UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)
             
             if event.type == MUSIC_ENDED:
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))
