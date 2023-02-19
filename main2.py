@@ -46,27 +46,33 @@ def Play():
         
         pygame.display.update()
         
+        #action du clavier
+        keys = pygame.key.get_pressed()
+        
         camOffset = [0,0]
+        if keys[pygame.K_UP]:
+            camOffset[1]+=5
+        if keys[pygame.K_DOWN]:
+            camOffset[1]-=5
+        if keys[pygame.K_RIGHT]:
+            camOffset[0]-=5
+        if keys[pygame.K_LEFT]:
+            camOffset[0]+=5
+        SaveManager.TranslateCam(camOffset)
+        
+        if camOffset != [0,0]:
+            GameItems.Minerais.SpawnBorder(camOffset)
+        
+        if keys[pygame.K_ESCAPE]:
+            SaveManager.Unload()
+            return
         
         for event in pygame.event.get():
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
             if event.type == pygame.QUIT:
                 SaveManager.Unload()
                 return
-            #action du clavier
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    SaveManager.Unload()
-                    return
-                if event.key == pygame.K_UP:
-                    camOffset[1]+=5
-                if event.key == pygame.K_DOWN:
-                    camOffset[1]-=5
-                if event.key == pygame.K_RIGHT:
-                    camOffset[0]-=5
-                if event.key == pygame.K_LEFT:
-                    camOffset[0]+=5
-                GameItems.Minerais.SpawnBorder(camOffset)
+            
             #action de molette de souris
             if event.type == pygame.MOUSEWHEEL:
                 zoom = SaveManager.mainData.zoom
@@ -85,9 +91,8 @@ def Play():
             if event.type == MUSIC_ENDED:
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))
                 pygame.mixer.music.play(start=0.0, fade_ms=200)
-
-
-        SaveManager.TranslateCam(camOffset)
+        
+        
         SaveManager.clock.tick()
         
 
