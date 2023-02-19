@@ -83,10 +83,10 @@ def Play():
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1: # 1 == left button
-                    if not UiManager.IsClickOnUI():
+                    if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
                         SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))
-                    elif UiManager.UIelements.get("select",None):
-                        UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)
+                    elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
+                        UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
             
             if event.type == MUSIC_ENDED:
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))

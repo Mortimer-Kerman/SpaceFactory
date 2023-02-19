@@ -43,8 +43,8 @@ def GetMouseWorldPos():
 
 def IsClickOnUI():
     a=0
-    for i in UIelements.values():
-        a+=int(i)
+    for i in UIelements.values():#pour chaque valeur de UIelements
+        a+=int(i)#ajouter à a i -> entier    (True=1, False=0)
     return a
     
 
@@ -80,12 +80,22 @@ def UpdateBackground():
                 screen.blit(TextureManager.GetTexture("ground", zoom), (Xpos, Ypos))
 
 def ItemMenu():
+    """
+    Un petit menu de séléction
+    """
     global UIelements
+    #On stocke la valeur bool en cas d'hover sur l'élément dans UIelements["select"]
     UIelements["select"]=forme2(width-500,height-500*showMenu.get("select",0),width,100,50,200,(98,99,102)).collidepoint(pygame.mouse.get_pos())
+    
+    #Différents points des petits triangles (t[0]=up t[1]=down)
     t=[[(width-450, height-45-500*showMenu.get("select",0)), (width-475, height-15-500*showMenu.get("select",0)), (width-425, height-15-500*showMenu.get("select",0))],
        [(width-450, height-15-500*showMenu.get("select",0)), (width-475, height-45-500*showMenu.get("select",0)), (width-425, height-45-500*showMenu.get("select",0))]]
+    #on dessine le petit triangle 
     pygame.draw.polygon(screen, (255,255,255),t[showMenu.get("select",0)])
+    #on mets du texte
     place_text("Séléctionner",width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.aquire)
+    
+    #On stocke la valeur bool en cas d'hover sur l'élément (ici le rectangle sous "forme2" du menu de séléction) dans UIelements["select"]
     UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-500*showMenu.get("select",0)),(width,height-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
 
     place_text("À faire",width-500,height-400*showMenu.get("select",0),200,(255,0,0))
