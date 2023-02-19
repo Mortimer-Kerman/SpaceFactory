@@ -30,9 +30,9 @@ def FillScreen(color:tuple):
 def DisplayUi():
     forme(0,0,width,100,50,200)
 
-    forme2(0,height-50,width,100,50,200)
+    forme2(0,height,width,100,50,200)
     
-    place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()) + " " + str(round(SaveManager.clock.get_fps())),0,height-100,20,(250,250,250),TextureManager.aquire)
+    place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()) + " " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.aquire)
 
     ItemMenu()
 
@@ -81,11 +81,11 @@ def UpdateBackground():
 
 def ItemMenu():
     global UIelements
-    UIelements["select"]=forme2(width-500,height-50-500*showMenu.get("select",0),width,100,50,200,(98,99,102)).collidepoint(pygame.mouse.get_pos())
-    t=[[(width-450, height-95-500*showMenu.get("select",0)), (width-475, height-65-500*showMenu.get("select",0)), (width-425, height-65-500*showMenu.get("select",0))],
-       [(width-450, height-65-500*showMenu.get("select",0)), (width-475, height-95-500*showMenu.get("select",0)), (width-425, height-95-500*showMenu.get("select",0))]]
+    UIelements["select"]=forme2(width-500,height-500*showMenu.get("select",0),width,100,50,200,(98,99,102)).collidepoint(pygame.mouse.get_pos())
+    t=[[(width-450, height-45-500*showMenu.get("select",0)), (width-475, height-15-500*showMenu.get("select",0)), (width-425, height-15-500*showMenu.get("select",0))],
+       [(width-450, height-15-500*showMenu.get("select",0)), (width-475, height-45-500*showMenu.get("select",0)), (width-425, height-45-500*showMenu.get("select",0))]]
     pygame.draw.polygon(screen, (255,255,255),t[showMenu.get("select",0)])
-    place_text("Séléctionner",width-400,height-90-500*showMenu.get("select",0),100,(255,255,255),TextureManager.aquire)
-    UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-50-500*showMenu.get("select",0)),(width,height-50-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
+    place_text("Séléctionner",width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.aquire)
+    UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-500*showMenu.get("select",0)),(width,height-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
 
     place_text("À faire",width-500,height-400*showMenu.get("select",0),200,(255,0,0))
