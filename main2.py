@@ -20,7 +20,6 @@ pygame.init()#initialisation pygame
 UiManager.Init()
 
 pygame.display.set_caption('SpaceFactory')
-pygame.key.set_repeat(10)
 
 TextureManager.LoadAllTextures()
 
@@ -28,6 +27,7 @@ def Play():
     """
     Lance le jeu
     """
+    pygame.key.set_repeat(10)
     SaveManager.Load(str(saveFileSelect.get_value()))
 
     GameItems.Minerais.SpawnAllScreen()
@@ -96,6 +96,8 @@ def Play():
         SaveManager.clock.tick()
         
 
+   
+
 MUSIC_ENDED = pygame.USEREVENT
 pygame.mixer.music.set_endevent(MUSIC_ENDED)
 playlist=["theme.mp3","Genesis.mp3","jake-chudnow-moon-men.mp3","buran-voskresenie.mp3"]
@@ -113,4 +115,4 @@ saveFileSelect=menu.add.text_input('Fichier :', default='save',maxchar=10)
 menu.add.button('Jouer', Play)
 menu.add.button('Quitter', pygame_menu.events.EXIT)
 
-menu.mainloop(UiManager.screen, lambda : bg.draw(UiManager.screen))
+menu.mainloop(UiManager.screen, lambda : (bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
