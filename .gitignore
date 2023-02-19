@@ -129,7 +129,4 @@ dmypy.json
 .pyre/
 
 # Space factory save files
-.spf
-*.spf
-*.spf
 *.spf
