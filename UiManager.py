@@ -42,16 +42,17 @@ def GetMouseWorldPos():
     return ((pygame.mouse.get_pos()[0]-cam[0]-(width/2))//zoom,(pygame.mouse.get_pos()[1]-cam[1]-(height/2))//zoom)
 
 def IsClickOnUI():
-    a=0
     for i in UIelements.values():#pour chaque valeur de UIelements
-        a+=int(i)#ajouter à a i -> entier    (True=1, False=0)
-    return a
+        if i:
+            return True
+    return False
     
 
 def place_text(text, x, y, size, color=(255,255,255),font=None):
     font = pygame.font.Font(None, size) if font==None else font
     text_surface = font.render(text, True, color)
     screen.blit(text_surface, (x, y))
+
 def forme(x,y,w,wr,h,o,color=(47,48,51)):
     a = x, y
     b = x + w - 1, y
