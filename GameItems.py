@@ -88,13 +88,14 @@ class Minerais:
         """
         se=SaveManager.GetSeed()
         random.seed(x*y*se+x+y+se+x)
-        if random.randint(0,60)==40:
+        r=3
+        if random.randint(0,60*r)==40:
             return "coal"
-        elif random.randint(0,80)==40:
+        elif random.randint(0,80*r)==40:
             return "copper"
-        elif random.randint(0,100)==10:
+        elif random.randint(0,100*r)==10:
             return "or3"
-        elif random.randint(0,120)==50:
+        elif random.randint(0,120*r)==50:
             return "m1"
         else:
             return False
