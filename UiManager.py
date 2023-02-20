@@ -29,6 +29,7 @@ def FillScreen(color:tuple):
 
 def DisplayUi():
     forme(0,0,width,100,50,200)
+    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100), (0, 0)).collidepoint(pygame.mouse.get_pos())
 
     forme2(0,height,width,100,50,200)
     
