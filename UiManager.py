@@ -5,81 +5,112 @@ Created on Thu Feb  9 11:47:04 2023
 @author: sartre.thomas
 """
 
+#Chargement des bibliothèques
 import pygame
 import SaveManager
 import TextureManager
 
-screen = None
+#Les variables importantes
+screen = None#la fenêtre pricipale (élément pygame.display)
+#la taille de l'écran
 width = 0
 height = 0
 
-UIelements={}
-showMenu={"select":0}
+UIelements={}#dictionaire stockant les interaction souris/éléments interface
+showMenu={"select":0}#affichage ou non des menus interne à l'UI
 
 def Init():
-    global screen
-    global width
-    global height
+    """
+    Fonction d'initialisation du fichier
+    Sert à définir les variables importantes (voir ci-dessus)
+    """
+    global screen,width,height#on prends les variables comme globales
     
-    width, height = pygame.display.list_modes()[0]
-    screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+    width, height = pygame.display.list_modes()[0]#on prends la plus grande taille possible
+    screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)#on définit l'élément pygame.display (la fenêtre sera en plein écran)
 
 def FillScreen(color:tuple):
+    """
+    Cette fonction sert juste à remplir l'écran d'une couleur (en cas de problème avec le chargement de la texture du sol ["ground"])
+    """
     screen.fill(color)
 
 def DisplayUi():
-    forme(0,0,width,100,50,200)
-    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100), (0, 0)).collidepoint(pygame.mouse.get_pos())
+    """
+    Affichage de l'Interface Utilisateur
+    """
+    forme(0,0,width,100,50,200)#forme affichée en haut de l'écran
 
-    forme2(0,height,width,100,50,200)
+    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+
+    forme2(0,height,width,100,50,200)#forme2 affichée en bas de l'écran
     
-    place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()) + " " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.aquire)
+    place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()) + " " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.aquire)#placement du texte (position du curseur + caméra + FPS)
 
-    ItemMenu()
+    ItemMenu()#placement du menu de séléction d'item
 
 def GetMouseWorldPos():
-    cam = SaveManager.GetCamPos()
-    zoom = SaveManager.GetZoom()
-    return ((pygame.mouse.get_pos()[0]-cam[0]-(width/2))//zoom,(pygame.mouse.get_pos()[1]-cam[1]-(height/2))//zoom)
+    """
+    Renvoie la position du curseur dans le monde
+    """
+    cam = SaveManager.GetCamPos()#on obtient les coordonées de la caméra
+    zoom = SaveManager.GetZoom()#obtention du zoom
+    return ((pygame.mouse.get_pos()[0]-cam[0]-(width/2))//zoom,(pygame.mouse.get_pos()[1]-cam[1]-(height/2))//zoom)#renvoie la position par rapport à la caméra+zoom
 
 def IsClickOnUI():
-    for i in UIelements.values():#pour chaque valeur de UIelements
-        if i:
-            return True
-    return False
+    """
+    Sert à savoir si l'utilisateur clique sur l'UI
+    """
+    for i in UIelements.values():#pour chaque valeur de UIelements (toutes les valeurs sont des booléens)
+        if i:#si i
+            return True#renvoier vrai
+    return False#renvoier faux
     
 
 def place_text(text, x, y, size, color=(255,255,255),font=None):
-    font = pygame.font.Font(None, size) if font==None else font
-    text_surface = font.render(text, True, color)
-    screen.blit(text_surface, (x, y))
+    """
+    Fonction utilitaire servant au placement du texte sur l'écran
+    """
+    font = pygame.font.Font(None, size) if font==None else font#tentative de charger la police
+    text_surface = font.render(text, True, color)#on crée l'image du texte
+    screen.blit(text_surface, (x, y))#on affiche le texte
 
 def forme(x,y,w,wr,h,o,color=(47,48,51)):
+    """
+    Crée une forme
+    """
+    #calcul des coordonées du polygone
     a = x, y
     b = x + w - 1, y
     c = x + w - 1, y + h * 0.6
     d = x + wr + 25 + o, y + h * 0.6
     e = x + wr + 5 + o, y + h
     f = x, y + h
-    return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))
+    return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))#affichage du polygone (renvoie l'élément pygame.Rect lié au polygone)
 def forme2(x,y,w,wr,h,o,color=(47,48,51)):
+    """
+    Crée une forme miroire à forme
+    """
+    #calcul des coordonées du polygone
     a = x, y
     b = x + w - 1, y
     c = x + w - 1, y - h * 0.6
     d = x + wr + 25 + o, y - h * 0.6
     e = x + wr + 5 + o, y - h
     f = x, y - h
-    return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))
+    return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))#affichage du polygone (renvoie l'élément pygame.Rect lié au polygone)
 
 def UpdateBackground():
-    zoom = SaveManager.GetZoom()*10
-    cam = SaveManager.GetCamPos()
-    for posX in range(-1,(width//zoom)+1):
-            for posY in range(-1,(height//zoom)+1):
-                Xpos = posX*zoom+((cam[0]+(width/2))%zoom)
-                Ypos = posY*zoom+((cam[1]+(height/2))%zoom)
-                #colorFilter.fill((0,255,128))
-                screen.blit(TextureManager.GetTexture("ground", zoom), (Xpos, Ypos))
+    """
+    Mise à jour du fond
+    """
+    zoom = SaveManager.GetZoom()*10#récupération du zoom
+    cam = SaveManager.GetCamPos()#récupération de la position de la caméra
+    for posX in range(-1,(width//zoom)+1):#pour posX dans -1,(width//zoom)+1 
+            for posY in range(-1,(height//zoom)+1):#pour posY dans -1,(height//zoom)+1
+                Xpos = posX*zoom+((cam[0]+(width/2))%zoom)#coordonées selon zoom
+                Ypos = posY*zoom+((cam[1]+(height/2))%zoom)#coordonées selon zoom
+                screen.blit(TextureManager.GetTexture("ground", zoom), (Xpos, Ypos))#placement du fond
 
 def ItemMenu():
     """

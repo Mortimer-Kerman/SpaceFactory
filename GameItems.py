@@ -4,36 +4,55 @@ Created on Thu Feb  9 18:05:51 2023
 
 @author: 29ray
 """
+#importation des bibliothèques
 import SaveManager
 import UiManager
 import TextureManager
 import random
 
 class Item:
+    """
+    Objet Item
+    """
     def __init__(self,name:str,pos:tuple,texture:str="no",metadata=None):
+        """
+        Définition de l'objet
+        """
         self.name=name
         self.pos=pos
         self.texture=texture
         self.metadata=metadata
     
     def ReadDictRepresentation(DictRepresentation:dict):
+        """
+        lecture d'un dictionaire
+        """
         item = Item(None,None)
         item.__dict__ = DictRepresentation
         return item
     
     def Display(self):
+        """
+        Affichage de l'item
+        """
         cam = SaveManager.GetCamPos()
         cam = [cam[0],cam[1]]
         zoom = SaveManager.GetZoom()
         cam[0] += UiManager.width / 2
         cam[1] += UiManager.height / 2
-        if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):
-            return
-        UiManager.screen.blit(TextureManager.GetTexture(self.texture, zoom), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))
+        if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
+            return#quitter la fonction
+        UiManager.screen.blit(TextureManager.GetTexture(self.texture, zoom), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
 
-current=[]
+current=[]#liste des minerais affichés
 class Minerais:
+    """
+    Toutes les fonctions relatives aux Minerais
+    """
     def SpawnAllScreen():
+        """
+        Apparition des minerais sur tout l'écran
+        """
         cam = SaveManager.GetCamPos()
         cam = [cam[0],cam[1]]
         zoom = SaveManager.GetZoom()
@@ -64,6 +83,9 @@ class Minerais:
         
 
     def Place(x,y):
+        """
+        Place le minerais selon son type
+        """
         cam = SaveManager.GetCamPos()
         cam = [cam[0],cam[1]]
         zoom = SaveManager.GetZoom()
@@ -75,6 +97,9 @@ class Minerais:
             UiManager.screen.blit(TextureManager.GetTexture(a, zoom), (x*zoom+cam[0], y*zoom+cam[1]))
 
     def PlaceFromCurrent(a):
+        """
+        Placement depuis current (le type de minerais est connu)
+        """
         cam = SaveManager.GetCamPos()
         cam = [cam[0],cam[1]]
         zoom = SaveManager.GetZoom()
@@ -87,8 +112,8 @@ class Minerais:
         Renvoie le type de minerais, si ce n'est pas un minerais, renvoie False
         """
         se=SaveManager.GetSeed()
-        random.seed(x*y*se+x+y+se+x)
-        r=3
+        random.seed(x*y*se+x+y+se+x)#la graine
+        r=3#plus r est grand, moins les minerais spawneront
         if random.randint(0,60*r)==40:
             return "coal"
         elif random.randint(0,80*r)==40:
