@@ -22,7 +22,8 @@ def GetColorFilter(color:tuple, scale:float):
     return pygame.transform.scale(colorFilter,(scale,scale))
 
 loadedTextures = {"no":missingTexture,"colorFilter":colorFilter}
-def GetTexture(textureName:str,scale:float=1)->pygame.Surface:
+menuTextures = {}
+def GetTexture(textureName:str,scale:float=1,is_menu:bool=False)->pygame.Surface:
     """
     Permet d'obtenir la texture
     """
@@ -34,11 +35,17 @@ def GetTexture(textureName:str,scale:float=1)->pygame.Surface:
             textureName = "no.png"
     tex = loadedTextures[textureName]
     if scale != 1:#si la taille est différente de 1
-        if textureName in zoomedTextures:#si textureName est dans zoomedTextures
+        if textureName in zoomedTextures and not is_menu:#si textureName est dans zoomedTextures et n'est pas dans le menu
             tex = zoomedTextures[textureName]
+        elif textureName in menuTextures and is_menu:
+            tex=menuTextures[textureName]
         else:
             tex = pygame.transform.scale(tex,(scale,scale))#redimentionner l'image
-            zoomedTextures[textureName] = tex
+            if is_menu:
+                menuTextures[textureName] = tex
+            else:
+                zoomedTextures[textureName] = tex
+                
     return tex
 
 def LoadAllTextures():

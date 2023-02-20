@@ -24,6 +24,7 @@ class Data:
         self.zoom = 100
         self.seed = random.randint(-(9**9),9**9)
         self.items = []
+        self.selectedItem="drill"
         
     def toJson(self):
         """
@@ -128,3 +129,15 @@ def GetSeed()->int:
     Renvoie la seed de la sauvegarde
     """
     return mainData.seed
+
+def SetSelectedItem(item):
+    """
+    Change l'item séléctionné
+    """
+    mainData.selectedItem=item
+
+def GetSelectedItem()->str:
+    """
+    Renvoie l'item séléctionné
+    """
+    return mainData.selectedItem

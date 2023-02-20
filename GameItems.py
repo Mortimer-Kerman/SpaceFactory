@@ -10,6 +10,8 @@ import UiManager
 import TextureManager
 import random
 
+menuElements=["drill","c","no","menu_icon","copper","or3"]#éléments du menu de séléction
+
 class Item:
     """
     Objet Item

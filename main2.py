@@ -85,13 +85,19 @@ def Play():
                 if event.button == 1: # 1 == left button
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
 
-                        SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), "drill"))#Placer item
+                        SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), SaveManager.GetSelectedItem()))#Placer item
 
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                         UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
                     elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
                         SaveManager.Unload()#Décharger la sauvegarde
                         return#on quitte la fonction Play()
+                    elif UiManager.UIelements.get("select2",False):
+                        menuElements=GameItems.menuElements
+                        for i in range(len(menuElements)):
+                            if UiManager.UIelements.get("selectElements_"+menuElements[i],False):
+                                SaveManager.SetSelectedItem(menuElements[i])
+                            
             
             if event.type == MUSIC_ENDED:#Si la musique s'arrête
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))#on charge une nouvelle musique

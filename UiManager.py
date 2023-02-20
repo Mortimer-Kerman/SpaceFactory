@@ -9,6 +9,7 @@ Created on Thu Feb  9 11:47:04 2023
 import pygame
 import SaveManager
 import TextureManager
+import GameItems
 
 #Les variables importantes
 screen = None#la fenêtre pricipale (élément pygame.display)
@@ -131,4 +132,8 @@ def ItemMenu():
     #On stocke la valeur bool en cas d'hover sur l'élément (ici le rectangle sous "forme2" du menu de séléction) dans UIelements["select"]
     UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-500*showMenu.get("select",0)),(width,height-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
 
-    place_text("À faire",width-500,height-400*showMenu.get("select",0),200,(255,0,0))
+    menuElements=GameItems.menuElements
+    for i in range(len(menuElements)):
+        UIelements["selectElements_"+menuElements[i]]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
+        screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
+        place_text(menuElements[i],width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire)
