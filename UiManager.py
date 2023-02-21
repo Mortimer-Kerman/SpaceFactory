@@ -66,17 +66,33 @@ def IsClickOnUI():
         if i:#si i
             return True#renvoier vrai
     return False#renvoier faux
-    
 
-def place_text(text, x, y, size, color=(255,255,255),font=None,n=20):
+autoSize={}
+def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=False):
     """
     Fonction utilitaire servant au placement du texte sur l'écran
     """
-    font = pygame.font.Font(None, size) if font==None else font#tentative de charger la police
-    t=text.splitlines()
-    for i,l in enumerate(t):
-        text_surface = font.render(l, True, color)#on crée l'image du texte
-        screen.blit(text_surface, (x, y+n*i))#on affiche le texte
+    if not auto_size:
+        font = pygame.font.Font(None, size) if font==None else font#tentative de charger la police
+        t=text.splitlines()
+        for i,l in enumerate(t):
+            text_surface = font.render(l, True, color)#on crée l'image du texte
+            screen.blit(text_surface, (x, y+n*i))#on affiche le texte
+    else:
+        if (auto_size,text) in autoSize.keys():
+            font = pygame.font.Font("./Assets2/font/Aquire.ttf",autoSize[(auto_size,text)])#on tente de charger aquire
+            text_surface = font.render(text, True, (255, 255, 255))
+            screen.blit(text_surface, (x, y))#on affiche le texte
+        else:
+            taille=32
+            while taille > 0:
+                font = pygame.font.Font("./Assets2/font/Aquire.ttf",taille)#on tente de charger aquire
+                text_surface = font.render(text, True, (255, 255, 255))
+                if text_surface.get_width() <= auto_size[0] and text_surface.get_height() <= auto_size[1]:
+                    break
+                taille -= 1
+            autoSize[(auto_size,text)]=taille
+            screen.blit(text_surface, (x, y))#on affiche le texte
 
 def forme(x,y,w,wr,h,o,color=(47,48,51)):
     """
@@ -138,7 +154,7 @@ def ItemMenu():
     for i in range(len(menuElements)):
         UIelements["selectElements_"+menuElements[i]]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
-        place_text(menuElements[i],width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire)
+        place_text(menuElements[i],width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
 
 def addNewlines(text,l):
     """
