@@ -42,8 +42,9 @@ def Play():
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
             item.Display()#Afficher l'item
 
-        for popup in UiManager.UIPopup:
-            popup.show()
+        for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
+            popup.show(index)
+            UiManager.UIelements["popup_area"]=pygame.Rect(UiManager.width-500,50,500,205+205*index).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
 
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
@@ -101,7 +102,10 @@ def Play():
                         for i in range(len(menuElements)):
                             if UiManager.UIelements.get("selectElements_"+menuElements[i],False):
                                 SaveManager.SetSelectedItem(menuElements[i])
-                            
+                    elif UiManager.UIelements.get("popup_area",False):
+                        for index,popup in enumerate(UiManager.UIPopup):
+                            if UiManager.UIelements.get("popup_"+str(index),False):
+                                popup.close()
             
             if event.type == MUSIC_ENDED:#Si la musique s'arrête
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))#on charge une nouvelle musique

@@ -142,7 +142,7 @@ def ItemMenu():
 
 def addNewlines(text,l):
     """
-    Adds a newline character to a string every 29 characters, without cutting a word in the middle.
+    Ajoute un caractère \n à une chaine de caractères tout les 29 caractères, sans couper un mot.
     """
     words = text.split()
     new_text = ""
@@ -166,14 +166,17 @@ class Popup:
     """
     def __init__(self,text):
         self.text=addNewlines(text,29)
-        print(self.text)
         self.time=int(pygame.time.get_ticks())
         self.sliding=0
         UIPopup.append(self)
-    def show(self):
+    def show(self,i):
         self.sliding+=5 if self.sliding<=500 else 0
         if int(pygame.time.get_ticks())>(self.time+10000):
                UIPopup.remove(self)
         else:
-            pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,500,500,200))
-            place_text(self.text,width-self.sliding,500,26,(255,255,255),TextureManager.aquire)
+            UIelements["popup_"+str(i)]=pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,50+205*i,500,200)).collidepoint(pygame.mouse.get_pos())
+            place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.aquire)
+            UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
+            place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.aquire)
+    def close(self):
+        UIPopup.remove(self)
