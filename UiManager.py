@@ -178,5 +178,7 @@ class Popup:
             place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.aquire)
             UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
             place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.aquire)
-    def close(self):
+    def close(self,i):
         UIPopup.remove(self)
+        UIelements["popup_"+str(i)]=False
+        UIelements["popup_area"]=False
