@@ -80,8 +80,7 @@ def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=Fa
             screen.blit(text_surface, (x, y+n*i))#on affiche le texte
     else:
         if (auto_size,text) in autoSize.keys():
-            font = autoSize[(auto_size,text)]#on tente de charger aquire
-            text_surface = font.render(text, True, (255, 255, 255))
+            text_surface = autoSize[(auto_size,text)]
             screen.blit(text_surface, (x, y))#on affiche le texte
         else:
             taille=32
@@ -91,7 +90,7 @@ def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=Fa
                 if text_surface.get_width() <= auto_size[0] and text_surface.get_height() <= auto_size[1]:
                     break
                 taille -= 1
-            autoSize[(auto_size,text)]=font
+            autoSize[(auto_size,text)]=text_surface
             screen.blit(text_surface, (x, y))#on affiche le texte
 
 def forme(x,y,w,wr,h,o,color=(47,48,51)):
