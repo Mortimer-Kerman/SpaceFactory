@@ -42,7 +42,7 @@ def DisplayUi():
     """
     forme(0,0,width,100,50,200)#forme affichée en haut de l'écran
 
-    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
 
     forme2(0,height,width,100,50,200)#forme2 affichée en bas de l'écran
     
@@ -187,7 +187,7 @@ class Popup:
     def show(self,i):
         self.sliding+=5 if self.sliding<=500 else 0
         if int(pygame.time.get_ticks())>(self.time+10000):
-               UIPopup.remove(self)
+               self.close(i)
         else:
             UIelements["popup_"+str(i)]=pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,50+205*i,500,200)).collidepoint(pygame.mouse.get_pos())
             place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.aquire)
@@ -197,3 +197,5 @@ class Popup:
         UIPopup.remove(self)
         UIelements["popup_"+str(i)]=False
         UIelements["popup_area"]=False
+        UIelements["popup_close_button_"+str(i)]=False
+        
