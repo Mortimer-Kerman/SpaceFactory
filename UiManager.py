@@ -68,13 +68,15 @@ def IsClickOnUI():
     return False#renvoier faux
     
 
-def place_text(text, x, y, size, color=(255,255,255),font=None):
+def place_text(text, x, y, size, color=(255,255,255),font=None,n=20):
     """
     Fonction utilitaire servant au placement du texte sur l'écran
     """
     font = pygame.font.Font(None, size) if font==None else font#tentative de charger la police
-    text_surface = font.render(text, True, color)#on crée l'image du texte
-    screen.blit(text_surface, (x, y))#on affiche le texte
+    t=text.splitlines()
+    for i,l in enumerate(t):
+        text_surface = font.render(l, True, color)#on crée l'image du texte
+        screen.blit(text_surface, (x, y+n*i))#on affiche le texte
 
 def forme(x,y,w,wr,h,o,color=(47,48,51)):
     """
@@ -137,3 +139,41 @@ def ItemMenu():
         UIelements["selectElements_"+menuElements[i]]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
         place_text(menuElements[i],width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire)
+
+def addNewlines(text,l):
+    """
+    Adds a newline character to a string every 29 characters, without cutting a word in the middle.
+    """
+    words = text.split()
+    new_text = ""
+    line_len = 0
+    for word in words:
+        word_len = len(word)
+        if line_len + word_len + 1 <= int(l):
+            new_text += word + " "
+            line_len += word_len + 1
+        else:
+            new_text = new_text.strip() + "\n"
+            new_text += word + " "
+            line_len = word_len + 1
+    return new_text.strip() + "\n"
+
+
+UIPopup=[]
+class Popup:
+    """
+    Des popups
+    """
+    def __init__(self,text):
+        self.text=addNewlines(text,29)
+        print(self.text)
+        self.time=int(pygame.time.get_ticks())
+        self.sliding=0
+        UIPopup.append(self)
+    def show(self):
+        self.sliding+=5 if self.sliding<=500 else 0
+        if int(pygame.time.get_ticks())>(self.time+10000):
+               UIPopup.remove(self)
+        else:
+            pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,500,500,200))
+            place_text(self.text,width-self.sliding,500,26,(255,255,255),TextureManager.aquire)

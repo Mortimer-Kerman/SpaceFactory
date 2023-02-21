@@ -42,6 +42,9 @@ def Play():
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
             item.Display()#Afficher l'item
 
+        for popup in UiManager.UIPopup:
+            popup.show()
+
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
         pygame.display.update()#Mise à jour de l'affichage Pygame
@@ -84,9 +87,10 @@ def Play():
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
                 if event.button == 1: # 1 == left button
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
-
-                        SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), SaveManager.GetSelectedItem()))#Placer item
-
+                        if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
+                            SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), SaveManager.GetSelectedItem()))#Placer item
+                        else:
+                            UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                         UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
                     elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors

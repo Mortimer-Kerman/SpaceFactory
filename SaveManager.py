@@ -141,3 +141,9 @@ def GetSelectedItem()->str:
     Renvoie l'item séléctionné
     """
     return mainData.selectedItem
+
+def IsItemHere(co)->bool:
+    for i in mainData.items:#pour chaque valeur de mainData.items (toutes les valeurs sont des Items)
+        if co==i.pos:#si i
+            return True#renvoier vrai
+    return False#renvoier faux
