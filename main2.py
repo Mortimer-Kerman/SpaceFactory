@@ -41,6 +41,7 @@ def Play():
 
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
             item.Display()#Afficher l'item
+            item.Give()
 
         for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
             popup.show(index)
@@ -109,7 +110,7 @@ def Play():
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
                         clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
                         if clickedItem != None:
-                            UiManager.Popup(clickedItem.name)
+                            UiManager.Popup(clickedItem.name+"\n"+str(clickedItem.metadata)+"\n"+str(clickedItem.pos)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
             
             if event.type == MUSIC_ENDED:#Si la musique s'arrête
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))#on charge une nouvelle musique

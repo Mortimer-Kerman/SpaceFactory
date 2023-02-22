@@ -10,13 +10,13 @@ import UiManager
 import TextureManager
 import random
 
-menuElements=["drill","c","no","menu_icon","copper","or3"]#éléments du menu de séléction
+menuElements=["foreuse","c","no","menu_icon","copper","or3"]#éléments du menu de séléction
 
 class Item:
     """
     Objet Item
     """
-    def __init__(self,name:str,pos:tuple,metadata=[]):
+    def __init__(self,name:str,pos:tuple,metadata={}):
         """
         Définition de l'objet
         """
@@ -44,6 +44,31 @@ class Item:
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
         UiManager.screen.blit(TextureManager.GetTexture(self.name, zoom), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
+        UiManager.place_text(str(self.metadata.get("inv",None)),self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1],20,(255,0,0))
+    
+    def Give(self):
+        giveTo={"foreuse":[1,1,1,1],"c":[0,1,0,0],"stockage":[1,1,1,1]}#[up down left right]
+        if self.name=="foreuse" and self.metadata.get("inv",None) is None:
+            #if self.metadata.get("minerais", None) is None:
+            self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
+            if self.metadata["minerais"] is False:self.metadata["minerais"]=None
+            self.metadata["inv"]=self.metadata["minerais"]
+        
+        g=giveTo.get(self.name,[0,0,0,0])
+        item=None
+        if g[0]:
+            item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]+1))#on récupère l'item du dessus
+        if g[1] and item is None:
+            item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessous
+        if g[2] and item is None:
+            item=SaveManager.GetItemAtPos((self.pos[0]-1,self.pos[1]))#on récupère l'item de gauche
+        if g[3] and item is None:
+            item=SaveManager.GetItemAtPos((self.pos[0]+1,self.pos[1]))#on récupère l'item de droite
+        
+        if item is not None:
+            if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
+                item.metadata["inv"]=self.metadata.get("inv",None)
+                self.metadata["inv"]=None#on vide l'inventaire
 
 current=[]#liste des minerais affichés
 class Minerais:
