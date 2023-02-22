@@ -142,8 +142,17 @@ def GetSelectedItem()->str:
     """
     return mainData.selectedItem
 
-def IsItemHere(co)->bool:
+def IsItemHere(pos)->bool:
+    """
+    Détecte si il y a un item à une position
+    """
+    return GetItemAtPos(pos) != None
+
+def GetItemAtPos(pos):
+    """
+    Renvoie l'item à une position si il y en a un, None sinon
+    """
     for i in mainData.items:#pour chaque valeur de mainData.items (toutes les valeurs sont des Items)
-        if co[0]==i.pos[0] and co[1]==i.pos[1]:#si i partage les mêmes coordonnées que ceux en entrée...
-            return True#renvoier vrai
-    return False#renvoier faux
+        if pos[0]==i.pos[0] and pos[1]==i.pos[1]:#si i partage les mêmes coordonnées que ceux en entrée...
+            return i#On renvoie l'item trouvé
+    return None#On renvoie None

@@ -16,13 +16,12 @@ class Item:
     """
     Objet Item
     """
-    def __init__(self,name:str,pos:tuple,texture:str="no",metadata=None):
+    def __init__(self,name:str,pos:tuple,metadata=[]):
         """
         Définition de l'objet
         """
         self.name=name
         self.pos=pos
-        self.texture=texture
         self.metadata=metadata
     
     def ReadDictRepresentation(DictRepresentation:dict):
@@ -44,7 +43,7 @@ class Item:
         cam[1] += UiManager.height / 2
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
-        UiManager.screen.blit(TextureManager.GetTexture(self.texture, zoom), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
+        UiManager.screen.blit(TextureManager.GetTexture(self.name, zoom), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
 
 current=[]#liste des minerais affichés
 class Minerais:

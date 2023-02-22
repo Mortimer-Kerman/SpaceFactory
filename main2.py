@@ -89,7 +89,7 @@ def Play():
                 if event.button == 1: # 1 == left button
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
                         if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
-                            SaveManager.PlaceItem(GameItems.Item("lessgo", UiManager.GetMouseWorldPos(), SaveManager.GetSelectedItem()))#Placer item
+                            SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos()))#Placer item
                         else:
                             UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
@@ -105,6 +105,11 @@ def Play():
                         for index,popup in enumerate(UiManager.UIPopup):
                             if UiManager.UIelements.get("popup_"+str(index),False):
                                 popup.close(index)
+                if event.button == 3: # 3 == right button
+                    if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
+                        clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
+                        if clickedItem != None:
+                            UiManager.Popup(clickedItem.name)
             
             if event.type == MUSIC_ENDED:#Si la musique s'arrête
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))#on charge une nouvelle musique
