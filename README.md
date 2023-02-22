@@ -1,4 +1,4 @@
-#SpaceFactory - Projet
+# SpaceFactory - Projet
 > Réalisé par François Patinec-Haxel, Thomas Sartre et Matéo Bourdin
 
 SpaceFactory est un jeu de construction qui vous transporte dans un univers futuriste où vous êtes aux commandes de votre propre usine spatiale.
