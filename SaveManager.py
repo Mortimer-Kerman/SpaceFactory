@@ -24,6 +24,7 @@ class Data:
         self.zoom = 100
         self.seed = random.randint(-(9**9),9**9)
         self.items = []
+        self.itemsPos={}
         self.selectedItem="drill"
         
     def toJson(self):
@@ -47,7 +48,9 @@ def Load(name:str):
         mainData.__dict__ = json.load(open("Saves/" + name + ".spf", "r"))#charger les Datas
         items = []
         for item in mainData.items:
-            items.append(GameItems.Item.ReadDictRepresentation(item))#on charge la représentation des items en objet
+            a=GameItems.Item.ReadDictRepresentation(item)
+            items.append(a)#on charge la représentation des items en objet
+            mainData.itemsPos[str(list(a.pos))]=a
         mainData.items = items
     print("File loaded!")
     
@@ -123,6 +126,7 @@ def PlaceItem(item):
     Ajoute un item à la liste item
     """
     mainData.items.append(item)
+    mainData.itemsPos[str(list(item.pos))]=item
 
 def GetSeed()->int:
     """
@@ -152,7 +156,4 @@ def GetItemAtPos(pos):
     """
     Renvoie l'item à une position si il y en a un, None sinon
     """
-    for i in mainData.items:#pour chaque valeur de mainData.items (toutes les valeurs sont des Items)
-        if pos[0]==i.pos[0] and pos[1]==i.pos[1]:#si i partage les mêmes coordonnées que ceux en entrée...
-            return i#On renvoie l'item trouvé
-    return None#On renvoie None
+    return mainData.itemsPos.get(str(list(pos)),None)
