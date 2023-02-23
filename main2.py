@@ -90,7 +90,7 @@ def Play():
                 if event.button == 1: # 1 == left button
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
                         if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
-                            SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos()))#Placer item
+                            SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
                         else:
                             UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors

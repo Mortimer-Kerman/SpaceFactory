@@ -138,6 +138,8 @@ class Minerais:
         Renvoie le type de minerais, si ce n'est pas un minerais, renvoie False
         """
         se=SaveManager.GetSeed()
+        x=int(x)
+        y=int(y)
         random.seed(x*y*se+x+y+se+x)#la graine
         r=3#plus r est grand, moins les minerais spawneront
         if random.randint(0,60*r)==40:
