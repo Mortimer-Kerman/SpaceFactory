@@ -10,7 +10,9 @@ import UiManager
 import TextureManager
 import random
 
-menuElements=["foreuse","c","no","menu_icon","copper","or3"]#éléments du menu de séléction
+import pygame
+
+menuElements=["foreuse","tapis","stockage","trieur","four","or3"]#éléments du menu de séléction
 
 class Item:
     """
@@ -44,10 +46,21 @@ class Item:
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
         UiManager.screen.blit(TextureManager.GetTexture(self.name, zoom), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
+
+
         UiManager.place_text(str(self.metadata.get("inv",None)),self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1],20,(255,0,0))
+
+        if self.name=="tapis":
+            col={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(0,0,100)}
+            a=col.get(self.metadata.get("inv",None),False)
+            if a:
+                pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+1/4*zoom),
+                                                                     (self.pos[0]*zoom+cam[0]+3/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom),
+                                                                     (self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+3/4*zoom),
+                                                                     (self.pos[0]*zoom+cam[0]+1/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom)])
     
     def Give(self):
-        giveTo={"foreuse":[1,1,1,1],"c":[0,1,0,0],"stockage":[1,1,1,1]}#[up down left right]
+        giveTo={"foreuse":[1,1,1,1],"tapis":[0,1,0,0],"stockage":[1,1,1,1]}#[up down left right]
         if self.name=="foreuse" and self.metadata.get("inv",None) is None:
             if self.metadata.get("minerais", None) is None:
                 self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
@@ -143,11 +156,11 @@ class Minerais:
         random.seed(x*y*se+x+y+se+x)#la graine
         r=3#plus r est grand, moins les minerais spawneront
         if random.randint(0,60*r)==40:
-            return "coal"
+            return "charbon"
         elif random.randint(0,80*r)==40:
-            return "copper"
+            return "cuivre"
         elif random.randint(0,100*r)==10:
-            return "or3"
+            return "or"
         elif random.randint(0,120*r)==50:
             return "m1"
         else:

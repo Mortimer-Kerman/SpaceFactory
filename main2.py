@@ -30,6 +30,7 @@ def Play():
     pygame.key.set_repeat(10)#on réduit le temps de détéction de répétition de touche
     SaveManager.Load(str(saveFileSelect.get_value()))#Chargement de la sauvegarde
 
+    runtime=0
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
 
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
@@ -41,7 +42,7 @@ def Play():
 
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
             item.Display()#Afficher l'item
-            item.Give()
+            if runtime%100==0:item.Give()
 
         for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
             popup.show(index)
@@ -118,7 +119,7 @@ def Play():
         
         
         SaveManager.clock.tick()#on mets à jour l'horloge des FPS
-        
+        runtime+=1
 
    
 
