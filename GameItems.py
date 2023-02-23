@@ -57,9 +57,9 @@ class Item:
         g=giveTo.get(self.name,[0,0,0,0])
         item=None
         if g[0]:
-            item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]+1))#on récupère l'item du dessus
+            item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
         if g[1] and item is None:
-            item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessous
+            item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]+1))#on récupère l'item du dessous
         if g[2] and item is None:
             item=SaveManager.GetItemAtPos((self.pos[0]-1,self.pos[1]))#on récupère l'item de gauche
         if g[3] and item is None:
