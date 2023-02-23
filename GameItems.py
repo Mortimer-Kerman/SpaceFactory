@@ -49,9 +49,9 @@ class Item:
     def Give(self):
         giveTo={"foreuse":[1,1,1,1],"c":[0,1,0,0],"stockage":[1,1,1,1]}#[up down left right]
         if self.name=="foreuse" and self.metadata.get("inv",None) is None:
-            #if self.metadata.get("minerais", None) is None:
-            self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
-            if self.metadata["minerais"] is False:self.metadata["minerais"]=None
+            if self.metadata.get("minerais", None) is None:
+                self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
+                if self.metadata["minerais"] is False:self.metadata["minerais"]=None
             self.metadata["inv"]=self.metadata["minerais"]
         
         g=giveTo.get(self.name,[0,0,0,0])
