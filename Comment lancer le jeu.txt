@@ -6,5 +6,3 @@ Requis pour le lancement :
 -python >= 3.10
 -pygame >= 2.0.0
 -pygame_menu >=4.3.6
--pygame_widgets >=1.1.1
-pyfastnoisesimd>=1.22.4
