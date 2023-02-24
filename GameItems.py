@@ -61,7 +61,6 @@ class Item:
                                                                      (self.pos[0]*zoom+cam[0]+1/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom)])
     
     def Give(self):
-        giveTo={"foreuse":[1,1,1,1],"tapis":[0,1,0,0],"stockage":[1,1,1,1]}#[up down left right]
         giveTo={"foreuse":[1,1,1,1],"tapis Nord":[1,0,0,0],"tapis Sud":[0,1,0,0],"tapis Ouest":[0,0,1,0],"tapis Est":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
         if self.name=="foreuse" and self.metadata.get("inv",None) is None:
             if self.metadata.get("minerais", None) is None:
@@ -77,24 +76,21 @@ class Item:
         if g[0]:
             item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
             if item is not None:
-                if item.giveto==[0,1,0,0]:item=None
+                if item.giveto==[0,1,0,0] or item.metadata.get("inv",None) is not None:item=None
         if g[1] and item is None:
             item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]+1))#on récupère l'item du dessous
             if item is not None:
-                if item.giveto==[1,0,0,0]:item=None
+                if item.giveto==[1,0,0,0] or item.metadata.get("inv",None) is not None:item=None
         if g[2] and item is None:
             item=SaveManager.GetItemAtPos((self.pos[0]-1,self.pos[1]))#on récupère l'item de gauche
             if item is not None:
-                if item.giveto==[0,0,0,1]:item=None
+                if item.giveto==[0,0,0,1] or item.metadata.get("inv",None) is not None:item=None
         if g[3] and item is None:
             item=SaveManager.GetItemAtPos((self.pos[0]+1,self.pos[1]))#on récupère l'item de droite
-        
             if item is not None:
-                if item.giveto==[0,0,1,0]:item=None
+                if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
         if item is not None:
             if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
-                item.metadata["inv"]=self.metadata.get("inv",None)
-                self.metadata["inv"]=None#on vide l'inventaire
                 if self.name=="stockage":
                     a=max(self.metadata.get("biginv",{}), key=self.metadata.get("biginv",{}).get)
                     item.metadata["inv"]=a

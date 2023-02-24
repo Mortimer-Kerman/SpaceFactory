@@ -12,6 +12,8 @@ import os
 
 import GameItems
 
+SaveFileVersion="f0.7"
+
 class Data:
     """
     La classe Data contient le déroulement de tout le jeu
@@ -23,9 +25,9 @@ class Data:
         self.camPos = [0,0]
         self.zoom = 100
         self.seed = random.randint(-(9**9),9**9)
-        self.items = []
-        self.itemsPos={}
+        self.items = {}
         self.selectedItem="drill"
+        self.saveVersion=SaveFileVersion
         
     def toJson(self):
         """
@@ -46,12 +48,16 @@ def Load(name:str):
     CreateSave(name)#Création de la sauvegarde
     if SaveExists(name):#si la sauvegarde existe
         mainData.__dict__ = json.load(open("Saves/" + name + ".spf", "r"))#charger les Datas
-        items = []
-        for item in mainData.items:
+        try:
+            if mainData.saveVersion!=SaveFileVersion:
+                print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
+                return
+        except:
+            print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
+            return
+        for item in mainData.items.values():
             a=GameItems.Item.ReadDictRepresentation(item)
-            items.append(a)#on charge la représentation des items en objet
-            mainData.itemsPos[str(list(a.pos))]=a
-        mainData.items = items
+            mainData.items[str(list(a.pos))]=a
     print("File loaded!")
     
 def Save():
@@ -119,17 +125,16 @@ def GetItems()->list:
     """
     Renvoie la liste d'item
     """
-    return mainData.items
+    return mainData.items.values()
 
 def PlaceItem(item):
     """
-    Ajoute un item à la liste item
+    Ajoute un item aux items
     """
-    mainData.items.append(item)
-    mainData.itemsPos[str(list(item.pos))]=item
+    mainData.items[str(list(item.pos))]=item
 
 def DeleteItem(pos):
-    pass
+    del mainData.items[str(list(pos))]
 
 def GetSeed()->int:
     """
@@ -159,4 +164,4 @@ def GetItemAtPos(pos):
     """
     Renvoie l'item à une position si il y en a un, None sinon
     """
-    return mainData.itemsPos.get(str(list(pos)),None)
+    return mainData.items.get(str(list(pos)),None)

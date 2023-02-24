@@ -94,11 +94,13 @@ def Play():
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
                         if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
                             if not UiManager.showMenu["delete"]:
-                                SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
-                            else:
-                                SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
+                                if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
+                                    SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
+                                else:
+                                    UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
                         else:
-                            UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
+                            SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
+                            UiManager.showMenu["delete"]=0
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                         UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
                     elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
