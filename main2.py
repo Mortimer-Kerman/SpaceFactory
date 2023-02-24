@@ -93,7 +93,7 @@ def Play():
                 if event.button == 1: # 1 == left button
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
                         if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
-                            if not UiManager.selectMenu["delete"]:
+                            if not UiManager.showMenu["delete"]:
                                 SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
                             else:
                                 SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
