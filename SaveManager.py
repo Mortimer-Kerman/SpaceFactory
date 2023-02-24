@@ -128,6 +128,9 @@ def PlaceItem(item):
     mainData.items.append(item)
     mainData.itemsPos[str(list(item.pos))]=item
 
+def DeleteItem(pos):
+    pass
+
 def GetSeed()->int:
     """
     Renvoie la seed de la sauvegarde

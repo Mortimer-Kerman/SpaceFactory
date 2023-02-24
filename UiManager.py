@@ -18,7 +18,7 @@ width = 0
 height = 0
 
 UIelements={}#dictionaire stockant les interaction souris/éléments interface
-showMenu={"select":0}#affichage ou non des menus interne à l'UI
+showMenu={"select":0,"delete":0}#affichage ou non des menus interne à l'UI
 
 def Init():
     """
@@ -154,6 +154,10 @@ def ItemMenu():
         UIelements["selectElements_"+menuElements[i]]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
         place_text(menuElements[i],width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+
+    UIelements["selectElements_delete"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
+    screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*(i%5),height-100*showMenu.get("select",0)))
+    place_text("détruire",width-500+102*(i%5),height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
 
 def addNewlines(text,l):
     """
