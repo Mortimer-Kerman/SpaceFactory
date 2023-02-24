@@ -43,11 +43,13 @@ def Play():
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
             item.Display()#Afficher l'item
             if runtime%100==0:item.Give()
-
+        
+        UiManager.DisplayItemToPlace()
+        
         for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
             popup.show(index)
             UiManager.UIelements["popup_area"]=pygame.Rect(UiManager.width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
-
+        
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
         pygame.display.update()#Mise à jour de l'affichage Pygame
@@ -57,13 +59,13 @@ def Play():
         
         camOffset = [0,0]#Définition de l'offset de la caméra
         if keys[pygame.K_UP]:#si touche up
-            camOffset[1]+=5
+            camOffset[1]+=SaveManager.clock.get_time() / 2
         if keys[pygame.K_DOWN]:#si touche down
-            camOffset[1]-=5
+            camOffset[1]-=SaveManager.clock.get_time() / 2
         if keys[pygame.K_RIGHT]:#si touche right
-            camOffset[0]-=5
+            camOffset[0]-=SaveManager.clock.get_time() / 2
         if keys[pygame.K_LEFT]:#si touche left
-            camOffset[0]+=5
+            camOffset[0]+=SaveManager.clock.get_time() / 2
         SaveManager.TranslateCam(camOffset)#On applique les changements de caméra
         
         if camOffset != [0,0]:#si un déplacement a eu lieu

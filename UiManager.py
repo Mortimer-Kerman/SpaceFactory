@@ -173,6 +173,27 @@ def addNewlines(text,l):
             line_len = word_len + 1
     return new_text.strip() + "\n"
 
+def DisplayItemToPlace():
+    """
+    Cette fonction a pour but d'afficher l'item que le joueur s'apprête à placer en transparence pour lui donner une indication de visée
+    """
+    ItemTexture = SaveManager.mainData.selectedItem
+    
+    if ItemTexture == None or IsClickOnUI():
+        return
+    
+    cam = SaveManager.GetCamPos()
+    cam = [cam[0],cam[1]]
+    zoom = SaveManager.GetZoom()
+    cam[0] += width / 2
+    cam[1] += height / 2
+    pos = GetMouseWorldPos()
+    
+    tex = TextureManager.GetTexture(ItemTexture, zoom).copy()
+    tex.set_alpha(150)
+    screen.blit(tex, (pos[0]*zoom+cam[0], pos[1]*zoom+cam[1]))
+    
+    
 
 UIPopup=[]
 class Popup:
@@ -185,7 +206,10 @@ class Popup:
         self.sliding=0
         UIPopup.append(self)
     def show(self,i):
-        self.sliding+=5 if self.sliding<=500 else 0
+        self.sliding+= SaveManager.clock.get_time()
+        if self.sliding > 500:
+            self.sliding = 500
+        
         if int(pygame.time.get_ticks())>(self.time+10000):
                self.close(i)
         else:

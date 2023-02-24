@@ -30,7 +30,7 @@ def GetTexture(textureName:str,scale:float=1,is_menu:bool=False)->pygame.Surface
     textureName += ".png"
     if not textureName in loadedTextures.keys():#si la texture n'est pas chargée
         try:#tenter
-            loadedTextures[textureName] = pygame.image.load(texturesPath + textureName + ".png")#chargement image
+            loadedTextures[textureName] = pygame.image.load(texturesPath + textureName + ".png").convert()#chargement image
         except:#en cas d'erreur
             textureName = "no.png"
     tex = loadedTextures[textureName]
