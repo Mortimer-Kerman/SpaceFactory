@@ -36,7 +36,7 @@ class Item:
         item.__dict__ = DictRepresentation
         return item
     
-    def Display(self):
+    def Display(self,runtime):
         """
         Affichage de l'item
         """
@@ -56,11 +56,14 @@ class Item:
         if "tapis" in self.name:
             col={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110)}
             a=col.get(self.metadata.get("inv",None),False)
+            #b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2])}
+            b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2])}
+            b,ca=b[self.name]# if runtime<40 else (0,0)
             if a:
-                pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+1/4*zoom),
-                                                                     (self.pos[0]*zoom+cam[0]+3/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom),
-                                                                     (self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+3/4*zoom),
-                                                                     (self.pos[0]*zoom+cam[0]+1/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom)])
+                pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+ca[0]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[4]*zoom+((runtime/50)*zoom)*b[1]),
+                                                                     (self.pos[0]*zoom+cam[0]+ca[1]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[5]*zoom+((runtime/50)*zoom)*b[1]),
+                                                                     (self.pos[0]*zoom+cam[0]+ca[2]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[6]*zoom+((runtime/50)*zoom)*b[1]),
+                                                                     (self.pos[0]*zoom+cam[0]+ca[3]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[7]*zoom+((runtime/50)*zoom)*b[1])])
     
     def Give(self):
         if self.metadata.get("g",False):
