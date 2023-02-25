@@ -12,7 +12,7 @@ import random
 
 import pygame
 
-menuElements=["foreuse","tapis Nord","tapis Sud","tapis Ouest","tapis Est","stockage","trieur","four"]#éléments du menu de séléction
+menuElements=["foreuse","tapis Nord","tapis Sud","tapis Ouest","tapis Est","stockage","trieur","jonction","pont","four"]#éléments du menu de séléction
 
 class Item:
     """
@@ -40,6 +40,8 @@ class Item:
         """
         Affichage de l'item
         """
+        self.metadata["g"]=0
+
         cam = SaveManager.GetCamPos()
         cam = [cam[0],cam[1]]
         zoom = SaveManager.GetZoom()
@@ -61,6 +63,8 @@ class Item:
                                                                      (self.pos[0]*zoom+cam[0]+1/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom)])
     
     def Give(self):
+        if self.metadata.get("g",False):
+            return
         giveTo={"foreuse":[1,1,1,1],"tapis Nord":[1,0,0,0],"tapis Sud":[0,1,0,0],"tapis Ouest":[0,0,1,0],"tapis Est":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
         if self.name=="foreuse" and self.metadata.get("inv",None) is None:
             if self.metadata.get("minerais", None) is None:
@@ -70,6 +74,7 @@ class Item:
         if self.name=="stockage":
             self.metadata["biginv"]=self.metadata.get("biginv",{})
             self.metadata["biginv"][self.metadata.get("inv","")]=self.metadata["biginv"].get(self.metadata.get("inv",None),0)+1
+            self.metadata["inv"]=None
         
         g=giveTo.get(self.name,[0,0,0,0])
         item=None
@@ -93,12 +98,16 @@ class Item:
             if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
                 if self.name=="stockage":
                     a=max(self.metadata.get("biginv",{}), key=self.metadata.get("biginv",{}).get)
-                    item.metadata["inv"]=a
+                    item.Obtain(a)
                     if a is not None:
                         self.metadata["biginv"][a]-=1
                 else:
-                    item.metadata["inv"]=self.metadata.get("inv",None)
+                    item.Obtain(self.metadata.get("inv",None))
                     self.metadata["inv"]=None#on vide l'inventaire
+    def Obtain(self,inv):
+        self.metadata["g"]=1
+        if self.metadata.get("inv",None) is None:
+            self.metadata["inv"]=inv
 
 current=[]#liste des minerais affichés
 class Minerais:

@@ -41,8 +41,8 @@ def Play():
             GameItems.Minerais.PlaceFromCurrent(m)#placement du minerais
 
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
+            if runtime%50==0:item.Give()
             item.Display()#Afficher l'item
-            if runtime%100==0:item.Give()
         
         UiManager.DisplayItemToPlace()
         
