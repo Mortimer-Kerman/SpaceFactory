@@ -23,22 +23,29 @@ pygame.display.set_caption('SpaceFactory')#Définition du tire de la fenêtre
 
 TextureManager.LoadAllTextures()#chargement des textures
 
-AudioManager.Init()
+AudioManager.Init()#Initialisation de l'AudioManager
+
+class Menus:
+    """
+    Contient des références aux différents menus du menu principal
+    """
+    MainMenu = None
+    SavesList = None
+    SaveCreation = None
+    MenuBackground = bg=pygame_menu.baseimage.BaseImage("./Assets2/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
 
 def OpenMainMenu():
     #Définition du Menu (ici, le menu est généré via le module pygame_menu)
-    menu = pygame_menu.Menu('Space Factory', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    bg=pygame_menu.baseimage.BaseImage("./Assets2/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond du menu
+    Menus.MainMenu = pygame_menu.Menu('Space Factory', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
-    menu.add.button('Jouer', OpenSavesList)#Bouton pour lancer le jeu
-    menu.add.button('Quitter', pygame_menu.events.EXIT)#Quitter le jeu
+    Menus.MainMenu.add.button('Jouer', OpenSavesList)#Bouton pour lancer le jeu
+    Menus.MainMenu.add.button('Quitter', pygame_menu.events.EXIT)#Quitter le jeu
     
-    menu.mainloop(UiManager.screen, lambda : (bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))#Boucle principale du Menu
+    Menus.MainMenu.mainloop(UiManager.screen, lambda : (Menus.bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))#Boucle principale du Menu
 
 def OpenSavesList():
     
-    menu = pygame_menu.Menu('Sauvegardes', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    bg=pygame_menu.baseimage.BaseImage("./Assets2/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond du menu
+    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
     if not os.path.exists("Saves/"):#si le dossier de sauvegarde n'existe pas, le créer
         os.makedirs("Saves/")
@@ -46,14 +53,36 @@ def OpenSavesList():
     for saveFile in os.listdir('Saves/'):
         if ".spf" in saveFile:
             saveName = saveFile.replace(".spf", "")
-            menu.add.button(saveName, lambda : OpenSave(saveName, menu))
+            Menus.SavesList.add.button(saveName, lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save)))
     
-    menu.add.button('Retour', menu.disable)
+    Menus.SavesList.add.button('Nouvelle sauvegarde', OpenSaveCreationMenu)
     
-    menu.mainloop(UiManager.screen, lambda : (bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
+    Menus.SavesList.add.button('Retour', Menus.SavesList.disable)
+    
+    Menus.SavesList.mainloop(UiManager.screen, lambda : (Menus.bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
    
-def OpenSave(saveName:str, MenuToClose):
-    MenuToClose.disable()
+def OpenSaveCreationMenu():
+    
+    Menus.SaveCreation = pygame_menu.Menu('Nouvelle sauvegarde', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    
+    saveNameInput=Menus.SaveCreation.add.text_input('Nom: ', default='save',maxchar=10)
+    
+    Menus.SaveCreation.add.button('Créer', lambda : TryCreateSave(saveNameInput))
+    
+    Menus.SaveCreation.add.button('Retour', Menus.SaveCreation.disable)
+    
+    Menus.SaveCreation.mainloop(UiManager.screen, lambda : (Menus.bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
+    
+def TryCreateSave(saveNameInput):
+    
+    saveName = str(saveNameInput.get_value())
+    
+    if os.path.isfile("Saves/" + saveName + ".spf"):
+        #penser a mettre un truc genre un popup pour alerter le joueur
+        return
+    
+    Menus.SavesList.disable()
+    Menus.SaveCreation.disable()
     SessionManager.Play(saveName)
     
 OpenMainMenu()

@@ -26,7 +26,7 @@ class Data:
         self.zoom = 100
         self.seed = random.randint(-(9**9),9**9)
         self.items = {}
-        self.selectedItem="drill"
+        self.selectedItem="foreuse"
         self.saveVersion=SaveFileVersion
         
     def toJson(self):
