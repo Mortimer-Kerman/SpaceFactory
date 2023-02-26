@@ -2,7 +2,7 @@
 """
 Created on Thu Feb  9 11:47:04 2023
 
-@author: sartre.thomas
+@author: Thomas Sartre et François Patinec-Haxel
 """
 
 #Chargement des bibliothèques

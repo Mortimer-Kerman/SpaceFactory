@@ -2,7 +2,7 @@
 """
 Created on Wed Feb  8 16:21:49 2023
 
-@author: 29ray
+@author: Thomas Sartre et François Patinec-Haxel
 """
 import pygame
 import os

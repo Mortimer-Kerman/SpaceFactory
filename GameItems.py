@@ -2,7 +2,7 @@
 """
 Created on Thu Feb  9 18:05:51 2023
 
-@author: 29ray
+@author: Thomas Sartre et François Patinec-Haxel
 """
 #importation des bibliothèques
 import SaveManager

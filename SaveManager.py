@@ -2,7 +2,7 @@
 """
 Created on Wed Feb  8 17:31:39 2023
 
-@author: 29ray
+@author: Thomas Sartre et François Patinec-Haxel
 """
 #chargement des bibliothèques
 import pygame
