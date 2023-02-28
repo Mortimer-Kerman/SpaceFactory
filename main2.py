@@ -46,30 +46,34 @@ def OpenMainMenu():
 def OpenSavesList():
     
     Menus.SavesList = pygame_menu.Menu('Sauvegardes', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.SavesList.add.button('Retour', Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    Menus.SavesList.add.button('Nouvelle sauvegarde', OpenSaveCreationMenu)
     
     if not os.path.exists("Saves/"):#si le dossier de sauvegarde n'existe pas, le créer
         os.makedirs("Saves/")
     
+    saveNames = []
     for saveFile in os.listdir('Saves/'):
         if ".spf" in saveFile:
-            saveName = saveFile.replace(".spf", "")
-            Menus.SavesList.add.button(saveName, lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save)))
+            saveNames.append(saveFile.replace(".spf", ""))
     
-    Menus.SavesList.add.button('Nouvelle sauvegarde', OpenSaveCreationMenu)
+    frame = Menus.SavesList.add.frame_v(360, len(saveNames) * 50, background_color=(50, 50, 50), padding=0)
+    frame.relax(True)
     
-    Menus.SavesList.add.button('Retour', Menus.SavesList.disable)
+    for saveName in saveNames:
+        frame.pack(Menus.SavesList.add.button(saveName, lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save))))
     
     Menus.SavesList.mainloop(UiManager.screen, lambda : (Menus.bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
    
 def OpenSaveCreationMenu():
     
-    Menus.SaveCreation = pygame_menu.Menu('Nouvelle sauvegarde', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.SaveCreation = pygame_menu.Menu('Sauvegardes', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.SaveCreation.add.button('Retour', Menus.SaveCreation.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
     saveNameInput=Menus.SaveCreation.add.text_input('Nom: ', default='save',maxchar=10)
     
     Menus.SaveCreation.add.button('Créer', lambda : TryCreateSave(saveNameInput))
-    
-    Menus.SaveCreation.add.button('Retour', Menus.SaveCreation.disable)
     
     Menus.SaveCreation.mainloop(UiManager.screen, lambda : (Menus.bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
     
