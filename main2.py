@@ -14,6 +14,7 @@ import TextureManager
 import UiManager
 import SessionManager
 import AudioManager
+#import PlanetGenerator
 
 pygame.init()#initialisation pygame
 
@@ -74,7 +75,13 @@ def OpenSaveCreationMenu():
     saveNameInput=Menus.SaveCreation.add.text_input('Nom: ', default='save',maxchar=10)
     
     Menus.SaveCreation.add.button('Créer', lambda : TryCreateSave(saveNameInput))
+    """
+    texture = pygame.Surface((100,100))
     
+    pygame.surfarray.blit_array(texture, PlanetGenerator.Generate())
+    
+    Menus.SaveCreation.add.surface(texture)
+    """
     Menus.SaveCreation.mainloop(UiManager.screen, lambda : (Menus.bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
     
 def TryCreateSave(saveNameInput):
