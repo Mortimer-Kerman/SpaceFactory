@@ -14,6 +14,8 @@ import pygame
 
 menuElements=["foreuse","tapis Nord","tapis Sud","tapis Ouest","tapis Est","stockage","trieur","jonction","pont","four"]#éléments du menu de séléction
 
+Anim=0
+
 class Item:
     """
     Objet Item
@@ -59,12 +61,16 @@ class Item:
             #b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2])}
             b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2])}
             b,ca=b[self.name]# if runtime<40 else (0,0)
-            if a:
+            if a and Anim:
                 pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+ca[0]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[4]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[1]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[5]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[2]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[6]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[3]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[7]*zoom+((runtime/50)*zoom)*b[1])])
-    
+            elif a and not Anim:
+                pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+1/4*zoom),
+                                                                     (self.pos[0]*zoom+cam[0]+3/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom),
+                                                                     (self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+3/4*zoom),
+                                                                     (self.pos[0]*zoom+cam[0]+1/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom)])    
     def Give(self):
         if self.metadata.get("g",False):
             return

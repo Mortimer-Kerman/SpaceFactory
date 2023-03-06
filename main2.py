@@ -85,11 +85,17 @@ def OpenSaveCreationMenu():
     Menus.SaveCreation.mainloop(UiManager.screen, lambda : (Menus.bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
     
 def TryCreateSave(saveNameInput):
-    
+
+    global SavePopup
+
     saveName = str(saveNameInput.get_value())
     
     if os.path.isfile("Saves/" + saveName + ".spf"):
-        #penser a mettre un truc genre un popup pour alerter le joueur
+
+        try:SavePopup.hide()
+        except:pass
+
+        SavePopup=Menus.SaveCreation.add.label("Ce nom existe déjà !").set_background_color((218, 85, 82), inflate=(0, 0))
         return
     
     Menus.SavesList.disable()
