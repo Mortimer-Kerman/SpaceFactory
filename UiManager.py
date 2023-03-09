@@ -204,26 +204,39 @@ class Popup:
     """
     Des popups
     """
-    def __init__(self,text):
+    def __init__(self,text,command=None,d=0):
         self.text=addNewlines(text,29)
         self.time=int(pygame.time.get_ticks())
+        self.command=command
         self.sliding=0
+        self.d=d
         UIPopup.append(self)
     def show(self,i):
         self.sliding+= SaveManager.clock.get_time()
         if self.sliding > 500:
             self.sliding = 500
         
-        if int(pygame.time.get_ticks())>(self.time+10000):
+        if int(pygame.time.get_ticks())>(self.time+10000) and self.command is None and not self.d:
                self.close(i)
         else:
             UIelements["popup_"+str(i)]=pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,50+205*i,500,200)).collidepoint(pygame.mouse.get_pos())
             place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.aquire)
-            UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
-            place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.aquire)
+            if self.command is None:
+                UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
+                place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.aquire)
+            else:
+                UIelements["popup_launch_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,100,25)).collidepoint(pygame.mouse.get_pos())
+                place_text("Lancer",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.aquire)
+                UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding+150,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
+                place_text("Non",width-self.sliding+150,225+205*i,26,(255,255,255),TextureManager.aquire)
     def close(self,i):
         UIPopup.remove(self)
         UIelements["popup_"+str(i)]=False
         UIelements["popup_area"]=False
         UIelements["popup_close_button_"+str(i)]=False
+        if self.command is not None:
+            del UIelements["popup_launch_button_"+str(i)]
+
+    def launch(self):
+        self.command()
         

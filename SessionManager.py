@@ -15,7 +15,17 @@ import UiManager
 import GameItems
 import AudioManager
 
-def Play(saveName:str):
+showTuto=9**9
+def Tuto(t=1):
+    global showTuto
+    a=["Déplace toi avec les flèches du clavier","Zoom et dézoom avec la molette","Commence par placer une foreuse sur un minerais","Place ensuite des tapis pour faire sortir les minerais de la foreuse","Place un stockage à la fin du chemin que tu viens de créer","Bravo, tu connait maintenant les bases, n'hésite pas à cliquer sur l'icone \"interogation\" si tu te poses des questions sur un item"]
+    if showTuto in [1,2,3,4,5,6]:
+        for i,popup in enumerate(UiManager.UIPopup):
+            popup.close(i)
+    showTuto=showTuto+1 if t else t
+    UiManager.Popup(a[showTuto],d=1 if showTuto<len(a)-1 else 0)
+
+def Play(saveName:str,tuto=0):
     """
     Lance le jeu
     """
@@ -25,6 +35,9 @@ def Play(saveName:str):
     runtime=0
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
 
+    if tuto:
+        UiManager.Popup("Souhaitez-vous lancer le tutoriel",lambda : Tuto(0))
+
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
         UiManager.UpdateBackground()#mise à jour du fond
@@ -33,7 +46,7 @@ def Play(saveName:str):
             GameItems.Minerais.PlaceFromCurrent(m)#placement du minerais
 
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
-            if runtime%50==0:item.Give();runtime=0
+            if runtime%50==0:item.Give();runtime=0#transmition de l'inventaire à l'item adjacent et remise à 0 du runtime
             item.Display(runtime)#Afficher l'item
         
         UiManager.DisplayItemToPlace()
@@ -62,6 +75,8 @@ def Play(saveName:str):
         
         if camOffset != [0,0]:#si un déplacement a eu lieu
             GameItems.Minerais.SpawnBorder(camOffset)#on spawn les minerais aux bordures
+            if showTuto==0:
+                Tuto()
         
         if keys[pygame.K_ESCAPE]:#Si la touche Esc est pressée
             SaveManager.Unload()#Décharger la sauvegarde
@@ -80,6 +95,9 @@ def Play(saveName:str):
                 SaveManager.mainData.zoom = zoom#on change le zoom dans le SaveManager
                 TextureManager.RefreshZoom()#On mets à jour le zoom
                 GameItems.Minerais.SpawnBorder(camOffset)#On spawn les minerais aux bordures
+
+                if showTuto==1:
+                    Tuto()
                 
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
                 if event.button == 1: # 1 == left button
@@ -88,11 +106,13 @@ def Play(saveName:str):
                             if not UiManager.showMenu["delete"]:
                                 if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
                                     SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
-                                else:
-                                    UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
+                                    if (showTuto==2 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==3 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==4 and SaveManager.GetSelectedItem()=="stockage"):
+                                        Tuto()
+                            else:
+                                SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
+                                UiManager.showMenu["delete"]=0  
                         else:
-                            SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
-                            UiManager.showMenu["delete"]=0
+                            UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                         UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
                     elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
@@ -104,9 +124,12 @@ def Play(saveName:str):
                                 SaveManager.SetSelectedItem(i)
                         if UiManager.UIelements.get("selectElements_delete",False):
                             UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
+
                     elif UiManager.UIelements.get("popup_area",False):
                         for index,popup in enumerate(UiManager.UIPopup):
                             if UiManager.UIelements.get("popup_"+str(index),False):
+                                if UiManager.UIelements.get("popup_launch_button_"+str(index)):
+                                    popup.launch()
                                 popup.close(index)
                 if event.button == 3: # 3 == right button
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI

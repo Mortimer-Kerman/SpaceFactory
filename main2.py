@@ -100,6 +100,6 @@ def TryCreateSave(saveNameInput):
     
     Menus.SavesList.disable()
     Menus.SaveCreation.disable()
-    SessionManager.Play(saveName)
+    SessionManager.Play(saveName,tuto=1)
     
 OpenMainMenu()
