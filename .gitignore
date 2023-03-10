@@ -130,3 +130,6 @@ dmypy.json
 
 # Space factory save files
 *.spf
+
+#JSON file
+*.json
