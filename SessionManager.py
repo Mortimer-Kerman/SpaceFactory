@@ -113,17 +113,29 @@ def Play(saveName:str,tuto=0):
                                 UiManager.showMenu["delete"]=0  
                         else:
                             UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
+
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                         UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
+                    elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
+                        UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
                     elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
                         SaveManager.Unload()#Décharger la sauvegarde
                         return#on quitte la fonction Play()
                     elif UiManager.UIelements.get("select2",False):
                         for i in GameItems.menuElements:
                             if UiManager.UIelements.get("selectElements_"+i,False):
-                                SaveManager.SetSelectedItem(i)
+                                if UiManager.showMenu.get("question",False):
+                                    GameItems.getDescription(i)
+                                else:
+                                    SaveManager.SetSelectedItem(i)
                         if UiManager.UIelements.get("selectElements_delete",False):
-                            UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
+                            if UiManager.showMenu.get("question",False):
+                                GameItems.getDescription("delete")
+                            else:
+                                UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
+                        if UiManager.UIelements.get("selectElements_question",False):
+                            UiManager.Popup("Clique sur un élément pour voir apparaitre sa description\nRecliquez sur le bouton \"Interrogation\" pour quitter ce mode")
+                            UiManager.showMenu["question"]=1-UiManager.showMenu.get("question",0)
 
                     elif UiManager.UIelements.get("popup_area",False):
                         for index,popup in enumerate(UiManager.UIPopup):

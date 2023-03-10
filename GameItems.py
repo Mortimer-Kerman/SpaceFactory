@@ -200,3 +200,14 @@ class Minerais:
             return "m1"
         else:
             return False
+        
+
+doc={
+    "foreuse":{"d":"La foreuse est une machine servant à extraire du minerais automatiquement","c":{"cuivre":50}},
+     "tapis":{"d":"Les tapis roulants sont un merveilleux moyen de déplacer des items d'une machine vers une autre","c":{"cuivre":10}},
+     "stockage":{"d":"Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, cliquez sur un stockage pour récupérer son contenu dans votre inventaire]","c":{"cuivre":100}},
+     "jonction":{"d":"La jonction permet de lier deux tapis roulant","c":{"cuivre":20}},
+     "delete":{"d":"Le menu de destruction permet de détruire un item"}
+     }
+def getDescription(type):
+    UiManager.Popup(doc.get(type,{"d":"Une erreur est survenue : Item introuvable/non documenté"}).get("d"))

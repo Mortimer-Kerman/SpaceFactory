@@ -18,7 +18,7 @@ width = 0
 height = 0
 
 UIelements={}#dictionaire stockant les interaction souris/éléments interface
-showMenu={"select":0,"delete":0}#affichage ou non des menus interne à l'UI
+showMenu={"select":0,"inv":0,"delete":0,"question":0}#affichage ou non des menus interne à l'UI
 
 def Init():
     """
@@ -49,6 +49,8 @@ def DisplayUi():
     place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()) + " " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.aquire)#placement du texte (position du curseur + caméra + FPS)
 
     ItemMenu()#placement du menu de séléction d'item
+
+    InvMenu()#placement du menu inventaire
 
 def GetMouseWorldPos():
     """
@@ -155,9 +157,30 @@ def ItemMenu():
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
         place_text(menuElements[i],width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
 
-    UIelements["selectElements_delete"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
-    screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*(i%5),height-100*showMenu.get("select",0)))
-    place_text("détruire",width-500+102*(i%5),height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+    UIelements["selectElements_question"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
+    screen.blit(TextureManager.GetTexture("question", 78, True),(width-500+11+102*3,height-100*showMenu.get("select",0)))
+    place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+
+    UIelements["selectElements_delete"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*4,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
+    screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*4,height-100*showMenu.get("select",0)))
+    place_text("détruire",width-500+102*4,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+    
+
+def InvMenu():
+    global UIelements
+    UIelements["inv"]=forme(width-500,500*showMenu.get("inv",0),width,100,50,200,(98,99,102)).collidepoint(pygame.mouse.get_pos())
+
+    #Différents points des petits triangles (t[0]=up t[1]=down)
+    t=[[(width-450, 45+500*showMenu.get("inv",0)), (width-475, 15+500*showMenu.get("inv",0)), (width-425, 15+500*showMenu.get("inv",0))],
+       [(width-450, 15+500*showMenu.get("inv",0)), (width-475, 45+500*showMenu.get("inv",0)), (width-425, 45+500*showMenu.get("inv",0))]]
+    #on dessine le petit triangle 
+    pygame.draw.polygon(screen, (255,255,255),t[showMenu.get("inv",0)])
+    #on mets du texte
+    place_text("Inventaire",width-400,20+500*showMenu.get("inv",0),100,(255,255,255),TextureManager.aquire)
+
+    UIelements["inv2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,500*showMenu.get("inv",0)),(width,500*showMenu.get("inv",0)),(width,0),(width-500,0)]).collidepoint(pygame.mouse.get_pos())
+
+    
 
 def addNewlines(text,l):
     """
