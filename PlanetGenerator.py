@@ -25,11 +25,11 @@ BiomeLerpSpeed = 0.3
 
 octaves = 2
 
-CalculateLight = False
+CalculateLight = True
 IsSunBehind = False
 LightPos = (0.35, 0.35)
 
-CalculateSphericity = True
+CalculateSphericity = False
 SphericityFactor = 1
 
 class PlanetaryConditions():
@@ -108,7 +108,7 @@ def Generate(conditions = PlanetaryConditions(), Seed = None):
                     desert = lerpcol(((depth * 1) + 0.2, (depth * 0.92) + 0.2, 0.2), (depth, depth / 4, 0), SandRedFactor)
                     poles = (depth + 0.3, depth + 0.3, depth + 0.3)
 
-                    Latitude = abs((y - (TextureSize / 2)) / (TextureSize / 2))
+                    Latitude = abs((x - (TextureSize / 2)) / (TextureSize / 2))
 
                     grass = lerpcol(desert, grass, clamp01((FractalNoise(xCoord, yCoord, (Offset[0] * 2, Offset[1] * 2), 1, distanceToC) - DesertCoverage) / (1 - DesertCoverage)) / BiomeLerpSpeed)
 
@@ -157,16 +157,16 @@ def Generate(conditions = PlanetaryConditions(), Seed = None):
                 light *= 2
             
             col = multiply(add(add(c, atm), clouds), light)
-            #row.append(ZeroOneToHexa(col))
-            row.append(col)
+            row.append(ZeroOneToHexa(col))
+            #row.append(col)
         pix.append(row)
     
-    #texture = pygame.Surface((100,100))
-    #pygame.surfarray.blit_array(texture, numpy.array(pix))
+    texture = pygame.Surface((100,100))
+    pygame.surfarray.blit_array(texture, numpy.array(pix))
     
-    #return texture
-    plt.imshow(pix)
-    plt.show()
+    return texture
+    #plt.imshow(pix)
+    #plt.show()
 
 
 def clamp(val:float,minv:float,maxv:float)->float:
@@ -234,4 +234,4 @@ def FractalCraterNoise(posX:float, posY:float, offset:tuple, DistanceToC:float)-
     return NoiseTools.FractalCraterNoise(posX, posY, offset)
 
 
-Generate(Seed = 100)
+#Generate(Seed = 100)

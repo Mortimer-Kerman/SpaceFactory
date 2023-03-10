@@ -93,9 +93,9 @@ def OpenSaveCreationMenu():
     creationTools.pack(Menus.SaveCreation.add.button('Créer', lambda : TryCreateSave(saveNameInput)))
     
     
-    #planetTex = pygame.transform.scale(PlanetGenerator.Generate(),(150,150))
+    planetTex = pygame.transform.scale(PlanetGenerator.Generate(),(150,150))
     
-    #menuSections.pack(Menus.SaveCreation.add.surface(planetTex))
+    menuSections.pack(Menus.SaveCreation.add.surface(planetTex))
     
     Menus.SaveCreation.mainloop(UiManager.screen, lambda : (Menus.bg.draw(UiManager.screen),pygame.key.set_repeat(1000)))
     
