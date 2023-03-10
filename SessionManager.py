@@ -14,6 +14,8 @@ import SaveManager
 import UiManager
 import GameItems
 import AudioManager
+import SettingsManager
+
 
 showTuto=9**9
 def Tuto(t=1):
@@ -63,13 +65,13 @@ def Play(saveName:str,tuto=0):
         keys = pygame.key.get_pressed()#On stocke les touches pressées
         
         camOffset = [0,0]#Définition de l'offset de la caméra
-        if keys[pygame.K_UP]:#si touche up
+        if keys[SettingsManager.GetKeybind("up")]:#si touche up
             camOffset[1]+=SaveManager.clock.get_time() / 2
-        if keys[pygame.K_DOWN]:#si touche down
+        if keys[SettingsManager.GetKeybind("down")]:#si touche down
             camOffset[1]-=SaveManager.clock.get_time() / 2
-        if keys[pygame.K_RIGHT]:#si touche right
+        if keys[SettingsManager.GetKeybind("right")]:#si touche right
             camOffset[0]-=SaveManager.clock.get_time() / 2
-        if keys[pygame.K_LEFT]:#si touche left
+        if keys[SettingsManager.GetKeybind("left")]:#si touche left
             camOffset[0]+=SaveManager.clock.get_time() / 2
         SaveManager.TranslateCam(camOffset)#On applique les changements de caméra
         
@@ -105,14 +107,25 @@ def Play(saveName:str,tuto=0):
                         if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
                             if not UiManager.showMenu["delete"]:
                                 if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
-                                    SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
+                                    if UiManager.showMenu.get("question",False):
+                                        a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
+                                        if a:
+                                            GameItems.getDescription(a)
+                                    else:
+                                        SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
                                     if (showTuto==2 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==3 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==4 and SaveManager.GetSelectedItem()=="stockage"):
                                         Tuto()
                             else:
                                 SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
                                 UiManager.showMenu["delete"]=0  
                         else:
-                            UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
+                            if UiManager.showMenu.get("question",False):
+                                    GameItems.getDescription(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)
+                                    a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
+                                    if a:
+                                        GameItems.getDescription(a)
+                            else:
+                                UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
 
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                         UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"

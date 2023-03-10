@@ -207,7 +207,11 @@ doc={
      "tapis":{"d":"Les tapis roulants sont un merveilleux moyen de déplacer des items d'une machine vers une autre","c":{"cuivre":10}},
      "stockage":{"d":"Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, cliquez sur un stockage pour récupérer son contenu dans votre inventaire]","c":{"cuivre":100}},
      "jonction":{"d":"La jonction permet de lier deux tapis roulant","c":{"cuivre":20}},
-     "delete":{"d":"Le menu de destruction permet de détruire un item"}
+     "delete":{"d":"Le menu de destruction permet de détruire un item"},
+     "charbon":{"d":"Le charbon est un minerais qui peut servir de conbustible"},
+     "cuivre":{"d":"Le cuivre est le plus ancien métal utilisé par l’Espèce humaine. Le point de fusion de ce minerais n'est pas trop élevé"},
+     "or":{"d":"L'or est un excellent conducteur éléctrique, c'est un minerais apprécié pour son fort éclat de \"petit soleil\""},
+     "m1":{"d":"M1, est un minerais, dont l'existence a été théorisé durtant les années 1950 via l'un des premier ordinateurs soviétique, le M-1"}
      }
 def getDescription(type):
     UiManager.Popup(doc.get(type,{"d":"Une erreur est survenue : Item introuvable/non documenté"}).get("d"))
