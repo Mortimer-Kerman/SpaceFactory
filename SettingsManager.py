@@ -8,6 +8,8 @@ Created on Fri Mar 10 17:51:59 2023
 import pygame
 import json
 
+SettingsChanged = False
+
 def DefaultSettingsInstance():
     return {
         "musicVolume": 70,
@@ -26,12 +28,16 @@ def GetSetting(name:str):
 
 def SetSetting(name:str, value):
     __mainSettings[name] = value
+    global SettingsChanged
+    SettingsChanged = True
 
 def GetKeybind(name:str):
     return __mainSettings["keybinds"].get(name, None)
 
 def SetKeybind(name:str, value):
     __mainSettings["keybinds"][name] = value
+    global SettingsChanged
+    SettingsChanged = True
 
 def LoadSettings():
     global __mainSettings
@@ -41,9 +47,13 @@ def LoadSettings():
         ApplySettings()
     except:
         ResetSettings()
+    global SettingsChanged
+    SettingsChanged = False
 
 def SaveSettings():
     open("Settings.json", "w").write(json.dumps(__mainSettings, default=lambda o: o.__dict__, indent = 4))
+    global SettingsChanged
+    SettingsChanged = False
     ApplySettings()
 
 def ResetSettings():

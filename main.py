@@ -39,6 +39,7 @@ class Menus:
     SaveCreation = None
     Settings = None
     KeyChanger = None
+    WarnMenu = None
     MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
 
 def DisplayBackground():
@@ -130,7 +131,19 @@ def TryCreateSave(saveNameInput):
 def OpenSettings():
     
     Menus.Settings = pygame_menu.Menu('Options', 800, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    Menus.Settings.add.button('Retour', lambda:(SettingsManager.LoadSettings(), Menus.Settings.disable()), align=pygame_menu.locals.ALIGN_LEFT)
+    
+    def TryLeave():
+        if not SettingsManager.SettingsChanged:
+            SettingsManager.LoadSettings()
+            Menus.Settings.disable()
+            return
+        WarnUser("Attention", "Cetains paramètres ne sont pas sauvegardés.\nVoulez-vous quand même quitter?\n", lambda:(SettingsManager.LoadSettings(), Menus.Settings.disable()), None)
+        
+        
+    topBar = Menus.Settings.add.frame_h(800,50)
+    topBar.relax(True)
+    topBar.pack(Menus.Settings.add.button('Retour', TryLeave), align=pygame_menu.locals.ALIGN_LEFT)
+    topBar.pack(Menus.Settings.add.button('Enregistrer', SettingsManager.SaveSettings), align=pygame_menu.locals.ALIGN_RIGHT)
     
     Menus.Settings.add.vertical_margin(20)
     
@@ -148,18 +161,20 @@ def OpenSettings():
         frame = Menus.Settings.add.frame_h(300, 50, padding=0, align=pygame_menu.locals.ALIGN_LEFT)
         frame.relax(True)
         frame.pack(Menus.Settings.add.label(key))
-        button = Menus.Settings.add.button(pygame.key.name(bindings[key]))
+        
+        name = pygame.key.name(bindings[key])
+        leak = int((10 - len(name))/2)
+        for i in range(leak):
+            name = " " + name + " "
+        
+        button = Menus.Settings.add.button(name)
         frame.pack(button, align=pygame_menu.locals.ALIGN_RIGHT)
         button.set_onreturn(lambda btn=button,kname=key:ChangeKey(btn,kname))
-    
-    Menus.Settings.add.vertical_margin(20)
-    
-    Menus.Settings.add.button('Enregistrer', SettingsManager.SaveSettings)
     
     Menus.Settings.mainloop(UiManager.screen, DisplayBackground)
 
 def ChangeKey(KeyButton,KeyId):
-    keyName = KeyButton.get_title()
+    keyName = KeyButton.get_title().strip()
     
     Menus.KeyChanger = pygame_menu.Menu('Changer la touche', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
@@ -176,6 +191,25 @@ def ChangeKey(KeyButton,KeyId):
     
     Menus.KeyChanger.mainloop(UiManager.screen, lambda:(DisplayBackground(),kLoop()))
 
-
+def WarnUser(title:str,message:str, confirm, cancel):
+    
+    Menus.WarnMenu = pygame_menu.Menu(title, 800, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    
+    Menus.WarnMenu.add.label(message)
+    
+    bottomBar = Menus.WarnMenu.add.frame_h(800,50)
+    bottomBar.relax(True)
+    
+    confirmButton = Menus.WarnMenu.add.button('Confirmer', Menus.WarnMenu.disable)
+    if confirm != None:
+        confirmButton.set_onreturn(lambda:(confirm(),Menus.WarnMenu.disable()))
+    bottomBar.pack(confirmButton, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    cancelButton = Menus.WarnMenu.add.button('Annuler', Menus.WarnMenu.disable)
+    if cancel != None:
+        confirmButton.set_onreturn(lambda:(cancel(),Menus.WarnMenu.disable()))
+    bottomBar.pack(cancelButton, align=pygame_menu.locals.ALIGN_RIGHT)
+    
+    Menus.WarnMenu.mainloop(UiManager.screen, DisplayBackground)
 
 OpenMainMenu()
