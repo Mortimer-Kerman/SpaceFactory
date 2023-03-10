@@ -16,7 +16,7 @@ def Init():
     pygame.mixer.music.set_endevent(MUSIC_ENDED)#si la musique s'arrête, lancer événement MUSIC_ENDED
     
     #Lancement de la musique
-    pygame.mixer.music.load("./Assets2/audio/" + random.choice(playlist))#on chargte une nouvelle musique
+    pygame.mixer.music.load("./Assets/audio/" + random.choice(playlist))#on chargte une nouvelle musique
     
     pygame.mixer.music.set_volume(0.7)#On règle le volume de la musique
     pygame.mixer.music.play(start=0.0, fade_ms=200)#lancement de la lecture de la musique

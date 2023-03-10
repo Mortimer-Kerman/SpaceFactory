@@ -7,7 +7,7 @@ Created on Wed Feb  8 16:21:49 2023
 import pygame
 import os
 
-texturesPath = "./Assets2/textures/"#le chemin des textures
+texturesPath = "./Assets/textures/"#le chemin des textures
 
 missingTexture = None#Si la texture n'existe pas
 
@@ -53,7 +53,7 @@ def LoadAllTextures():
     Chargement de toutes les textures
     """
     global aquire
-    try:aquire=pygame.font.Font("./Assets2/font/Aquire.ttf",26)#on tente de charger aquire
+    try:aquire=pygame.font.Font("./Assets/font/Aquire.ttf",26)#on tente de charger aquire
     except:aquire=pygame.font.get_default_font()#en cas d'erreur, on tente avec la police par défaut
     
     for subdir, dirs, files in os.walk(texturesPath):#on explore tous les fichiers dans le chemin des textures

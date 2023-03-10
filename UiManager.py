@@ -87,7 +87,7 @@ def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=Fa
         else:
             taille=32
             while taille > 0:
-                font = pygame.font.Font("./Assets2/font/Aquire.ttf",taille)#on tente de charger aquire
+                font = pygame.font.Font("./Assets/font/Aquire.ttf",taille)#on tente de charger aquire
                 text_surface = font.render(text, True, (255, 255, 255))
                 if text_surface.get_width() <= auto_size[0] and text_surface.get_height() <= auto_size[1]:
                     break
