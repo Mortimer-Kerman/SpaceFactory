@@ -16,6 +16,7 @@ import SessionManager
 import AudioManager
 import PlanetGenerator
 import SettingsManager
+import SaveManager
 
 
 pygame.init()#initialisation pygame
@@ -58,7 +59,7 @@ def OpenMainMenu():
 def OpenSavesList():
     if Menus.SavesList != None:
         Menus.SavesList.disable()
-    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 400, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SavesList.add.button('Retour', Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
     Menus.SavesList.add.button('Nouvelle sauvegarde', OpenSaveCreationMenu)
@@ -68,15 +69,24 @@ def OpenSavesList():
     
     saveNames = []
     for saveFile in os.listdir('Saves/'):
-        if ".spf" in saveFile:
-            saveNames.append(saveFile.replace(".spf", ""))
+        if SaveManager.SaveExists(saveFile):
+            saveNames.append(saveFile)
     
-    frame = Menus.SavesList.add.frame_v(360, max(len(saveNames) * 50, 145), background_color=(50, 50, 50), padding=0)
+    frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 100, 245), background_color=(50, 50, 50), padding=0)
     frame.relax(True)
     
     for saveName in saveNames:
-        frame.pack(Menus.SavesList.add.button(saveName, lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save))))
-    
+        
+        saveFrame = Menus.SavesList.add.frame_h(460, 100, padding=0)
+        saveFrame.relax(True)
+        frame.pack(saveFrame)
+        
+        saveFrame.pack(Menus.SavesList.add.button(saveName, lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save))))
+        
+        texPath = "Saves/" + saveName + "/planet.png"
+        if os.path.isfile(texPath):
+            saveFrame.pack(Menus.SavesList.add.surface(pygame.transform.scale(pygame.image.load(texPath),(90,90))), align=pygame_menu.locals.ALIGN_RIGHT)
+        
     Menus.SavesList.mainloop(UiManager.screen, DisplayBackground)
    
 def OpenSaveCreationMenu():
@@ -106,9 +116,9 @@ def OpenSaveCreationMenu():
     creationTools.pack(Menus.SaveCreation.add.button('Créer', lambda : TryCreateSave(saveNameInput)))
     
     
-    planetTex = pygame.transform.scale(PlanetGenerator.Generate(),(150,150))
+    SaveManager.planetTex = PlanetGenerator.Generate()
     
-    menuSections.pack(Menus.SaveCreation.add.surface(planetTex))
+    menuSections.pack(Menus.SaveCreation.add.surface(pygame.transform.scale(SaveManager.planetTex,(150,150))))
     
     Menus.SaveCreation.mainloop(UiManager.screen, DisplayBackground)
     
@@ -118,7 +128,7 @@ def TryCreateSave(saveNameInput):
 
     saveName = str(saveNameInput.get_value())
     
-    if os.path.isfile("Saves/" + saveName + ".spf"):
+    if SaveManager.SaveExists(saveName):
 
         try:SavePopup.hide()
         except:pass
