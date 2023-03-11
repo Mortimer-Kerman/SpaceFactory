@@ -176,7 +176,6 @@ def Play(saveName:str,tuto=0):
                 pygame.mixer.music.load("./Assets/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique
                 pygame.mixer.music.play(start=0.0, fade_ms=200)#on lance la lecture de la nouvelle musique
         
-        print(SaveManager.clock.get_time())
         SaveManager.clock.tick()#on mets à jour l'horloge des FPS
         runtime+=SaveManager.clock.get_time() / 8
         if runtime > 50:
