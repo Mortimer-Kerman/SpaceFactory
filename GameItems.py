@@ -38,10 +38,10 @@ class Item:
         self.name=name
         self.pos=pos
         self.metadata=metadata
-        giveTo={"foreuse":[1,1,1,1],"tapis 0":[1,0,0,0],"tapis 2":[0,1,0,0],"tapis 1":[0,0,1,0],"tapis 3":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
+        giveTo={"foreuse":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
         self.rotation=SaveManager.GetRotation()
-        if name in ["tapis"]:
-            name+=" "+str(self.rotation)
+        if name in ["tapis","jonction"]:
+            name=str(self.rotation)
         self.giveto=giveTo.get(name,[0,0,0,0])
     
     def ReadDictRepresentation(DictRepresentation:dict):
@@ -146,16 +146,21 @@ class Item:
             if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
                 if self.name=="stockage":
                     a=max(self.metadata.get("biginv",{}), key=self.metadata.get("biginv",{}).get)
-                    item.Obtain(a)
+                    item.Obtain(a,self)
                     if a is not None:
                         self.metadata["biginv"][a]-=1
                 else:
-                    item.Obtain(self.metadata.get("inv",None))
-                    self.metadata["inv"]=None#on vide l'inventaire
-    def Obtain(self,inv):
+                    item.Obtain(self.metadata.get("inv",None),self)
+                    
+    def Obtain(self,inv,giver):
         self.metadata["g"]=1
-        if self.metadata.get("inv",None) is None:
-            self.metadata["inv"]=inv
+        if self.name=="jonction" and list(self.metadata.get("last",[]))==list(giver.pos):
+            self.metadata["last"]=[]
+        else:
+            self.metadata["last"]=list(giver.pos)
+            if self.metadata.get("inv",None) is None:
+                self.metadata["inv"]=inv
+                giver.metadata["inv"]=None
 
 current=[]#liste des minerais affichés
 class Minerais:
