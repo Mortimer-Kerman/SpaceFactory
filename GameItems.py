@@ -40,9 +40,21 @@ class Item:
         self.metadata=metadata
         giveTo={"foreuse":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
         self.rotation=SaveManager.GetRotation()
-        if name in ["tapis","jonction"]:
+        if name in ["tapis","jonction","trieur"]:
             name=str(self.rotation)
         self.giveto=giveTo.get(name,[0,0,0,0])
+        if name == "trieur":
+            if 1 in self.giveto[0:2]:
+                self.giveto[0]*=2
+                self.giveto[1]*=2
+                self.giveto[2]=1
+                self.giveto[3]=1
+            if 1 in self.giveto[2:4]:
+                self.giveto[0]=1
+                self.giveto[1]=1
+                self.giveto[2]*=2
+                self.giveto[3]*=2
+                
     
     def ReadDictRepresentation(DictRepresentation:dict):
         """
