@@ -186,12 +186,14 @@ PauseMenuBackground = None
         
 def DisplayPauseMenuBackground():
     if PauseMenuBackground != None:
-        PauseMenuBackground.draw(UiManager.screen)
+        UiManager.screen.blit(PauseMenuBackground,(0,0))
         
 def Pause():
     global PauseMenuBackground
-    #PauseMenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
-    #PauseMenuBackground._surface = pygame.display.get_surface()
+    screenFilter = pygame.Surface((UiManager.width,UiManager.height))
+    screenFilter.set_alpha(50)
+    PauseMenuBackground = pygame.display.get_surface().copy()
+    PauseMenuBackground.blit(screenFilter,(0,0))
     
     quitGame = False
     def QuitGame():
