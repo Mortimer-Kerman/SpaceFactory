@@ -14,7 +14,7 @@ import pygame
 
 menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four"]#éléments du menu de séléction
 
-Anim=0
+Anim=1
 
 RenderQueues = {}
 def AddToRender(order:int,action):
@@ -78,16 +78,31 @@ class Item:
             #b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2])}
             b=[([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2]),([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2])]
             b,ca=b[self.rotation]# if runtime<40 else (0,0)
-            if a and Anim:
-                AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+ca[0]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[4]*zoom+((runtime/50)*zoom)*b[1]),
-                                                                     (self.pos[0]*zoom+cam[0]+ca[1]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[5]*zoom+((runtime/50)*zoom)*b[1]),
-                                                                     (self.pos[0]*zoom+cam[0]+ca[2]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[6]*zoom+((runtime/50)*zoom)*b[1]),
-                                                                     (self.pos[0]*zoom+cam[0]+ca[3]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[7]*zoom+((runtime/50)*zoom)*b[1])]))
-            elif a and not Anim:
-                AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+1/4*zoom),
-                                                                     (self.pos[0]*zoom+cam[0]+3/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom),
-                                                                     (self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+3/4*zoom),
-                                                                     (self.pos[0]*zoom+cam[0]+1/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom)]))   
+            
+            if a:
+                renderOffset = (0,0)
+                if Anim:
+                    animState = -runtime/50#-(runtime/25 - 1)
+                    renderOffset = (0,animState)
+                    if self.rotation == 1:
+                        renderOffset = (renderOffset[1],-renderOffset[0])
+                    elif self.rotation == 2:
+                        renderOffset = (-renderOffset[0],-renderOffset[1])
+                    elif self.rotation == 3:
+                        renderOffset = (-renderOffset[1],renderOffset[0])
+                    
+                    
+                    
+                renderOffset = (renderOffset[0]*zoom,renderOffset[1]*zoom)
+                AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom+renderOffset[0],
+                                                                                 self.pos[1]*zoom+cam[1]+1/4*zoom+renderOffset[1]),
+                                                                                (self.pos[0]*zoom+cam[0]+3/4*zoom+renderOffset[0],
+                                                                                 self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1]),
+                                                                                (self.pos[0]*zoom+cam[0]+1/2*zoom+renderOffset[0],
+                                                                                 self.pos[1]*zoom+cam[1]+3/4*zoom+renderOffset[1]),
+                                                                                (self.pos[0]*zoom+cam[0]+1/4*zoom+renderOffset[0],
+                                                                                 self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1])]))
+ 
     def Give(self):
         if self.metadata.get("g",False):
             return

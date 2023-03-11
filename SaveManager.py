@@ -137,7 +137,8 @@ def PlaceItem(item):
     mainData.items[str(list(item.pos))]=item
 
 def DeleteItem(pos):
-    del mainData.items[str(list(pos))]
+    if IsItemHere(pos):
+        del mainData.items[str(list(pos))]
 
 def GetSeed()->int:
     """
