@@ -83,9 +83,11 @@ def OpenSavesList():
         
         saveFrame.pack(Menus.SavesList.add.button(saveName, lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save))))
         
+        planetTex = TextureManager.GetTexture("missingThumb")
         texPath = "Saves/" + saveName + "/planet.png"
         if os.path.isfile(texPath):
-            saveFrame.pack(Menus.SavesList.add.surface(pygame.transform.scale(pygame.image.load(texPath),(90,90))), align=pygame_menu.locals.ALIGN_RIGHT)
+            planetTex = pygame.image.load(texPath)
+        saveFrame.pack(Menus.SavesList.add.surface(pygame.transform.scale(planetTex,(90,90))), align=pygame_menu.locals.ALIGN_RIGHT)
         
     Menus.SavesList.mainloop(UiManager.screen, DisplayBackground)
    
