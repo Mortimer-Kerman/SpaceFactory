@@ -11,6 +11,7 @@ import random
 import os
 
 import GameItems
+import TextureManager
 
 SaveFileVersion="f0.8"
 
@@ -86,6 +87,7 @@ def Unload():
     Save()
     saveName = None
     mainData = None
+    TextureManager.RefreshZoom()
     print("File unloaded")
 
 def SaveExists(name:str):

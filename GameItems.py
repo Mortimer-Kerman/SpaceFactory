@@ -16,6 +16,14 @@ menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four"]#é
 
 Anim=0
 
+postRenderQueue = []
+def AddToPostRender(action):
+    postRenderQueue.append(action)
+def ExecutePostRender():
+    for action in postRenderQueue:
+        action()
+    postRenderQueue.clear()
+
 class Item:
     """
     Objet Item
@@ -65,10 +73,10 @@ class Item:
             b=[([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2]),([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2])]
             b,ca=b[self.rotation]# if runtime<40 else (0,0)
             if a and Anim:
-                pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+ca[0]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[4]*zoom+((runtime/50)*zoom)*b[1]),
+                AddToPostRender(lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+ca[0]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[4]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[1]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[5]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[2]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[6]*zoom+((runtime/50)*zoom)*b[1]),
-                                                                     (self.pos[0]*zoom+cam[0]+ca[3]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[7]*zoom+((runtime/50)*zoom)*b[1])])
+                                                                     (self.pos[0]*zoom+cam[0]+ca[3]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[7]*zoom+((runtime/50)*zoom)*b[1])]))
             elif a and not Anim:
                 pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+1/4*zoom),
                                                                      (self.pos[0]*zoom+cam[0]+3/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom),

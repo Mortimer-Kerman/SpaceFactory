@@ -56,6 +56,8 @@ def Play(saveName:str,tuto=0):
             popup.show(index)
             UiManager.UIelements["popup_area"]=pygame.Rect(UiManager.width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
         
+        GameItems.ExecutePostRender()
+        
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
         pygame.display.update()#Mise à jour de l'affichage Pygame
@@ -82,8 +84,6 @@ def Play(saveName:str,tuto=0):
         if keys[pygame.K_ESCAPE]:#Si la touche Esc est pressée
             SaveManager.Unload()#Décharger la sauvegarde
             return#on quitte la fonction Play()
-        if keys[SettingsManager.GetKeybind("rotate")] and runtime%50==0:
-            SaveManager.UpdateRotation()#mise à jour de la rotation
         
         for event in pygame.event.get():
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
@@ -101,7 +101,12 @@ def Play(saveName:str,tuto=0):
 
                 if showTuto==1:
                     Tuto()
-                
+            
+            #action de clic sur une touche
+            if event.type == pygame.KEYDOWN:
+                if event.key == SettingsManager.GetKeybind("rotate"):
+                    SaveManager.UpdateRotation()#mise à jour de la rotation
+            
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
                 if event.button == 1: # 1 == left button
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
