@@ -13,6 +13,7 @@ import SaveManager
 import TextureManager
 import GameItems
 import SettingsManager
+import SessionManager
 
 #Les variables importantes
 screen = None#la fenêtre pricipale (élément pygame.display)
@@ -185,7 +186,9 @@ def InvMenu():
 
     UIelements["inv2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,500*showMenu.get("inv",0)),(width,500*showMenu.get("inv",0)),(width,0),(width-500,0)]).collidepoint(pygame.mouse.get_pos())
 
-    
+    for i in range(10):
+        UIelements["invElements_"+str(i)]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),-500+500*showMenu.get("inv",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
+        #screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
 
 def addNewlines(text,l):
     """
@@ -226,7 +229,26 @@ def DisplayItemToPlace():
     tex=pygame.transform.rotate(tex,90*SaveManager.mainData.rotation)
     screen.blit(tex, (pos[0]*zoom+cam[0], pos[1]*zoom+cam[1]))
     
+def interactItem(item):
+    screenFilter = pygame.Surface((width,height))
+    screenFilter.set_alpha(50)
+    SessionManager.PauseMenuBackground = pygame.display.get_surface().copy()
+    SessionManager.PauseMenuBackground.blit(screenFilter,(0,0))
     
+    interactMenu = pygame_menu.Menu("Configurez cet élément", 400, 300, theme=pygame_menu.themes.THEME_DARK)
+    
+    interactMenu.add.button('Reprendre', interactMenu.disable)#Reprendre la partie
+    if item.name=="trieur":
+        a=[[i] for i in list(GameItems.allTransportableItems.keys())]
+        b=interactMenu.add.selector("Choisissez : ",a)
+    if item.name=="stockage":
+        a=[[i] for i in list(GameItems.allTransportableItems.keys())]
+        b=interactMenu.add.selector("Choisissez : ",a)
+
+    interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)
+
+    SessionManager.PauseMenuBackground = None
+    return b.get_value()
 
 UIPopup=[]
 class Popup:
