@@ -197,7 +197,6 @@ class Item:
                 giver.metadata["inv"]=None
     
     def edit(self,a):
-        print(a)
         if self.name == "trieur":self.metadata["trieur_choice"]=a[0][0]
 
 current=[]#liste des minerais affichés

@@ -21,7 +21,7 @@ import SettingsManager
 showTuto=9**9
 def Tuto(t=1):
     global showTuto
-    a=["Déplace toi avec les flèches du clavier","Zoom et dézoom avec la molette","Commence par placer une foreuse sur un minerais","Place ensuite des tapis pour faire sortir les minerais de la foreuse","Place un stockage à la fin du chemin que tu viens de créer","Bravo, tu connait maintenant les bases, n'hésite pas à cliquer sur l'icone \"interogation\" si tu te poses des questions sur un item"]
+    a=["Déplace toi avec "+pygame.key.name(SettingsManager.GetKeybind("up"))+pygame.key.name(SettingsManager.GetKeybind("down"))+pygame.key.name(SettingsManager.GetKeybind("left"))+pygame.key.name(SettingsManager.GetKeybind("right")),"Zoom et dézoom avec la molette","Commence par placer une foreuse sur un minerais","Place ensuite des tapis pour faire sortir les minerais de la foreuse","Place un stockage à la fin du chemin que tu viens de créer","Bravo, tu connait maintenant les bases, n'hésite pas à cliquer sur l'icone \"interogation\" si tu te poses des questions sur un item"]
     if showTuto in [1,2,3,4,5,6]:
         for i,popup in enumerate(UiManager.UIPopup):
             popup.close(i)
