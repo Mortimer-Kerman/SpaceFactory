@@ -13,7 +13,7 @@ import os
 import GameItems
 import TextureManager
 
-SaveFileVersion="f0.8"
+SaveFileVersion="f0.9"
 
 class Data:
     """
@@ -41,6 +41,7 @@ clock = pygame.time.Clock()#horloge du jeu
 
 saveName = None#nom de la sauvegarde
 mainData = None#va bientôt contenir la classe Data principale
+planetTex = None
 
 def Load(name:str):
     """
@@ -49,7 +50,8 @@ def Load(name:str):
     global mainData
     CreateSave(name)#Création de la sauvegarde
     if SaveExists(name):#si la sauvegarde existe
-        mainData.__dict__ = json.load(open("Saves/" + name + ".spf", "r"))#charger les Datas
+        path = "Saves/" + saveName + "/"
+        mainData.__dict__ = json.load(open(path + "save.spf", "r"))#charger les Datas
         try:
             if mainData.saveVersion!=SaveFileVersion:
                 print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
@@ -60,13 +62,22 @@ def Load(name:str):
         for item in mainData.items.values():
             a=GameItems.Item.ReadDictRepresentation(item)
             mainData.items[str(list(a.pos))]=a
+        global planetTex
+        planetTex = None
+        if os.path.isfile(path + "planet.png"):
+            planetTex = pygame.image.load(path + "planet.png")
     print("File loaded!")
     
 def Save():
     """
     Sauvegarde
     """
-    open("Saves/" + saveName + ".spf", "w").write(mainData.toJson())#écriture dans le fichier de sauvegarde
+    path = "Saves/" + saveName + "/"
+    if not os.path.exists(path):#si le dossier de sauvegarde n'existe pas, le créer
+        os.makedirs(path)
+    open(path + "save.spf", "w").write(mainData.toJson())#écriture dans le fichier de sauvegarde
+    if planetTex != None:
+        pygame.image.save(planetTex, path + "planet.png")
     print("File saved!")
 
 def CreateSave(name:str):
@@ -94,7 +105,8 @@ def SaveExists(name:str):
     """
     Vérifie si la sauvegarde existe
     """
-    return os.path.exists("Saves/" + name + ".spf")
+    path = "Saves/" + name + "/"
+    return os.path.exists(path) and os.path.isfile(path + "save.spf")
 
 def SaveLoaded()->bool:
     """
