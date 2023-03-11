@@ -56,7 +56,8 @@ def OpenMainMenu():
     Menus.MainMenu.mainloop(UiManager.screen, lambda : (DisplayBackground(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
 
 def OpenSavesList():
-    
+    if Menus.SavesList != None:
+        Menus.SavesList.disable()
     Menus.SavesList = pygame_menu.Menu('Sauvegardes', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SavesList.add.button('Retour', Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
@@ -79,7 +80,8 @@ def OpenSavesList():
     Menus.SavesList.mainloop(UiManager.screen, DisplayBackground)
    
 def OpenSaveCreationMenu():
-    
+    if Menus.SaveCreation != None:
+        Menus.SaveCreation.disable()
     Menus.SaveCreation = pygame_menu.Menu('Sauvegardes', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SaveCreation.add.button('Retour', Menus.SaveCreation.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
@@ -129,7 +131,8 @@ def TryCreateSave(saveNameInput):
     SessionManager.Play(saveName,tuto=1)
     
 def OpenSettings():
-    
+    if Menus.Settings != None:
+        Menus.Settings.disable()
     Menus.Settings = pygame_menu.Menu('Options', 800, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
     def TryLeave():
@@ -171,6 +174,10 @@ def OpenSettings():
         frame.pack(button, align=pygame_menu.locals.ALIGN_RIGHT)
         button.set_onreturn(lambda btn=button,kname=key:ChangeKey(btn,kname))
     
+    Menus.Settings.add.vertical_margin(20)
+    
+    Menus.Settings.add.button('Réinitialiser les paramètres', lambda:WarnUser("Attention","Voulez-vous vraiment remettre\ntous vos paramètres à leurs valeurs d'origine?",lambda:(SettingsManager.ResetSettings(),OpenSettings()),None))
+    
     Menus.Settings.mainloop(UiManager.screen, DisplayBackground)
 
 def ChangeKey(KeyButton,KeyId):
@@ -186,7 +193,11 @@ def ChangeKey(KeyButton,KeyId):
             if event.type == pygame.KEYDOWN:
                 if event.key != pygame.K_ESCAPE:
                     SettingsManager.SetKeybind(KeyId, event.key)
-                    KeyButton.set_title(pygame.key.name(event.key))
+                    name = pygame.key.name(event.key)
+                    leak = int((10 - len(name))/2)
+                    for i in range(leak):
+                        name = " " + name + " "
+                    KeyButton.set_title(name)
                 Menus.KeyChanger.disable()
     
     Menus.KeyChanger.mainloop(UiManager.screen, lambda:(DisplayBackground(),kLoop()))
@@ -202,12 +213,12 @@ def WarnUser(title:str,message:str, confirm, cancel):
     
     confirmButton = Menus.WarnMenu.add.button('Confirmer', Menus.WarnMenu.disable)
     if confirm != None:
-        confirmButton.set_onreturn(lambda:(confirm(),Menus.WarnMenu.disable()))
+        confirmButton.set_onreturn(lambda:(Menus.WarnMenu.disable(),confirm()))
     bottomBar.pack(confirmButton, align=pygame_menu.locals.ALIGN_LEFT)
     
     cancelButton = Menus.WarnMenu.add.button('Annuler', Menus.WarnMenu.disable)
     if cancel != None:
-        confirmButton.set_onreturn(lambda:(cancel(),Menus.WarnMenu.disable()))
+        confirmButton.set_onreturn(lambda:(Menus.WarnMenu.disable(),cancel()))
     bottomBar.pack(cancelButton, align=pygame_menu.locals.ALIGN_RIGHT)
     
     Menus.WarnMenu.mainloop(UiManager.screen, DisplayBackground)

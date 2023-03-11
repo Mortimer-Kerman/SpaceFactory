@@ -47,16 +47,17 @@ def Play(saveName:str,tuto=0):
             GameItems.Minerais.PlaceFromCurrent(m)#placement du minerais
 
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
-            if runtime%50==0:item.Give();runtime=0#transmition de l'inventaire à l'item adjacent et remise à 0 du runtime
+            if runtime==0:
+                item.Give()#transmition de l'inventaire à l'item adjacent
             item.Display(runtime)#Afficher l'item
+        
+        GameItems.ExecuteRender()
         
         UiManager.DisplayItemToPlace()
         
         for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
             popup.show(index)
             UiManager.UIelements["popup_area"]=pygame.Rect(UiManager.width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
-        
-        GameItems.ExecutePostRender()
         
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
@@ -175,6 +176,8 @@ def Play(saveName:str,tuto=0):
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique
                 pygame.mixer.music.play(start=0.0, fade_ms=200)#on lance la lecture de la nouvelle musique
         
-        
+        print(SaveManager.clock.get_time())
         SaveManager.clock.tick()#on mets à jour l'horloge des FPS
-        runtime+=1
+        runtime+=SaveManager.clock.get_time() / 8
+        if runtime > 50:
+            runtime = 0

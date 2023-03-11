@@ -16,13 +16,16 @@ menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four"]#é
 
 Anim=0
 
-postRenderQueue = []
-def AddToPostRender(action):
-    postRenderQueue.append(action)
-def ExecutePostRender():
-    for action in postRenderQueue:
-        action()
-    postRenderQueue.clear()
+RenderQueues = {}
+def AddToRender(order:int,action):
+    if not order in RenderQueues:
+        RenderQueues[order] = []
+    RenderQueues[order].append(action)
+def ExecuteRender():
+    for queue in sorted(RenderQueues):
+        for action in RenderQueues[queue]:
+            action()
+    RenderQueues.clear()
 
 class Item:
     """
@@ -62,7 +65,10 @@ class Item:
         cam[1] += UiManager.height / 2
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
-        UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
+        
+        order = 0 if "tapis" in self.name else 2
+        
+        AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))#afficher
         
         #UiManager.place_text(str(self.metadata.get("inv",None)),self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1],20,(255,0,0))
         
@@ -73,15 +79,15 @@ class Item:
             b=[([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2]),([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2])]
             b,ca=b[self.rotation]# if runtime<40 else (0,0)
             if a and Anim:
-                AddToPostRender(lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+ca[0]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[4]*zoom+((runtime/50)*zoom)*b[1]),
+                AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+ca[0]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[4]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[1]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[5]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[2]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[6]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[3]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[7]*zoom+((runtime/50)*zoom)*b[1])]))
             elif a and not Anim:
-                pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+1/4*zoom),
+                AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+1/4*zoom),
                                                                      (self.pos[0]*zoom+cam[0]+3/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom),
                                                                      (self.pos[0]*zoom+cam[0]+1/2*zoom, self.pos[1]*zoom+cam[1]+3/4*zoom),
-                                                                     (self.pos[0]*zoom+cam[0]+1/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom)])    
+                                                                     (self.pos[0]*zoom+cam[0]+1/4*zoom, self.pos[1]*zoom+cam[1]+1/2*zoom)]))   
     def Give(self):
         if self.metadata.get("g",False):
             return
