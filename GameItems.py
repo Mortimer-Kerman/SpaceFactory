@@ -289,6 +289,7 @@ doc={
      "tapis":{"d":"Les tapis roulants sont un merveilleux moyen de déplacer des items d'une machine vers une autre","c":{"cuivre":10}},
      "stockage":{"d":"Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, cliquez sur un stockage pour récupérer son contenu dans votre inventaire]","c":{"cuivre":100}},
      "jonction":{"d":"La jonction permet de lier deux tapis roulant","c":{"cuivre":20}},
+     "trieur":{"d":"Permet de trier les différents items","c":{"cuivre":20,"or":10}},
      "delete":{"d":"Le menu de destruction permet de détruire un item"},
      "charbon":{"d":"Le charbon est un minerais qui peut servir de conbustible"},
      "cuivre":{"d":"Le cuivre est le plus ancien métal utilisé par l’Espèce humaine. Le point de fusion de ce minerais n'est pas trop élevé"},

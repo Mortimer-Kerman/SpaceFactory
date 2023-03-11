@@ -212,7 +212,7 @@ def DisplayItemToPlace():
     """
     Cette fonction a pour but d'afficher l'item que le joueur s'apprête à placer en transparence pour lui donner une indication de visée
     """
-    ItemTexture = "detruire" if showMenu["delete"] else SaveManager.mainData.selectedItem
+    ItemTexture = "detruire" if showMenu["delete"] else "question" if showMenu["question"] else SaveManager.mainData.selectedItem
     
     if ItemTexture == None or IsClickOnUI():
         return
