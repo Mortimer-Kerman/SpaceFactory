@@ -88,7 +88,7 @@ class Item:
                     if item is None:
                         renderOffset=(0,0)
                     else:
-                        if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
+                        if item.metadata.get("inv",None) is not None:#si l'item n'a rien dans son inventaire
                             renderOffset=(0,0)
 
                     if self.rotation == 1:
