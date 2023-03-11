@@ -228,7 +228,7 @@ class Minerais:
         x=int(x)
         y=int(y)
         random.seed(x*y*se+x+y+se+x)#la graine
-        r=3#plus r est grand, moins les minerais spawneront
+        r=5#plus r est grand, moins les minerais spawneront
         if random.randint(0,60*r)==40:
             return "charbon"
         elif random.randint(0,80*r)==40:
