@@ -10,6 +10,7 @@ import pygame
 import SaveManager
 import TextureManager
 import GameItems
+import SettingsManager
 
 #Les variables importantes
 screen = None#la fenêtre pricipale (élément pygame.display)
@@ -164,6 +165,8 @@ def ItemMenu():
     UIelements["selectElements_delete"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*4,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*4,height-100*showMenu.get("select",0)))
     place_text("détruire",width-500+102*4,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+
+    place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(300,100))
     
 
 def InvMenu():
@@ -218,6 +221,7 @@ def DisplayItemToPlace():
     
     tex = TextureManager.GetTexture(ItemTexture, zoom).copy()
     tex.set_alpha(150)
+    tex=pygame.transform.rotate(tex,90*SaveManager.mainData.rotation)
     screen.blit(tex, (pos[0]*zoom+cam[0], pos[1]*zoom+cam[1]))
     
     

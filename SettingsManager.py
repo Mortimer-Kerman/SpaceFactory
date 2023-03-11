@@ -17,7 +17,8 @@ def DefaultSettingsInstance():
             "up": pygame.K_z,
             "down": pygame.K_s,
             "left": pygame.K_q,
-            "right": pygame.K_d
+            "right": pygame.K_d,
+            "rotate": pygame.K_r
         }
     }
 

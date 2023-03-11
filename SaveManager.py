@@ -12,7 +12,7 @@ import os
 
 import GameItems
 
-SaveFileVersion="f0.7"
+SaveFileVersion="f0.8"
 
 class Data:
     """
@@ -27,6 +27,7 @@ class Data:
         self.seed = random.randint(-(9**9),9**9)
         self.items = {}
         self.selectedItem="foreuse"
+        self.rotation=0
         self.saveVersion=SaveFileVersion
         
     def toJson(self):
@@ -51,10 +52,10 @@ def Load(name:str):
         try:
             if mainData.saveVersion!=SaveFileVersion:
                 print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
-                return
+                quit()
         except:
             print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
-            return
+            quit()
         for item in mainData.items.values():
             a=GameItems.Item.ReadDictRepresentation(item)
             mainData.items[str(list(a.pos))]=a
@@ -165,3 +166,20 @@ def GetItemAtPos(pos):
     Renvoie l'item à une position si il y en a un, None sinon
     """
     return mainData.items.get(str(list(pos)),None)
+
+def GetRotation():
+    """
+    Renvoie la rotation actuelle
+    """
+    return mainData.rotation
+
+def UpdateRotation():
+    """
+    Mets à jour la rotation
+    """
+    r=GetRotation()
+    if r!=3:
+        r+=1
+    else:
+        r=0
+    mainData.rotation=r

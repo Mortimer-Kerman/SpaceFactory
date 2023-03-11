@@ -12,7 +12,7 @@ import random
 
 import pygame
 
-menuElements=["foreuse","tapis Nord","tapis Sud","tapis Ouest","tapis Est","stockage","trieur","jonction","pont","four"]#éléments du menu de séléction
+menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four"]#éléments du menu de séléction
 
 Anim=0
 
@@ -27,7 +27,10 @@ class Item:
         self.name=name
         self.pos=pos
         self.metadata=metadata
-        giveTo={"foreuse":[1,1,1,1],"tapis Nord":[1,0,0,0],"tapis Sud":[0,1,0,0],"tapis Ouest":[0,0,1,0],"tapis Est":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
+        giveTo={"foreuse":[1,1,1,1],"tapis 0":[1,0,0,0],"tapis 2":[0,1,0,0],"tapis 1":[0,0,1,0],"tapis 3":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
+        self.rotation=SaveManager.GetRotation()
+        if name in ["tapis"]:
+            name+=" "+str(self.rotation)
         self.giveto=giveTo.get(name,[0,0,0,0])
     
     def ReadDictRepresentation(DictRepresentation:dict):
@@ -51,7 +54,7 @@ class Item:
         cam[1] += UiManager.height / 2
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
-        UiManager.screen.blit(TextureManager.GetTexture(self.name, zoom), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
+        UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
         
         #UiManager.place_text(str(self.metadata.get("inv",None)),self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1],20,(255,0,0))
         
@@ -59,8 +62,8 @@ class Item:
             col={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110)}
             a=col.get(self.metadata.get("inv",None),False)
             #b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2])}
-            b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2])}
-            b,ca=b[self.name]# if runtime<40 else (0,0)
+            b=[([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2]),([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2])]
+            b,ca=b[self.rotation]# if runtime<40 else (0,0)
             if a and Anim:
                 pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+ca[0]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[4]*zoom+((runtime/50)*zoom)*b[1]),
                                                                      (self.pos[0]*zoom+cam[0]+ca[1]*zoom+((runtime/50)*zoom*b[0]), self.pos[1]*zoom+cam[1]+ca[5]*zoom+((runtime/50)*zoom)*b[1]),
@@ -74,7 +77,6 @@ class Item:
     def Give(self):
         if self.metadata.get("g",False):
             return
-        giveTo={"foreuse":[1,1,1,1],"tapis Nord":[1,0,0,0],"tapis Sud":[0,1,0,0],"tapis Ouest":[0,0,1,0],"tapis Est":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
         if self.name=="foreuse" and self.metadata.get("inv",None) is None:
             if self.metadata.get("minerais", None) is None:
                 self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
@@ -85,7 +87,7 @@ class Item:
             self.metadata["biginv"][self.metadata.get("inv","")]=self.metadata["biginv"].get(self.metadata.get("inv",None),0)+1
             self.metadata["inv"]=None
         
-        g=giveTo.get(self.name,[0,0,0,0])
+        g=self.giveto
         item=None
         if g[0]:
             item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus

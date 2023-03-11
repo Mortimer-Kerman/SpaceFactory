@@ -31,7 +31,6 @@ def Play(saveName:str,tuto=0):
     """
     Lance le jeu
     """
-    pygame.key.set_repeat(10)#on réduit le temps de détéction de répétition de touche
     SaveManager.Load(saveName)#Chargement de la sauvegarde
     
     runtime=0
@@ -83,6 +82,8 @@ def Play(saveName:str,tuto=0):
         if keys[pygame.K_ESCAPE]:#Si la touche Esc est pressée
             SaveManager.Unload()#Décharger la sauvegarde
             return#on quitte la fonction Play()
+        if keys[SettingsManager.GetKeybind("rotate")] and runtime%50==0:
+            SaveManager.UpdateRotation()#mise à jour de la rotation
         
         for event in pygame.event.get():
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
@@ -124,6 +125,9 @@ def Play(saveName:str,tuto=0):
                                     a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
                                     if a:
                                         GameItems.getDescription(a)
+                            elif UiManager.showMenu["delete"]:
+                                SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
+                                UiManager.showMenu["delete"]=0
                             else:
                                 UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
 
@@ -160,7 +164,7 @@ def Play(saveName:str,tuto=0):
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
                         clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
                         if clickedItem != None:
-                            UiManager.Popup(clickedItem.name+"\n"+str(clickedItem.metadata)+"\n"+str(clickedItem.pos)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
+                            UiManager.Popup(clickedItem.name+"\n"+str(clickedItem.rotation)+"\n"+str(clickedItem.giveto)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
             
             if event.type == AudioManager.MUSIC_ENDED:#Si la musique s'arrête
                 pygame.mixer.music.load("./Assets2/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique
