@@ -170,7 +170,7 @@ def Play(saveName:str,tuto=0):
                     if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
                         clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
                         if clickedItem != None:
-                            UiManager.Popup(clickedItem.name+"\n"+str(clickedItem.rotation)+"\n"+str(clickedItem.giveto)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
+                            UiManager.Popup(clickedItem.name+"\n"+str(clickedItem.rotation)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
             
             if event.type == AudioManager.MUSIC_ENDED:#Si la musique s'arrête
                 pygame.mixer.music.load("./Assets/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique

@@ -76,23 +76,29 @@ class Item:
             col={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110)}
             a=col.get(self.metadata.get("inv",None),False)
             #b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2])}
-            b=[([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2]),([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2])]
-            b,ca=b[self.rotation]# if runtime<40 else (0,0)
+            #b=[([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2]),([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2])]
+            #b,ca=b[self.rotation]# if runtime<40 else (0,0)
             
             if a:
                 renderOffset = (0,0)
                 if Anim:
+
+                    item=self.GetItemToGive()
                     renderOffset = (0,-runtime/50)
+                    if item is None:
+                        renderOffset=(0,0)
+                    else:
+                        if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
+                            renderOffset=(0,0)
+
                     if self.rotation == 1:
                         renderOffset = (renderOffset[1],-renderOffset[0])
                     elif self.rotation == 2:
                         renderOffset = (-renderOffset[0],-renderOffset[1])
                     elif self.rotation == 3:
                         renderOffset = (-renderOffset[1],renderOffset[0])
-                    
-                    
-                    
-                renderOffset = (renderOffset[0]*zoom,renderOffset[1]*zoom)
+
+                renderOffset = (renderOffset[0]*zoom,renderOffset[1]*zoom)            
                 AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom+renderOffset[0],
                                                                                  self.pos[1]*zoom+cam[1]+1/4*zoom+renderOffset[1]),
                                                                                 (self.pos[0]*zoom+cam[0]+3/4*zoom+renderOffset[0],
@@ -101,20 +107,7 @@ class Item:
                                                                                  self.pos[1]*zoom+cam[1]+3/4*zoom+renderOffset[1]),
                                                                                 (self.pos[0]*zoom+cam[0]+1/4*zoom+renderOffset[0],
                                                                                  self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1])]))
- 
-    def Give(self):
-        if self.metadata.get("g",False):
-            return
-        if self.name=="foreuse" and self.metadata.get("inv",None) is None:
-            if self.metadata.get("minerais", None) is None:
-                self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
-                if self.metadata["minerais"] is False:self.metadata["minerais"]=None
-            self.metadata["inv"]=self.metadata["minerais"]
-        if self.name=="stockage":
-            self.metadata["biginv"]=self.metadata.get("biginv",{})
-            self.metadata["biginv"][self.metadata.get("inv","")]=self.metadata["biginv"].get(self.metadata.get("inv",None),0)+1
-            self.metadata["inv"]=None
-        
+    def GetItemToGive(self):
         g=self.giveto
         item=None
         if g[0]:
@@ -133,6 +126,22 @@ class Item:
             item=SaveManager.GetItemAtPos((self.pos[0]+1,self.pos[1]))#on récupère l'item de droite
             if item is not None:
                 if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
+        return item
+    
+    def Give(self):
+        if self.metadata.get("g",False):
+            return
+        if self.name=="foreuse" and self.metadata.get("inv",None) is None:
+            if self.metadata.get("minerais", None) is None:
+                self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
+                if self.metadata["minerais"] is False:self.metadata["minerais"]=None
+            self.metadata["inv"]=self.metadata["minerais"]
+        if self.name=="stockage":
+            self.metadata["biginv"]=self.metadata.get("biginv",{})
+            self.metadata["biginv"][self.metadata.get("inv","")]=self.metadata["biginv"].get(self.metadata.get("inv",None),0)+1
+            self.metadata["inv"]=None
+        
+        item=self.GetItemToGive()
         if item is not None:
             if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
                 if self.name=="stockage":
