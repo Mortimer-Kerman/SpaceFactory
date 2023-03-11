@@ -66,13 +66,13 @@ class Item:
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
         
-        order = 0 if "tapis" in self.name else 2
+        order = 0 if self.name == "tapis" else 2
         
         AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))#afficher
         
         #UiManager.place_text(str(self.metadata.get("inv",None)),self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1],20,(255,0,0))
         
-        if "tapis" in self.name:
+        if self.name == "tapis":
             col={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110)}
             a=col.get(self.metadata.get("inv",None),False)
             #b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2])}
@@ -82,8 +82,7 @@ class Item:
             if a:
                 renderOffset = (0,0)
                 if Anim:
-                    animState = -runtime/50#-(runtime/25 - 1)
-                    renderOffset = (0,animState)
+                    renderOffset = (0,-runtime/50)
                     if self.rotation == 1:
                         renderOffset = (renderOffset[1],-renderOffset[0])
                     elif self.rotation == 2:

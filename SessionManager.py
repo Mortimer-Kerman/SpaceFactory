@@ -49,7 +49,7 @@ def Play(saveName:str,tuto=0):
         for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
             if runtime==0:
                 item.Give()#transmition de l'inventaire à l'item adjacent
-            item.Display(runtime)#Afficher l'item
+            item.Display(int(runtime))#Afficher l'item
         
         GameItems.ExecuteRender()
         
