@@ -6,6 +6,7 @@ Created on Sun Feb 26 21:43:27 2023
 """
 
 import pygame
+import pygame_menu
 
 import random
 
@@ -83,14 +84,14 @@ def Play(saveName:str,tuto=0):
                 Tuto()
         
         if keys[pygame.K_ESCAPE]:#Si la touche Esc est pressée
-            SaveManager.Unload()#Décharger la sauvegarde
-            return#on quitte la fonction Play()
+            if Pause():#On fait pause
+                return#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
         
         for event in pygame.event.get():
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
             if event.type == pygame.QUIT:#en cas de Alt+F4 ou de fermeture via la croix de la fenêtre
-                SaveManager.Unload()#Décharger la sauvegarde
-                return#on quitte la fonction Play()
+                if Pause():#On fait pause
+                    return#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
             
             #action de molette de souris
             if event.type == pygame.MOUSEWHEEL:#si un changement molette survient
@@ -142,8 +143,8 @@ def Play(saveName:str,tuto=0):
                     elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
                         UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
                     elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
-                        SaveManager.Unload()#Décharger la sauvegarde
-                        return#on quitte la fonction Play()
+                        if Pause():#On fait pause
+                            return#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
                     elif UiManager.UIelements.get("select2",False):
                         for i in GameItems.menuElements:
                             if UiManager.UIelements.get("selectElements_"+i,False):
@@ -180,3 +181,34 @@ def Play(saveName:str,tuto=0):
         runtime+=SaveManager.clock.get_time() / 8
         if runtime > 50:
             runtime = 0
+        
+PauseMenuBackground = None    
+        
+def DisplayPauseMenuBackground():
+    if PauseMenuBackground != None:
+        PauseMenuBackground.draw(UiManager.screen)
+        
+def Pause():
+    global PauseMenuBackground
+    #PauseMenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
+    #PauseMenuBackground._surface = pygame.display.get_surface()
+    
+    quitGame = False
+    def QuitGame():
+        pauseMenu.disable()
+        SaveManager.Unload()
+        global quitGame
+        quitGame = True
+    
+    pauseMenu = pygame_menu.Menu("Pause", 400, 300, theme=pygame_menu.themes.THEME_DARK)
+    
+    pauseMenu.add.button('Reprendre', pauseMenu.disable)#Reprendre la partie
+    pauseMenu.add.button('Paramètres', lambda:SettingsManager.OpenSettings(DisplayPauseMenuBackground))#Bouton pour ouvrir les options
+    pauseMenu.add.button('Menu principal', QuitGame)#Menu principal
+    
+    pauseMenu.mainloop(UiManager.screen,DisplayPauseMenuBackground)
+    
+    
+    PauseMenuBackground = None
+    return quitGame
+    

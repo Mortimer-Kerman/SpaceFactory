@@ -40,21 +40,17 @@ class Menus:
     SaveCreation = None
     Settings = None
     KeyChanger = None
-    WarnMenu = None
-    MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
 
-def DisplayBackground():
-    Menus.MenuBackground.draw(UiManager.screen)
 
 def OpenMainMenu():
     #Définition du Menu (ici, le menu est généré via le module pygame_menu)
     Menus.MainMenu = pygame_menu.Menu('Space Factory', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
     Menus.MainMenu.add.button('Jouer', OpenSavesList)#Bouton pour lancer le jeu
-    Menus.MainMenu.add.button('Options', OpenSettings)#Bouton pour lancer le jeu
+    Menus.MainMenu.add.button('Options', lambda:SettingsManager.OpenSettings(UiManager.DisplayBackground))#Bouton pour ouvrir les options
     Menus.MainMenu.add.button('Quitter', pygame_menu.events.EXIT)#Quitter le jeu
     
-    Menus.MainMenu.mainloop(UiManager.screen, lambda : (DisplayBackground(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
+    Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
 
 def OpenSavesList():
     if Menus.SavesList != None:
@@ -89,18 +85,18 @@ def OpenSavesList():
             planetTex = pygame.image.load(texPath)
         saveFrame.pack(Menus.SavesList.add.surface(pygame.transform.scale(planetTex,(90,90))), align=pygame_menu.locals.ALIGN_RIGHT)
         
-    Menus.SavesList.mainloop(UiManager.screen, DisplayBackground)
+    Menus.SavesList.mainloop(UiManager.screen, UiManager.DisplayBackground)
    
 def OpenSaveCreationMenu():
     if Menus.SaveCreation != None:
         Menus.SaveCreation.disable()
-    Menus.SaveCreation = pygame_menu.Menu('Sauvegardes', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.SaveCreation = pygame_menu.Menu('Sauvegardes', 600, 500, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SaveCreation.add.button('Retour', Menus.SaveCreation.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
-    menuSections = Menus.SaveCreation.add.frame_h(360, 195, padding=0)
+    menuSections = Menus.SaveCreation.add.frame_h(560, 195, padding=0)
     menuSections.relax(True)
     
-    creationTools = Menus.SaveCreation.add.frame_v(220, 195, padding=0)
+    creationTools = Menus.SaveCreation.add.frame_v(420, 195, padding=0)
     creationTools.relax(True)
     
     menuSections.pack(creationTools)
@@ -115,14 +111,28 @@ def OpenSaveCreationMenu():
         default=0
     ))
     """
+    
     creationTools.pack(Menus.SaveCreation.add.button('Créer', lambda : TryCreateSave(saveNameInput)))
     
-    
     SaveManager.planetTex = PlanetGenerator.Generate()
+    thumbDisplayer = Menus.SaveCreation.add.surface(pygame.transform.scale(SaveManager.planetTex,(150,150)))
     
-    menuSections.pack(Menus.SaveCreation.add.surface(pygame.transform.scale(SaveManager.planetTex,(150,150))))
+    def SetSurface(surface):
+        SaveManager.planetTex = surface
+        thumbDisplayer.set_surface(pygame.transform.scale(SaveManager.planetTex,(150,150)))
     
-    Menus.SaveCreation.mainloop(UiManager.screen, DisplayBackground)
+    menuSections.pack(thumbDisplayer)
+    
+    environmentsDict = {0: 'Aléatoire', 1: 'Lunaire', 2: 'Désertique', 3: 'Vivant'}
+    Menus.SaveCreation.add.range_slider('Environment', 0, list(environmentsDict.keys()),
+                      slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_RIGHT,
+                      value_format=lambda x: environmentsDict[x])
+    difficultiesDict = {0: 'Facile', 1: 'Normal', 2: 'Difficile'}
+    Menus.SaveCreation.add.range_slider('Difficulté', 1, list(difficultiesDict.keys()),
+                      slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_RIGHT,
+                      value_format=lambda x: difficultiesDict[x])
+    
+    Menus.SaveCreation.mainloop(UiManager.screen, UiManager.DisplayBackground)
     
 def TryCreateSave(saveNameInput):
 
@@ -142,97 +152,8 @@ def TryCreateSave(saveNameInput):
     Menus.SaveCreation.disable()
     SessionManager.Play(saveName,tuto=1)
     
-def OpenSettings():
-    if Menus.Settings != None:
-        Menus.Settings.disable()
-    Menus.Settings = pygame_menu.Menu('Options', 800, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    
-    def TryLeave():
-        if not SettingsManager.SettingsChanged:
-            SettingsManager.LoadSettings()
-            Menus.Settings.disable()
-            return
-        WarnUser("Attention", "Cetains paramètres ne sont pas sauvegardés.\nVoulez-vous quand même quitter?\n", lambda:(SettingsManager.LoadSettings(), Menus.Settings.disable()), None)
-        
-        
-    topBar = Menus.Settings.add.frame_h(800,50)
-    topBar.relax(True)
-    topBar.pack(Menus.Settings.add.button('Retour', TryLeave), align=pygame_menu.locals.ALIGN_LEFT)
-    topBar.pack(Menus.Settings.add.button('Enregistrer', SettingsManager.SaveSettings), align=pygame_menu.locals.ALIGN_RIGHT)
-    
-    Menus.Settings.add.vertical_margin(20)
-    
-    Menus.Settings.add.range_slider('Volume de la musique', SettingsManager.GetSetting("musicVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.music.set_volume(int(x)/100),SettingsManager.SetSetting("musicVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
-    
-    Menus.Settings.add.vertical_margin(20)
-    
-    Menus.Settings.add.label("Touches", align=pygame_menu.locals.ALIGN_LEFT)
-    
-    Menus.Settings.add.vertical_margin(20)
-    
-    bindings = SettingsManager.GetSetting("keybinds")
-    
-    for key in bindings.keys():
-        frame = Menus.Settings.add.frame_h(300, 50, padding=0, align=pygame_menu.locals.ALIGN_LEFT)
-        frame.relax(True)
-        frame.pack(Menus.Settings.add.label(key))
-        
-        name = pygame.key.name(bindings[key])
-        leak = int((10 - len(name))/2)
-        for i in range(leak):
-            name = " " + name + " "
-        
-        button = Menus.Settings.add.button(name)
-        frame.pack(button, align=pygame_menu.locals.ALIGN_RIGHT)
-        button.set_onreturn(lambda btn=button,kname=key:ChangeKey(btn,kname))
-    
-    Menus.Settings.add.vertical_margin(20)
-    
-    Menus.Settings.add.button('Réinitialiser les paramètres', lambda:WarnUser("Attention","Voulez-vous vraiment remettre\ntous vos paramètres à leurs valeurs d'origine?",lambda:(SettingsManager.ResetSettings(),OpenSettings()),None))
-    
-    Menus.Settings.mainloop(UiManager.screen, DisplayBackground)
 
-def ChangeKey(KeyButton,KeyId):
-    keyName = KeyButton.get_title().strip()
-    
-    Menus.KeyChanger = pygame_menu.Menu('Changer la touche', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    
-    Menus.KeyChanger.add.label(KeyId)
-    Menus.KeyChanger.add.label("Touche actuelle: " + keyName)
-    
-    def kLoop():
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key != pygame.K_ESCAPE:
-                    SettingsManager.SetKeybind(KeyId, event.key)
-                    name = pygame.key.name(event.key)
-                    leak = int((10 - len(name))/2)
-                    for i in range(leak):
-                        name = " " + name + " "
-                    KeyButton.set_title(name)
-                Menus.KeyChanger.disable()
-    
-    Menus.KeyChanger.mainloop(UiManager.screen, lambda:(DisplayBackground(),kLoop()))
 
-def WarnUser(title:str,message:str, confirm, cancel):
-    
-    Menus.WarnMenu = pygame_menu.Menu(title, 800, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    
-    Menus.WarnMenu.add.label(message)
-    
-    bottomBar = Menus.WarnMenu.add.frame_h(800,50)
-    bottomBar.relax(True)
-    
-    confirmButton = Menus.WarnMenu.add.button('Confirmer', Menus.WarnMenu.disable)
-    if confirm != None:
-        confirmButton.set_onreturn(lambda:(Menus.WarnMenu.disable(),confirm()))
-    bottomBar.pack(confirmButton, align=pygame_menu.locals.ALIGN_LEFT)
-    
-    cancelButton = Menus.WarnMenu.add.button('Annuler', Menus.WarnMenu.disable)
-    if cancel != None:
-        confirmButton.set_onreturn(lambda:(Menus.WarnMenu.disable(),cancel()))
-    bottomBar.pack(cancelButton, align=pygame_menu.locals.ALIGN_RIGHT)
-    
-    Menus.WarnMenu.mainloop(UiManager.screen, DisplayBackground)
+
 
 OpenMainMenu()

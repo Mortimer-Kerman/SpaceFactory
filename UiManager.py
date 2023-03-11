@@ -7,6 +7,8 @@ Created on Thu Feb  9 11:47:04 2023
 
 #Chargement des bibliothèques
 import pygame
+import pygame_menu
+
 import SaveManager
 import TextureManager
 import GameItems
@@ -266,4 +268,37 @@ class Popup:
 
     def launch(self):
         self.command()
-        
+
+
+
+
+MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
+
+def DisplayBackground():
+    MenuBackground.draw(screen)
+
+def WarnUser(title:str,message:str, confirm, cancel, background=DisplayBackground):
+    
+    WarnMenu = pygame_menu.Menu(title, 800, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    
+    WarnMenu.add.label(message)
+    
+    bottomBar = WarnMenu.add.frame_h(800,50)
+    bottomBar.relax(True)
+    
+    confirmButton = WarnMenu.add.button('Confirmer', WarnMenu.disable)
+    if confirm != None:
+        confirmButton.set_onreturn(lambda:(WarnMenu.disable(),confirm()))
+    bottomBar.pack(confirmButton, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    cancelButton = WarnMenu.add.button('Annuler', WarnMenu.disable)
+    if cancel != None:
+        confirmButton.set_onreturn(lambda:(WarnMenu.disable(),cancel()))
+    bottomBar.pack(cancelButton, align=pygame_menu.locals.ALIGN_RIGHT)
+    
+    WarnMenu.mainloop(screen, background)
+
+
+
+
+

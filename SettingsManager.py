@@ -7,6 +7,9 @@ Created on Fri Mar 10 17:51:59 2023
 
 import pygame
 import json
+import pygame_menu
+
+import UiManager
 
 SettingsChanged = False
 
@@ -113,3 +116,90 @@ def ApplySettings():
     Applique les paramètres au jeu
     """
     pygame.mixer.music.set_volume(GetSetting("musicVolume")/100)
+
+
+SettingsMenu = None
+
+
+def OpenSettings(background):
+    global SettingsMenu
+    if SettingsMenu != None:
+        SettingsMenu.disable()
+    SettingsMenu = pygame_menu.Menu('Options', 800, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    
+    def TryLeave():
+        if not SettingsChanged:
+            LoadSettings()
+            SettingsMenu.disable()
+            return
+        UiManager.WarnUser("Attention", "Cetains paramètres ne sont pas sauvegardés.\nVoulez-vous quand même quitter?\n", lambda:(LoadSettings(), SettingsMenu.disable()), None)
+        
+        
+    topBar = SettingsMenu.add.frame_h(800,50)
+    topBar.relax(True)
+    topBar.pack(SettingsMenu.add.button('Retour', TryLeave), align=pygame_menu.locals.ALIGN_LEFT)
+    topBar.pack(SettingsMenu.add.button('Enregistrer', SaveSettings), align=pygame_menu.locals.ALIGN_RIGHT)
+    
+    SettingsMenu.add.vertical_margin(20)
+    
+    SettingsMenu.add.range_slider('Volume de la musique', GetSetting("musicVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.music.set_volume(int(x)/100),SetSetting("musicVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
+    
+    SettingsMenu.add.vertical_margin(20)
+    
+    SettingsMenu.add.label("Touches", align=pygame_menu.locals.ALIGN_LEFT)
+    
+    SettingsMenu.add.vertical_margin(20)
+    
+    bindings = GetSetting("keybinds")
+    
+    for key in bindings.keys():
+        frame = SettingsMenu.add.frame_h(300, 50, padding=0, align=pygame_menu.locals.ALIGN_LEFT)
+        frame.relax(True)
+        frame.pack(SettingsMenu.add.label(key))
+        
+        name = pygame.key.name(bindings[key])
+        leak = int((10 - len(name))/2)
+        for i in range(leak):
+            name = " " + name + " "
+        
+        button = SettingsMenu.add.button(name)
+        frame.pack(button, align=pygame_menu.locals.ALIGN_RIGHT)
+        button.set_onreturn(lambda btn=button,kname=key:ChangeKey(btn,kname,background))
+    
+    SettingsMenu.add.vertical_margin(20)
+    
+    SettingsMenu.add.button('Réinitialiser les paramètres', lambda:UiManager.WarnUser("Attention","Voulez-vous vraiment remettre\ntous vos paramètres à leurs valeurs d'origine?",lambda:(ResetSettings(),OpenSettings(background)),None,background))
+    
+    SettingsMenu.mainloop(UiManager.screen, background)
+
+def ChangeKey(KeyButton,KeyId,background):
+    keyName = KeyButton.get_title().strip()
+    
+    KeyChanger = pygame_menu.Menu('Changer la touche', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    
+    KeyChanger.add.label(KeyId)
+    KeyChanger.add.label("Touche actuelle: " + keyName)
+    
+    def kLoop():
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key != pygame.K_ESCAPE:
+                    SetKeybind(KeyId, event.key)
+                    name = pygame.key.name(event.key)
+                    leak = int((10 - len(name))/2)
+                    for i in range(leak):
+                        name = " " + name + " "
+                    KeyButton.set_title(name)
+                KeyChanger.disable()
+    
+    KeyChanger.mainloop(UiManager.screen, lambda:(background(),kLoop()))
+
+
+
+
+
+    
+    
+    
+    
+    

@@ -41,7 +41,11 @@ class PlanetaryConditions():
                                           and 0.7 < self.pressure < 1.3
                                           and -30 < self.temperature < 50) else PlanetTypes.Dead
 
-def Generate(conditions = PlanetaryConditions(), Seed = None):
+def Generate(conditions = None, Seed = None):
+    
+    if conditions == None:
+        conditions = PlanetaryConditions()
+    
     DeadPlanetColor = 0
     AtmosphereColor = 0.5
     AtmosphereCoverage = 0.1
@@ -56,7 +60,7 @@ def Generate(conditions = PlanetaryConditions(), Seed = None):
         Seed = random.randint(-10000, 10000);
     random.seed(Seed)
     
-    PlanetType = PlanetTypes.EarthLike#conditions.type
+    PlanetType = conditions.type
     
     if PlanetType == PlanetTypes.Dead:
     
