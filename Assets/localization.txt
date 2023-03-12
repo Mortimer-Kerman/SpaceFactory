@@ -50,7 +50,7 @@ Settings.EditKey.Current : Touche actuelle: %$1
 Settings.Reset : Réinitialiser les paramètres
 Settings.Reset.Message : Voulez-vous vraiment remettre%$rtous vos paramètres à leurs valeurs d'origine?
 
-//
+//Session de jeu
 Session.AskTuto : Souhaitez-vous lancer le tutoriel ?
 Session.Tuto.0 : Déplace toi avec %$1 %$2 %$3 %$4
 Session.Tuto.1 : Zoom et dézoom avec la molette
@@ -62,7 +62,8 @@ Session.AlreadyItemHere : Vous ne pouvez pas placer d'éléments ici, cet emplac
 Session.Question : Clique sur un élément pour voir apparaitre sa description. Recliquez sur le bouton "Interrogation" pour quitter ce mode
 Session.Pause : Pause
 Session.Continue : Reprendre
-//
+
+//Items du jeu
 Items.foreuse : Foreuse
 Items.tapis : Tapis
 Items.stockage : Stockage
@@ -70,7 +71,8 @@ Items.trieur : Trieur
 Items.jonction : Jonction
 Items.pont : Pont
 Items.four : Four
-//
+
+//Description des items
 GameItems.d.foreuse : La foreuse est une machine servant à extraire du minerais automatiquement
 GameItems.d.tapis : Les tapis roulants sont un merveilleux moyen de déplacer des items d'une machine vers une autre
 GameItems.d.stockage : Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, cliquez sur un stockage pour récupérer son contenu dans votre inventaire]
