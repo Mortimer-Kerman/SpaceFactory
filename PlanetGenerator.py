@@ -4,27 +4,29 @@ Created on Tue Mar  6 21:18:31 2023
 
 @author: Thomas Sartre et François Patinec-Haxel
 """
+
+#Importation des bibliothèques nécessaires pour la génération
 import random
 import math
 from colorsys import hsv_to_rgb
-import matplotlib.pyplot as plt
 import numpy
 import NoiseTools
-import pygame
-import math
 
+import pygame
+
+#Les types de planète fournissent au générateur une direction globale dans sa manière de générer
 class PlanetTypes:
     Random = 0
     EarthLike = 1
     Dead = 2
 
+#Paramètres généraux pour la génération des textures: taille de la texture, échelle de bruit, nombre d'octaves et vitesse de transition entre les biomes
 TextureSize = 100
 Scale = 3
-
+octaves = 2
 BiomeLerpSpeed = 0.3
 
-octaves = 2
-
+#Paramètres pour la gestion de la lumière
 CalculateLight = True
 IsSunBehind = False
 LightPos = (0.35, 0.35)
@@ -32,7 +34,11 @@ LightPos = (0.35, 0.35)
 CalculateSphericity = False
 SphericityFactor = 1
 
+
 class PlanetaryConditions():
+    """
+    Permet de générer ou stocker des conditions planétaires pour les passer au générateur
+    """
     def __init__(self, **kwargs):
         self.gravity = kwargs.get("gravity", random.uniform(0.5, 1.5))
         self.pressure = kwargs.get("pressure", random.uniform(0, 2))
@@ -41,11 +47,24 @@ class PlanetaryConditions():
                                           and 0.7 < self.pressure < 1.3
                                           and -30 < self.temperature < 50) else PlanetTypes.Dead
 
+
 def Generate(conditions = None, Seed = None):
+    """
+    Génère une texture d'une planète vue depuis l'orbite à partir de conditions spécifiées en entrée
+    """
     
+    #Si aucune graine n'est donnée en entrée, il faut en prendre une aléatoire
+    if Seed == None:
+        Seed = random.randint(-10000, 10000)
+    
+    #On règle le générateur d'aléatoire sur cette graine
+    random.seed(Seed)
+    
+    #Si les conditions planétaires ne sont pas spécifiées, il faut en prendre des aléatoires
     if conditions == None:
         conditions = PlanetaryConditions()
     
+    #Préparation de plusieurs variables décrivant des caractéristiques de l'apparence de la planète: Apparence de l'atmosphère, niveau de la mer, taille des calottes polaires...
     DeadPlanetColor = 0
     AtmosphereColor = 0.5
     AtmosphereCoverage = 0.1
@@ -56,10 +75,7 @@ def Generate(conditions = None, Seed = None):
     SeaLevel = 0.5
     PoleCoverage = 0.3
     
-    if Seed == None:
-        Seed = random.randint(-10000, 10000);
-    random.seed(Seed)
-    
+    #On récupère le type de planète depuis les conditions
     PlanetType = conditions.type
     
     if PlanetType == PlanetTypes.Dead:
@@ -162,15 +178,12 @@ def Generate(conditions = None, Seed = None):
             
             col = multiply(add(add(c, atm), clouds), light)
             row.append(ZeroOneToHexa(col))
-            #row.append(col)
         pix.append(row)
     
     texture = pygame.Surface((100,100))
     pygame.surfarray.blit_array(texture, numpy.array(pix))
     
     return texture
-    #plt.imshow(pix)
-    #plt.show()
 
 
 def clamp(val:float,minv:float,maxv:float)->float:

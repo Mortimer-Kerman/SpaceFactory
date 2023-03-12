@@ -13,15 +13,7 @@ missingTexture = None#Si la texture n'existe pas
 
 aquire = None#variable stockant la police principale "aquire"
 
-#tentative de faire un filtre
-colorFilter = pygame.Surface((100,100))
-colorFilter.set_alpha(50)
-
-def GetColorFilter(color:tuple, scale:float):
-    colorFilter.fill(color)
-    return pygame.transform.scale(colorFilter,(scale,scale))
-
-loadedTextures = {"no":missingTexture,"colorFilter":colorFilter}
+loadedTextures = {"no":missingTexture}
 menuTextures = {}
 def GetTexture(textureName:str,scale:float=1,is_menu:bool=False)->pygame.Surface:
     """
