@@ -1,3 +1,12 @@
+//FICHIER DE TRADUCTION FRANÇAIS
+//
+//Par Thomas Sartre et François Patinec-Haxel
+//
+//Note sur le formatage:
+//  -Un retour à la ligne s'écrit %$r
+//  -Une zone remplaçable par des valeurs s'écrit %$n avec n remplaçable par un nombre de 1 à 9 inclus
+
+//Menu principal et valeurs générales
 Game.Title : Space Factory
 Game.Play : Jouer
 Game.Quit : Quitter
@@ -7,7 +16,8 @@ Game.Credits : Crédits
 Game.Warning : Attention
 Game.Confirm : Confirmer
 Game.Cancel : Annuler
-//
+
+//Menu des sauvegardes
 Saves.Title : Sauvegardes
 Saves.NewSave : Nouvelle sauvegarde
 Saves.NewSave.Name : Nom: 
@@ -23,7 +33,8 @@ Saves.NewSave.Difficulty.Normal : Normal
 Saves.NewSave.Difficulty.Hard : Difficile
 Saves.NewSave.Create : Créer
 Saves.NewSave.AlreadyExists : Ce nom existe déjà !
-//
+
+//Menu des options
 Settings.Title : Options
 Settings.NotSaved : Cetains paramètres ne sont pas sauvegardés.%$rVoulez-vous quand même quitter?%$r
 Settings.Save : Enregistrer
@@ -38,6 +49,7 @@ Settings.EditKey : Changer la touche
 Settings.EditKey.Current : Touche actuelle: %$1
 Settings.Reset : Réinitialiser les paramètres
 Settings.Reset.Message : Voulez-vous vraiment remettre%$rtous vos paramètres à leurs valeurs d'origine?
+
 //
 Session.AskTuto : Souhaitez-vous lancer le tutoriel ?
 Session.Tuto.0 : Déplace toi avec %$1 %$2 %$3 %$4
