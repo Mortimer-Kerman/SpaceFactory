@@ -210,9 +210,9 @@ def Pause():
     
     pauseMenu = pygame_menu.Menu(L.GetLoc("Session.Pause"), 400, 300, theme=pygame_menu.themes.THEME_DARK)
     
-    pauseMenu.add.button(L.GetLoc("Session.Reprendre"), pauseMenu.disable)#Reprendre la partie
-    pauseMenu.add.button(L.GetLoc("Session.Settings"), lambda:SettingsManager.OpenSettings(DisplayPauseMenuBackground))#Bouton pour ouvrir les options
-    pauseMenu.add.button(L.GetLoc("Session.MainMenu"), QuitGame)#Menu principal
+    pauseMenu.add.button(L.GetLoc("Session.Continue"), pauseMenu.disable)#Reprendre la partie
+    pauseMenu.add.button(L.GetLoc("Settings.Title"), lambda:SettingsManager.OpenSettings(DisplayPauseMenuBackground))#Bouton pour ouvrir les options
+    pauseMenu.add.button(L.GetLoc("Game.MainMenu"), QuitGame)#Menu principal
     
     pauseMenu.mainloop(UiManager.screen,DisplayPauseMenuBackground)
     

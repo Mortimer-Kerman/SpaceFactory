@@ -285,16 +285,21 @@ class Minerais:
         
 
 doc={
-    "foreuse":{"d":L.GetLoc("GameItems.d.foreuse"),"c":{"cuivre":50}},
-     "tapis":{"d":L.GetLoc("GameItems.d.tapis"),"c":{"cuivre":10}},
-     "stockage":{"d":L.GetLoc("GameItems.d.stockage"),"c":{"cuivre":100}},
-     "jonction":{"d":L.GetLoc("GameItems.d.jonction"),"c":{"cuivre":20}},
-     "trieur":{"d":L.GetLoc("GameItems.d.trieur"),"c":{"cuivre":20,"or":10}},
-     "delete":{"d":L.GetLoc("GameItems.d.delete")},
-     "charbon":{"d":L.GetLoc("GameItems.d.charbon")},
-     "cuivre":{"d":L.GetLoc("GameItems.d.cuivre")},
-     "or":{"d":L.GetLoc("GameItems.d.or")},
-     "m1":{"d":L.GetLoc("GameItems.d.m1")}
+    "foreuse":{"c":{"cuivre":50}},
+     "tapis":{"c":{"cuivre":10}},
+     "stockage":{"c":{"cuivre":100}},
+     "jonction":{"c":{"cuivre":20}},
+     "trieur":{"c":{"cuivre":20,"or":10}},
+     "delete":{},
+     "charbon":{},
+     "cuivre":{},
+     "or":{},
+     "m1":{}
      }
 def getDescription(type):
-    UiManager.Popup(doc.get(type,{"d":L.GetLoc("GameItems.d.error")}).get("d"))
+    loc = L.GetLoc("GameItems.d." + type)
+    
+    if loc == "GameItems.d." + type:
+        loc = L.GetLoc("GameItems.d.error")
+    
+    UiManager.Popup(loc)
