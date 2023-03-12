@@ -11,6 +11,7 @@ import math
 from colorsys import hsv_to_rgb
 import numpy
 import NoiseTools
+import FunctionUtils
 
 import pygame
 
@@ -125,14 +126,14 @@ def Generate(conditions = None, Seed = None):
                     
                     ocean = (0, 0, depth + SeaLevel)
                     grass = (0, depth, 0)
-                    desert = lerpcol(((depth * 1) + 0.2, (depth * 0.92) + 0.2, 0.2), (depth, depth / 4, 0), SandRedFactor)
+                    desert = FunctionUtils.lerpcol(((depth * 1) + 0.2, (depth * 0.92) + 0.2, 0.2), (depth, depth / 4, 0), SandRedFactor)
                     poles = (depth + 0.3, depth + 0.3, depth + 0.3)
 
                     Latitude = abs((x - (TextureSize / 2)) / (TextureSize / 2))
 
-                    grass = lerpcol(desert, grass, clamp01((FractalNoise(xCoord, yCoord, (Offset[0] * 2, Offset[1] * 2), 1, distanceToC) - DesertCoverage) / (1 - DesertCoverage)) / BiomeLerpSpeed)
+                    grass = FunctionUtils.lerpcol(desert, grass, FunctionUtils.clamp01((FractalNoise(xCoord, yCoord, (Offset[0] * 2, Offset[1] * 2), 1, distanceToC) - DesertCoverage) / (1 - DesertCoverage)) / BiomeLerpSpeed)
 
-                    grass = lerpcol(grass, poles, clamp01((Latitude - (1 - PoleCoverage)) / PoleCoverage) / BiomeLerpSpeed)
+                    grass = FunctionUtils.lerpcol(grass, poles, FunctionUtils.clamp01((Latitude - (1 - PoleCoverage)) / PoleCoverage) / BiomeLerpSpeed)
 
                     if depth < SeaLevel:
                         c = ocean
@@ -155,7 +156,7 @@ def Generate(conditions = None, Seed = None):
                 density = (distanceToC - (1 - AtmosphereCoverage)) / AtmosphereCoverage
                 if (density < AtmosphereStrengh):
                     density = AtmosphereStrengh
-                atm = multiply(hsv_to_rgb(AtmosphereColor, 1, 1), density);
+                atm = FunctionUtils.multiplycol(hsv_to_rgb(AtmosphereColor, 1, 1), density);
             
 
             clouds = (0,0,0)
@@ -176,8 +177,8 @@ def Generate(conditions = None, Seed = None):
                     light = 0
                 light *= 2
             
-            col = multiply(add(add(c, atm), clouds), light)
-            row.append(ZeroOneToHexa(col))
+            col = FunctionUtils.multiplycol(FunctionUtils.addcol(FunctionUtils.addcol(c, atm), clouds), light)
+            row.append(FunctionUtils.ZeroOneToHexa(col))
         pix.append(row)
     
     texture = pygame.Surface((100,100))
@@ -186,27 +187,9 @@ def Generate(conditions = None, Seed = None):
     return texture
 
 
-def clamp(val:float,minv:float,maxv:float)->float:
-    return max(min(val,maxv),minv)
 
-def clamp01(val:float)->float:
-    return clamp(val, 0, 1)
 
-def lerp(a:float,b:float,t:float)->float:
-    t = clamp01(t)
-    return a * (1 - t) + (b * t)
 
-def lerpcol(a:tuple,b:tuple,t:float)->tuple:
-    return (lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t))
-
-def add(a:tuple,b:tuple)->tuple:
-    return(clamp01(a[0] + b[0]), clamp01(a[1] + b[1]), clamp01(a[2] + b[2]))
-
-def multiply(c:tuple,v:float)->tuple:
-    return (clamp01(c[0] * v),clamp01(c[1] * v),clamp01(c[2] * v))
-
-def ZeroOneToHexa(c:tuple)->tuple:
-    return (c[0] * 255, c[1] * 255, c[2] * 255)
 
 
 def DistanceToCenter(x:float, y:float):

@@ -9,6 +9,9 @@ Created on Thu Feb  9 11:47:04 2023
 import pygame
 import pygame_menu
 
+from datetime import datetime
+import os
+
 import SaveManager
 import TextureManager
 import GameItems
@@ -322,7 +325,7 @@ def WarnUser(title:str,message:str, confirm, cancel, background=DisplayBackgroun
     
     WarnMenu.mainloop(screen, background)
 
-
-
-
-
+def TakeScreenshot():
+    if not os.path.exists("Screenshots/"):
+        os.makedirs("Screenshots/")
+    pygame.image.save(pygame.display.get_surface(), "Screenshots/screnshot_" + datetime.now().strftime("%Y%m%d%H%M%S%f"))

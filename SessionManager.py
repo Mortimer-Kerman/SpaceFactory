@@ -16,6 +16,7 @@ import UiManager
 import GameItems
 import AudioManager
 import SettingsManager
+import FunctionUtils
 import Localization as L
 
 
@@ -101,7 +102,7 @@ def Play(saveName:str,seed=None,tuto=0):
             #action de molette de souris
             if event.type == pygame.MOUSEWHEEL:#si un changement molette survient
                 zoom = SaveManager.mainData.zoom#on récupère le zoom 
-                zoom+=event.y if event.y+zoom>1 else 0#on ajoute le y du changement de molette (uniquement si le niveau de zoom restera supérieur à 1)
+                zoom = FunctionUtils.clamp(zoom+event.y, 10, 150)#on ajoute le y du changement de molette en s'assurant de garder le niveau de zoom entre 10 et 150
                 SaveManager.mainData.zoom = zoom#on change le zoom dans le SaveManager
                 TextureManager.RefreshZoom()#On mets à jour le zoom
                 GameItems.Minerais.SpawnBorder(camOffset)#On spawn les minerais aux bordures
@@ -113,6 +114,8 @@ def Play(saveName:str,seed=None,tuto=0):
             if event.type == pygame.KEYDOWN:
                 if event.key == SettingsManager.GetKeybind("rotate"):
                     SaveManager.UpdateRotation()#mise à jour de la rotation
+                if event.key == pygame.K_F2:
+                    UiManager.TakeScreenshot()
             
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
                 if event.button == 1: # 1 == left button
