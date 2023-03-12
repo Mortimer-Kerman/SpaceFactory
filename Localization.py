@@ -20,17 +20,13 @@ def Init():
     except:
         pass
 
-def __ProcessLoc(loc:str, *args):
-    
-    loc = loc.replace("%$r", "\n")
-    
-    for i in range(1,len(args)+1):
-        loc = loc.replace("%$" + str(i), str(args[i - 1]))
-    
-    return loc
-
 def GetLoc(LocKey:str, *args):
     try:
-        return __ProcessLoc(__localizations[LocKey], args)
+        loc = __localizations[LocKey].replace("%$r", "\n")
+        
+        for i in range(1,len(args)+1):
+            loc = loc.replace("%$" + str(i), str(args[i - 1]))
+        
+        return loc
     except:
         return LocKey
