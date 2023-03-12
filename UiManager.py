@@ -328,4 +328,4 @@ def WarnUser(title:str,message:str, confirm, cancel, background=DisplayBackgroun
 def TakeScreenshot():
     if not os.path.exists("Screenshots/"):
         os.makedirs("Screenshots/")
-    pygame.image.save(pygame.display.get_surface(), "Screenshots/screnshot_" + datetime.now().strftime("%Y%m%d%H%M%S%f"))
+    pygame.image.save(pygame.display.get_surface(), "Screenshots/screnshot_" + datetime.now().strftime("%Y%m%d%H%M%S%f") + ".png")
