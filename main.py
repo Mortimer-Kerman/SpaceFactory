@@ -45,11 +45,12 @@ def OpenMainMenu():
     #Définition du Menu (ici, le menu est généré via le module pygame_menu)
     Menus.MainMenu = pygame_menu.Menu('Space Factory', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
+    Menus.MainMenu.add.vertical_margin(30)
+    
     Menus.MainMenu.add.button('Jouer', OpenSavesList)#Bouton pour lancer le jeu
     Menus.MainMenu.add.button('Options', lambda:SettingsManager.OpenSettings(UiManager.DisplayBackground))#Bouton pour ouvrir les options
     Menus.MainMenu.add.button('Quitter', pygame_menu.events.EXIT)#Quitter le jeu
     
-    Menus.MainMenu.add.vertical_margin(30)
     Menus.MainMenu.add.button('Crédits', OpenCredits, align=pygame_menu.locals.ALIGN_LEFT, font_size=20)
     
     Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
