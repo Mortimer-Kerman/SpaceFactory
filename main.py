@@ -170,7 +170,7 @@ def OpenCredits():
     creditsMenu = pygame_menu.Menu("Crédits", 1500, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     creditsMenu.add.button('Retour', creditsMenu.disable, align=pygame_menu.locals.ALIGN_LEFT)
     creditsMenu.add.vertical_margin(30)
-    with open("Assets/credits (merci)", "r", encoding="utf-8") as f:
+    with open("Assets/credits.txt", "r", encoding="utf-8") as f:
         creditsMenu.add.label(f.read(), font_size=20)
     
     creditsMenu.mainloop(UiManager.screen, UiManager.DisplayBackground)
