@@ -16,17 +16,19 @@ import UiManager
 import GameItems
 import AudioManager
 import SettingsManager
+import Localization as L
 
 
 showTuto=9**9
 def Tuto(t=1):
     global showTuto
-    a=["Déplace toi avec "+pygame.key.name(SettingsManager.GetKeybind("up"))+" "+pygame.key.name(SettingsManager.GetKeybind("down"))+" "+pygame.key.name(SettingsManager.GetKeybind("left"))+" "+pygame.key.name(SettingsManager.GetKeybind("right")),"Zoom et dézoom avec la molette","Commence par placer une foreuse sur un minerais","Place ensuite des tapis pour faire sortir les minerais de la foreuse","Place un stockage à la fin du chemin que tu viens de créer","Bravo, tu connait maintenant les bases, n'hésite pas à cliquer sur l'icone \"interogation\" si tu te poses des questions sur un item"]
     if showTuto in [1,2,3,4,5,6]:
         for i,popup in enumerate(UiManager.UIPopup):
             popup.close(i)
     showTuto=showTuto+1 if t else t
-    UiManager.Popup(a[showTuto],d=1 if showTuto<len(a)-1 else 0)
+    a=L.GetLoc("Session.Tuto."+str(showTuto),pygame.key.name(SettingsManager.GetKeybind("up")),pygame.key.name(SettingsManager.GetKeybind("down")),pygame.key.name(SettingsManager.GetKeybind("left")),pygame.key.name(SettingsManager.GetKeybind("right")))
+    
+    UiManager.Popup(a,d=1 if showTuto<len(a)-1 else 0)
 
 def Play(saveName:str,seed=None,tuto=0):
     """
@@ -41,7 +43,7 @@ def Play(saveName:str,seed=None,tuto=0):
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
 
     if tuto:
-        UiManager.Popup("Souhaitez-vous lancer le tutoriel",lambda : Tuto(0))
+        UiManager.Popup(L.GetLoc("Session.AskTuto"),lambda : Tuto(0))
 
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
@@ -139,7 +141,7 @@ def Play(saveName:str,seed=None,tuto=0):
                                 SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
                                 UiManager.showMenu["delete"]=0
                             else:
-                                UiManager.Popup("Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé")
+                                UiManager.Popup(L.GetLoc("Session.AlreadyItemHere"))
 
                     elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                         UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
@@ -161,7 +163,7 @@ def Play(saveName:str,seed=None,tuto=0):
                             else:
                                 UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
                         if UiManager.UIelements.get("selectElements_question",False):
-                            UiManager.Popup("Clique sur un élément pour voir apparaitre sa description\nRecliquez sur le bouton \"Interrogation\" pour quitter ce mode")
+                            UiManager.Popup(L.GetLoc("Session.Question"))
                             UiManager.showMenu["question"]=1-UiManager.showMenu.get("question",0)
 
                     elif UiManager.UIelements.get("popup_area",False):
@@ -206,11 +208,11 @@ def Pause():
         global quitGame
         quitGame = True
     
-    pauseMenu = pygame_menu.Menu("Pause", 400, 300, theme=pygame_menu.themes.THEME_DARK)
+    pauseMenu = pygame_menu.Menu(L.GetLoc("Session.Pause"), 400, 300, theme=pygame_menu.themes.THEME_DARK)
     
-    pauseMenu.add.button('Reprendre', pauseMenu.disable)#Reprendre la partie
-    pauseMenu.add.button('Paramètres', lambda:SettingsManager.OpenSettings(DisplayPauseMenuBackground))#Bouton pour ouvrir les options
-    pauseMenu.add.button('Menu principal', QuitGame)#Menu principal
+    pauseMenu.add.button(L.GetLoc("Session.Reprendre"), pauseMenu.disable)#Reprendre la partie
+    pauseMenu.add.button(L.GetLoc("Session.Settings"), lambda:SettingsManager.OpenSettings(DisplayPauseMenuBackground))#Bouton pour ouvrir les options
+    pauseMenu.add.button(L.GetLoc("Session.MainMenu"), QuitGame)#Menu principal
     
     pauseMenu.mainloop(UiManager.screen,DisplayPauseMenuBackground)
     
