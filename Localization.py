@@ -15,7 +15,7 @@ def Init():
                 LocKey = LocKey[:-1]
                 if len(LocKey) != 0 and not LocKey.startswith("//"):
                     
-                    KeyPair = LocKey.split(':', 1)
+                    KeyPair = LocKey.split(' : ', 1)
                     __localizations[KeyPair[0]] = KeyPair[1]
     except:
         pass
