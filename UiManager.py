@@ -14,6 +14,7 @@ import TextureManager
 import GameItems
 import SettingsManager
 import SessionManager
+import Localization
 
 #Les variables importantes
 screen = None#la fenêtre pricipale (élément pygame.display)
@@ -160,8 +161,8 @@ def ItemMenu():
     for i in range(len(menuElements)):
         UIelements["selectElements_"+menuElements[i]]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
-        place_text(menuElements[i],width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
-
+        place_text(Localization.GetLoc('Items.' + menuElements[i]),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+    
     UIelements["selectElements_question"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("question", 78, True),(width-500+11+102*3,height-100*showMenu.get("select",0)))
     place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
@@ -309,12 +310,12 @@ def WarnUser(title:str,message:str, confirm, cancel, background=DisplayBackgroun
     bottomBar = WarnMenu.add.frame_h(800,50)
     bottomBar.relax(True)
     
-    confirmButton = WarnMenu.add.button('Confirmer', WarnMenu.disable)
+    confirmButton = WarnMenu.add.button(Localization.GetLoc('Game.Confirm'), WarnMenu.disable)
     if confirm != None:
         confirmButton.set_onreturn(lambda:(WarnMenu.disable(),confirm()))
     bottomBar.pack(confirmButton, align=pygame_menu.locals.ALIGN_LEFT)
     
-    cancelButton = WarnMenu.add.button('Annuler', WarnMenu.disable)
+    cancelButton = WarnMenu.add.button(Localization.GetLoc('Game.Cancel'), WarnMenu.disable)
     if cancel != None:
         confirmButton.set_onreturn(lambda:(WarnMenu.disable(),cancel()))
     bottomBar.pack(cancelButton, align=pygame_menu.locals.ALIGN_RIGHT)

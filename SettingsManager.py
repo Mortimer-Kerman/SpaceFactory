@@ -10,6 +10,7 @@ import json
 import pygame_menu
 
 import UiManager
+import Localization
 
 SettingsChanged = False
 
@@ -127,28 +128,28 @@ def OpenSettings(background):
     global SettingsMenu
     if SettingsMenu != None:
         SettingsMenu.disable()
-    SettingsMenu = pygame_menu.Menu('Options', 800, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    SettingsMenu = pygame_menu.Menu(Localization.GetLoc('Settings.Title'), 800, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
     def TryLeave():
         if not SettingsChanged:
             LoadSettings()
             SettingsMenu.disable()
             return
-        UiManager.WarnUser("Attention", "Cetains paramètres ne sont pas sauvegardés.\nVoulez-vous quand même quitter?\n", lambda:(LoadSettings(), SettingsMenu.disable()), None)
+        UiManager.WarnUser(Localization.GetLoc('Game.Warning'), Localization.GetLoc('Settings.NotSaved'), lambda:(LoadSettings(), SettingsMenu.disable()), None)
         
         
     topBar = SettingsMenu.add.frame_h(800,50)
     topBar.relax(True)
-    topBar.pack(SettingsMenu.add.button('Retour', TryLeave), align=pygame_menu.locals.ALIGN_LEFT)
-    topBar.pack(SettingsMenu.add.button('Enregistrer', SaveSettings), align=pygame_menu.locals.ALIGN_RIGHT)
+    topBar.pack(SettingsMenu.add.button(Localization.GetLoc('Game.Back'), TryLeave), align=pygame_menu.locals.ALIGN_LEFT)
+    topBar.pack(SettingsMenu.add.button(Localization.GetLoc('Settings.Save'), SaveSettings), align=pygame_menu.locals.ALIGN_RIGHT)
     
     SettingsMenu.add.vertical_margin(20)
     
-    SettingsMenu.add.range_slider('Volume de la musique', GetSetting("musicVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.music.set_volume(int(x)/100),SetSetting("musicVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
+    SettingsMenu.add.range_slider(Localization.GetLoc('Settings.MusicVolume'), GetSetting("musicVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.music.set_volume(int(x)/100),SetSetting("musicVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
     
     SettingsMenu.add.vertical_margin(20)
     
-    SettingsMenu.add.label("Touches", align=pygame_menu.locals.ALIGN_LEFT)
+    SettingsMenu.add.label(Localization.GetLoc('Settings.Keys.Title'), align=pygame_menu.locals.ALIGN_LEFT)
     
     SettingsMenu.add.vertical_margin(20)
     
@@ -157,7 +158,7 @@ def OpenSettings(background):
     for key in bindings.keys():
         frame = SettingsMenu.add.frame_h(300, 50, padding=0, align=pygame_menu.locals.ALIGN_LEFT)
         frame.relax(True)
-        frame.pack(SettingsMenu.add.label(key))
+        frame.pack(SettingsMenu.add.label(Localization.GetLoc('Settings.Keys.'+key)))
         
         name = pygame.key.name(bindings[key])
         leak = int((10 - len(name))/2)
@@ -170,17 +171,17 @@ def OpenSettings(background):
     
     SettingsMenu.add.vertical_margin(20)
     
-    SettingsMenu.add.button('Réinitialiser les paramètres', lambda:UiManager.WarnUser("Attention","Voulez-vous vraiment remettre\ntous vos paramètres à leurs valeurs d'origine?",lambda:(ResetSettings(),OpenSettings(background)),None,background))
+    SettingsMenu.add.button(Localization.GetLoc('Settings.Reset'), lambda:UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Settings.Reset.Message'),lambda:(ResetSettings(),OpenSettings(background)),None,background))
     
     SettingsMenu.mainloop(UiManager.screen, background)
 
 def ChangeKey(KeyButton,KeyId,background):
     keyName = KeyButton.get_title().strip()
     
-    KeyChanger = pygame_menu.Menu('Changer la touche', 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    KeyChanger = pygame_menu.Menu(Localization.GetLoc('Settings.EditKey'), 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
     KeyChanger.add.label(KeyId)
-    KeyChanger.add.label("Touche actuelle: " + keyName)
+    KeyChanger.add.label(Localization.GetLoc('Settings.EditKey.Current',keyName))
     
     def kLoop():
         for event in pygame.event.get():

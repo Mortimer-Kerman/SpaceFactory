@@ -1,0 +1,50 @@
+Game.Title : Space Factory
+Game.Play : Jouer
+Game.Quit : Quitter
+Game.MainMenu : Menu principal
+Game.Back : Retour
+Game.Credits : Crédits
+Game.Warning : Attention
+Game.Confirm : Confirmer
+Game.Cancel : Annuler
+//
+Saves.Title : Sauvegardes
+Saves.NewSave : Nouvelle sauvegarde
+Saves.NewSave.Name : Nom: 
+Saves.NewSave.Seed : Graine: 
+Saves.NewSave.Environment : Environment
+Saves.NewSave.Environment.Random : Aléatoire
+Saves.NewSave.Environment.Lunar : Lunaire
+Saves.NewSave.Environment.Desertic : Désertique
+Saves.NewSave.Environment.Lifefull : Vivant
+Saves.NewSave.Difficulty : Difficulté
+Saves.NewSave.Difficulty.Easy : Facile
+Saves.NewSave.Difficulty.Normal : Normal
+Saves.NewSave.Difficulty.Hard : Difficile
+Saves.NewSave.Create : Créer
+Saves.NewSave.AlreadyExists : Ce nom existe déjà !
+//
+Settings.Title : Options
+Settings.NotSaved : Cetains paramètres ne sont pas sauvegardés.%$rVoulez-vous quand même quitter?%$r
+Settings.Save : Enregistrer
+Settings.MusicVolume : Volume de la musique
+Settings.Keys.Title : Touches
+Settings.Keys.up : Haut
+Settings.Keys.down : Bas
+Settings.Keys.left : Gauche
+Settings.Keys.right : Droite
+Settings.Keys.rotate : Tourner
+Settings.EditKey : Changer la touche
+Settings.EditKey.Current : Touche actuelle: %$1
+Settings.Reset : Réinitialiser les paramètres
+Settings.Reset.Message : Voulez-vous vraiment remettre%$rtous vos paramètres à leurs valeurs d'origine?
+//
+Items.foreuse : Foreuse
+Items.tapis : Tapis
+Items.stockage : Stockage
+Items.trieur : Trieur
+Items.jonction : Jonction
+Items.pont : Pont
+Items.four : Four
+
+
