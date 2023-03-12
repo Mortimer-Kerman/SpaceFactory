@@ -19,18 +19,7 @@ import PlanetGenerator
 import SettingsManager
 import SaveManager
 import Localization
-from pypresence import Presence
 
-try:
-    """
-    Tentative de création de RichPrésence (RichPrésence : Message : Utilisateur joue à ce jeu)
-    """
-    RPC = Presence("1084578470790705243")
-    RPC.connect()
-
-    RPC.update(state="test",details="hee hee",large_image="mainTex")
-except:
-    print("ERREUR DISCORD")
 
 pygame.init()#initialisation pygame
 
