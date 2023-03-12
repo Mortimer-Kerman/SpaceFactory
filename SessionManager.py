@@ -28,11 +28,14 @@ def Tuto(t=1):
     showTuto=showTuto+1 if t else t
     UiManager.Popup(a[showTuto],d=1 if showTuto<len(a)-1 else 0)
 
-def Play(saveName:str,tuto=0):
+def Play(saveName:str,seed=None,tuto=0):
     """
     Lance le jeu
     """
     SaveManager.Load(saveName)#Chargement de la sauvegarde
+    
+    if seed != None:
+        SaveManager.mainData.seed = seed
     
     runtime=0
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais

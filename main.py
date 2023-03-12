@@ -9,6 +9,7 @@ import pygame
 import pygame_menu
 
 import os
+import random
 
 import TextureManager
 import UiManager
@@ -38,8 +39,6 @@ class Menus:
     MainMenu = None
     SavesList = None
     SaveCreation = None
-    Settings = None
-    KeyChanger = None
 
 
 def OpenMainMenu():
@@ -49,6 +48,9 @@ def OpenMainMenu():
     Menus.MainMenu.add.button('Jouer', OpenSavesList)#Bouton pour lancer le jeu
     Menus.MainMenu.add.button('Options', lambda:SettingsManager.OpenSettings(UiManager.DisplayBackground))#Bouton pour ouvrir les options
     Menus.MainMenu.add.button('Quitter', pygame_menu.events.EXIT)#Quitter le jeu
+    
+    Menus.MainMenu.add.vertical_margin(30)
+    Menus.MainMenu.add.button('Crédits', OpenCredits, align=pygame_menu.locals.ALIGN_LEFT, font_size=20)
     
     Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
 
@@ -102,17 +104,11 @@ def OpenSaveCreationMenu():
     menuSections.pack(creationTools)
     
     saveNameInput=Menus.SaveCreation.add.text_input('Nom: ', default='save',maxchar=10)
-    
     creationTools.pack(saveNameInput)
-    """
-    creationTools.pack(Menus.SaveCreation.add.dropselect(
-        title='',
-        items=[('Lunaire', 0),('Hadéen', 1),('Précambien', 2),('Carbonifèrien', 3)],
-        default=0
-    ))
-    """
     
-    creationTools.pack(Menus.SaveCreation.add.button('Créer', lambda : TryCreateSave(saveNameInput)))
+    global seedInput
+    seedInput=Menus.SaveCreation.add.text_input("Graine: ",maxchar=10)
+    creationTools.pack(seedInput)
     
     SaveManager.planetTex = PlanetGenerator.Generate()
     thumbDisplayer = Menus.SaveCreation.add.surface(pygame.transform.scale(SaveManager.planetTex,(150,150)))
@@ -132,28 +128,50 @@ def OpenSaveCreationMenu():
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_RIGHT,
                       value_format=lambda x: difficultiesDict[x])
     
+    global CreateSaveButton
+    CreateSaveButton = Menus.SaveCreation.add.button('Créer', lambda : TryCreateSave(saveNameInput))
+    
     Menus.SaveCreation.mainloop(UiManager.screen, UiManager.DisplayBackground)
     
 def TryCreateSave(saveNameInput):
-
-    global SavePopup
-
+    
     saveName = str(saveNameInput.get_value())
     
     if SaveManager.SaveExists(saveName):
-
-        try:SavePopup.hide()
-        except:pass
-
-        SavePopup=Menus.SaveCreation.add.label("Ce nom existe déjà !").set_background_color((218, 85, 82), inflate=(0, 0))
+        global CreateSaveButton
+        CreateSaveButton.set_title("Ce nom existe déjà !").set_background_color((218, 85, 82), inflate=(0, 0))
         return
     
     Menus.SavesList.disable()
     Menus.SaveCreation.disable()
-    SessionManager.Play(saveName,tuto=1)
+    SessionManager.Play(saveName,GetSeedFromInput(),tuto=1)
     
+def GetSeedFromInput():
 
+    seed = None
+    
+    if seedInput != None:
+        inputedSeed = seedInput.get_value()
+        if inputedSeed == "":
+            seed = random.randint(-(9**9),9**9)
+        else:
+            try:
+                seed = int(inputedSeed)
+            except:
+                seed = hash(inputedSeed)
+        while seed > 9**9 or seed < -(9**9):
+            seed = int(seed/10)
+    
+    return seed
 
-
+def OpenCredits():
+    
+    creditsMenu = pygame_menu.Menu("Crédits", 800, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    creditsMenu.add.button('Retour', creditsMenu.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    with open("Assets/credits (merci)", "r") as f:
+        creditsMenu.add.label(f.read())
+    
+    creditsMenu.mainloop(UiManager.screen, UiManager.DisplayBackground)
 
 OpenMainMenu()

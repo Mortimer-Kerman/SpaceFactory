@@ -51,7 +51,8 @@ def Load(name:str):
     CreateSave(name)#Création de la sauvegarde
     if SaveExists(name):#si la sauvegarde existe
         path = "Saves/" + saveName + "/"
-        mainData.__dict__ = json.load(open(path + "save.spf", "r"))#charger les Datas
+        with open(path + "save.spf", "r") as f:
+            mainData.__dict__ = json.load(f)#charger les Datas
         try:
             if mainData.saveVersion!=SaveFileVersion:
                 print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
@@ -75,7 +76,8 @@ def Save():
     path = "Saves/" + saveName + "/"
     if not os.path.exists(path):#si le dossier de sauvegarde n'existe pas, le créer
         os.makedirs(path)
-    open(path + "save.spf", "w").write(mainData.toJson())#écriture dans le fichier de sauvegarde
+    with open(path + "save.spf", "w") as f:
+        f.write(mainData.toJson())#écriture dans le fichier de sauvegarde
     if planetTex != None:
         pygame.image.save(planetTex, path + "planet.png")
     print("File saved!")

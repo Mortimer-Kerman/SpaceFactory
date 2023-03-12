@@ -73,7 +73,8 @@ def LoadSettings():
     global __mainSettings
     
     try:
-        __mainSettings = json.load(open("Settings.json", "r"))
+        with open("Settings.json", "r") as f:
+            __mainSettings = json.load(f)
         EnsureSettingsValidity()
         ApplySettings()
     except:
@@ -85,7 +86,8 @@ def SaveSettings():
     """
     Sauvegarde les paramètres dans le disque dur et les applique au jeu
     """
-    open("Settings.json", "w").write(json.dumps(__mainSettings, default=lambda o: o.__dict__, indent = 4))
+    with open("Settings.json", "w") as f:
+        f.write(json.dumps(__mainSettings, default=lambda o: o.__dict__, indent = 4))
     global SettingsChanged
     SettingsChanged = False
     ApplySettings()
