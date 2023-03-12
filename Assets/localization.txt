@@ -1,0 +1,24 @@
+Game.Title:Space Factory
+Game.Play:Jouer
+Game.Quit:Quitter
+Game.MainMenu:Menu principal
+Game.Back:Retour
+Game.Credits:Crédits
+//
+Saves.Title:Sauvegardes
+Saves.NewSave:Nouvelle sauvegarde
+Saves.NewSave.Name:Nom: 
+Saves.NewSave.Seed:Graine: 
+Saves.NewSave.Environment:Environment
+Saves.NewSave.Environment.Random:Aléatoire
+Saves.NewSave.Environment.Lunar:Lunaire
+Saves.NewSave.Environment.Desertic:Désertique
+Saves.NewSave.Environment.Lifefull:Vivant
+Saves.NewSave.Difficulty:Difficulté
+Saves.NewSave.Difficulty.Easy:Facile
+Saves.NewSave.Difficulty.Normal:Normal
+Saves.NewSave.Difficulty.Hard:Difficile
+Saves.NewSave.Create:Créer
+Saves.NewSave.AlreadyExists:Ce nom existe déjà !
+//
+Settings.Title:Options
