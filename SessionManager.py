@@ -133,7 +133,6 @@ def Play(saveName:str,seed=None,tuto=0):
                                         Tuto()
                             else:
                                 SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
-                                UiManager.showMenu["delete"]=0  
                         else:
                             if UiManager.showMenu.get("question",False):
                                     GameItems.getDescription(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)
@@ -142,7 +141,6 @@ def Play(saveName:str,seed=None,tuto=0):
                                         GameItems.getDescription(a)
                             elif UiManager.showMenu["delete"]:
                                 SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
-                                UiManager.showMenu["delete"]=0
                             else:
                                 UiManager.Popup(L.GetLoc("Session.AlreadyItemHere"))
 
