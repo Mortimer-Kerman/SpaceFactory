@@ -175,7 +175,7 @@ def GetSeedFromInput():
 
 def OpenCredits():
     
-    creditsMenu = pygame_menu.Menu(Localization.GetLoc('Game.Credits'), 1500, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    creditsMenu = pygame_menu.Menu(Localization.GetLoc('Game.Credits'), UiManager.width//1.1, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     creditsMenu.add.button(Localization.GetLoc('Game.Back'), creditsMenu.disable, align=pygame_menu.locals.ALIGN_LEFT)
     creditsMenu.add.vertical_margin(30)
     with open("Assets/credits.txt", "r", encoding="utf-8") as f:
