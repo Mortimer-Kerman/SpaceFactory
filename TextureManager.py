@@ -49,7 +49,7 @@ def LoadAllTextures():
     global aquire, nasalization
     try:
         aquire=pygame.font.Font("./Assets/font/Aquire.ttf",26)#on tente de charger aquire
-        nasalization=pygame.font.Font("./Assets/font/nasalization.ttf",30)#on tente de charger aquire
+        nasalization=pygame.font.Font("./Assets/font/nasalization.ttf",30)#on tente de charger nasalization
     except:
         aquire=pygame.font.get_default_font()
         nasalization=pygame.font.get_default_font()# en cas d'erreur, on tente avec la police par défaut
@@ -69,3 +69,21 @@ def RefreshZoom():
     Cette fonction sert à raffraichir le zoom
     """
     zoomedTextures.clear()#vide le dictionnaire des textures zoomées
+    zoomedFilters.clear()
+
+
+def GetColorFilter(color:tuple,scale:float):
+    
+    if not color in filters.keys():
+        colorFilter = pygame.Surface((100,100))
+        colorFilter.fill(color)
+        filters[color] = colorFilter
+    tex = filters[color]
+    if scale != 1:
+        if not color in zoomedFilters.keys():
+            zoomedFilters[color] = pygame.transform.scale(tex,(scale,scale))
+        tex = zoomedFilters[color]
+    return tex
+
+filters = {}
+zoomedFilters = {}

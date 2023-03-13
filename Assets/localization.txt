@@ -22,15 +22,23 @@ Saves.Title : Sauvegardes
 Saves.NewSave : Nouvelle sauvegarde
 Saves.NewSave.Name : Nom: 
 Saves.NewSave.Seed : Graine: 
-Saves.NewSave.Environment : Environment
-Saves.NewSave.Environment.Random : Aléatoire
-Saves.NewSave.Environment.Lunar : Lunaire
-Saves.NewSave.Environment.Desertic : Désertique
-Saves.NewSave.Environment.Lifefull : Vivant
 Saves.NewSave.Difficulty : Difficulté
 Saves.NewSave.Difficulty.Easy : Facile
 Saves.NewSave.Difficulty.Normal : Normal
 Saves.NewSave.Difficulty.Hard : Difficile
+Saves.NewSave.Environment : Environment
+Saves.NewSave.Environment.Random : Aléatoire
+Saves.NewSave.Environment.Random.desc : Commencez sur une planète inconnue.%$rDe quoi sera fait le monde qui vous attend? A vous de le découvrir!
+Saves.NewSave.Environment.Lunar : Lunaire
+Saves.NewSave.Environment.Lunar.desc : Vous avez été envoyé sur un monde sans air, exposé au vide spatial.%$rC'est un petit pas pour l'Homme...
+Saves.NewSave.Environment.Desertic : Désertique
+Saves.NewSave.Environment.Desertic.desc : Votre prochaine destination : Un monde plein de potentiel.%$rUn désert rocailleux, des océans vierges,%$rune graine pour la vie.
+Saves.NewSave.Environment.Lifefull : Vivant
+Saves.NewSave.Environment.Lifefull.desc : Nous ne sommes peut-être pas seuls dans l'univers.%$rCe monde, lui reste la preuve irréfutable que la vie est possible ailleurs.%$rQu'en ferez vous?
+Saves.NewSave.Gamemode : Mode de jeu
+Saves.NewSave.Gamemode.Career : Carrière
+Saves.NewSave.Gamemode.Sandbox : Bac à sable
+Saves.NewSave.Gamemode.Tutorial : Tutoriel
 Saves.NewSave.Create : Créer
 Saves.NewSave.AlreadyExists : Ce nom existe déjà !
 

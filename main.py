@@ -59,12 +59,6 @@ def OpenMainMenu():
     Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
 
 def OpenSavesList():
-    if Menus.SavesList != None:
-        Menus.SavesList.disable()
-    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 400, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    Menus.SavesList.add.button(Localization.GetLoc('Game.Back'), Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)
-    
-    Menus.SavesList.add.button(Localization.GetLoc('Saves.NewSave'), OpenSaveCreationMenu)
     
     if not os.path.exists("Saves/"):#si le dossier de sauvegarde n'existe pas, le créer
         os.makedirs("Saves/")
@@ -73,6 +67,17 @@ def OpenSavesList():
     for saveFile in os.listdir('Saves/'):
         if SaveManager.SaveExists(saveFile):
             saveNames.append(saveFile)
+    
+    if len(saveNames) == 0:
+        OpenSaveCreationMenu(True)
+        return
+    
+    if Menus.SavesList != None:
+        Menus.SavesList.disable()
+    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 400, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.SavesList.add.button(Localization.GetLoc('Game.Back'), Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    Menus.SavesList.add.button(Localization.GetLoc('Saves.NewSave'), OpenSaveCreationMenu)
     
     frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 100, 245), background_color=(50, 50, 50), padding=0)
     frame.relax(True)
@@ -93,29 +98,64 @@ def OpenSavesList():
         
     Menus.SavesList.mainloop(UiManager.screen, UiManager.DisplayBackground)
    
-def OpenSaveCreationMenu():
+def OpenSaveCreationMenu(defaultTuto:bool=False):
     if Menus.SaveCreation != None:
         Menus.SaveCreation.disable()
-    Menus.SaveCreation = pygame_menu.Menu(Localization.GetLoc('Saves.Title'), 600, 500, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.SaveCreation = pygame_menu.Menu(Localization.GetLoc('Saves.NewSave'), 700, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SaveCreation.add.button(Localization.GetLoc('Game.Back'), Menus.SaveCreation.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
-    menuSections = Menus.SaveCreation.add.frame_h(560, 195, padding=0)
+    menuSections = Menus.SaveCreation.add.frame_h(660, 325, padding=0)
     menuSections.relax(True)
     
-    creationTools = Menus.SaveCreation.add.frame_v(420, 195, padding=0)
+    creationTools = Menus.SaveCreation.add.frame_v(520, 325, padding=0)
     creationTools.relax(True)
     
-    menuSections.pack(creationTools)
+    menuSections.pack(creationTools, align=pygame_menu.locals.ALIGN_LEFT)
     
-    saveNameInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Name'), default=Localization.GetLoc('Saves.NewSave'),maxchar=20)
-    creationTools.pack(saveNameInput)
+    saveNameInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Name'), default=Localization.GetLoc('Saves.NewSave'),maxchar=30)
+    creationTools.pack(saveNameInput, align=pygame_menu.locals.ALIGN_LEFT)
     
     global seedInput
     seedInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Seed'),maxchar=10)
-    creationTools.pack(seedInput)
+    creationTools.pack(seedInput, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    difficultiesDict = {0: 'Saves.NewSave.Difficulty.Easy',
+                        1: 'Saves.NewSave.Difficulty.Normal',
+                        2: 'Saves.NewSave.Difficulty.Hard'}
+    DifficultySlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Difficulty'), 1, list(difficultiesDict.keys()),
+                      slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
+                      value_format=lambda x: Localization.GetLoc(difficultiesDict[x]))
+    creationTools.pack(DifficultySlider, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    environmentsDict = {0: 'Saves.NewSave.Environment.Random',
+                        1: 'Saves.NewSave.Environment.Lunar',
+                        2: 'Saves.NewSave.Environment.Desertic',
+                        3: 'Saves.NewSave.Environment.Lifefull'}
+    EnvironmentSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Environment'), 0, list(environmentsDict.keys()),
+                      slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
+                      onchange=lambda x: (SetLabelText(Localization.GetLoc(environmentsDict[x] + '.desc')), SetCorrectPlanetMap(x)),
+                      value_format=lambda x: Localization.GetLoc(environmentsDict[x]))
+    creationTools.pack(EnvironmentSlider, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    gameModesDict = {0: 'Saves.NewSave.Gamemode.Career',
+                     1: 'Saves.NewSave.Gamemode.Sandbox',
+                     2: 'Saves.NewSave.Gamemode.Tutorial'}
+    GameModeSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Gamemode'), 2 if defaultTuto else 0, list(gameModesDict.keys()),
+                      slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
+                      value_format=lambda x: Localization.GetLoc(gameModesDict[x]))
+    creationTools.pack(GameModeSlider, align=pygame_menu.locals.ALIGN_LEFT)
     
     SaveManager.planetTex = PlanetGenerator.Generate()
-    thumbDisplayer = Menus.SaveCreation.add.surface(pygame.transform.scale(SaveManager.planetTex,(150,150)))
+    thumbDisplayer = Menus.SaveCreation.add.surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
+    
+    def SetCorrectPlanetMap(x:int):
+        if x == 0:
+            SetSurface(PlanetGenerator.Generate())
+            thumbDisplayer.set_surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
+            return
+        conditions = PlanetGenerator.PlanetaryConditions()
+        conditions.type = 2 if x == 1 else 1
+        SetSurface(PlanetGenerator.Generate(conditions))
     
     def SetSurface(surface):
         SaveManager.planetTex = surface
@@ -123,19 +163,17 @@ def OpenSaveCreationMenu():
     
     menuSections.pack(thumbDisplayer)
     
-    environmentsDict = {0: Localization.GetLoc('Saves.NewSave.Environment.Random'),
-                        1: Localization.GetLoc('Saves.NewSave.Environment.Lunar'),
-                        2: Localization.GetLoc('Saves.NewSave.Environment.Desertic'),
-                        3: Localization.GetLoc('Saves.NewSave.Environment.Lifefull')}
-    Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Environment'), 0, list(environmentsDict.keys()),
-                      slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_RIGHT,
-                      value_format=lambda x: environmentsDict[x])
-    difficultiesDict = {0: Localization.GetLoc('Saves.NewSave.Difficulty.Easy'),
-                        1: Localization.GetLoc('Saves.NewSave.Difficulty.Normal'),
-                        2: Localization.GetLoc('Saves.NewSave.Difficulty.Hard')}
-    Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Difficulty'), 1, list(difficultiesDict.keys()),
-                      slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_RIGHT,
-                      value_format=lambda x: difficultiesDict[x])
+    DescLabel = Menus.SaveCreation.add.label('\n\n', font_size=15)
+    def SetLabelText(text:str):
+        lines = text.split('\n',2)
+        for i in range(3):
+            if i < len(lines):
+                DescLabel[i].set_title(lines[i])
+            else:
+                DescLabel[i].set_title('')
+    SetLabelText(Localization.GetLoc('Saves.NewSave.Environment.Random.desc'))
+    
+    Menus.SaveCreation.add.vertical_margin(20)
     
     global CreateSaveButton
     CreateSaveButton = Menus.SaveCreation.add.button(Localization.GetLoc('Saves.NewSave.Create'), lambda : TryCreateSave(saveNameInput))
@@ -151,8 +189,9 @@ def TryCreateSave(saveNameInput):
         CreateSaveButton.set_title(Localization.GetLoc('Saves.NewSave.AlreadyExists')).set_background_color((218, 85, 82), inflate=(0, 0))
         return
     
-    Menus.SavesList.disable()
     Menus.SaveCreation.disable()
+    if Menus.SavesList != None:
+        Menus.SavesList.disable()
     SessionManager.Play(saveName,GetSeedFromInput(),tuto=1)
     
 def GetSeedFromInput():
