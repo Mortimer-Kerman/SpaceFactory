@@ -13,6 +13,8 @@ missingTexture = None#Si la texture n'existe pas
 
 aquire = None#variable stockant la police principale "aquire"
 
+nasalization = None#variable stockant la police "nasalization"
+
 loadedTextures = {"no":missingTexture}
 menuTextures = {}
 def GetTexture(textureName:str,scale:float=1,is_menu:bool=False)->pygame.Surface:
@@ -44,9 +46,13 @@ def LoadAllTextures():
     """
     Chargement de toutes les textures
     """
-    global aquire
-    try:aquire=pygame.font.Font("./Assets/font/Aquire.ttf",26)#on tente de charger aquire
-    except:aquire=pygame.font.get_default_font()#en cas d'erreur, on tente avec la police par défaut
+    global aquire, nasalization
+    try:
+        aquire=pygame.font.Font("./Assets/font/Aquire.ttf",26)#on tente de charger aquire
+        nasalization=pygame.font.Font("./Assets/font/nasalization.ttf",30)#on tente de charger aquire
+    except:
+        aquire=pygame.font.get_default_font()
+        nasalization=pygame.font.get_default_font()# en cas d'erreur, on tente avec la police par défaut
     
     for subdir, dirs, files in os.walk(texturesPath):#on explore tous les fichiers dans le chemin des textures
         for file in files:#pour chaque fichier dans les fichiers

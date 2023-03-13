@@ -276,7 +276,7 @@ class Popup:
                self.close(i)
         else:
             UIelements["popup_"+str(i)]=pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,50+205*i,500,200)).collidepoint(pygame.mouse.get_pos())
-            place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.aquire)
+            place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.nasalization,n=30)
             if self.command is None:
                 UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
                 place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.aquire)
