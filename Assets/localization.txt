@@ -79,6 +79,7 @@ Items.trieur : Trieur
 Items.jonction : Jonction
 Items.pont : Pont
 Items.four : Four
+Items.market : Market
 
 //Description des items
 GameItems.d.foreuse : La foreuse est une machine servant à extraire du minerais automatiquement

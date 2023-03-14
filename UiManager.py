@@ -243,17 +243,57 @@ def interactItem(item):
     interactMenu = pygame_menu.Menu("Configurez cet élément", 400, 300, theme=pygame_menu.themes.THEME_DARK)
     
     interactMenu.add.button('Reprendre', interactMenu.disable)#Reprendre la partie
+    b=None
     if item.name=="trieur":
         a=[[i] for i in list(GameItems.allTransportableItems.keys())]
         b=interactMenu.add.selector("Choisissez : ",a)
-    if item.name=="stockage":
-        a=[[i] for i in list(GameItems.allTransportableItems.keys())]
-        b=interactMenu.add.selector("Choisissez : ",a)
+        interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)
+    if item.name in ["stockage","market"]:
+        in_menu=1
+        BLOCK_SIZE=100
+        rects=[]#[[100,100],[1000,1000]]
+        for x in range(10):
+            rects.append( pygame.Rect(x*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) )
+        clock = pygame.time.Clock()
+        while in_menu:
+            selected=None
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        in_menu = False
+ 
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        for i, r in enumerate(rects):
+                            # Pythagoras a^2 + b^2 = c^2
+                            dx = r.centerx - event.pos[0] # a
+                            dy = r.centery - event.pos[1] # b
+                            distance_square = dx**2 + dy**2 # c^2
 
-    interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)
+                            if distance_square <= 50**2: # c^2 <= radius^2
+                                selected = i
+                                selected_offset_x = r.x - event.pos[0]
+                                selected_offset_y = r.y - event.pos[1]
+               
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        selected = None
+               
+                elif event.type == pygame.MOUSEMOTION:
+                    if selected is not None: # selected can be `0` so `is not None` is required
+                        # move object
+                        rects[selected].x = event.pos[0] + selected_offset_x
+                        rects[selected].y = event.pos[1] + selected_offset_y
+            screen.fill((0,0,0))
+            for r in rects:
+                pygame.draw.circle(screen, (255,0,0), r.center, 50)
+            pygame.display.update()
+            clock.tick(25)
+    
 
     SessionManager.PauseMenuBackground = None
-    return b.get_value()
+    return b.get_value() if b is not None else None
+
 
 UIPopup=[]
 class Popup:

@@ -13,7 +13,7 @@ import Localization as L
 
 import pygame
 
-menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four"]#éléments du menu de séléction
+menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four","market"]#éléments du menu de séléction
 
 allTransportableItems={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110)}
 
