@@ -249,6 +249,7 @@ def interactItem(item):
         b=interactMenu.add.selector("Choisissez : ",a)
         interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)
     if item.name in ["stockage","market"]:
+        
         in_menu=1
         BLOCK_SIZE=100
         rects=[]#[[100,100],[1000,1000]]
@@ -265,12 +266,7 @@ def interactItem(item):
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         for i, r in enumerate(rects):
-                            # Pythagoras a^2 + b^2 = c^2
-                            dx = r.centerx - event.pos[0] # a
-                            dy = r.centery - event.pos[1] # b
-                            distance_square = dx**2 + dy**2 # c^2
-
-                            if distance_square <= 50**2: # c^2 <= radius^2
+                            if r.collidepoint(event.pos):
                                 selected = i
                                 selected_offset_x = r.x - event.pos[0]
                                 selected_offset_y = r.y - event.pos[1]
@@ -284,9 +280,10 @@ def interactItem(item):
                         # move object
                         rects[selected].x = event.pos[0] + selected_offset_x
                         rects[selected].y = event.pos[1] + selected_offset_y
-            screen.fill((0,0,0))
+               
+            sc.fill((0,0,0))
             for r in rects:
-                pygame.draw.circle(screen, (255,0,0), r.center, 50)
+                pygame.draw.rect(sc, (255,0,0), r)
             pygame.display.update()
             clock.tick(25)
     
