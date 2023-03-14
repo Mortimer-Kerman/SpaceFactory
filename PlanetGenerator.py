@@ -181,7 +181,7 @@ def Generate(conditions = None, Seed = None):
             row.append(FunctionUtils.ZeroOneToHexa(col))
         pix.append(row)
     
-    texture = pygame.Surface((100,100))
+    texture = pygame.Surface((TextureSize,TextureSize))
     pygame.surfarray.blit_array(texture, numpy.array(pix))
     
     return texture
