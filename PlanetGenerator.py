@@ -18,8 +18,9 @@ import pygame
 #Les types de planète fournissent au générateur une direction globale dans sa manière de générer
 class PlanetTypes:
     Random = 0
-    EarthLike = 1
-    Dead = 2
+    Dead = 1
+    Desertic = 2
+    EarthLike = 3
 
 #Paramètres généraux pour la génération des textures: taille de la texture, échelle de bruit, nombre d'octaves et vitesse de transition entre les biomes
 TextureSize = 100
@@ -96,11 +97,14 @@ def Generate(conditions = None, Seed = None):
 
         SeaLevel = 0.5#random.uniform(0.2, 0.8)
 
-        DesertCoverage = random.uniform(0, 1)
+        DesertCoverage = random.uniform(0.5, 1)
 
         CloudsStrength = (SeaLevel - 0.2) * 4 / 3
 
         SandRedFactor = random.uniform(0, 1)
+    
+    if PlanetType == PlanetTypes.Desertic:
+        PlanetType = PlanetTypes.EarthLike
     
     Offset = (random.uniform(-TextureSize, TextureSize),random.uniform(-TextureSize, TextureSize))
     
@@ -112,8 +116,8 @@ def Generate(conditions = None, Seed = None):
         row = []
         for x in range(TextureSize):
             
-            xCoord = x * scale;
-            yCoord = y * scale;
+            xCoord = x * scale
+            yCoord = y * scale
 
             distanceToC = DistanceToCenter(x, y)
 

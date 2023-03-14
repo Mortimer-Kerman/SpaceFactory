@@ -18,6 +18,7 @@ import AudioManager
 import SettingsManager
 import FunctionUtils
 import Localization as L
+import MapManager
 
 
 showTuto=9**9
@@ -89,10 +90,6 @@ def Play(saveName:str,seed=None,tuto=0):
             if showTuto==0:
                 Tuto()
         
-        if keys[pygame.K_ESCAPE]:#Si la touche Esc est pressée
-            if Pause():#On fait pause
-                return#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
-        
         for event in pygame.event.get():
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
             if event.type == pygame.QUIT:#en cas de Alt+F4 ou de fermeture via la croix de la fenêtre
@@ -116,6 +113,11 @@ def Play(saveName:str,seed=None,tuto=0):
                     SaveManager.UpdateRotation()#mise à jour de la rotation
                 if event.key == pygame.K_F2:
                     UiManager.TakeScreenshot()
+                if event.key == pygame.K_m:
+                    MapManager.OpenMap()
+                if event.key == pygame.K_ESCAPE:
+                    if Pause():#On fait pause
+                        return#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
             
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
                 if event.button == 1: # 1 == left button

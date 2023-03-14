@@ -162,7 +162,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
             thumbDisplayer.set_surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
             return
         conditions = PlanetGenerator.PlanetaryConditions()
-        conditions.type = 2 if x == 1 else 1
+        conditions.type = x
         SetSurface(PlanetGenerator.Generate(conditions))
     
     def SetSurface(surface):
