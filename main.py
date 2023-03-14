@@ -134,6 +134,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     EnvironmentSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Environment'), 0, list(environmentsDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
                       onchange=lambda x: (SetLabelText(Localization.GetLoc(environmentsDict[x] + '.desc')), SetCorrectPlanetMap(x)),
+                      #range_values=int,
                       value_format=lambda x: Localization.GetLoc(environmentsDict[x]))
     creationTools.pack(EnvironmentSlider, align=pygame_menu.locals.ALIGN_LEFT)
     
@@ -148,7 +149,14 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     SaveManager.planetTex = PlanetGenerator.Generate()
     thumbDisplayer = Menus.SaveCreation.add.surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
     
+    global PrevEnvironment
+    PrevEnvironment = 0
     def SetCorrectPlanetMap(x:int):
+        global PrevEnvironment
+        if x == PrevEnvironment:
+            return
+        PrevEnvironment = x
+
         if x == 0:
             SetSurface(PlanetGenerator.Generate())
             thumbDisplayer.set_surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
