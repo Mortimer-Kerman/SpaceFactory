@@ -79,7 +79,7 @@ def OpenSavesList():
     
     Menus.SavesList.add.button(Localization.GetLoc('Saves.NewSave'), OpenSaveCreationMenu)
     
-    frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 100, 245), background_color=(50, 50, 50), padding=0)
+    frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 100, 245), max_height=245, background_color=(50, 50, 50), padding=0)
     frame.relax(True)
     
     for saveName in saveNames:

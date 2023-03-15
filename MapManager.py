@@ -6,6 +6,7 @@ Created on Tue Mar 14 15:26:04 2023
 """
 
 import pygame
+import pygame_menu
 
 import SettingsManager
 import SaveManager
@@ -13,11 +14,80 @@ import UiManager
 import FunctionUtils
 import NoiseTools
 import numpy
+import Localization
+import TextureManager
 
 worldMap = pygame.image.load("Assets/background.png")
 
 def OpenMap():
     
+    screenFilter = pygame.Surface((UiManager.width,UiManager.height))
+    screenFilter.set_alpha(50)
+    background = pygame.display.get_surface().copy()
+    background.blit(screenFilter,(0,0))
+    def DisplayBackground():
+        UiManager.screen.blit(background,(0,0))
+    
+    menu = pygame_menu.Menu("Carte", UiManager.width//1.3, UiManager.height//1.3, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    #menu.add.surface(SaveManager.planetTex)
+    
+    messages = [GenerateMessage() for i in range(5)]
+    
+    h = int((UiManager.height//1.3)-105)
+    
+    frame = menu.add.frame_h(UiManager.width//1.3, h, padding=0)
+    frame.relax(True)
+    
+    listFrame = menu.add.frame_v(500, max(len(messages) * 155, h), max_height=h, padding=0)
+    listFrame.relax(True)
+    frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    for message in messages:
+        
+        oppFrame = menu.add.frame_v(500, 150, background_color=(50, 50, 50), padding=0)
+        oppFrame.relax(True)
+        listFrame.pack(oppFrame)
+        
+        linedMessage = message.replace("\n","")
+        
+        oppFrame.pack(menu.add.button(linedMessage[:30] + ("..." if len(linedMessage) > 30 else ""), lambda x=message:SetLabelText(x)))
+        
+        oppFrame.pack(menu.add.vertical_margin(50))
+        
+        subtext = menu.add.label("Temps de voyage: 15 jours")
+        subtext.set_font(TextureManager.nasalization, 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
+        oppFrame.pack(subtext)
+        
+        listFrame.pack(menu.add.vertical_margin(5))
+    
+    w = int(UiManager.width//1.3-500)
+    
+    detailsFrame = menu.add.frame_v(w, h, max_height=h, padding=0)
+    detailsFrame.relax(True)
+    frame.pack(detailsFrame)
+    
+    detailsFrame.pack(menu.add.surface(pygame.transform.scale(pygame.image.load("Assets/background.png"),(w//2,w//4))))
+    
+    
+    
+    label = menu.add.label("\n\n")
+    detailsFrame.pack(label)
+    
+    detailsFrame.pack(menu.add.button("Lancer une expédition"))
+    
+    
+    def SetLabelText(text:str):
+        lines = text.split('\n',2)
+        for i in range(3):
+            if i < len(lines):
+                label[i].set_title(lines[i])
+            else:
+                label[i].set_title('')
+    
+    menu.mainloop(UiManager.screen, DisplayBackground)
+    """
     worldMap = CalculateWorldMap()
     
     zoom = 4
@@ -62,6 +132,109 @@ def OpenMap():
                     scaledMap = pygame.transform.scale(worldMap,(UiManager.width * zoom,UiManager.height * zoom))
         
         SaveManager.clock.tick()#on mets à jour l'horloge des FPS
+    """
+
+from random import choice
+
+peoplesingular = [
+    "Un groupe de chercheurs ",
+    "Une équipe ",
+    "Une mission de reconaissance ",
+    "On ",
+    "Une patrouille "
+]
+
+peopleplurial = [
+    "Des scientifiques ",
+    "Des colons ",
+    "Des chercheurs ",
+    "Plusieurs ouvriers "
+]
+
+prefixsingular = [
+    "a ",
+    "semble avoir ",
+]
+
+prefixplurial = [
+    "ont ",
+    "semblent avoir "
+]
+
+discover = [
+    "trouvé ",
+    "identifié ",
+    "découvert ",
+    "détécté ",
+    "décelé "
+]
+
+way = [
+    "grâce à des données satellites ",
+    "en analysant des archives ",
+    "dans le lointain ",
+    "lors d'une sortie ",
+    "avec des témoignages ",
+    "par hasard ",
+    ""
+]
+
+thing = [
+    "une zone ",
+    "une région ",
+    "un massif montagneux ",
+    "un massif végétal ",
+    "un cratère ",
+    "une plaine ",
+    "une steppe désertique ",
+    "un ancien bassin volcanique "
+]
+
+place = [
+    "a plusieurs jours de marche ",
+    "a quelques heures de route ",
+    "près d'ici ",
+    "de l'autre coté des montagnes ",
+    "de l'autre coté de la planète "
+]
+
+contains = [
+    "abritant ",
+    "semblant contenir ",
+    "pouvant receler ",
+    "contenant ",
+]
+
+quantity = [
+    "d'importants gisements de ",
+    "de grandes quantités de ",
+]
+
+ressource = [
+    "or",
+    "charbon",
+    "cuivre",
+    "fer",
+    "m1"
+]
+
+def isVowel(letter:str):
+    return letter.lower() in "aeiouy"
+
+def GenerateMessage():
+    
+    singular = choice([True,False])
+    
+    people = choice(peoplesingular if singular else peopleplurial)
+    prefix = choice(prefixsingular if singular else prefixplurial)
+    
+    foundQuantity = choice(quantity)
+    foundRessource = choice(ressource)
+    if isVowel(foundRessource[0]):
+        foundQuantity = foundQuantity[:-2] + "'"
+    
+    return people + prefix + choice(discover) + choice(way) + "\n" + choice(thing) + choice(place) + choice(contains) + "\n" + foundQuantity + foundRessource
+
 
 import matplotlib.pyplot as plt
 
@@ -119,4 +292,3 @@ def CalculateWorldMap():
     
     return texture
 
-CalculateWorldMap()
