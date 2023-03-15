@@ -254,10 +254,10 @@ def interactItem(item):
         BLOCK_SIZE=100
         rects=[]#[[100,100],[1000,1000]]
         for x in range(10):
-            rects.append( pygame.Rect(x*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) )
+            rects.append( pygame.Rect(width//4-250+(x%4)*(BLOCK_SIZE+5), height//2-250+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
         clock = pygame.time.Clock()
+        selected=None
         while in_menu:
-            selected=None
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -281,9 +281,16 @@ def interactItem(item):
                         rects[selected].x = event.pos[0] + selected_offset_x
                         rects[selected].y = event.pos[1] + selected_offset_y
                
-            sc.fill((0,0,0))
+            SessionManager.DisplayPauseMenuBackground()
+            forme2(width//4-250,height//2-250,500,100,50,200,(98,99,102))
+            pygame.draw.polygon(screen, (98,99,102), [(width//4-250,height//2-250),(width//4+250,height//2-250),(width//4+250,height//2+250),(width//4-250,height//2+250)])
+            place_text("Stockage",width//4-245,height//2-280,100,(255,255,255),TextureManager.aquire)
+            forme2((width//4)*3-250,height//2-250,500,100,50,200,(98,99,102))
+            pygame.draw.polygon(screen, (98,99,102), [((width//4)*3-250,height//2-250),((width//4)*3+250,height//2-250),((width//4)*3+250,height//2+250),((width//4)*3-250,height//2+250)])
+            place_text("Inventaire",(width//4)*3-245,height//2-280,100,(255,255,255),TextureManager.aquire)
             for r in rects:
-                pygame.draw.rect(sc, (255,0,0), r)
+                pygame.draw.rect(screen, (255,0,0), r)
+                
             pygame.display.update()
             clock.tick(25)
     
