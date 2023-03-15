@@ -217,12 +217,11 @@ class Minerais:
         for x in range(int((0-cam[0])//zoom),int((UiManager.width+cam[0])//zoom)):
             for y in range(int((0-cam[1])//zoom),int((UiManager.height+cam[1])//zoom)):
                 Minerais.Place(x,y)
-    def SpawnBorder(camOffset):
+    def SpawnBorder():
         """
         Ne fais spawn les minerais que sur les bordures
         """
-        cam = SaveManager.GetCamPos()
-        cam = [cam[0]+camOffset[0],cam[1]+camOffset[1]]
+        cam = SaveManager.GetLastCamPos()
         zoom = SaveManager.GetZoom()
         cam[0] += UiManager.width / 2
         cam[1] += UiManager.height / 2

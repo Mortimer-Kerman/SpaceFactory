@@ -43,26 +43,19 @@ def Play(saveName:str,seed=None,tuto=0):
     
     runtime=0
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
-
+    
     if tuto:
         UiManager.Popup(L.GetLoc("Session.AskTuto"),lambda : Tuto(0))
-
+    
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
         UiManager.UpdateBackground()#mise à jour du fond
-
-        for m in GameItems.current:#pour chaque minerais dans GameItems.current
-            GameItems.Minerais.PlaceFromCurrent(m)#placement du minerais
-
-        for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
-            if runtime==0:
-                item.Give()#transmition de l'inventaire à l'item adjacent
-            item.Display(int(runtime))#Afficher l'item
         
-        GameItems.ExecuteRender()
+        DisplayObjects(int(runtime))
         
-        UiManager.DisplayItemToPlace()
-        
+        """
+        IL FAUT FUSIONNER CE BLOC AVEC DISPLAYUI
+        """
         for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
             popup.show(index)
             UiManager.UIelements["popup_area"]=pygame.Rect(UiManager.width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
@@ -71,24 +64,7 @@ def Play(saveName:str,seed=None,tuto=0):
         
         pygame.display.update()#Mise à jour de l'affichage Pygame
         
-        #action du clavier
-        keys = pygame.key.get_pressed()#On stocke les touches pressées
-        
-        camOffset = [0,0]#Définition de l'offset de la caméra
-        if keys[SettingsManager.GetKeybind("up")]:#si touche up
-            camOffset[1]+=SaveManager.clock.get_time() / 2
-        if keys[SettingsManager.GetKeybind("down")]:#si touche down
-            camOffset[1]-=SaveManager.clock.get_time() / 2
-        if keys[SettingsManager.GetKeybind("right")]:#si touche right
-            camOffset[0]-=SaveManager.clock.get_time() / 2
-        if keys[SettingsManager.GetKeybind("left")]:#si touche left
-            camOffset[0]+=SaveManager.clock.get_time() / 2
-        SaveManager.TranslateCam(camOffset)#On applique les changements de caméra
-        
-        if camOffset != [0,0]:#si un déplacement a eu lieu
-            GameItems.Minerais.SpawnBorder(camOffset)#on spawn les minerais aux bordures
-            if showTuto==0:
-                Tuto()
+        HandleLongKeyInputs()
         
         for event in pygame.event.get():
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
@@ -102,85 +78,19 @@ def Play(saveName:str,seed=None,tuto=0):
                 zoom = FunctionUtils.clamp(zoom+event.y, 10, 150)#on ajoute le y du changement de molette en s'assurant de garder le niveau de zoom entre 10 et 150
                 SaveManager.mainData.zoom = zoom#on change le zoom dans le SaveManager
                 TextureManager.RefreshZoom()#On mets à jour le zoom
-                GameItems.Minerais.SpawnBorder(camOffset)#On spawn les minerais aux bordures
+                GameItems.Minerais.SpawnBorder()#On spawn les minerais aux bordures
 
                 if showTuto==1:
                     Tuto()
             
             #action de clic sur une touche
             if event.type == pygame.KEYDOWN:
-                if event.key == SettingsManager.GetKeybind("rotate"):
-                    SaveManager.UpdateRotation()#mise à jour de la rotation
-                if event.key == pygame.K_F2:
-                    UiManager.TakeScreenshot()
-                if event.key == pygame.K_m:
-                    MapManager.OpenMap()
-                if event.key == pygame.K_ESCAPE:
-                    if Pause():#On fait pause
-                        return#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
+                if HandleShortKeyInputs(event.key):
+                    return
             
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
-                if event.button == 1: # 1 == left button
-                    if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
-                        if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
-                            if not UiManager.showMenu["delete"]:
-                                if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
-                                    if UiManager.showMenu.get("question",False):
-                                        a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
-                                        if a:
-                                            GameItems.getDescription(a)
-                                    else:
-                                        SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
-                                    if (showTuto==2 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==3 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==4 and SaveManager.GetSelectedItem()=="stockage"):
-                                        Tuto()
-                            else:
-                                SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
-                        else:
-                            if UiManager.showMenu.get("question",False):
-                                    GameItems.getDescription(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)
-                                    a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
-                                    if a:
-                                        GameItems.getDescription(a)
-                            elif UiManager.showMenu["delete"]:
-                                SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
-                            else:
-                                UiManager.Popup(L.GetLoc("Session.AlreadyItemHere"))
-
-                    elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
-                        UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
-                    elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
-                        UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
-                    elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
-                        if Pause():#On fait pause
-                            return#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
-                    elif UiManager.UIelements.get("select2",False):
-                        for i in GameItems.menuElements:
-                            if UiManager.UIelements.get("selectElements_"+i,False):
-                                if UiManager.showMenu.get("question",False):
-                                    GameItems.getDescription(i)
-                                else:
-                                    SaveManager.SetSelectedItem(i)
-                        if UiManager.UIelements.get("selectElements_delete",False):
-                            if UiManager.showMenu.get("question",False):
-                                GameItems.getDescription("delete")
-                            else:
-                                UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
-                        if UiManager.UIelements.get("selectElements_question",False):
-                            UiManager.Popup(L.GetLoc("Session.Question"))
-                            UiManager.showMenu["question"]=1-UiManager.showMenu.get("question",0)
-
-                    elif UiManager.UIelements.get("popup_area",False):
-                        for index,popup in enumerate(UiManager.UIPopup):
-                            if UiManager.UIelements.get("popup_"+str(index),False):
-                                if UiManager.UIelements.get("popup_launch_button_"+str(index)):
-                                    popup.launch()
-                                popup.close(index)
-                if event.button == 3: # 3 == right button
-                    if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
-                        clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
-                        if clickedItem != None:
-                            UiManager.Popup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
-                            if clickedItem.name in ["trieur","stockage"]:clickedItem.edit(UiManager.interactItem(clickedItem))
+                if HandleMouseClicks(event.button):
+                    return
 
             if event.type == AudioManager.MUSIC_ENDED:#Si la musique s'arrête
                 pygame.mixer.music.load("./Assets/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique
@@ -190,7 +100,121 @@ def Play(saveName:str,seed=None,tuto=0):
         runtime+=SaveManager.clock.get_time() / 8
         if runtime > 50:
             runtime = 0
+    
         
+def DisplayObjects(runtime:int):
+    
+    for m in GameItems.current:#pour chaque minerais dans GameItems.current
+        GameItems.Minerais.PlaceFromCurrent(m)#placement du minerais
+
+    for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
+        if runtime==0:
+            item.Give()#transmition de l'inventaire à l'item adjacent
+        item.Display(runtime)#Afficher l'item
+    
+    GameItems.ExecuteRender()
+    
+    UiManager.DisplayItemToPlace()
+
+def HandleLongKeyInputs():
+    #action du clavier
+    keys = pygame.key.get_pressed()#On stocke les touches pressées
+    
+    camOffset = [0,0]#Définition de l'offset de la caméra
+    if keys[SettingsManager.GetKeybind("up")]:#si touche up
+        camOffset[1]+=SaveManager.clock.get_time() / 2
+    if keys[SettingsManager.GetKeybind("down")]:#si touche down
+        camOffset[1]-=SaveManager.clock.get_time() / 2
+    if keys[SettingsManager.GetKeybind("right")]:#si touche right
+        camOffset[0]-=SaveManager.clock.get_time() / 2
+    if keys[SettingsManager.GetKeybind("left")]:#si touche left
+        camOffset[0]+=SaveManager.clock.get_time() / 2
+    SaveManager.TranslateCam(camOffset)#On applique les changements de caméra
+    
+    if camOffset != [0,0]:#si un déplacement a eu lieu
+        GameItems.Minerais.SpawnBorder()#on spawn les minerais aux bordures
+        if showTuto==0:
+            Tuto()
+            
+def HandleShortKeyInputs(key):
+    if key == SettingsManager.GetKeybind("rotate"):
+        SaveManager.UpdateRotation()#mise à jour de la rotation
+    if key == pygame.K_F2:
+        UiManager.TakeScreenshot()
+    if key == pygame.K_m:
+        MapManager.OpenMap()
+    if key == pygame.K_ESCAPE:
+        if Pause():#On fait pause
+            return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
+    return False
+    
+def HandleMouseClicks(button):
+    if button == 1: # 1 == left button
+        if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
+            if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
+                if not UiManager.showMenu["delete"]:
+                    if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
+                        if UiManager.showMenu.get("question",False):
+                            a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
+                            if a:
+                                GameItems.getDescription(a)
+                        else:
+                            SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
+                        if (showTuto==2 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==3 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==4 and SaveManager.GetSelectedItem()=="stockage"):
+                            Tuto()
+                else:
+                    SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
+            else:
+                if UiManager.showMenu.get("question",False):
+                        GameItems.getDescription(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)
+                        a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
+                        if a:
+                            GameItems.getDescription(a)
+                elif UiManager.showMenu["delete"]:
+                    SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
+                else:
+                    UiManager.Popup(L.GetLoc("Session.AlreadyItemHere"))
+
+        elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
+            UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
+        elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
+            UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
+        elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
+            if Pause():#On fait pause
+                return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
+        elif UiManager.UIelements.get("select2",False):
+            for i in GameItems.menuElements:
+                if UiManager.UIelements.get("selectElements_"+i,False):
+                    if UiManager.showMenu.get("question",False):
+                        GameItems.getDescription(i)
+                    else:
+                        SaveManager.SetSelectedItem(i)
+            if UiManager.UIelements.get("selectElements_delete",False):
+                if UiManager.showMenu.get("question",False):
+                    GameItems.getDescription("delete")
+                else:
+                    UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
+            if UiManager.UIelements.get("selectElements_question",False):
+                UiManager.Popup(L.GetLoc("Session.Question"))
+                UiManager.showMenu["question"]=1-UiManager.showMenu.get("question",0)
+
+        elif UiManager.UIelements.get("popup_area",False):
+            for index,popup in enumerate(UiManager.UIPopup):
+                if UiManager.UIelements.get("popup_"+str(index),False):
+                    if UiManager.UIelements.get("popup_launch_button_"+str(index)):
+                        popup.launch()
+                    popup.close(index)
+    
+    if button == 3: # 3 == right button
+        if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
+            clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
+            if clickedItem != None:
+                UiManager.Popup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
+                if clickedItem.name in ["trieur","stockage"]:clickedItem.edit(UiManager.interactItem(clickedItem))
+    
+    return False
+
+
 PauseMenuBackground = None    
         
 def DisplayPauseMenuBackground():

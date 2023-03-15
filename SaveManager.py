@@ -67,6 +67,8 @@ def Load(name:str):
         planetTex = None
         if os.path.isfile(path + "planet.png"):
             planetTex = pygame.image.load(path + "planet.png")
+    global LastCamPos
+    LastCamPos = mainData.camPos.copy()
     print("File loaded!")
     
 def Save():
@@ -123,6 +125,8 @@ def TranslateCam(offset:list):
     """
     Changement de la position de la caméra
     """
+    global LastCamPos
+    LastCamPos = mainData.camPos.copy()
     mainData.camPos[0] += offset[0]
     mainData.camPos[1] += offset[1]
     
@@ -130,7 +134,14 @@ def GetCamPos():
     """
     Renvoie la position de la caméra
     """
-    return mainData.camPos
+    return mainData.camPos.copy()
+
+def GetLastCamPos():
+    """
+    Renvoie la position précédente de la caméra
+    """
+    global LastCamPos
+    return LastCamPos
 
 def GetZoom():
     """
