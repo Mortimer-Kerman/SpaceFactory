@@ -10,6 +10,7 @@ import pygame_menu
 
 import os
 import random
+from shutil import rmtree
 
 import TextureManager
 import UiManager
@@ -19,6 +20,7 @@ import PlanetGenerator
 import SettingsManager
 import SaveManager
 import Localization
+import FunctionUtils
 
 
 pygame.init()#initialisation pygame
@@ -74,21 +76,36 @@ def OpenSavesList():
     
     if Menus.SavesList != None:
         Menus.SavesList.disable()
-    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 400, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 450, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SavesList.add.button(Localization.GetLoc('Game.Back'), Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
     Menus.SavesList.add.button(Localization.GetLoc('Saves.NewSave'), OpenSaveCreationMenu)
     
-    frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 100, 245), max_height=245, background_color=(50, 50, 50), padding=0)
+    frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 102, 245), max_height=245, background_color=(30, 30, 30), padding=0)
     frame.relax(True)
+    
+    global selectedMap, selectedFrame
+    selectedMap = selectedFrame = None
     
     for saveName in saveNames:
         
-        saveFrame = Menus.SavesList.add.frame_h(460, 100, padding=0)
+        saveFrame = Menus.SavesList.add.frame_h(460, 100, background_color=(50, 50, 50), padding=0)
         saveFrame.relax(True)
         frame.pack(saveFrame)
         
-        saveFrame.pack(Menus.SavesList.add.button(saveName, lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save))))
+        def setSelectedFrame(f,name):
+            global selectedMap, selectedFrame
+            if selectedFrame != None:
+                selectedFrame.set_border(0, None)
+            f.set_border(1,(255,255,255))
+            selectedFrame = f
+            selectedMap = name
+        
+        frameButton = Menus.SavesList.add.button(FunctionUtils.ReduceStr(saveName, 22))
+        frameButton.set_selection_effect(None)
+        frameButton.set_onselect(lambda f=saveFrame, name=saveName:setSelectedFrame(f,name))
+        #lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save))
+        saveFrame.pack(frameButton)
         
         planetTex = TextureManager.GetTexture("missingThumb")
         texPath = "Saves/" + saveName + "/planet.png"
@@ -96,6 +113,15 @@ def OpenSavesList():
             planetTex = pygame.image.load(texPath)
         saveFrame.pack(Menus.SavesList.add.surface(pygame.transform.scale(planetTex,(90,90))), align=pygame_menu.locals.ALIGN_RIGHT)
         
+        frame.pack(Menus.SavesList.add.vertical_margin(2))
+    
+    bottomFrame = Menus.SavesList.add.frame_h(460, 50, padding=0)
+    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Game.Play'),lambda: (Menus.SavesList.disable(), SessionManager.Play(selectedMap))), align=pygame_menu.locals.ALIGN_CENTER)
+    bottomFrame.pack(Menus.SavesList.add.frame_v(50,50),align=pygame_menu.locals.ALIGN_CENTER)
+    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Saves.Delete'),
+        lambda:UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Saves.Delete.Warn',selectedMap),lambda:(rmtree("Saves/" + selectedMap),OpenSavesList()),None)),
+        align=pygame_menu.locals.ALIGN_CENTER)
+    
     Menus.SavesList.mainloop(UiManager.screen, UiManager.DisplayBackground)
    
 def OpenSaveCreationMenu(defaultTuto:bool=False):

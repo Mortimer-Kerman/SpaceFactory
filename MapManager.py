@@ -52,7 +52,7 @@ def OpenMap():
         
         linedMessage = message.replace("\n","")
         
-        oppFrame.pack(menu.add.button(linedMessage[:30] + ("..." if len(linedMessage) > 30 else ""), lambda x=message:SetLabelText(x)))
+        oppFrame.pack(menu.add.button(FunctionUtils.ReduceStr(linedMessage, 30), lambda x=message:SetLabelText(x)))
         
         oppFrame.pack(menu.add.vertical_margin(50))
         
@@ -68,14 +68,16 @@ def OpenMap():
     detailsFrame.relax(True)
     frame.pack(detailsFrame)
     
-    detailsFrame.pack(menu.add.surface(pygame.transform.scale(pygame.image.load("Assets/background.png"),(w//2,w//4))))
+    detailsFrame.pack(menu.add.surface(pygame.transform.scale(pygame.image.load("Assets/background.png"),(w//1.5,w//3))),align=pygame_menu.locals.ALIGN_CENTER)
     
     
     
     label = menu.add.label("\n\n")
     detailsFrame.pack(label)
     
-    detailsFrame.pack(menu.add.button("Lancer une expédition"))
+    detailsFrame.pack(menu.add.vertical_margin(100))
+    
+    detailsFrame.pack(menu.add.button("Lancer une expédition"),align=pygame_menu.locals.ALIGN_CENTER)
     
     
     def SetLabelText(text:str):
