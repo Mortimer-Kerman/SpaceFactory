@@ -61,6 +61,11 @@ def DisplayUi():
 
     InvMenu()#placement du menu inventaire
 
+    for index,popup in enumerate(UIPopup):#pour index , popup dans UiManager.UIPopup
+            popup.show(index)
+            UIelements["popup_area"]=pygame.Rect(width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
+
+
 def GetMouseWorldPos():
     """
     Renvoie la position du curseur dans le monde
@@ -217,9 +222,16 @@ def DisplayItemToPlace():
     """
     Cette fonction a pour but d'afficher l'item que le joueur s'apprête à placer en transparence pour lui donner une indication de visée
     """
-    ItemTexture = "detruire" if showMenu["delete"] else "question" if showMenu["question"] else SaveManager.mainData.selectedItem
-    
-    if ItemTexture == None or IsClickOnUI():
+    ItemTexture = None
+    if showMenu["delete"]:
+        if SaveManager.IsItemHere(GetMouseWorldPos()):
+            ItemTexture = TextureManager.GetColorFilter((255,0,0),SaveManager.GetZoom())
+    elif showMenu["question"]:
+        ItemTexture = "question"
+    else:
+        ItemTexture = SaveManager.mainData.selectedItem
+
+    if ItemTexture == None or (IsClickOnUI() and not showMenu["question"]):
         return
     
     cam = SaveManager.GetCamPos()
@@ -229,7 +241,10 @@ def DisplayItemToPlace():
     cam[1] += height / 2
     pos = GetMouseWorldPos()
     
-    tex = TextureManager.GetTexture(ItemTexture, zoom).copy()
+    if type(ItemTexture) == str:
+        tex = TextureManager.GetTexture(ItemTexture, zoom).copy()
+    else:
+        tex = ItemTexture
     tex.set_alpha(150)
     tex=pygame.transform.rotate(tex,90*SaveManager.mainData.rotation)
     screen.blit(tex, (pos[0]*zoom+cam[0], pos[1]*zoom+cam[1]))
@@ -252,8 +267,8 @@ def interactItem(item):
         
         in_menu=1
         BLOCK_SIZE=100
-        rects=[]#[[100,100],[1000,1000]]
-        for x in range(10):
+        rects=[]
+        for x in range(20):
             rects.append( pygame.Rect(width//4-250+(x%4)*(BLOCK_SIZE+5), height//2-250+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
         clock = pygame.time.Clock()
         selected=None
@@ -282,17 +297,27 @@ def interactItem(item):
                         rects[selected].y = event.pos[1] + selected_offset_y
                
             SessionManager.DisplayPauseMenuBackground()
-            forme2(width//4-250,height//2-250,500,100,50,200,(98,99,102))
-            pygame.draw.polygon(screen, (98,99,102), [(width//4-250,height//2-250),(width//4+250,height//2-250),(width//4+250,height//2+250),(width//4-250,height//2+250)])
-            place_text("Stockage",width//4-245,height//2-280,100,(255,255,255),TextureManager.aquire)
-            forme2((width//4)*3-250,height//2-250,500,100,50,200,(98,99,102))
-            pygame.draw.polygon(screen, (98,99,102), [((width//4)*3-250,height//2-250),((width//4)*3+250,height//2-250),((width//4)*3+250,height//2+250),((width//4)*3-250,height//2+250)])
-            place_text("Inventaire",(width//4)*3-245,height//2-280,100,(255,255,255),TextureManager.aquire)
+            forme2(width//4-250,height//2-300,500,100,50,200,(98,99,102))
+            pygame.draw.polygon(screen, (98,99,102), [(width//4-250,height//2-300),(width//4+250,height//2-300),(width//4+250,height//2+300),(width//4-250,height//2+300)])
+            place_text("Stockage",width//4-245,height//2-330,100,(255,255,255),TextureManager.aquire)
+            forme2((width//4)*3-250,height//2-300,500,100,50,200,(98,99,102))
+            pygame.draw.polygon(screen, (98,99,102), [((width//4)*3-250,height//2-300),((width//4)*3+250,height//2-300),((width//4)*3+250,height//2+300),((width//4)*3-250,height//2+300)])
+            place_text("Inventaire",(width//4)*3-245,height//2-330,100,(255,255,255),TextureManager.aquire)
             for r in rects:
                 pygame.draw.rect(screen, (255,0,0), r)
                 
             pygame.display.update()
             clock.tick(25)
+        #change l'environnement de stockage/inv
+        SaveManager.ClearInv()
+        item.metadata["biginv"]={}
+        for r in rects:
+            if r.x<width//2:
+                #item
+                pass
+            else:
+                pass
+                SaveManager.AddToInv()
     
 
     SessionManager.PauseMenuBackground = None
@@ -373,3 +398,4 @@ def TakeScreenshot():
     if not os.path.exists("Screenshots/"):
         os.makedirs("Screenshots/")
     pygame.image.save(pygame.display.get_surface(), "Screenshots/screnshot_" + datetime.now().strftime("%Y%m%d%H%M%S%f") + ".png")
+    Popup("Capture d'écran trouvable dans le dossier /Screenshots/")

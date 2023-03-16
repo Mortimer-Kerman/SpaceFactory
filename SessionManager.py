@@ -53,13 +53,7 @@ def Play(saveName:str,seed=None,tuto=0):
         
         DisplayObjects(int(runtime))
         
-        """
-        IL FAUT FUSIONNER CE BLOC AVEC DISPLAYUI
-        """
-        for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
-            popup.show(index)
-            UiManager.UIelements["popup_area"]=pygame.Rect(UiManager.width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
-        
+                
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
         pygame.display.update()#Mise à jour de l'affichage Pygame
