@@ -228,7 +228,7 @@ def AddToInv(d):
     if a!="NotIn":
         mainData.inv[a]["m"]+=1
         return True
-    if len(mainData.inv)>20:
+    if len(mainData.inv)>=25:
         UiManager.Popup(L.GetLoc("SaveManager.AddToInv.error"))
         return False
     else:

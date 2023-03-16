@@ -212,6 +212,8 @@ class Item:
             if e.get("n",False)==a:
                 if e["m"]+1<100 or p:
                     return i
+            if e.get("n",None) is None:
+                del self.metadata["biginv"][i]
         return "NotIn"
 
     def AddToInv(self,d):
@@ -219,7 +221,7 @@ class Item:
         if a!="NotIn":
             self.metadata["biginv"][a]["m"]+=1
             return True
-        if len(self.metadata["biginv"])>20:
+        if len(self.metadata["biginv"])>=25:
             return False
         else:
             self.metadata["biginv"]+=[{"n":d,"m":1}]

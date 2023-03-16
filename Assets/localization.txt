@@ -45,8 +45,10 @@ Saves.NewSave.Create : Créer
 Saves.NewSave.AlreadyExists : Ce nom existe déjà !
 
 //Edition de la sauvegarde actuelle
-SaveManager.AddToItem.error : Vous n'avez pas assez de place dans votre inventaire
-SaveManager.GetFromItem.error : Vous n'avez pas assez d'items requis dans votre inventaire
+SaveManager.AddToInv.error : Vous n'avez pas assez de place dans votre inventaire
+SaveManager.GetFromInv.error : Vous n'avez pas assez d'items requis dans votre inventaire
+//
+UiManager.biginv.error : Il n'y a pas assez de place dans ce stockage
 
 //Menu des options
 Settings.Title : Options

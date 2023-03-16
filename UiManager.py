@@ -272,10 +272,13 @@ def interactItem(item):
         rects=[]
         inv=[]
         for x,e in enumerate(item.metadata.get("biginv",[])):
-            rects.append( pygame.Rect(width//4-250+(x%4)*(BLOCK_SIZE+5), height//2-250+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
-            inv.append(e)
+            if e["n"] is None:
+                del item.metadata["biginv"][x]
+            else:
+                rects.append( pygame.Rect(width//4-250+(x%4)*(BLOCK_SIZE+5), height//2-300+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
+                inv.append(e)
         for x,e in enumerate(SaveManager.mainData.inv):
-            rects.append( pygame.Rect((width//4)*3-250+(x%4)*(BLOCK_SIZE+5), height//2-250+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
+            rects.append( pygame.Rect((width//4)*3-250+(x%4)*(BLOCK_SIZE+5), height//2-300+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
             inv.append(e)
         clock = pygame.time.Clock()
         selected=None
@@ -328,6 +331,7 @@ def interactItem(item):
                     if not item.AddToInv(r[1]["n"]):
                         SaveManager.mainData.inv=tempInv
                         item.metadata["biginv"]=tempBigInv
+                        Popup(Localization.GetLoc("UiManager.biginv.error"))
                         return
             else:
                 for i in range(r[1]["m"]):
@@ -381,6 +385,12 @@ class Popup:
     def launch(self):
         self.command()
 
+class LightPopup:
+    """
+    Popups légères
+    """
+    def __init__(self,text):
+        self.text=texts
 
 
 
