@@ -218,7 +218,7 @@ def ClearInv():
     mainData.inv=[]
 def IsInInv(a,p=0):
     for i,e in enumerate(mainData.inv):
-        if e["n"]==a:
+        if e.get("n",False)==a:
             if e["m"]+1<100 or p:
                 return i
     return "NotIn"
@@ -232,7 +232,7 @@ def AddToInv(d):
         UiManager.Popup(L.GetLoc("SaveManager.AddToInv.error"))
         return False
     else:
-        mainData.inv+={"n":d,"m":1}
+        mainData.inv+=[{"n":d,"m":1}]
         return True
 def GetFromInv(d):
     a=IsInInv(d,1)

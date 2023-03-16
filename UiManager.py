@@ -196,9 +196,11 @@ def InvMenu():
 
     UIelements["inv2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,500*showMenu.get("inv",0)),(width,500*showMenu.get("inv",0)),(width,0),(width-500,0)]).collidepoint(pygame.mouse.get_pos())
 
-    for i in range(10):
+    for i,e in enumerate(SaveManager.mainData.inv):
         UIelements["invElements_"+str(i)]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),-500+500*showMenu.get("inv",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
-        #screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
+        place_text(e["n"],width-500+102*(i%5),-500+500*showMenu.get("inv",0)+102*(i//5),20)
+        place_text(str(e["m"]),width-500+102*(i%5),-480+500*showMenu.get("inv",0)+102*(i//5),20)
+        screen.blit(TextureManager.GetTexture(e["n"], 78, True),(width-500+11+102*(i%5),-500+11+500*showMenu.get("inv",0)+102*(i//5)))
 
 def addNewlines(text,l):
     """
@@ -268,11 +270,16 @@ def interactItem(item):
         in_menu=1
         BLOCK_SIZE=100
         rects=[]
-        for x in range(20):
+        inv=[]
+        for x,e in enumerate(item.metadata.get("biginv",[])):
             rects.append( pygame.Rect(width//4-250+(x%4)*(BLOCK_SIZE+5), height//2-250+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
+            inv.append(e)
+        for x,e in enumerate(SaveManager.mainData.inv):
+            rects.append( pygame.Rect((width//4)*3-250+(x%4)*(BLOCK_SIZE+5), height//2-250+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
+            inv.append(e)
         clock = pygame.time.Clock()
         selected=None
-        return 
+        
         while in_menu:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -304,8 +311,9 @@ def interactItem(item):
             forme2((width//4)*3-250,height//2-300,500,100,50,200,(98,99,102))
             pygame.draw.polygon(screen, (98,99,102), [((width//4)*3-250,height//2-300),((width//4)*3+250,height//2-300),((width//4)*3+250,height//2+300),((width//4)*3-250,height//2+300)])
             place_text("Inventaire",(width//4)*3-245,height//2-330,100,(255,255,255),TextureManager.aquire)
-            for r in rects:
-                pygame.draw.rect(screen, (255,0,0), r)
+            for r in zip(rects,inv):
+                pygame.draw.rect(screen, (255,0,0), r[0])
+                place_text(str(r[1]),r[0].x,r[0].y,20)
                 
             pygame.display.update()
             clock.tick(25)
@@ -314,15 +322,19 @@ def interactItem(item):
         tempBigInv=item.metadata["biginv"]
         SaveManager.ClearInv()
         item.metadata["biginv"]=[]
-        for r in rects:
-            if r.x<width//2:
-                #item
-                pass
+        for r in zip(rects,inv):
+            if r[0].x<width//2:
+                for i in range(r[1]["m"]):
+                    if not item.AddToInv(r[1]["n"]):
+                        SaveManager.mainData.inv=tempInv
+                        item.metadata["biginv"]=tempBigInv
+                        return
             else:
-                if not SaveManager.AddToInv():
-                    SaveManager.mainData.inv=tempInv
-                    item.metadata["biginv"]=tempBigInv
-                    return
+                for i in range(r[1]["m"]):
+                    if not SaveManager.AddToInv(r[1]["n"]):
+                        SaveManager.mainData.inv=tempInv
+                        item.metadata["biginv"]=tempBigInv
+                        return
 
     SessionManager.PauseMenuBackground = None
     return b.get_value() if b is not None else None
