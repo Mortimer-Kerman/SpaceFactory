@@ -52,7 +52,7 @@ UiManager.biginv.error : Il n'y a pas assez de place dans ce stockage
 
 //Menu des options
 Settings.Title : Options
-Settings.NotSaved : Cetains paramètres ne sont pas sauvegardés.%$rVoulez-vous quand même quitter?%$r
+Settings.NotSaved : Certains paramètres ne sont pas sauvegardés.%$rVoulez-vous quand même quitter?%$r
 Settings.Save : Enregistrer
 Settings.MusicVolume : Volume de la musique
 Settings.Keys.Title : Touches
@@ -69,13 +69,13 @@ Settings.Reset.Message : Voulez-vous vraiment remettre%$rtous vos paramètres à
 //Session de jeu
 Session.AskTuto : Souhaitez-vous lancer le tutoriel ?
 Session.Tuto.0 : Déplace toi avec %$1 %$2 %$3 %$4
-Session.Tuto.1 : Zoom et dézoom avec la molette
+Session.Tuto.1 : Zoom et dézoome avec la molette
 Session.Tuto.2 : Commence par placer une foreuse sur un minerais
 Session.Tuto.3 : Place ensuite des tapis pour faire sortir les minerais de la foreuse
 Session.Tuto.4 : Place un stockage à la fin du chemin que tu viens de créer
-Session.Tuto.5 : Bravo, tu connait maintenant les bases, n'hésite pas à cliquer sur l'icone "interogation" si tu te poses des questions sur un item
+Session.Tuto.5 : Bravo, tu connaît maintenant les bases, n'hésite pas à cliquer sur l’icône "interrogation" si tu te poses des questions sur un item
 Session.AlreadyItemHere : Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé
-Session.Question : Clique sur un élément pour voir apparaitre sa description. Recliquez sur le bouton "Interrogation" pour quitter ce mode
+Session.Question : Clique sur un élément pour voir apparaître sa description. Recliquez sur le bouton "Interrogation" pour quitter ce mode
 Session.Pause : Pause
 Session.Continue : Reprendre
 
@@ -96,8 +96,8 @@ GameItems.d.stockage : Le stockage permet, comme son nom l'indique, de stocker d
 GameItems.d.jonction : La jonction permet de lier deux tapis roulant
 GameItems.d.trieur : Permet de trier les différents items
 GameItems.d.delete : Le menu de destruction permet de détruire un item
-GameItems.d.charbon : Le charbon est un minerais qui peut servir de conbustible
+GameItems.d.charbon : Le charbon est un minerais qui peut servir de combustible
 GameItems.d.cuivre : Le cuivre est le plus ancien métal utilisé par l’Espèce humaine. Le point de fusion de ce minerais n'est pas trop élevé
-GameItems.d.or : L'or est un excellent conducteur éléctrique, c'est un minerais apprécié pour son fort éclat de "petit soleil"
-GameItems.d.m1 : M1, est un minerais, dont l'existence a été théorisé durtant les années 1950 via l'un des premier ordinateurs soviétique, le M-1
+GameItems.d.or : L'or est un excellent conducteur électrique, c'est un minerais apprécié pour son fort éclat de "petit soleil"
+GameItems.d.m1 : M1, est un minerais, dont l'existence a été théorisé durant les années 1950 via l'un des premier ordinateurs soviétique, le M-1
 GameItems.d.error : Une erreur est survenue : Item introuvable/non documenté
