@@ -44,6 +44,10 @@ Saves.NewSave.Gamemode.Tutorial : Tutoriel
 Saves.NewSave.Create : Créer
 Saves.NewSave.AlreadyExists : Ce nom existe déjà !
 
+//Edition de la sauvegarde actuelle
+SaveManager.AddToItem.error : Vous n'avez pas assez de place dans votre inventaire
+SaveManager.GetFromItem.error : Vous n'avez pas assez d'items requis dans votre inventaire
+
 //Menu des options
 Settings.Title : Options
 Settings.NotSaved : Cetains paramètres ne sont pas sauvegardés.%$rVoulez-vous quand même quitter?%$r

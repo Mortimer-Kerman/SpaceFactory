@@ -12,8 +12,10 @@ import os
 
 import GameItems
 import TextureManager
+import UiManager
+import Localization as L
 
-SaveFileVersion="f0.9"
+SaveFileVersion="f0.10"
 
 class Data:
     """
@@ -30,6 +32,7 @@ class Data:
         self.selectedItem="foreuse"
         self.rotation=0
         self.saveVersion=SaveFileVersion
+        self.inv=[]
         
     def toJson(self):
         """
@@ -211,3 +214,31 @@ def UpdateRotation():
     else:
         r=0
     mainData.rotation=r
+def ClearInv():
+    mainData.inv=[]
+def IsInInv(a,p=0):
+    for i,e in enumerate(mainData.inv):
+        if e["n"]==a:
+            if e["m"]+1<100 or p:
+                return i
+    return "NotIn"
+
+def AddToInv(d):
+    a=IsInInv(d)
+    if a!="NotIn":
+        mainData.inv[a]["m"]+=1
+        return True
+    if len(mainData.inv)>20:
+        UiManager.Popup(L.GetLoc("SaveManager.AddToInv.error"))
+        return False
+    else:
+        mainData.inv+={"n":d,"m":1}
+        return True
+def GetFromInv(d):
+    a=IsInInv(d,1)
+    if a!="NotIn":
+        mainData.inv[a]["m"]-=1
+        return True
+    else:
+        UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
+        return False

@@ -272,6 +272,7 @@ def interactItem(item):
             rects.append( pygame.Rect(width//4-250+(x%4)*(BLOCK_SIZE+5), height//2-250+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
         clock = pygame.time.Clock()
         selected=None
+        return 
         while in_menu:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -309,16 +310,19 @@ def interactItem(item):
             pygame.display.update()
             clock.tick(25)
         #change l'environnement de stockage/inv
+        tempInv=SaveManager.mainData.inv
+        tempBigInv=item.metadata["biginv"]
         SaveManager.ClearInv()
-        item.metadata["biginv"]={}
+        item.metadata["biginv"]=[]
         for r in rects:
             if r.x<width//2:
                 #item
                 pass
             else:
-                pass
-                SaveManager.AddToInv()
-    
+                if not SaveManager.AddToInv():
+                    SaveManager.mainData.inv=tempInv
+                    item.metadata["biginv"]=tempBigInv
+                    return
 
     SessionManager.PauseMenuBackground = None
     return b.get_value() if b is not None else None

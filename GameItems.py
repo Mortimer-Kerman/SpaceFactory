@@ -42,6 +42,7 @@ class Item:
         self.pos=pos
         self.metadata=metadata
         self.metadata["trieur_choice"]="or"
+        self.metadata["biginv"]=self.metadata.get("biginv",[])
         giveTo={"foreuse":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
         self.rotation=SaveManager.GetRotation()
         if name in ["tapis","jonction","trieur"]:
@@ -172,18 +173,24 @@ class Item:
                 if self.metadata["minerais"] is False:self.metadata["minerais"]=None
             self.metadata["inv"]=self.metadata["minerais"]
         if self.name=="stockage":
-            self.metadata["biginv"]=self.metadata.get("biginv",{})
-            self.metadata["biginv"][self.metadata.get("inv","")]=self.metadata["biginv"].get(self.metadata.get("inv",None),0)+1
-            self.metadata["inv"]=None
+            self.metadata["biginv"]=self.metadata.get("biginv",[])
+            if self.AddToInv(self.metadata.get("inv",None)):
+                self.metadata["inv"]=None
         
         item=self.GetItemToGive()
         if item is not None:
             if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
                 if self.name=="stockage":
-                    a=max(self.metadata.get("biginv",{}), key=self.metadata.get("biginv",{}).get)
+                    a=self.IsInInv(None)
+                    if a!="NotIn":
+                        del self.metadata["biginv"][a]
+                    try:
+                        a=self.metadata["biginv"][0]["n"]
+                    except:
+                        a=None
                     item.Obtain(a,self)
                     if a is not None:
-                        self.metadata["biginv"][a]-=1
+                        self.GetFromInv(a)
                 else:
                     item.Obtain(self.metadata.get("inv",None),self)
                     
@@ -199,6 +206,33 @@ class Item:
     
     def edit(self,a):
         if self.name == "trieur":self.metadata["trieur_choice"]=a[0][0]
+    
+    def IsInInv(self,a,p=0):
+        for i,e in enumerate(self.metadata["biginv"]):
+            if e.get("n",False)==a:
+                if e["m"]+1<100 or p:
+                    return i
+        return "NotIn"
+
+    def AddToInv(self,d):
+        a=self.IsInInv(d)
+        if a!="NotIn":
+            self.metadata["biginv"][a]["m"]+=1
+            return True
+        if len(self.metadata["biginv"])>20:
+            return False
+        else:
+            self.metadata["biginv"]+=[{"n":d,"m":1}]
+            return True
+    def GetFromInv(self,d):
+        a=self.IsInInv(d,1)
+        if a!="NotIn":
+            self.metadata["biginv"][a]["m"]-=1
+            if self.metadata["biginv"][a]["m"]==0:
+                del self.metadata["biginv"][a]
+            return True
+        else:
+            return False
 
 current=[]#liste des minerais affichés
 class Minerais:
