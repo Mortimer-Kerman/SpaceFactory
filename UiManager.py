@@ -20,12 +20,12 @@ import SessionManager
 import Localization
 
 #Les variables importantes
-screen = None#la fenêtre pricipale (élément pygame.display)
+screen = None#la fenêtre principale (élément pygame.display)
 #la taille de l'écran
 width = 0
 height = 0
 
-UIelements={}#dictionaire stockant les interaction souris/éléments interface
+UIelements={}#dictionnaire stockant les interaction souris/éléments interface
 showMenu={"select":0,"inv":0,"delete":0,"question":0}#affichage ou non des menus interne à l'UI
 
 def Init():
@@ -57,7 +57,7 @@ def DisplayUi():
     
     place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()) + " " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.aquire)#placement du texte (position du curseur + caméra + FPS)
 
-    ItemMenu()#placement du menu de séléction d'item
+    ItemMenu()#placement du menu de sélection d'item
 
     InvMenu()#placement du menu inventaire
 
@@ -70,7 +70,7 @@ def GetMouseWorldPos():
     """
     Renvoie la position du curseur dans le monde
     """
-    cam = SaveManager.GetCamPos()#on obtient les coordonées de la caméra
+    cam = SaveManager.GetCamPos()#on obtient les coordonnées de la caméra
     zoom = SaveManager.GetZoom()#obtention du zoom
     return ((pygame.mouse.get_pos()[0]-cam[0]-(width/2))//zoom,(pygame.mouse.get_pos()[1]-cam[1]-(height/2))//zoom)#renvoie la position par rapport à la caméra+zoom
 
@@ -80,8 +80,8 @@ def IsClickOnUI():
     """
     for i in UIelements.values():#pour chaque valeur de UIelements (toutes les valeurs sont des booléens)
         if i:#si i
-            return True#renvoier vrai
-    return False#renvoier faux
+            return True#renvoyer vrai
+    return False#renvoyer faux
 
 autoSize={}
 def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=False):
@@ -113,7 +113,7 @@ def forme(x,y,w,wr,h,o,color=(47,48,51)):
     """
     Crée une forme
     """
-    #calcul des coordonées du polygone
+    #calcul des coordonnées du polygone
     a = x, y
     b = x + w - 1, y
     c = x + w - 1, y + h * 0.6
@@ -125,7 +125,7 @@ def forme2(x,y,w,wr,h,o,color=(47,48,51)):
     """
     Crée une forme miroire à forme
     """
-    #calcul des coordonées du polygone
+    #calcul des coordonnées du polygone
     a = x, y
     b = x + w - 1, y
     c = x + w - 1, y - h * 0.6
@@ -142,13 +142,13 @@ def UpdateBackground():
     cam = SaveManager.GetCamPos()#récupération de la position de la caméra
     for posX in range(-1,(width//zoom)+1):#pour posX dans -1,(width//zoom)+1 
             for posY in range(-1,(height//zoom)+1):#pour posY dans -1,(height//zoom)+1
-                Xpos = posX*zoom+((cam[0]+(width/2))%zoom)#coordonées selon zoom
-                Ypos = posY*zoom+((cam[1]+(height/2))%zoom)#coordonées selon zoom
+                Xpos = posX*zoom+((cam[0]+(width/2))%zoom)#coordonnées selon zoom
+                Ypos = posY*zoom+((cam[1]+(height/2))%zoom)#coordonnées selon zoom
                 screen.blit(TextureManager.GetTexture("ground", zoom), (Xpos, Ypos))#placement du fond
 
 def ItemMenu():
     """
-    Un petit menu de séléction
+    Un petit menu de sélection
     """
     global UIelements
     #On stocke la valeur bool en cas d'hover sur l'élément dans UIelements["select"]
@@ -162,7 +162,7 @@ def ItemMenu():
     #on mets du texte
     place_text("Séléctionner",width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.aquire)
     
-    #On stocke la valeur bool en cas d'hover sur l'élément (ici le rectangle sous "forme2" du menu de séléction) dans UIelements["select"]
+    #On stocke la valeur bool en cas d'hover sur l'élément (ici le rectangle sous "forme2" du menu de sélection) dans UIelements["select"]
     UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-500*showMenu.get("select",0)),(width,height-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
 
     menuElements=GameItems.menuElements
@@ -204,7 +204,7 @@ def InvMenu():
 
 def addNewlines(text,l):
     """
-    Ajoute un caractère \n à une chaine de caractères tout les 29 caractères, sans couper un mot.
+    Ajoute un caractère \n à une chaîne de caractères tout les 29 caractères, sans couper un mot.
     """
     words = text.split()
     new_text = ""
@@ -390,8 +390,17 @@ class LightPopup:
     Popups légères
     """
     def __init__(self,text):
-        self.text=texts
-
+        self.text=text
+        self.time=int(pygame.time.get_ticks())
+    def show(self,i):
+        if int(pygame.time.get_ticks())>(self.time+10000) and self.command is None and not self.d:
+               self.close(i)
+        else:
+            place_text(self.text, width//4, (height//4)*3+i*20, 20, (255,255,255),TextureManager.nasalization,auto_size=(width//2,height//10))
+    def close(self,i):
+        UIPopup.remove(self)
+        UIelements["popup_"+str(i)]=False
+        UIelements["popup_area"]=False
 
 
 MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
@@ -423,5 +432,5 @@ def WarnUser(title:str,message:str, confirm, cancel, background=DisplayBackgroun
 def TakeScreenshot():
     if not os.path.exists("Screenshots/"):
         os.makedirs("Screenshots/")
-    pygame.image.save(pygame.display.get_surface(), "Screenshots/screnshot_" + datetime.now().strftime("%Y%m%d%H%M%S%f") + ".png")
+    pygame.image.save(pygame.display.get_surface(), "Screenshots/screenshot_" + datetime.now().strftime("%Y%m%d%H%M%S%f") + ".png")
     Popup("Capture d'écran trouvable dans le dossier /Screenshots/")
