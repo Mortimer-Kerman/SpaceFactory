@@ -116,7 +116,7 @@ def OpenSavesList():
         frame.pack(Menus.SavesList.add.vertical_margin(2))
     
     bottomFrame = Menus.SavesList.add.frame_h(460, 50, padding=0)
-    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Game.Play'),lambda: (Menus.SavesList.disable(), SessionManager.Play(selectedMap))), align=pygame_menu.locals.ALIGN_CENTER)
+    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Game.Play'),lambda: TryLoadSave(selectedMap)), align=pygame_menu.locals.ALIGN_CENTER)
     bottomFrame.pack(Menus.SavesList.add.frame_v(50,50),align=pygame_menu.locals.ALIGN_CENTER)
     bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Saves.Delete'),
         lambda:UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Saves.Delete.Warn',selectedMap),lambda:(rmtree("Saves/" + selectedMap),OpenSavesList()),None)),
@@ -227,6 +227,10 @@ def TryCreateSave(saveNameInput):
     if Menus.SavesList != None:
         Menus.SavesList.disable()
     SessionManager.Play(saveName,GetSeedFromInput(),tuto=1)
+    
+def TryLoadSave(saveName:str):
+    if SessionManager.Play(saveName):
+        Menus.SavesList.disable()
     
 def GetSeedFromInput():
 

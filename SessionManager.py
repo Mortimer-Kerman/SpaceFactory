@@ -36,7 +36,8 @@ def Play(saveName:str,seed=None,tuto=0):
     """
     Lance le jeu
     """
-    SaveManager.Load(saveName)#Chargement de la sauvegarde
+    if not SaveManager.Load(saveName):#Chargement de la sauvegarde
+        return False
     
     if seed != None:
         SaveManager.mainData.seed = seed
@@ -64,7 +65,7 @@ def Play(saveName:str,seed=None,tuto=0):
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
             if event.type == pygame.QUIT:#en cas de Alt+F4 ou de fermeture via la croix de la fenêtre
                 if Pause():#On fait pause
-                    return#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
+                    return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
             
             #action de molette de souris
             if event.type == pygame.MOUSEWHEEL:#si un changement molette survient
@@ -80,11 +81,11 @@ def Play(saveName:str,seed=None,tuto=0):
             #action de clic sur une touche
             if event.type == pygame.KEYDOWN:
                 if HandleShortKeyInputs(event.key):
-                    return
+                    return True
             
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
                 if HandleMouseClicks(event.button):
-                    return
+                    return True
 
             if event.type == AudioManager.MUSIC_ENDED:#Si la musique s'arrête
                 pygame.mixer.music.load("./Assets/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique
@@ -94,6 +95,7 @@ def Play(saveName:str,seed=None,tuto=0):
         runtime+=SaveManager.clock.get_time() / 8
         if runtime > 50:
             runtime = 0
+    return True
     
         
 def DisplayObjects(runtime:int):

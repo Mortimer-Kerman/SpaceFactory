@@ -408,7 +408,7 @@ MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", draw
 def DisplayBackground():
     MenuBackground.draw(screen)
 
-def WarnUser(title:str,message:str, confirm, cancel, background=DisplayBackground):
+def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground):
     
     WarnMenu = pygame_menu.Menu(title, 800, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     

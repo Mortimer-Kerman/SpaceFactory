@@ -28,16 +28,17 @@ def OpenMap():
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
     
-    menu = pygame_menu.Menu("Carte", UiManager.width//1.3, UiManager.height//1.3, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    h = int((UiManager.height//2)-105)
+    w = int(UiManager.height)
+    
+    menu = pygame_menu.Menu("Carte", w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
     #menu.add.surface(SaveManager.planetTex)
     
     messages = [GenerateMessage() for i in range(5)]
     
-    h = int((UiManager.height//1.3)-105)
-    
-    frame = menu.add.frame_h(UiManager.width//1.3, h, padding=0)
+    frame = menu.add.frame_h(w, h, padding=0)
     frame.relax(True)
     
     listFrame = menu.add.frame_v(500, max(len(messages) * 155, h), max_height=h, padding=0)
@@ -50,9 +51,7 @@ def OpenMap():
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
-        linedMessage = message.replace("\n","")
-        
-        oppFrame.pack(menu.add.button(FunctionUtils.ReduceStr(linedMessage, 30), lambda x=message:SetLabelText(x)))
+        oppFrame.pack(menu.add.button(FunctionUtils.ReduceStr(message[0], 30), lambda x=message:(title.set_title(x[0]),SetLabelText(x[1]))))
         
         oppFrame.pack(menu.add.vertical_margin(50))
         
@@ -62,17 +61,14 @@ def OpenMap():
         
         listFrame.pack(menu.add.vertical_margin(5))
     
-    w = int(UiManager.width//1.3-500)
-    
-    detailsFrame = menu.add.frame_v(w, h, max_height=h, padding=0)
+    detailsFrame = menu.add.frame_v(w-500, h, max_height=h, padding=0)
     detailsFrame.relax(True)
     frame.pack(detailsFrame)
     
-    detailsFrame.pack(menu.add.surface(pygame.transform.scale(pygame.image.load("Assets/background.png"),(w//1.5,w//3))),align=pygame_menu.locals.ALIGN_CENTER)
+    title = menu.add.label("",font_size=40)
+    detailsFrame.pack(title,align=pygame_menu.locals.ALIGN_CENTER)
     
-    
-    
-    label = menu.add.label("\n\n")
+    label = menu.add.label("\n\n",font_size=20)
     detailsFrame.pack(label)
     
     detailsFrame.pack(menu.add.vertical_margin(100))
@@ -220,6 +216,16 @@ ressource = [
     "m1"
 ]
 
+titles = [
+    "Intriguantes ressources",
+    "Ruée vers l'or",
+    "Deep Inpact",
+    "Archives",
+    "La grande traversée",
+    "Mirages",
+    "Découverte fortuite"
+]
+
 def isVowel(letter:str):
     return letter.lower() in "aeiouy"
 
@@ -230,12 +236,32 @@ def GenerateMessage():
     people = choice(peoplesingular if singular else peopleplurial)
     prefix = choice(prefixsingular if singular else prefixplurial)
     
+    foundDiscover = choice(discover)
+    foundThing = choice(thing)
+    foundWay = choice(way)
+    foundPlace = choice(place)
+    foundContains = choice(contains)
+    
     foundQuantity = choice(quantity)
     foundRessource = choice(ressource)
     if isVowel(foundRessource[0]):
         foundQuantity = foundQuantity[:-2] + "'"
     
-    return people + prefix + choice(discover) + choice(way) + "\n" + choice(thing) + choice(place) + choice(contains) + "\n" + foundQuantity + foundRessource
+    possibleTitles = [titles[0]]
+    if foundRessource == ressource[0]:
+        possibleTitles.append(titles[1])
+    if foundThing == thing[4]:
+        possibleTitles.append(titles[2])
+    if foundWay == way[1]:
+        possibleTitles.append(titles[3])
+    if foundPlace == place[4]:
+        possibleTitles.append(titles[4])
+    if foundWay == way[2]:
+        possibleTitles.append(titles[5])
+    if foundWay == way[5]:
+        possibleTitles.append(titles[6])
+    
+    return (choice(possibleTitles), people + prefix + foundDiscover + foundWay + foundThing + foundPlace + foundContains + foundQuantity + foundRessource)
 
 
 import matplotlib.pyplot as plt

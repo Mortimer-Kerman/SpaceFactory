@@ -20,7 +20,7 @@ Game.Cancel : Annuler
 //Menu des sauvegardes
 Saves.Title : Sauvegardes
 Saves.Delete : Supprimer
-Saves.Delete.Warn : Voulez-vous vraiment supprimer %$1?
+Saves.Delete.Warn : Voulez-vous vraiment supprimer%$r%$1?
 Saves.NewSave : Nouvelle sauvegarde
 Saves.NewSave.Name : Nom: 
 Saves.NewSave.Seed : Graine: 

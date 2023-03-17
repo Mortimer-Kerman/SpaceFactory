@@ -46,10 +46,16 @@ saveName = None#nom de la sauvegarde
 mainData = None#va bientôt contenir la classe Data principale
 planetTex = None
 
-def Load(name:str):
+def Load(name:str)->bool:
     """
     Sert au chargement des sauvegardes
     """
+    global force
+    force = False
+    def ForceLoad():
+        global force
+        force = True
+    
     global mainData
     CreateSave(name)#Création de la sauvegarde
     if SaveExists(name):#si la sauvegarde existe
@@ -58,11 +64,15 @@ def Load(name:str):
             mainData.__dict__ = json.load(f)#charger les Datas
         try:
             if mainData.saveVersion!=SaveFileVersion:
-                print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
-                quit()
+                UiManager.WarnUser(L.GetLoc('Game.Warning'), "Cette sauvegarde n'est pas compatible avec\ncette version. Voulez-vous la charger quand même?",ForceLoad,None)
+                if not force:
+                    print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
+                    return False
         except:
-            print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
-            quit()
+            UiManager.WarnUser(L.GetLoc('Game.Warning'), "Cette sauvegarde n'est pas compatible avec\ncette version. Voulez-vous la charger quand même?",ForceLoad,None)
+            if not force:
+                print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
+                return False
         for item in mainData.items.values():
             a=GameItems.Item.ReadDictRepresentation(item)
             mainData.items[str(list(a.pos))]=a
@@ -73,6 +83,7 @@ def Load(name:str):
     global LastCamPos
     LastCamPos = mainData.camPos.copy()
     print("File loaded!")
+    return True
     
 def Save():
     """
