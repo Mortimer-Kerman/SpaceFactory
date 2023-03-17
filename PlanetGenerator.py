@@ -104,6 +104,7 @@ def Generate(conditions = None, Seed = None):
         SandRedFactor = random.uniform(0, 1)
     
     if PlanetType == PlanetTypes.Desertic:
+        SeaLevel = random.uniform(0.4, 0.5)
         DesertCoverage = 0.9
         PlanetType = PlanetTypes.EarthLike
     

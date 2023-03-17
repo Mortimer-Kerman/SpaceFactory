@@ -69,13 +69,13 @@ def OpenSavesList():
     for saveFile in os.listdir('Saves/'):
         if SaveManager.SaveExists(saveFile):
             saveNames.append(saveFile)
-
+    
     if Menus.SavesList != None:
         Menus.SavesList.disable()
     
     if len(saveNames) == 0:
         OpenSaveCreationMenu(True)
-        return    
+        return
     
     Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 450, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SavesList.add.button(Localization.GetLoc('Game.Back'), Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)

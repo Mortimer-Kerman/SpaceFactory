@@ -68,7 +68,7 @@ def OpenMap():
     title = menu.add.label("",font_size=40)
     detailsFrame.pack(title,align=pygame_menu.locals.ALIGN_CENTER)
     
-    label = menu.add.label("\n\n",font_size=20)
+    label = menu.add.label("\n\n\n\n\n",font_size=20)
     detailsFrame.pack(label)
     
     detailsFrame.pack(menu.add.vertical_margin(100))
@@ -77,8 +77,20 @@ def OpenMap():
     
     
     def SetLabelText(text:str):
-        lines = text.split('\n',2)
-        for i in range(3):
+        
+        cuts = [0]
+        lastSpace = 0
+        for i in range(len(text)):
+            if text[i] == " ":
+                lastSpace = i
+            lastCut = cuts[-1]
+            if i - lastCut > 55:
+                cuts.append(lastSpace)
+        
+        
+        lines = [text[i:j].strip() for i,j in zip(cuts, cuts[1:]+[None])]
+        
+        for i in range(6):
             if i < len(lines):
                 label[i].set_title(lines[i])
             else:
@@ -209,11 +221,11 @@ quantity = [
 ]
 
 ressource = [
-    "or",
-    "charbon",
-    "cuivre",
-    "fer",
-    "m1"
+    "or.",
+    "charbon.",
+    "cuivre.",
+    "fer.",
+    "m1."
 ]
 
 titles = [
@@ -222,8 +234,9 @@ titles = [
     "Deep Inpact",
     "Archives",
     "La grande traversée",
-    "Mirages",
-    "Découverte fortuite"
+    "Mirages et rumeurs",
+    "Découverte fortuite",
+    "Données orbitales"
 ]
 
 def isVowel(letter:str):
@@ -247,7 +260,7 @@ def GenerateMessage():
     if isVowel(foundRessource[0]):
         foundQuantity = foundQuantity[:-2] + "'"
     
-    possibleTitles = [titles[0]]
+    possibleTitles = []
     if foundRessource == ressource[0]:
         possibleTitles.append(titles[1])
     if foundThing == thing[4]:
@@ -256,10 +269,14 @@ def GenerateMessage():
         possibleTitles.append(titles[3])
     if foundPlace == place[4]:
         possibleTitles.append(titles[4])
-    if foundWay == way[2]:
+    if foundWay == way[2] or foundWay == way[4]:
         possibleTitles.append(titles[5])
     if foundWay == way[5]:
         possibleTitles.append(titles[6])
+    if foundWay == way[0]:
+        possibleTitles.append(titles[7])
+    if len(possibleTitles) == 0:
+        possibleTitles.append(titles[0])
     
     return (choice(possibleTitles), people + prefix + foundDiscover + foundWay + foundThing + foundPlace + foundContains + foundQuantity + foundRessource)
 
