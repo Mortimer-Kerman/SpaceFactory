@@ -269,7 +269,7 @@ class Minerais:
             Minerais.Place(int((UiManager.width+cam[0])//zoom),y)
         #retirer les minerais non affichés (loin du joueur)
         for i in current:
-            if not (-cam[0]+UiManager.width+1000>=i[0]*zoom>=-cam[0]-1000 and -cam[1]+UiManager.height+1000>=i[1]*zoom>=-cam[1]-1000):
+            if not (-cam[0]+UiManager.width+9000>=i[0]*zoom>=-cam[0]-9000 and -cam[1]+UiManager.height+9000>=i[1]*zoom>=-cam[1]-9000):
                 current.remove(i)
         
 

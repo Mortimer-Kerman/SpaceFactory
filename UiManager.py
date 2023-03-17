@@ -389,12 +389,13 @@ class LightPopup:
     """
     Popups légères
     """
-    def __init__(self,text):
+    def __init__(self,text,d=0):
         self.text=text
         self.time=int(pygame.time.get_ticks())
+        self.d=d
         UIPopup.append(self)
     def show(self,i):
-        if int(pygame.time.get_ticks())>(self.time+10000):
+        if int(pygame.time.get_ticks())>(self.time+10000) and not self.d:
                self.close(i)
         else:
             place_text(self.text, width//4, (height//4)*3+i*20, 20, (255,255,255),TextureManager.nasalization,auto_size=(width//2,height//10))
