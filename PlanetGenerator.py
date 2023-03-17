@@ -97,13 +97,14 @@ def Generate(conditions = None, Seed = None):
 
         SeaLevel = 0.5#random.uniform(0.2, 0.8)
 
-        DesertCoverage = random.uniform(0.5, 1)
+        DesertCoverage = random.uniform(0, 0.6)
 
         CloudsStrength = (SeaLevel - 0.2) * 4 / 3
 
         SandRedFactor = random.uniform(0, 1)
     
     if PlanetType == PlanetTypes.Desertic:
+        DesertCoverage = 0.9
         PlanetType = PlanetTypes.EarthLike
     
     Offset = (random.uniform(-TextureSize, TextureSize),random.uniform(-TextureSize, TextureSize))

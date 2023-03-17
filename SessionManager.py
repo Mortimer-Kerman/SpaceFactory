@@ -169,7 +169,7 @@ def HandleMouseClicks(button):
                 elif UiManager.showMenu["delete"]:
                     SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
                 else:
-                    UiManager.Popup(L.GetLoc("Session.AlreadyItemHere"))
+                    UiManager.LightPopup(L.GetLoc("Session.AlreadyItemHere"))
 
         elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
             UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
