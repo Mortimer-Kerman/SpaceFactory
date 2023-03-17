@@ -392,8 +392,9 @@ class LightPopup:
     def __init__(self,text):
         self.text=text
         self.time=int(pygame.time.get_ticks())
+        UIPopup.append(self)
     def show(self,i):
-        if int(pygame.time.get_ticks())>(self.time+10000) and self.command is None and not self.d:
+        if int(pygame.time.get_ticks())>(self.time+10000):
                self.close(i)
         else:
             place_text(self.text, width//4, (height//4)*3+i*20, 20, (255,255,255),TextureManager.nasalization,auto_size=(width//2,height//10))
