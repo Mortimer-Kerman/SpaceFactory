@@ -55,7 +55,18 @@ def OpenMap():
         
         oppFrame.pack(menu.add.vertical_margin(50))
         
-        subtext = menu.add.label("Temps de voyage: 15 jours")
+        
+        if message[2] >= 24:
+            distance = round(message[2]/24)
+            suffix = " jour"
+        else :
+            distance = message[2]
+            suffix = " heure"
+        if distance > 1:
+            suffix += "s"
+        distance = str(distance) + suffix
+        
+        subtext = menu.add.label("Temps de voyage: " + distance)
         subtext.set_font(TextureManager.nasalization, 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         
@@ -144,7 +155,7 @@ def OpenMap():
         SaveManager.clock.tick()#on mets à jour l'horloge des FPS
     """
 
-from random import choice
+from random import choice, randint
 
 peoplesingular = [
     "Un groupe de chercheurs ",
@@ -278,7 +289,10 @@ def GenerateMessage():
     if len(possibleTitles) == 0:
         possibleTitles.append(titles[0])
     
-    return (choice(possibleTitles), people + prefix + foundDiscover + foundWay + foundThing + foundPlace + foundContains + foundQuantity + foundRessource)
+    distance = [randint(25,100),randint(20,60),randint(2,7),randint(50,200),randint(100,500)][place.index(foundPlace)]
+    
+    
+    return (choice(possibleTitles), people + prefix + foundDiscover + foundWay + foundThing + foundPlace + foundContains + foundQuantity + foundRessource, distance)
 
 
 import matplotlib.pyplot as plt
