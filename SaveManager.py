@@ -64,12 +64,12 @@ def Load(name:str)->bool:
             mainData.__dict__ = json.load(f)#charger les Datas
         try:
             if mainData.saveVersion!=SaveFileVersion:
-                UiManager.WarnUser(L.GetLoc('Game.Warning'), "Cette sauvegarde n'est pas compatible avec\ncette version. Voulez-vous la charger quand même?",ForceLoad,None)
+                UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),ForceLoad,None)
                 if not force:
                     print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
                     return False
         except:
-            UiManager.WarnUser(L.GetLoc('Game.Warning'), "Cette sauvegarde n'est pas compatible avec\ncette version. Voulez-vous la charger quand même?",ForceLoad,None)
+            UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),ForceLoad,None)
             if not force:
                 print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
                 return False

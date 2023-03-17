@@ -21,6 +21,7 @@ Game.Cancel : Annuler
 Saves.Title : Sauvegardes
 Saves.Delete : Supprimer
 Saves.Delete.Warn : Voulez-vous vraiment supprimer%$r%$1?
+Saves.IncompatibilityMessage : Cette sauvegarde n'est pas compatible avec%$rcette version. Voulez-vous la charger quand même?
 Saves.NewSave : Nouvelle sauvegarde
 Saves.NewSave.Name : Nom: 
 Saves.NewSave.Seed : Graine: 
