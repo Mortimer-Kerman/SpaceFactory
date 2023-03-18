@@ -32,19 +32,25 @@ def Tuto(t=1):
     
     UiManager.Popup(a,d=1 if showTuto<len(a)-1 else 0)
 
-def Play(saveName:str,seed=None,tuto=0):
+def Play(saveName:str,**kwargs):
     """
     Lance le jeu
     """
     if not SaveManager.Load(saveName):#Chargement de la sauvegarde
         return False
     
+    seed = kwargs.get("seed",None)
     if seed != None:
         SaveManager.mainData.seed = seed
+    
+    planetaryConditions = kwargs.get("planetaryConditions",None)
+    if planetaryConditions != None:
+        SaveManager.mainData.planetaryConditions = planetaryConditions
     
     runtime=0
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
     
+    tuto = kwargs.get("tuto",0)
     if tuto:
         UiManager.Popup(L.GetLoc("Session.AskTuto"),lambda : Tuto(0))
     
