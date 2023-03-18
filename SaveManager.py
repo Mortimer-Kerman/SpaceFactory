@@ -16,7 +16,7 @@ import UiManager
 import PlanetGenerator
 import Localization as L
 
-SaveFileVersion="f0.10"
+SaveFileVersion="f0.11"
 
 class Data:
     """
