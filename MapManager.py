@@ -8,6 +8,8 @@ Created on Tue Mar 14 15:26:04 2023
 import pygame
 import pygame_menu
 
+from random import choice, randint
+
 import SettingsManager
 import SaveManager
 import UiManager
@@ -17,7 +19,6 @@ import numpy
 import Localization
 import TextureManager
 
-worldMap = pygame.image.load("Assets/background.png")
 
 def OpenMap():
     
@@ -36,31 +37,34 @@ def OpenMap():
     
     #menu.add.surface(SaveManager.planetTex)
     
-    messages = [GenerateMessage() for i in range(5)]
+    opportunities = [Opportunity() for i in range(5)]
     
     frame = menu.add.frame_h(w, h, padding=0)
     frame.relax(True)
     
-    listFrame = menu.add.frame_v(500, max(len(messages) * 155, h), max_height=h, padding=0)
+    listFrame = menu.add.frame_v(500, max(len(opportunities) * 155, h), max_height=h, padding=0)
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
-    for message in messages:
+    global currentOpportunity
+    currentOpportunity = None
+    
+    for opportunity in opportunities:
         
         oppFrame = menu.add.frame_v(500, 150, background_color=(50, 50, 50), padding=0)
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
-        oppFrame.pack(menu.add.button(FunctionUtils.ReduceStr(message[0], 30), lambda x=message:(title.set_title(x[0]),SetLabelText(x[1]))))
+        oppFrame.pack(menu.add.button(FunctionUtils.ReduceStr(opportunity.GetTitle(), 30), lambda opp=opportunity:OpenOpportunity(opp)))
         
         oppFrame.pack(menu.add.vertical_margin(50))
         
         
-        if message[2] >= 24:
-            distance = round(message[2]/24)
+        if opportunity.GetWalkDistance() >= 24:
+            distance = round(opportunity.GetWalkDistance()/24)
             suffix = " jour"
         else :
-            distance = message[2]
+            distance = opportunity.GetWalkDistance()
             suffix = " heure"
         if distance > 1:
             suffix += "s"
@@ -71,6 +75,12 @@ def OpenMap():
         oppFrame.pack(subtext)
         
         listFrame.pack(menu.add.vertical_margin(5))
+    
+    def OpenOpportunity(opportunity):
+        title.set_title(opportunity.GetTitle())
+        SetLabelText(opportunity.GetDesc())
+        global currentOpportunity
+        currentOpportunity = opportunity
     
     detailsFrame = menu.add.frame_v(w-500, h, max_height=h, padding=0)
     detailsFrame.relax(True)
@@ -84,8 +94,7 @@ def OpenMap():
     
     detailsFrame.pack(menu.add.vertical_margin(100))
     
-    detailsFrame.pack(menu.add.button("Lancer une expédition"),align=pygame_menu.locals.ALIGN_CENTER)
-    
+    detailsFrame.pack(menu.add.button("Lancer une expédition", OpenExpeditionLauncher),align=pygame_menu.locals.ALIGN_CENTER)
     
     def SetLabelText(text:str):
         
@@ -108,54 +117,49 @@ def OpenMap():
                 label[i].set_title('')
     
     menu.mainloop(UiManager.screen, DisplayBackground)
-    """
-    worldMap = CalculateWorldMap()
-    
-    zoom = 4
-    lastZoom = zoom
-    camPos = [0,0]
-    
-    scaledMap = pygame.transform.scale(worldMap,(UiManager.width * zoom,UiManager.height * zoom))
-    
-    while True:
-        
-        UiManager.screen.blit(scaledMap, camPos)
-        
-        pygame.display.update()
-        
-        #action du clavier
-        keys = pygame.key.get_pressed()#On stocke les touches pressées
-        
-        if keys[SettingsManager.GetKeybind("up")]:#si touche up
-            camPos[1]+=SaveManager.clock.get_time() / 2
-        if keys[SettingsManager.GetKeybind("down")]:#si touche down
-            camPos[1]-=SaveManager.clock.get_time() / 2
-        if keys[SettingsManager.GetKeybind("right")]:#si touche right
-            camPos[0]-=SaveManager.clock.get_time() / 2
-        if keys[SettingsManager.GetKeybind("left")]:#si touche left
-            camPos[0]+=SaveManager.clock.get_time() / 2    
-        
-        camPos[0] = FunctionUtils.clamp(camPos[0], -UiManager.width*(zoom-1), 0)
-        camPos[1] = FunctionUtils.clamp(camPos[1], -UiManager.height*(zoom-1), 0)
-        
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
-            
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    return
-            
-            if event.type == pygame.MOUSEWHEEL:#si un changement molette survient
-                zoom = FunctionUtils.clamp(zoom+(event.y / 10), 1, 4)#on ajoute le y du changement de molette en s'assurant de garder le niveau de zoom entre 10 et 150
-                if zoom != lastZoom:
-                    lastZoom = zoom
-                    scaledMap = pygame.transform.scale(worldMap,(UiManager.width * zoom,UiManager.height * zoom))
-        
-        SaveManager.clock.tick()#on mets à jour l'horloge des FPS
-    """
 
-from random import choice, randint
+def OpenExpeditionLauncher():
+    
+    global currentOpportunity
+    if currentOpportunity == None:
+        return
+    
+    screenFilter = pygame.Surface((UiManager.width,UiManager.height))
+    screenFilter.set_alpha(50)
+    background = pygame.display.get_surface().copy()
+    background.blit(screenFilter,(0,0))
+    def DisplayBackground():
+        UiManager.screen.blit(background,(0,0))
+    
+    menu = pygame_menu.Menu(currentOpportunity.GetTitle(), 500, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    if currentOpportunity.GetWalkDistance() >= 24:
+        distance = round(currentOpportunity.GetWalkDistance()/24)
+        suffix = " jour"
+    else :
+        distance = currentOpportunity.GetWalkDistance()
+        suffix = " heure"
+    if distance > 1:
+        suffix += "s"
+    distance = str(distance) + suffix
+    menu.add.label("Temps de marche: " + distance)
+    
+    if currentOpportunity.GetDriveDistance() >= 24:
+        distance = round(currentOpportunity.GetDriveDistance()/24)
+        suffix = " jour"
+    else :
+        distance = currentOpportunity.GetDriveDistance()
+        suffix = " heure"
+    if distance > 1:
+        suffix += "s"
+    distance = str(distance) + suffix
+    menu.add.label("Temps de route: " + distance)
+    
+    menu.mainloop(UiManager.screen, DisplayBackground)
+
+def Tick():
+    pass
 
 peoplesingular = [
     "Un groupe de chercheurs ",
@@ -250,104 +254,72 @@ titles = [
     "Données orbitales"
 ]
 
-def isVowel(letter:str):
-    return letter.lower() in "aeiouy"
-
-def GenerateMessage():
+class Opportunity:
+    def __init__(self):
+        
+        self.singular = choice([True,False])
+        
+        self.descCodes = {
+            "people": randint(0,len(peoplesingular if self.singular else peopleplurial)-1),
+            "prefix": randint(0,len(prefixsingular if self.singular else prefixplurial)-1),
+            "discover": randint(0, len(discover)-1),
+            "way": randint(0, len(way)-1),
+            "thing": randint(0, len(thing)-1),
+            "place": randint(0, len(place)-1),
+            "contains": randint(0, len(contains)-1),
+            "quantity": randint(0, len(quantity)-1),
+            "ressource": randint(0, len(ressource)-1)
+        }
+        
+        possibleTitles = []
+        if self.descCodes["ressource"] == 0:
+            possibleTitles.append(1)
+        if self.descCodes["thing"] == 4:
+            possibleTitles.append(2)
+        if self.descCodes["way"] == 1:
+            possibleTitles.append(3)
+        if self.descCodes["place"] == 4:
+            possibleTitles.append(4)
+        if self.descCodes["way"] == 2 or self.descCodes["way"] == 4:
+            possibleTitles.append(5)
+        if self.descCodes["way"] == 5:
+            possibleTitles.append(6)
+        if self.descCodes["way"] == 0:
+            possibleTitles.append(7)
+        if len(possibleTitles) == 0:
+            possibleTitles.append(0)
+        self.title = choice(possibleTitles)
+        
+        self.distance = [randint(100,400),randint(80,240),randint(8,28),randint(200,800),randint(400,2000)][self.descCodes["place"]]
+        
+    def GetDesc(self):
+        q = quantity[self.descCodes["quantity"]]
+        r = ressource[self.descCodes["ressource"]]
+        if FunctionUtils.IsVowel(r[0]):
+            q = q[:-2] + "'"
+        
+        codes = [
+            (peoplesingular if self.singular else peopleplurial)[self.descCodes["people"]],
+            (prefixsingular if self.singular else prefixsingular)[self.descCodes["prefix"]],
+            discover[self.descCodes["discover"]],
+            way[self.descCodes["way"]],
+            thing[self.descCodes["thing"]],
+            place[self.descCodes["place"]],
+            contains[self.descCodes["contains"]],
+            q,
+            r
+        ]
+        
+        return "".join(codes)
+        
+    def GetTitle(self):
+        return titles[self.title]
     
-    singular = choice([True,False])
+    def GetDistance(self):
+        return self.distance
     
-    people = choice(peoplesingular if singular else peopleplurial)
-    prefix = choice(prefixsingular if singular else prefixplurial)
+    def GetWalkDistance(self):
+        return self.distance//4
     
-    foundDiscover = choice(discover)
-    foundThing = choice(thing)
-    foundWay = choice(way)
-    foundPlace = choice(place)
-    foundContains = choice(contains)
-    
-    foundQuantity = choice(quantity)
-    foundRessource = choice(ressource)
-    if isVowel(foundRessource[0]):
-        foundQuantity = foundQuantity[:-2] + "'"
-    
-    possibleTitles = []
-    if foundRessource == ressource[0]:
-        possibleTitles.append(titles[1])
-    if foundThing == thing[4]:
-        possibleTitles.append(titles[2])
-    if foundWay == way[1]:
-        possibleTitles.append(titles[3])
-    if foundPlace == place[4]:
-        possibleTitles.append(titles[4])
-    if foundWay == way[2] or foundWay == way[4]:
-        possibleTitles.append(titles[5])
-    if foundWay == way[5]:
-        possibleTitles.append(titles[6])
-    if foundWay == way[0]:
-        possibleTitles.append(titles[7])
-    if len(possibleTitles) == 0:
-        possibleTitles.append(titles[0])
-    
-    distance = [randint(25,100),randint(20,60),randint(2,7),randint(50,200),randint(100,500)][place.index(foundPlace)]
-    
-    
-    return (choice(possibleTitles), people + prefix + foundDiscover + foundWay + foundThing + foundPlace + foundContains + foundQuantity + foundRessource, distance)
-
-
-import matplotlib.pyplot as plt
-
-def CalculateWorldMap():
-    pix = []
-    
-    Offset = (1,1)
-    DesertCoverage = 0.5
-    PoleCoverage = 0.2
-    SandRedFactor = 0.25
-    BiomeLerpSpeed = 0.2
-    SeaLevel = 0.5
-    
-    for y in range(200):
-        row = []
-        for x in range(100):
-            
-            xCoord = x / 50
-            yCoord = y / 50
-            
-            depth = NoiseTools.FractalNoise(xCoord, yCoord, Offset, 2)
-            
-            col = (depth,depth,depth)
-            
-            variationMap = (depth - SeaLevel) / 2
-            
-            ocean = (0, 0.21, 0.35)
-            grass = (0.28 + variationMap, 0.52 + variationMap, 0.07 + variationMap)
-            desert = FunctionUtils.lerpcol(((depth * 1) + 0.2, (depth * 0.92) + 0.2, 0.2), (depth, depth / 4, 0), SandRedFactor)
-            poles = (depth + 0.3, depth + 0.3, depth + 0.3)
-            
-            Latitude = abs((x - 50) / 50)
-            
-            biomeMap = NoiseTools.FractalNoise(xCoord, yCoord, (Offset[0] * 2, Offset[1] * 2), 2)# * 2 + 1
-            
-            biomeMap = round(biomeMap + 0.5 - DesertCoverage)#FunctionUtils.clamp01(((biomeMap+factor)/(abs(biomeMap+factor)+0.1)+1)/2)
-            
-            grass = FunctionUtils.lerpcol(desert, grass, biomeMap)
-
-            grass = FunctionUtils.lerpcol(grass, poles, FunctionUtils.clamp01((Latitude - (1 - PoleCoverage)) / PoleCoverage) / BiomeLerpSpeed)
-
-            if depth < SeaLevel:
-                col = ocean
-            else:
-                col = grass
-            
-            #row.append(col)
-            row.append(FunctionUtils.ZeroOneToHexa(col))
-        pix.append(row)
-    
-    plt.imshow(pix)
-    
-    texture = pygame.Surface((200,100))
-    pygame.surfarray.blit_array(texture, numpy.array(pix))
-    
-    return texture
-
+    def GetDriveDistance(self):
+        return self.distance//40

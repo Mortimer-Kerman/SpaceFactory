@@ -53,3 +53,9 @@ def ReduceStr(message:str,lengthMax:int)->str:
     S'assure qu'une chaine de caractères ne dépasse pas une certaine longueur, et si c'est le cas, retire la fin et ajoute trois points
     """
     return message[:lengthMax] + ("..." if len(message) > lengthMax else "")
+
+def IsVowel(letter:str)->bool:
+    """
+    Permet de savoir si une lettre est une voyelle
+    """
+    return letter.lower() in "aeiouy"
