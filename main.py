@@ -160,7 +160,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
                         3: 'Saves.NewSave.Environment.Lifefull'}
     EnvironmentSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Environment'), 0, list(environmentsDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
-                      onchange=lambda x: (SetLabelText(Localization.GetLoc(environmentsDict[x] + '.desc')), SetCorrectPlanetMap(x)),
+                      onchange=lambda x: (SetLabelText(Localization.GetLoc(environmentsDict[x] + '.desc')), SetCorrectPlanetMap(x,GetSeedFromInput())),
                       #range_values=int,
                       value_format=lambda x: Localization.GetLoc(environmentsDict[x]))
     creationTools.pack(EnvironmentSlider, align=pygame_menu.locals.ALIGN_LEFT)
@@ -173,28 +173,35 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
                       value_format=lambda x: Localization.GetLoc(gameModesDict[x]))
     creationTools.pack(GameModeSlider, align=pygame_menu.locals.ALIGN_LEFT)
     
-    SaveManager.planetTex = PlanetGenerator.Generate()
     thumbDisplayer = Menus.SaveCreation.add.surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
     
     global PrevEnvironment
     PrevEnvironment = 0
-    def SetCorrectPlanetMap(x:int):
+    def SetCorrectPlanetMap(x:int,seed=None,forceGenerate=False):
         global PrevEnvironment
-        if x == PrevEnvironment:
+        if x == PrevEnvironment and not forceGenerate:
             return
         PrevEnvironment = x
-
+        
+        global conditions
+        
+        conditions = PlanetGenerator.PlanetaryConditions(seed=seed)
         if x == 0:
-            SetSurface(PlanetGenerator.Generate())
+            
+            SetSurface(PlanetGenerator.Generate(conditions,seed))
             thumbDisplayer.set_surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
             return
-        conditions = PlanetGenerator.PlanetaryConditions()
-        conditions.type = x
-        SetSurface(PlanetGenerator.Generate(conditions))
+        
+        while conditions.type != x:
+            conditions = PlanetGenerator.PlanetaryConditions()
+        
+        SetSurface(PlanetGenerator.Generate(conditions,seed))
     
     def SetSurface(surface):
         SaveManager.planetTex = surface
         thumbDisplayer.set_surface(pygame.transform.scale(SaveManager.planetTex,(150,150)))
+    
+    SetCorrectPlanetMap(0,forceGenerate=True)
     
     menuSections.pack(thumbDisplayer)
     
@@ -211,7 +218,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     Menus.SaveCreation.add.vertical_margin(20)
     
     global CreateSaveButton
-    CreateSaveButton = Menus.SaveCreation.add.button(Localization.GetLoc('Saves.NewSave.Create'), lambda : TryCreateSave(saveNameInput))
+    CreateSaveButton = Menus.SaveCreation.add.button(Localization.GetLoc('Saves.NewSave.Create'), lambda : (SetCorrectPlanetMap(EnvironmentSlider.get_value(),GetSeedFromInput(),forceGenerate=True),TryCreateSave(saveNameInput)))
     
     Menus.SaveCreation.mainloop(UiManager.screen, UiManager.DisplayBackground)
     
@@ -227,7 +234,9 @@ def TryCreateSave(saveNameInput):
     Menus.SaveCreation.disable()
     if Menus.SavesList != None:
         Menus.SavesList.disable()
-    SessionManager.Play(saveName,GetSeedFromInput(),tuto=1)
+    
+    global conditions
+    SessionManager.Play(saveName,seed=GetSeedFromInput(),tuto=1,planetaryConditions=conditions)
     
 def TryLoadSave(saveName:str):
     if SessionManager.Play(saveName):

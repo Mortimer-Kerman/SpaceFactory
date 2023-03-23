@@ -42,12 +42,20 @@ class PlanetaryConditions():
     Permet de générer ou stocker des conditions planétaires pour les passer au générateur
     """
     def __init__(self, **kwargs):
+        seed = kwargs.get("seed", None)
+        if seed != None:
+            random.seed(seed)
+        
         self.gravity = kwargs.get("gravity", random.uniform(0.5, 1.5))
         self.pressure = kwargs.get("pressure", random.uniform(0, 2))
         self.temperature = kwargs.get("temperature", random.uniform(-50, 70))
-        self.type = PlanetTypes.EarthLike if (0.7 < self.gravity < 1.3
-                                          and 0.7 < self.pressure < 1.3
-                                          and -30 < self.temperature < 50) else PlanetTypes.Dead
+        if (0.7 < self.gravity < 1.3 and 0.7 < self.pressure < 1.3 and -30 < self.temperature < 50):
+            if (random.choice([True,False])):
+                self.type = PlanetTypes.EarthLike
+            else:
+                self.type = PlanetTypes.Desertic
+        else:
+            self.type = PlanetTypes.Dead
 
 
 def Generate(conditions = None, Seed = None):

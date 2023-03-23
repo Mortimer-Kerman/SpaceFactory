@@ -13,9 +13,10 @@ import os
 import GameItems
 import TextureManager
 import UiManager
+import PlanetGenerator
 import Localization as L
 
-SaveFileVersion="f0.10"
+SaveFileVersion="f0.11"
 
 class Data:
     """
@@ -28,6 +29,7 @@ class Data:
         self.camPos = [0,0]
         self.zoom = 100
         self.seed = random.randint(-(9**9),9**9)
+        self.planetaryConditions = PlanetGenerator.PlanetaryConditions(seed=self.seed)
         self.items = {}
         self.selectedItem="foreuse"
         self.rotation=0
