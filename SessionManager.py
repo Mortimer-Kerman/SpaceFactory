@@ -18,7 +18,7 @@ import AudioManager
 import SettingsManager
 import FunctionUtils
 import Localization as L
-import MapManager
+import OpportunitiesManager
 
 
 showTuto=9**9
@@ -32,19 +32,25 @@ def Tuto(t=1):
     
     UiManager.Popup(a,d=1 if showTuto<len(a)-1 else 0)
 
-def Play(saveName:str,seed=None,tuto=0):
+def Play(saveName:str,**kwargs):
     """
     Lance le jeu
     """
     if not SaveManager.Load(saveName):#Chargement de la sauvegarde
         return False
     
+    seed = kwargs.get("seed",None)
     if seed != None:
         SaveManager.mainData.seed = seed
+    
+    planetaryConditions = kwargs.get("planetaryConditions",None)
+    if planetaryConditions != None:
+        SaveManager.mainData.planetaryConditions = planetaryConditions
     
     runtime=0
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
     
+    tuto = kwargs.get("tuto",0)
     if tuto:
         UiManager.Popup(L.GetLoc("Session.AskTuto"),lambda : Tuto(0))
     
@@ -95,6 +101,7 @@ def Play(saveName:str,seed=None,tuto=0):
         runtime+=SaveManager.clock.get_time() / 8
         if runtime > 50:
             runtime = 0
+            OpportunitiesManager.Tick()
     return True
     
         
@@ -138,7 +145,7 @@ def HandleShortKeyInputs(key):
     if key == pygame.K_F2:
         UiManager.TakeScreenshot()
     if key == pygame.K_m:
-        MapManager.OpenMap()
+        OpportunitiesManager.OpenMap()
     if key == pygame.K_ESCAPE:
         if Pause():#On fait pause
             return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
