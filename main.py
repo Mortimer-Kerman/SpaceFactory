@@ -11,6 +11,7 @@ import pygame_menu
 import os
 import random
 from shutil import rmtree
+from math import cos
 
 import TextureManager
 import UiManager
@@ -139,7 +140,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     
     menuSections.pack(creationTools, align=pygame_menu.locals.ALIGN_LEFT)
     
-    saveNameInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Name'), default=Localization.GetLoc('Saves.NewSave'),maxchar=30)
+    saveNameInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Name'), default=RandomSaveName(),maxchar=30)
     creationTools.pack(saveNameInput, align=pygame_menu.locals.ALIGN_LEFT)
     
     global seedInput
@@ -260,6 +261,33 @@ def GetSeedFromInput():
     
     return seed
 
+def RandomSaveName()->str:   
+
+    length = random.randint(4,10)
+    consonants = [ "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "l", "n", "p", "q", "r", "s", "sh", "zh", "t", "v", "w", "x" ]
+    vowels = [ "a", "e", "i", "o", "u", "ae", "y" ]
+    Name = ""
+    b = 0
+    while b < length:
+    
+        Name += random.choice(consonants)
+        b += 1
+        if b == length:
+            break
+        Name += random.choice(vowels)
+        b += 1
+    
+    
+    suffixes = [ "I", "II", "III", "IV", "V", "Prime", "Alpha", "Beta", "Delta", "Minoris", "Majoris" ]
+    
+    if random.choice((True,False)):
+        Name += " " + random.choice(suffixes)
+    
+    Name = Name[0].upper() + Name[1:]
+    
+    return Name
+
+
 def OpenCredits():
     
     creditsMenu = pygame_menu.Menu(Localization.GetLoc('Game.Credits'), UiManager.width//1.1, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
@@ -270,4 +298,59 @@ def OpenCredits():
     
     creditsMenu.mainloop(UiManager.screen, UiManager.DisplayBackground)
 
-OpenMainMenu()
+def Intro()->bool:
+    
+    #récupération des logos à afficher dans l'ordre d'affichage
+    logos = [
+        pygame.Surface((2, 2)),#juste une texture noire avant le premier logo
+        pygame.transform.scale(pygame.image.load("MG.png"),(UiManager.height/2,UiManager.height/2)),
+        pygame.transform.scale(pygame.image.load("PYTHONLIBS.png"),(UiManager.height/1.5,UiManager.height/1.5)),
+        pygame.transform.scale(pygame.image.load("TROPHEES.png"),(UiManager.height/1.5,UiManager.height/1.5))
+    ]
+    
+    changedIcon = False
+    logoIndex = 0
+    
+    #tant que l'animation se joue...
+    playing = True
+    while playing:
+        
+        #boucle d'évenements
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                #si la fenêtre est fermée, on renvoie faux
+                pygame.quit()
+                return False
+            #si la touche echap, entrer ou espace est pressée...
+            if event.type == pygame.KEYDOWN and event.key in [pygame.K_ESCAPE,pygame.K_RETURN,pygame.K_SPACE]:
+                #on renvoie vrai, ce qui interromp l'animation
+                return True
+        
+        #calcul de la visibilité en fonction du temps d'exécution
+        visibility = (cos(pygame.time.get_ticks()/700+1))*200+150
+        
+        #on fait une copie de la texture à afficher et on règle sa visibilité
+        currentTex = logos[logoIndex].copy()
+        currentTex.set_alpha(visibility)
+        
+        #on affiche l'écran, le logo et on met à jour la fenêtre
+        UiManager.screen.fill((0,0,0))
+        UiManager.screen.blit(currentTex,((UiManager.width-currentTex.get_width())/2, (UiManager.height-currentTex.get_height())/2))
+        pygame.display.update()
+        
+        #si l'icône est invisible et qu'aucun changement d'icône n'a eu lieu...
+        if not changedIcon and visibility < 0:
+            #on change d'icône
+            changedIcon = True
+            logoIndex += 1
+            #si on est arrivé à la fin de la liste des icônes, on met fin à l'animation
+            if logoIndex == len(logos):
+                playing = False
+        #si l'icône est visible et qu'un changement d'icône a eu lieu...
+        elif changedIcon and visibility > 0:
+            changedIcon = False
+    
+    return True
+
+if Intro():
+    OpenMainMenu()

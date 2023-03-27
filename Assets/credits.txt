@@ -1,9 +1,16 @@
-Theme.mp3 publié sous licence https://creativecommons.org/licenses/by-nc/4.0/ trouvable à cet URL https://freesound.org/people/LagMusics/sounds/585674/
-Aquire.otf publié sous licence "Non-Commercial" trouvable à cet URL https://www.fontspace.com/aquire-font-f43735
-Nasalization.ttf publié sous licence "Non-Commercial" trouvable à https://www.dafont.com/fr/nasalization.font
+Theme.mp3 publié sous licence https://creativecommons.org/licenses/by-nc/4.0/ trouvable à cet URL:
+https://freesound.org/people/LagMusics/sounds/585674/
+
+Aquire.otf publié sous licence "Non-Commercial" trouvable à cet URL:
+https://www.fontspace.com/aquire-font-f43735
+
+Nasalization.ttf publié sous licence "Non-Commercial" trouvable à cet URL:
+https://www.dafont.com/fr/nasalization.font
+
 Background.png réalisé via StableDiffusion
 
-question.png est issue du projet Mozilla FirefoxEmoji https://mozilla.github.io/fxemoji/dist/FirefoxEmoji/index.html
+question.png est issue du projet Mozilla FirefoxEmoji
+https://mozilla.github.io/fxemoji/dist/FirefoxEmoji/index.html
 
 Genesis est une musique de Karl Casey @ White Bat Audio distribuée sans droits d'auteur.
 Moon Men est une musique de Jake Chudnow, distribué sans droits d'auteur.
