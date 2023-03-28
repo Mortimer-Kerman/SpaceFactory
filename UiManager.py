@@ -317,7 +317,9 @@ def interactItem(item):
             for r in zip(rects,inv):
                 pygame.draw.rect(screen,  (47,48,51), r[0])
                 screen.blit(TextureManager.GetTexture(r[1]["n"], 78, True),(r[0].x,r[0].y))
-                place_text(str(r[1]),r[0].x,r[0].y,20)
+
+                place_text(str(r[1]["n"]),r[0].x,r[0].y,20)
+                place_text(str(r[1]["m"]),r[0].x,r[0].y+20,20)
                 
             pygame.display.update()
             clock.tick(25)
