@@ -278,7 +278,7 @@ def RandomSaveName()->str:
         b += 1
     
     
-    suffixes = [ "I", "II", "III", "IV", "V", "Prime", "Alpha", "Beta", "Delta", "Minoris", "Majoris" ]
+    suffixes = [ "I", "II", "III", "IV", "V", "Prime", "Alpha", "Beta", "Delta", "Zeta", "Omega", "Minoris", "Majoris" ]
     
     if random.choice((True,False)):
         Name += " " + random.choice(suffixes)

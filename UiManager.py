@@ -315,7 +315,8 @@ def interactItem(item):
             pygame.draw.polygon(screen, (98,99,102), [((width//4)*3-250,height//2-300),((width//4)*3+250,height//2-300),((width//4)*3+250,height//2+300),((width//4)*3-250,height//2+300)])
             place_text("Inventaire",(width//4)*3-245,height//2-330,100,(255,255,255),TextureManager.aquire)
             for r in zip(rects,inv):
-                pygame.draw.rect(screen, (255,0,0), r[0])
+                pygame.draw.rect(screen,  (47,48,51), r[0])
+                screen.blit(TextureManager.GetTexture(r[1]["n"], 78, True),(r[0].x,r[0].y))
                 place_text(str(r[1]),r[0].x,r[0].y,20)
                 
             pygame.display.update()
