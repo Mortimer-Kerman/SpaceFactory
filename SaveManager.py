@@ -16,7 +16,7 @@ import UiManager
 import PlanetGenerator
 import Localization as L
 
-SaveFileVersion="f0.11"
+SaveFileVersion="f0.12"
 
 class Data:
     """
@@ -31,6 +31,7 @@ class Data:
         self.seed = random.randint(-(9**9),9**9)
         self.planetaryConditions = PlanetGenerator.PlanetaryConditions(seed=self.seed)
         self.items = {}
+        self.coins=0
         self.selectedItem="foreuse"
         self.rotation=0
         self.saveVersion=SaveFileVersion

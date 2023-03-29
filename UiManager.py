@@ -18,6 +18,7 @@ import GameItems
 import SettingsManager
 import SessionManager
 import Localization
+import MarketManager
 
 #Les variables importantes
 screen = None#la fenêtre principale (élément pygame.display)
@@ -265,7 +266,7 @@ def interactItem(item):
         a=[[i] for i in list(GameItems.allTransportableItems.keys())]
         b=interactMenu.add.selector("Choisissez : ",a)
         interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)
-    if item.name in ["stockage","market"]:
+    if item.name in ["stockage"]:
         
         in_menu=1
         BLOCK_SIZE=100
@@ -323,6 +324,7 @@ def interactItem(item):
                 
             pygame.display.update()
             clock.tick(25)
+        
         #change l'environnement de stockage/inv
         tempInv=SaveManager.mainData.inv
         tempBigInv=item.metadata["biginv"]
@@ -342,6 +344,9 @@ def interactItem(item):
                         SaveManager.mainData.inv=tempInv
                         item.metadata["biginv"]=tempBigInv
                         return
+    
+    if item.name=="market":
+        MarketManager.showMenu()
 
     SessionManager.PauseMenuBackground = None
     return b.get_value() if b is not None else None

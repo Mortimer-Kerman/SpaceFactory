@@ -33,7 +33,7 @@ def OpenMap():
     h = int((UiManager.height//2)-105)
     w = int(UiManager.height)
     
-    menu = pygame_menu.Menu("Carte", w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    menu = pygame_menu.Menu(Localization.GetLoc("Opportunities.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
     #menu.add.surface(SaveManager.planetTex)

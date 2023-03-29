@@ -13,7 +13,7 @@ import Localization as L
 
 import pygame
 
-menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four","market"]#éléments du menu de séléction
+menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four","market"]#éléments du menu de sélection
 
 allTransportableItems={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110)}
 
@@ -59,7 +59,6 @@ class Item:
                 self.giveto[1]=1
                 self.giveto[2]*=2
                 self.giveto[3]*=2
-            print(self.giveto)
     
     def ReadDictRepresentation(DictRepresentation:dict):
         """
@@ -326,10 +325,12 @@ doc={
      "jonction":{"c":{"cuivre":20}},
      "trieur":{"c":{"cuivre":20,"or":10}},
      "delete":{},
-     "charbon":{},
-     "cuivre":{},
-     "or":{},
-     "m1":{}
+     "charbon":{"g":1},
+     "cuivre":{"g":2},
+     "or":{"g":5},
+     "m1":{"g":10},
+     #objets du shop
+     "téléporteur":{"c":{"coins":100},"s":1}
      }
 def getDescription(type):
     loc = L.GetLoc("GameItems.d." + type)

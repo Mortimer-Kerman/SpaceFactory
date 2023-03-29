@@ -217,7 +217,7 @@ def HandleMouseClicks(button):
             clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
             if clickedItem != None:
                 UiManager.LightPopup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
-                if clickedItem.name in ["trieur","stockage"]:clickedItem.edit(UiManager.interactItem(clickedItem))
+                if clickedItem.name in ["trieur","stockage","market"]:clickedItem.edit(UiManager.interactItem(clickedItem))
     
     return False
 

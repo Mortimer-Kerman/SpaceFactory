@@ -164,3 +164,11 @@ Resources.Coal : charbon
 Resources.Copper : cuivre
 Resources.Iron : fer
 Resources.M1 : m1
+
+//Market
+Market.Title : GalacticMarket
+Market.Motto : Pour des achats intergalactiques!
+//Une expédition commerciale vers l'infini et au-delà
+
+//Opportunities
+Opportunities.Title : Carte
