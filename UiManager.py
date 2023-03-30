@@ -11,6 +11,7 @@ import pygame_menu
 
 from datetime import datetime
 import os
+import random
 
 import SaveManager
 import TextureManager
@@ -19,6 +20,7 @@ import SettingsManager
 import SessionManager
 import Localization
 import MarketManager
+import AudioManager
 
 #Les variables importantes
 screen = None#la fenêtre principale (élément pygame.display)
@@ -417,6 +419,13 @@ MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", draw
 
 def DisplayBackground():
     MenuBackground.draw(screen)
+    print(str(pygame.event.get()))
+    for event in pygame.event.get():
+        print("a")
+        if event.type == AudioManager.MUSIC_ENDED:#Si la musique s'arrête
+                print("aaaaaaa")
+                pygame.mixer.music.load("./Assets/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique
+                pygame.mixer.music.play(start=0.0, fade_ms=200)#on lance la lecture de la nouvelle musique
 
 def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground):
     
