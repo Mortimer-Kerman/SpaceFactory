@@ -36,7 +36,7 @@ def GetTexture(textureName:str,scale:float=1,is_menu:bool=False)->pygame.Surface
         elif textureName in menuTextures and is_menu:
             tex=menuTextures[textureName]
         else:
-            tex = pygame.transform.scale(tex,(scale,scale))#redimentionner l'image
+            tex = pygame.transform.scale(tex,(scale,scale))#redimensionner l'image
             if is_menu:
                 menuTextures[textureName] = tex
             else:
@@ -70,7 +70,7 @@ zoomedTextures = {}#dictionnaire des textures zoomées
 
 def RefreshZoom():
     """
-    Cette fonction sert à raffraichir le zoom
+    Cette fonction sert à rafraîchir le zoom
     """
     zoomedTextures.clear()#vide le dictionnaire des textures zoomées
     zoomedFilters.clear()
