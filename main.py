@@ -108,7 +108,7 @@ def OpenSavesList():
     
     Menus.SavesList.add.button(Localization.GetLoc('Saves.NewSave'), OpenSaveCreationMenu)
     
-    frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 102, 245), max_height=245, background_color=(30, 30, 30), padding=0)
+    frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 112, 245), max_height=245, background_color=(30, 30, 30), padding=0)
     frame.relax(True)
     
     global selectedMap, selectedFrame
@@ -116,7 +116,7 @@ def OpenSavesList():
     
     for saveName in saveNames:
         
-        saveFrame = Menus.SavesList.add.frame_h(460, 100, background_color=(50, 50, 50), padding=0)
+        saveFrame = Menus.SavesList.add.frame_h(460, 110, background_color=(50, 50, 50), padding=0)
         saveFrame.relax(True)
         frame.pack(saveFrame)
         
@@ -136,7 +136,10 @@ def OpenSavesList():
         texPath = "Saves/" + saveName + "/planet.png"
         if os.path.isfile(texPath):
             planetTex = pygame.image.load(texPath)
-        saveFrame.pack(Menus.SavesList.add.surface(pygame.transform.scale(planetTex,(90,90))), align=pygame_menu.locals.ALIGN_RIGHT)
+            
+        if planetTex.get_width() != 100 or planetTex.get_height() != 100:
+            planetTex = pygame.transform.scale(planetTex,(100, 100))
+        saveFrame.pack(Menus.SavesList.add.surface(planetTex), align=pygame_menu.locals.ALIGN_RIGHT)
         
         frame.pack(Menus.SavesList.add.vertical_margin(2))
     
