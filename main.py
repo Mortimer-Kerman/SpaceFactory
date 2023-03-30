@@ -51,11 +51,17 @@ def OpenMainMenu():
     
     transparentTheme = pygame_menu.themes.THEME_DARK.copy()
     transparentTheme.background_color=(0, 0, 0, 0)
+    transparentTheme.title_background_color=(255, 255, 255, 0)
     
     #Définition du Menu (ici, le menu est généré via le module pygame_menu)
-    Menus.MainMenu = pygame_menu.Menu(Localization.GetLoc('Game.Title'), UiManager.width, UiManager.height, theme=transparentTheme)#le thème du menu
+    Menus.MainMenu = pygame_menu.Menu('', UiManager.width, UiManager.height, theme=transparentTheme)#le thème du menu
     
-    Menus.MainMenu.add.vertical_margin(30)
+    Menus.MainMenu.add.surface(pygame.image.load("Assets/logos/SPFTRTXT.png"))
+    
+    hFactor = (UiManager.height-600)*(23/24)
+    
+    if hFactor > 0:
+        Menus.MainMenu.add.vertical_margin(hFactor*(13/46))
     
     f = Menus.MainMenu.add.frame_v(300, 50, background_color=(50,50,50), padding=0)
     b = Menus.MainMenu.add.button(Localization.GetLoc('Game.Play'), OpenSavesList)#Bouton pour lancer le jeu
@@ -73,9 +79,10 @@ def OpenMainMenu():
     b = Menus.MainMenu.add.button(Localization.GetLoc('Game.Quit'), pygame_menu.events.EXIT)#Quitter le jeu
     FunctionUtils.EncapsulateButtonInFrame(b, f)
     
-    Menus.MainMenu.add.vertical_margin(30)
+    if hFactor > 0:
+        Menus.MainMenu.add.vertical_margin(hFactor*(33/46))
     
-    Menus.MainMenu.add.button(Localization.GetLoc('Game.Credits'), OpenCredits, font_size=20)
+    Menus.MainMenu.add.button(Localization.GetLoc('Game.Credits'), OpenCredits, font_size=20, align=pygame_menu.locals.ALIGN_LEFT).set_onselect(FunctionUtils.setSelectedFrame)
     
     Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
 
@@ -319,9 +326,9 @@ def Intro()->bool:
     #récupération des logos à afficher dans l'ordre d'affichage
     logos = [
         pygame.Surface((2, 2)),#juste une texture noire avant le premier logo
-        pygame.transform.scale(pygame.image.load("MG.png"),(UiManager.height/2,UiManager.height/2)),
-        pygame.transform.scale(pygame.image.load("PYTHONLIBS.png"),(UiManager.height/1.5,UiManager.height/1.5)),
-        pygame.transform.scale(pygame.image.load("TROPHEES.png"),(UiManager.height/1.5,UiManager.height/1.5))
+        pygame.transform.scale(pygame.image.load("Assets/logos/SPFTR.png"),(UiManager.height/2,UiManager.height/2)),
+        pygame.transform.scale(pygame.image.load("Assets/logos/PYTHONLIBS.png"),(UiManager.height/1.5,UiManager.height/1.5)),
+        pygame.transform.scale(pygame.image.load("Assets/logos/TROPHEES.png"),(UiManager.height/1.5,UiManager.height/1.5))
     ]
     
     changedIcon = False

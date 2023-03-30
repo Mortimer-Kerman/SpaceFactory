@@ -71,13 +71,6 @@ def EncapsulateButtonInFrame(button:pygame_menu.widgets.Button,frame:pygame_menu
     Encapsule un bouton dans un cadre et permet de faire agir le cadre comme si il était un bouton
     """
     
-    def setSelectedFrame(f):
-        global selectedFrame
-        if selectedFrame != None:
-            selectedFrame.set_border(0, None)
-        f.set_border(1,(255,255,255))
-        selectedFrame = f
-    
     def setMouseOver(btn, mouseOver:bool):
         global mouseOverFB, hoveredFB
         mouseOverFB = mouseOver
@@ -94,6 +87,14 @@ def EncapsulateButtonInFrame(button:pygame_menu.widgets.Button,frame:pygame_menu
     frame.pack(button,align=buttonAlign)
     frame.set_onmouseover(lambda:setMouseOver(button,True))
     frame.set_onmouseleave(lambda:setMouseOver(button,False))
+    
+def setSelectedFrame(f=None):
+    global selectedFrame
+    if selectedFrame != None:
+        selectedFrame.set_border(0, None)
+    if f != None:
+        f.set_border(1,(255,255,255))
+    selectedFrame = f
     
 def ManageEncapsulatedButtons():
     """
@@ -119,4 +120,4 @@ def ManageEncapsulatedButtons():
             hoveredFB.apply()
         
     lastMousePressSequence = pressSequence
-        
+
