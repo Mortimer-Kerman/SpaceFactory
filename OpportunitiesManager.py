@@ -56,7 +56,9 @@ def OpenMap():
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
-        oppFrame.pack(menu.add.button(FunctionUtils.ReduceStr(opportunity.GetTitle(), 30), lambda opp=opportunity:OpenOpportunity(opp)))
+        b = menu.add.button(FunctionUtils.ReduceStr(opportunity.GetTitle(), 30), lambda opp=opportunity:OpenOpportunity(opp))
+        
+        FunctionUtils.EncapsulateButtonInFrame(b, oppFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
         oppFrame.pack(menu.add.vertical_margin(50))
         
@@ -119,7 +121,7 @@ def OpenMap():
             else:
                 label[i].set_title('')
     
-    menu.mainloop(UiManager.screen, DisplayBackground)
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
 
 def OpenExpeditionLauncher():
     

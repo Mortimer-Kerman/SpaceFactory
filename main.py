@@ -48,18 +48,36 @@ class Menus:
 
 
 def OpenMainMenu():
+    
+    transparentTheme = pygame_menu.themes.THEME_DARK.copy()
+    transparentTheme.background_color=(0, 0, 0, 0)
+    
     #Définition du Menu (ici, le menu est généré via le module pygame_menu)
-    Menus.MainMenu = pygame_menu.Menu(Localization.GetLoc('Game.Title'), 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    Menus.MainMenu = pygame_menu.Menu(Localization.GetLoc('Game.Title'), UiManager.width, UiManager.height, theme=transparentTheme)#le thème du menu
     
     Menus.MainMenu.add.vertical_margin(30)
     
-    Menus.MainMenu.add.button(Localization.GetLoc('Game.Play'), OpenSavesList)#Bouton pour lancer le jeu
-    Menus.MainMenu.add.button(Localization.GetLoc('Settings.Title'), lambda:SettingsManager.OpenSettings(UiManager.DisplayBackground))#Bouton pour ouvrir les options
-    Menus.MainMenu.add.button(Localization.GetLoc('Game.Quit'), pygame_menu.events.EXIT)#Quitter le jeu
+    f = Menus.MainMenu.add.frame_v(300, 50, background_color=(50,50,50), padding=0)
+    b = Menus.MainMenu.add.button(Localization.GetLoc('Game.Play'), OpenSavesList)#Bouton pour lancer le jeu
+    FunctionUtils.EncapsulateButtonInFrame(b, f)
     
-    Menus.MainMenu.add.button(Localization.GetLoc('Game.Credits'), OpenCredits, align=pygame_menu.locals.ALIGN_LEFT, font_size=20)
+    Menus.MainMenu.add.vertical_margin(20)
     
-    Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
+    f = Menus.MainMenu.add.frame_v(300, 50, background_color=(50,50,50), padding=0)
+    b = Menus.MainMenu.add.button(Localization.GetLoc('Settings.Title'), lambda:SettingsManager.OpenSettings(UiManager.DisplayBackground))#Bouton pour ouvrir les options
+    FunctionUtils.EncapsulateButtonInFrame(b, f)
+    
+    Menus.MainMenu.add.vertical_margin(20)
+    
+    f = Menus.MainMenu.add.frame_v(300, 50, background_color=(50,50,50), padding=0)
+    b = Menus.MainMenu.add.button(Localization.GetLoc('Game.Quit'), pygame_menu.events.EXIT)#Quitter le jeu
+    FunctionUtils.EncapsulateButtonInFrame(b, f)
+    
+    Menus.MainMenu.add.vertical_margin(30)
+    
+    Menus.MainMenu.add.button(Localization.GetLoc('Game.Credits'), OpenCredits, font_size=20)
+    
+    Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
 
 def OpenSavesList():
     
@@ -104,10 +122,8 @@ def OpenSavesList():
             selectedMap = name
         
         frameButton = Menus.SavesList.add.button(FunctionUtils.ReduceStr(saveName, 22))
-        frameButton.set_selection_effect(None)
-        frameButton.set_onselect(lambda f=saveFrame, name=saveName:setSelectedFrame(f,name))
-        #lambda save=saveName: (Menus.SavesList.disable(), SessionManager.Play(save))
-        saveFrame.pack(frameButton)
+        
+        FunctionUtils.EncapsulateButtonInFrame(frameButton, saveFrame, onSelect=lambda f=saveFrame, name=saveName:setSelectedFrame(f,name), buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
         planetTex = TextureManager.GetTexture("missingThumb")
         texPath = "Saves/" + saveName + "/planet.png"
@@ -124,7 +140,7 @@ def OpenSavesList():
         lambda:UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Saves.Delete.Warn',selectedMap),lambda:(rmtree("Saves/" + selectedMap),OpenSavesList()),None)),
         align=pygame_menu.locals.ALIGN_CENTER)
     
-    Menus.SavesList.mainloop(UiManager.screen, UiManager.DisplayBackground)
+    Menus.SavesList.mainloop(UiManager.screen, lambda:(UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
    
 def OpenSaveCreationMenu(defaultTuto:bool=False):
     if Menus.SaveCreation != None:

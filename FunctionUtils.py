@@ -4,6 +4,8 @@ Created on Sun Mar 12 21:13:26 2023
 
 @author: Thomas Sartre et François Patinec-Haxel
 """
+import pygame
+import pygame_menu
 
 def clamp(val:float,minv:float,maxv:float)->float:
     """
@@ -59,3 +61,62 @@ def IsVowel(letter:str)->bool:
     Permet de savoir si une lettre est une voyelle
     """
     return letter.lower() in "aeiouy"
+
+selectedFrame = None
+mouseOverFB = False
+hoveredFB = None
+lastMousePressSequence = (0,0,0)
+def EncapsulateButtonInFrame(button:pygame_menu.widgets.Button,frame:pygame_menu.widgets.Frame,onSelect=None, buttonAlign=pygame_menu.locals.ALIGN_CENTER):
+    """
+    Encapsule un bouton dans un cadre et permet de faire agir le cadre comme si il était un bouton
+    """
+    
+    def setSelectedFrame(f):
+        global selectedFrame
+        if selectedFrame != None:
+            selectedFrame.set_border(0, None)
+        f.set_border(1,(255,255,255))
+        selectedFrame = f
+    
+    def setMouseOver(btn, mouseOver:bool):
+        global mouseOverFB, hoveredFB
+        mouseOverFB = mouseOver
+        if mouseOver:
+            hoveredFB = btn
+    
+    button.set_selection_effect(None)
+    
+    if onSelect != None:
+        button.set_onselect(onSelect)
+    else:
+        button.set_onselect(lambda:setSelectedFrame(frame))
+    
+    frame.pack(button,align=buttonAlign)
+    frame.set_onmouseover(lambda:setMouseOver(button,True))
+    frame.set_onmouseleave(lambda:setMouseOver(button,False))
+    
+def ManageEncapsulatedButtons():
+    """
+    Doit être appelé dans la boucle de mise à jour des menus comportant des boutons encapsulés
+    """
+    global mouseOverFB, hoveredFB, lastMousePressSequence
+    
+    pressSequence = pygame.mouse.get_pressed()
+    
+    if mouseOverFB:
+        
+        NewPress = False
+        NewRelease = False
+        for i in range(3):
+            if pressSequence[i] and not lastMousePressSequence[i]:
+                NewPress = True
+            if lastMousePressSequence[i] and not pressSequence[i]:
+                NewRelease = True
+        
+        if NewPress:
+            hoveredFB.select(update_menu=True)
+        if NewRelease:
+            hoveredFB.apply()
+        
+    lastMousePressSequence = pressSequence
+        
