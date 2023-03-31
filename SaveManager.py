@@ -9,6 +9,7 @@ import pygame
 import json
 import random
 import os
+from datetime import datetime
 
 import GameItems
 import TextureManager
@@ -99,6 +100,16 @@ def Save():
         f.write(mainData.toJson())#écriture dans le fichier de sauvegarde
     if planetTex != None:
         pygame.image.save(planetTex, path + "planet.png")
+    
+    with open(path + "meta.json", "w") as f:
+        metaData = {
+            "lastPlayed":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "difficulty":"Normal",
+            "planetaryConditions":["","Lunaire","Désertique","Vivant"][mainData.planetaryConditions['type']],
+            "gameMode":"Carrière"
+        }
+        f.write(json.dumps(metaData, default=str, indent = 4))
+    
     print("File saved!")
 
 def CreateSave(name:str):

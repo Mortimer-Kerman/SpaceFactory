@@ -7,4 +7,4 @@ Requis pour le lancement :
 -pygame >= 2.0.0
 -pygame_menu >=4.3.6
 
-Un écran disposant d'une résolution supérieure à 500*600
+Un écran disposant d'une résolution supérieure à 800*600

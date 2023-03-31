@@ -9,6 +9,7 @@ import pygame
 import pygame_menu
 
 from random import choice, randint
+from datetime import datetime
 
 import SettingsManager
 import SaveManager
@@ -18,7 +19,6 @@ import NoiseTools
 import numpy
 import Localization
 import TextureManager
-from datetime import datetime
 
 
 def OpenMap():
@@ -121,6 +121,9 @@ def OpenMap():
             else:
                 label[i].set_title('')
     
+    if len(opportunities) != 0:
+        OpenOpportunity(opportunities[0])
+    
     menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
 
 def OpenExpeditionLauncher():
@@ -136,30 +139,46 @@ def OpenExpeditionLauncher():
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
     
-    menu = pygame_menu.Menu(currentOpportunity.GetTitle(), 500, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    menu = pygame_menu.Menu(currentOpportunity.GetTitle(), 550, 450, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
-    if currentOpportunity.GetWalkDistance() >= 24:
-        distance = round(currentOpportunity.GetWalkDistance()/24)
-        suffix = " jour"
-    else :
-        distance = currentOpportunity.GetWalkDistance()
-        suffix = " heure"
-    if distance > 1:
-        suffix += "s"
-    distance = str(distance) + suffix
-    menu.add.label("Temps de marche: " + distance)
+    menu.add.vertical_margin(50)
     
-    if currentOpportunity.GetDriveDistance() >= 24:
-        distance = round(currentOpportunity.GetDriveDistance()/24)
-        suffix = " jour"
-    else :
-        distance = currentOpportunity.GetDriveDistance()
-        suffix = " heure"
-    if distance > 1:
-        suffix += "s"
-    distance = str(distance) + suffix
-    menu.add.label("Temps de route: " + distance)
+    menu.add.range_slider("Nombre de membres: ", 5, (2, 10), 1, value_format=lambda x: str(int(x)), align=pygame_menu.locals.ALIGN_LEFT)
+    
+    def SetTravelTime(Rover:bool):
+        if Rover:
+            if currentOpportunity.GetDriveDistance() >= 24:
+                distance = round(currentOpportunity.GetDriveDistance()/24)
+                suffix = " jour"
+            else :
+                distance = currentOpportunity.GetDriveDistance()
+                suffix = " heure"
+            if distance > 1:
+                suffix += "s"
+            distance = str(distance) + suffix
+            travelTimeLabel.set_title("Temps de route: " + distance)
+        else:
+            if currentOpportunity.GetWalkDistance() >= 24:
+                distance = round(currentOpportunity.GetWalkDistance()/24)
+                suffix = " jour"
+            else :
+                distance = currentOpportunity.GetWalkDistance()
+                suffix = " heure"
+            if distance > 1:
+                suffix += "s"
+            distance = str(distance) + suffix
+            travelTimeLabel.set_title("Temps de marche: " + distance)
+    
+    menu.add.toggle_switch('Moyen de transport', state_text=('A pied', 'Rover'), state_color=((100, 100, 100), (100, 100, 100)), onchange=SetTravelTime)
+    
+    travelTimeLabel = menu.add.label("")
+    
+    menu.add.vertical_margin(50)
+    
+    menu.add.button("Lancer l'expédition")
+    
+    SetTravelTime(True)
     
     menu.mainloop(UiManager.screen, DisplayBackground)
 

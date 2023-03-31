@@ -12,6 +12,7 @@ import os
 import random
 from shutil import rmtree
 from math import cos
+import json
 
 import TextureManager
 import UiManager
@@ -113,6 +114,14 @@ def OpenSavesList():
         OpenSaveCreationMenu(True)
         return
     
+    def GetLastPlayTime(saveName:str)->str:
+        if os.path.isfile("Saves/" + saveName + "/meta.json"):
+            with open("Saves/" + saveName + "/meta.json", "r") as f:
+                return json.load(f)["lastPlayed"]
+        return "0"
+    
+    saveNames.sort(key=GetLastPlayTime,reverse=True)
+    
     Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 450, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SavesList.add.button(Localization.GetLoc('Game.Back'), Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
@@ -126,7 +135,7 @@ def OpenSavesList():
     
     for saveName in saveNames:
         
-        saveFrame = Menus.SavesList.add.frame_h(460, 110, background_color=(50, 50, 50), padding=0)
+        saveFrame = Menus.SavesList.add.frame_v(460, 110, background_color=(50, 50, 50), padding=0)
         saveFrame.relax(True)
         frame.pack(saveFrame)
         
@@ -142,6 +151,20 @@ def OpenSavesList():
         
         FunctionUtils.EncapsulateButtonInFrame(frameButton, saveFrame, onSelect=lambda f=saveFrame, name=saveName:setSelectedFrame(f,name), buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
+        meta = {
+            "lastPlayed":"Inconnue",
+            "difficulty":"?",
+            "planetaryConditions":"?",
+            "gameMode":"?"
+        }
+        if os.path.isfile("Saves/" + saveName + "/meta.json"):
+            with open("Saves/" + saveName + "/meta.json", "r") as f:
+                meta = json.load(f)
+        
+        saveFrame.pack(Menus.SavesList.add.label(meta["difficulty"] + " - " + meta["planetaryConditions"] + " - " + meta["gameMode"],font_size=15))
+        
+        saveFrame.pack(Menus.SavesList.add.label("Dernière session: " + meta["lastPlayed"],font_size=15))
+        
         planetTex = TextureManager.GetTexture("missingThumb")
         texPath = "Saves/" + saveName + "/planet.png"
         if os.path.isfile(texPath):
@@ -149,7 +172,7 @@ def OpenSavesList():
             
         if planetTex.get_width() != 100 or planetTex.get_height() != 100:
             planetTex = pygame.transform.scale(planetTex,(100, 100))
-        saveFrame.pack(Menus.SavesList.add.surface(planetTex), align=pygame_menu.locals.ALIGN_RIGHT)
+        saveFrame.pack(Menus.SavesList.add.surface(planetTex), align=pygame_menu.locals.ALIGN_RIGHT).translate(0, -106)
         
         frame.pack(Menus.SavesList.add.vertical_margin(2))
     

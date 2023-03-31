@@ -20,6 +20,7 @@ def DefaultSettingsInstance():
     """
     return {
         "musicVolume": 70,
+        "gameVolume": 100,
         "keybinds": {
             "up": pygame.K_z,
             "down": pygame.K_s,
@@ -146,6 +147,7 @@ def OpenSettings(background):
     SettingsMenu.add.vertical_margin(20)
     
     SettingsMenu.add.range_slider(Localization.GetLoc('Settings.MusicVolume'), GetSetting("musicVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.music.set_volume(int(x)/100),SetSetting("musicVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
+    SettingsMenu.add.range_slider(Localization.GetLoc('Settings.GameVolume'), GetSetting("gameVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:SetSetting("gameVolume", int(x)), align=pygame_menu.locals.ALIGN_LEFT)
     
     SettingsMenu.add.vertical_margin(20)
     
