@@ -56,12 +56,22 @@ def OpenMainMenu():
     #Définition du Menu (ici, le menu est généré via le module pygame_menu)
     Menus.MainMenu = pygame_menu.Menu('', UiManager.width, UiManager.height, theme=transparentTheme)#le thème du menu
     
-    Menus.MainMenu.add.surface(pygame.image.load("Assets/logos/SPFTRTXT.png"))
+    logo = pygame.image.load("Assets/logos/SPFTRTXT.png")
+    
+    additionalHeight = 0
+    
+    if UiManager.width < 1500:
+        logoWidth = UiManager.width * 0.8
+        logoHeight = logoWidth * 0.25
+        logo = pygame.transform.scale(logo,(logoWidth, logoHeight))
+        additionalHeight = 300 - logoHeight
+    
+    Menus.MainMenu.add.surface(logo)
     
     hFactor = (UiManager.height-600)*(23/24)
     
     if hFactor > 0:
-        Menus.MainMenu.add.vertical_margin(hFactor*(13/46))
+        Menus.MainMenu.add.vertical_margin(hFactor*(13/46)+additionalHeight)
     
     f = Menus.MainMenu.add.frame_v(300, 50, background_color=(50,50,50), padding=0)
     b = Menus.MainMenu.add.button(Localization.GetLoc('Game.Play'), OpenSavesList)#Bouton pour lancer le jeu

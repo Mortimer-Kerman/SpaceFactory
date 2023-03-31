@@ -10,7 +10,7 @@ import random
 
 MUSIC_ENDED = pygame.USEREVENT#MUSIC_ENDED est un événement
 
-playlist=["theme.mp3","Genesis.mp3","buran-voskresenie.mp3"]#définition de notre playlist
+playlist=["theme.mp3","Genesis.mp3","Lost in Space.mp3","buran-voskresenie.mp3"]#définition de notre playlist
 
 def Init():
     pygame.mixer.music.set_endevent(MUSIC_ENDED)#si la musique s'arrête, lancer événement MUSIC_ENDED
