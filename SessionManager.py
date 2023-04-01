@@ -87,13 +87,15 @@ def Play(saveName:str,**kwargs):
                 zoom = SaveManager.mainData.zoom#on récupère le zoom 
                 zoom = FunctionUtils.clamp(zoom+event.y, 10, 150)#on ajoute le y du changement de molette en s'assurant de garder le niveau de zoom entre 10 et 150
                 
+                #Calcul du facteur de différence entre l'ancien et le nouveau zoom
                 zoomDiff = zoom / SaveManager.mainData.zoom
                 
-                if zoomDiff != 0:
+                #si le zoom a changé...
+                if zoomDiff != 1:
                     SaveManager.mainData.zoom = zoom#on change le zoom dans le SaveManager
                     
+                    #On multiplie la position par la différence de zoom pour éviter un décalage
                     pos = SaveManager.GetCamPos()
-                    
                     SaveManager.SetCamPos([pos[0] * zoomDiff, pos[1] * zoomDiff])
                     
                     TextureManager.RefreshZoom()#On mets à jour le zoom

@@ -179,8 +179,8 @@ def SetCamPos(pos:list):
     """
     global LastCamPos
     LastCamPos = mainData.camPos.copy()
-    mainData.camPos[0] = pos[0]
-    mainData.camPos[1] = pos[1]
+    mainData.camPos[0] = round(pos[0])
+    mainData.camPos[1] = round(pos[1])
     
 def GetCamPos():
     """
