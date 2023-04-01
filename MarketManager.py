@@ -11,8 +11,13 @@ import Localization as L
 import FunctionUtils
 
 items=GameItems.doc
+marketItem={"Onion":501,"Sovietiu":5386,"Siberiu":542,"Titlu":254,"Monika":57}
+
+currentItem=None
+LabelCoins=None
 
 def showMenu():
+    global LabelCoins
     screenFilter = pygame.Surface((UiManager.width,UiManager.height))
     screenFilter.set_alpha(50)
     background = pygame.display.get_surface().copy()
@@ -24,30 +29,64 @@ def showMenu():
         UiManager.place_text(L.GetLoc("Market.Title"), 20, 50, 100,font=TextureManager.nasalization100)
         UiManager.place_text(L.GetLoc("Market.Motto"), 20, 150, 50)
         
-    
+    def setCurrent(a):
+        global currentItem
+        currentItem=a
+
     h = int((UiManager.height//2)-105)
     w = int(UiManager.height)
     
     menu = pygame_menu.Menu(L.GetLoc("Market.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    f=menu.add.frame_h(w, h, max_width=w, max_height=h, padding=0)
+    f=menu.add.frame_h(w, 50, max_width=w, max_height=50, padding=0)
     f.relax(True)
     f.pack(menu.add.button(L.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT),align=pygame_menu.locals.ALIGN_LEFT)
-    f.pack(menu.add.label(str(SaveManager.mainData.coins), align=pygame_menu.locals.ALIGN_RIGHT),align=pygame_menu.locals.ALIGN_RIGHT)
+    LabelCoins=menu.add.label(str(SaveManager.mainData.coins), align=pygame_menu.locals.ALIGN_RIGHT, padding=25)
+    f.pack(LabelCoins,align=pygame_menu.locals.ALIGN_RIGHT)
 
 
-    frame = menu.add.frame_h(w, h)
+    frame = menu.add.frame_h(w, h,padding=0)
     frame.relax(True)
 
-    listFrame = menu.add.frame_v(500, h, max_height=h, padding=0)
+    listFrame = menu.add.frame_v(500, max(len(marketItem) * 155, h), max_height=h, padding=0)
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
-    iFrame = menu.add.frame_v(500, 150, background_color=(50, 50, 50), padding=0)
-    iFrame.relax(True)
-    listFrame.pack(iFrame,vertical_position=pygame_menu.locals.POSITION_NORTH)
-
-
-    iFrame.pack(menu.add.button(FunctionUtils.ReduceStr("This is a test", 30), lambda : print("aabhghuqadhuqb")))
+    for i in marketItem.keys():
+        oppFrame = menu.add.frame_v(500, 150, background_color=(50, 50, 50), padding=0)
+        oppFrame.relax(True)
+        listFrame.pack(oppFrame)
         
+        b = menu.add.button(FunctionUtils.ReduceStr(i, 30), lambda i=i:setCurrent(i))
+        
+        FunctionUtils.EncapsulateButtonInFrame(b, oppFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
+        
+        oppFrame.pack(menu.add.vertical_margin(50))
 
-    menu.mainloop(UiManager.screen, DisplayBackground)
+        subtext = menu.add.label("Prix: " + str(marketItem[i]))
+        subtext.set_font(TextureManager.nasalization, 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
+        oppFrame.pack(subtext)
+        
+        listFrame.pack(menu.add.vertical_margin(5))
+
+    detailsFrame = menu.add.frame_v(w-500, h, max_height=h, padding=0)
+    detailsFrame.relax(True)
+    frame.pack(detailsFrame)
+    
+    title = menu.add.label("",font_size=int((UiManager.height-500)*(2/29)))#40 en 1080
+    detailsFrame.pack(title,align=pygame_menu.locals.ALIGN_CENTER)
+    
+    label = menu.add.label("\n\n\n\n\n",font_size=int((UiManager.height-500)*(1/29)))#20 en 1080
+    detailsFrame.pack(label)
+    
+    detailsFrame.pack(menu.add.vertical_margin(100))
+    
+    detailsFrame.pack(menu.add.button(L.GetLoc("Market.Buy"), Buy),align=pygame_menu.locals.ALIGN_CENTER)
+
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
+
+def Buy():
+    if currentItem is not None:
+        if marketItem[currentItem] <= SaveManager.mainData.coins:
+            SaveManager.mainData.coins -= marketItem[currentItem]
+            SaveManager.AddToInv(currentItem)
+            LabelCoins.set_title(str(SaveManager.mainData.coins))
