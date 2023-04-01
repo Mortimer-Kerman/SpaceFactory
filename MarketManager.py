@@ -10,7 +10,6 @@ import SaveManager
 import Localization as L
 import FunctionUtils
 
-items=GameItems.doc
 marketItem={"Onion":501,"Sovietiu":5386,"Siberiu":542,"Titlu":254,"Monika":57}
 
 currentItem=None
@@ -90,3 +89,7 @@ def Buy():
             SaveManager.mainData.coins -= marketItem[currentItem]
             SaveManager.AddToInv(currentItem)
             LabelCoins.set_title(str(SaveManager.mainData.coins))
+
+def Sell(item):
+    price={"charbon":1,"cuivre":2,"or":5,"m1":8}
+    SaveManager.mainData.coins += price.get(item,0)

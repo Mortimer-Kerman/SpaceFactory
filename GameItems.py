@@ -7,6 +7,7 @@ Created on Thu Feb  9 18:05:51 2023
 #importation des bibliothèques
 import SaveManager
 import UiManager
+import MarketManager
 import TextureManager
 import random
 import Localization as L
@@ -175,6 +176,8 @@ class Item:
             self.metadata["biginv"]=self.metadata.get("biginv",[])
             if self.AddToInv(self.metadata.get("inv",None)):
                 self.metadata["inv"]=None
+        if self.name=="market" and self.metadata.get("inv",None) is not None:
+            MarketManager.Sell(self.metadata["inv"])
         
         item=self.GetItemToGive()
         if item is not None:
