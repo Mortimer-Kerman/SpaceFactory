@@ -68,7 +68,6 @@ def Play(saveName:str,**kwargs):
         
         DisplayObjects(int(runtime))
         
-                
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
         pygame.display.update()#Mise à jour de l'affichage Pygame
@@ -87,9 +86,18 @@ def Play(saveName:str,**kwargs):
             if event.type == pygame.MOUSEWHEEL:#si un changement molette survient
                 zoom = SaveManager.mainData.zoom#on récupère le zoom 
                 zoom = FunctionUtils.clamp(zoom+event.y, 10, 150)#on ajoute le y du changement de molette en s'assurant de garder le niveau de zoom entre 10 et 150
-                SaveManager.mainData.zoom = zoom#on change le zoom dans le SaveManager
-                TextureManager.RefreshZoom()#On mets à jour le zoom
-                GameItems.Minerais.SpawnBorder()#On spawn les minerais aux bordures
+                
+                zoomDiff = zoom / SaveManager.mainData.zoom
+                
+                if zoomDiff != 0:
+                    SaveManager.mainData.zoom = zoom#on change le zoom dans le SaveManager
+                    
+                    pos = SaveManager.GetCamPos()
+                    
+                    SaveManager.SetCamPos([pos[0] * zoomDiff, pos[1] * zoomDiff])
+                    
+                    TextureManager.RefreshZoom()#On mets à jour le zoom
+                    GameItems.Minerais.SpawnBorder()#On spawn les minerais aux bordures
 
                 if showTuto==1:
                     Tuto()

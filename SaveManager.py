@@ -169,12 +169,18 @@ def SaveLoaded()->bool:
 
 def TranslateCam(offset:list):
     """
-    Changement de la position de la caméra
+    Déplace la caméra
+    """
+    SetCamPos([mainData.camPos[0] + offset[0], mainData.camPos[1] + offset[1]])
+    
+def SetCamPos(pos:list):
+    """
+    Définit la position de la caméra
     """
     global LastCamPos
     LastCamPos = mainData.camPos.copy()
-    mainData.camPos[0] += offset[0]
-    mainData.camPos[1] += offset[1]
+    mainData.camPos[0] = pos[0]
+    mainData.camPos[1] = pos[1]
     
 def GetCamPos():
     """
