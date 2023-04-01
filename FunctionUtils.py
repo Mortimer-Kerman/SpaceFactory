@@ -62,6 +62,16 @@ def IsVowel(letter:str)->bool:
     """
     return letter.lower() in "aeiouy"
 
+def GetSign(n:float)->int:
+    """
+    renvoie le signe d'un nombre
+    """
+    if n > 0:
+        return 1
+    if n < 0:
+        return -1
+    return 0
+
 selectedFrame = None
 mouseOverFB = False
 hoveredFB = None

@@ -47,12 +47,20 @@ def Play(saveName:str,**kwargs):
     if planetaryConditions != None:
         SaveManager.mainData.planetaryConditions = planetaryConditions
     
+    difficulty = kwargs.get("difficulty",None)
+    if difficulty != None:
+        SaveManager.mainData.difficulty = difficulty
+        
+    gamemode = kwargs.get("gamemode",None)
+    if gamemode != None:
+        SaveManager.mainData.gamemode = gamemode
+    
     runtime=0
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
     
-    tuto = kwargs.get("tuto",0)
-    if tuto:
-        UiManager.Popup(L.GetLoc("Session.AskTuto"),lambda : Tuto(0))
+    
+    if SaveManager.mainData.gamemode == 2:
+        Tuto(0)
     
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
@@ -64,6 +72,8 @@ def Play(saveName:str,**kwargs):
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
         pygame.display.update()#Mise à jour de l'affichage Pygame
+        
+        AudioManager.Tick()#Met à jour le gestionnaire de sons
         
         HandleLongKeyInputs()
         
@@ -92,10 +102,6 @@ def Play(saveName:str,**kwargs):
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
                 if HandleMouseClicks(event.button):
                     return True
-
-            if event.type == AudioManager.MUSIC_ENDED:#Si la musique s'arrête
-                pygame.mixer.music.load("./Assets/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique
-                pygame.mixer.music.play(start=0.0, fade_ms=200)#on lance la lecture de la nouvelle musique
         
         SaveManager.clock.tick()#on mets à jour l'horloge des FPS
         runtime+=SaveManager.clock.get_time() / 8

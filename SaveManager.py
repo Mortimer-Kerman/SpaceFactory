@@ -17,7 +17,18 @@ import UiManager
 import PlanetGenerator
 import Localization as L
 
-SaveFileVersion="f0.12"
+SaveFileVersion="f0.13"
+
+difficultiesDict = {0: 'Saves.Difficulty.Easy',
+                    1: 'Saves.Difficulty.Normal',
+                    2: 'Saves.Difficulty.Hard'}
+environmentsDict = {0: 'Saves.Environment.Random',
+                    1: 'Saves.Environment.Lunar',
+                    2: 'Saves.Environment.Desertic',
+                    3: 'Saves.Environment.Lifefull'}
+gameModesDict = {0: 'Saves.Gamemode.Career',
+                 1: 'Saves.Gamemode.Sandbox',
+                 2: 'Saves.Gamemode.Tutorial'}
 
 class Data:
     """
@@ -37,6 +48,8 @@ class Data:
         self.rotation=0
         self.saveVersion=SaveFileVersion
         self.inv=[]
+        self.gamemode=0
+        self.difficulty=1
         
     def toJson(self):
         """
@@ -86,6 +99,12 @@ def Load(name:str)->bool:
             planetTex = pygame.image.load(path + "planet.png")
     global LastCamPos
     LastCamPos = mainData.camPos.copy()
+    
+    if type(mainData.planetaryConditions) == dict:
+        conditions = PlanetGenerator.PlanetaryConditions(template=True)
+        conditions.__dict__ = mainData.planetaryConditions
+        mainData.planetaryConditions = conditions
+    
     print("File loaded!")
     return True
     
@@ -104,9 +123,9 @@ def Save():
     with open(path + "meta.json", "w") as f:
         metaData = {
             "lastPlayed":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "difficulty":"Normal",
-            "planetaryConditions":["","Lunaire","Désertique","Vivant"][mainData.planetaryConditions['type']],
-            "gameMode":"Carrière"
+            "difficulty":mainData.difficulty,
+            "planetaryConditions":mainData.planetaryConditions.type,
+            "gameMode":mainData.gamemode
         }
         f.write(json.dumps(metaData, default=str, indent = 4))
     
@@ -131,6 +150,8 @@ def Unload():
     saveName = None
     mainData = None
     TextureManager.RefreshZoom()
+    UiManager.UIPopup.clear()
+    GameItems.Minerais.Clear()
     print("File unloaded")
 
 def SaveExists(name:str):
@@ -145,9 +166,6 @@ def SaveLoaded()->bool:
     Renvoie True si une sauvegarde est chargée, False sinon
     """
     return (saveName is not None) and (mainData is not None)
-
-if not os.path.exists("Saves/"):#si le dossier de sauvegarde n'existe pas, le créer
-    os.makedirs("Saves/")
 
 def TranslateCam(offset:list):
     """

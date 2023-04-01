@@ -317,6 +317,11 @@ class Minerais:
         else:
             return False
         
+    def Clear():
+        """
+        Efface tous les minerais
+        """
+        current.clear()
 
 doc={
     "foreuse":{"c":{"cuivre":50}},

@@ -22,26 +22,27 @@ Saves.Title : Sauvegardes
 Saves.Delete : Supprimer
 Saves.Delete.Warn : Voulez-vous vraiment supprimer%$r%$1?
 Saves.IncompatibilityMessage : Cette sauvegarde n'est pas compatible avec%$rcette version. Voulez-vous la charger quand même?
+Saves.UnknownInfo : ???
+Saves.Difficulty : Difficulté
+Saves.Difficulty.Easy : Facile
+Saves.Difficulty.Normal : Normal
+Saves.Difficulty.Hard : Difficile
+Saves.Environment : Environment
+Saves.Environment.Random : Aléatoire
+Saves.Environment.Random.desc : Commencez sur une planète inconnue.%$rDe quoi sera fait le monde qui vous attend? A vous de le découvrir!
+Saves.Environment.Lunar : Lunaire
+Saves.Environment.Lunar.desc : Vous avez été envoyé sur un monde sans air, exposé au vide spatial.%$rC'est un petit pas pour l'Homme...
+Saves.Environment.Desertic : Désertique
+Saves.Environment.Desertic.desc : Votre prochaine destination : Un monde plein de potentiel.%$rUn désert rocailleux, des océans vierges,%$rune graine pour la vie.
+Saves.Environment.Lifefull : Vivant
+Saves.Environment.Lifefull.desc : Nous ne sommes peut-être pas seuls dans l'univers.%$rCe monde, lui reste la preuve irréfutable que la vie est possible ailleurs.%$rQu'en ferez vous?
+Saves.Gamemode : Mode de jeu
+Saves.Gamemode.Career : Carrière
+Saves.Gamemode.Sandbox : Bac à sable
+Saves.Gamemode.Tutorial : Tutoriel
 Saves.NewSave : Nouvelle sauvegarde
 Saves.NewSave.Name : Nom: 
 Saves.NewSave.Seed : Graine: 
-Saves.NewSave.Difficulty : Difficulté
-Saves.NewSave.Difficulty.Easy : Facile
-Saves.NewSave.Difficulty.Normal : Normal
-Saves.NewSave.Difficulty.Hard : Difficile
-Saves.NewSave.Environment : Environment
-Saves.NewSave.Environment.Random : Aléatoire
-Saves.NewSave.Environment.Random.desc : Commencez sur une planète inconnue.%$rDe quoi sera fait le monde qui vous attend? A vous de le découvrir!
-Saves.NewSave.Environment.Lunar : Lunaire
-Saves.NewSave.Environment.Lunar.desc : Vous avez été envoyé sur un monde sans air, exposé au vide spatial.%$rC'est un petit pas pour l'Homme...
-Saves.NewSave.Environment.Desertic : Désertique
-Saves.NewSave.Environment.Desertic.desc : Votre prochaine destination : Un monde plein de potentiel.%$rUn désert rocailleux, des océans vierges,%$rune graine pour la vie.
-Saves.NewSave.Environment.Lifefull : Vivant
-Saves.NewSave.Environment.Lifefull.desc : Nous ne sommes peut-être pas seuls dans l'univers.%$rCe monde, lui reste la preuve irréfutable que la vie est possible ailleurs.%$rQu'en ferez vous?
-Saves.NewSave.Gamemode : Mode de jeu
-Saves.NewSave.Gamemode.Career : Carrière
-Saves.NewSave.Gamemode.Sandbox : Bac à sable
-Saves.NewSave.Gamemode.Tutorial : Tutoriel
 Saves.NewSave.Create : Créer
 Saves.NewSave.AlreadyExists : Ce nom existe déjà !
 

@@ -419,9 +419,7 @@ MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", draw
 
 def DisplayBackground():
     MenuBackground.draw(screen)
-    if len(pygame.event.get(eventtype=AudioManager.MUSIC_ENDED)) != 0:#Si la musique s'arrête
-            pygame.mixer.music.load("./Assets/audio/" + random.choice(AudioManager.playlist))#on charge une nouvelle musique
-            pygame.mixer.music.play(start=0.0, fade_ms=200)#on lance la lecture de la nouvelle musique
+    AudioManager.Tick()
 
 def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground):
     

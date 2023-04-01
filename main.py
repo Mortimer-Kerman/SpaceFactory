@@ -31,6 +31,8 @@ UiManager.Init()#initialisation du l'UiManager
 
 pygame.display.set_caption('SpaceFactory')#Définition du tire de la fenêtre
 
+pygame.display.set_icon(pygame.image.load("Assets/logos/SPFTR.png"))
+
 TextureManager.LoadAllTextures()#chargement des textures
 
 AudioManager.Init()#Initialisation de l'AudioManager
@@ -49,96 +51,135 @@ class Menus:
 
 
 def OpenMainMenu():
-    
+    """
+    Lance le menu principal
+    """
+    #On crée une variante du thème sombre juste pour ce menu qui a un fond totalement transparent
     transparentTheme = pygame_menu.themes.THEME_DARK.copy()
+    #Si pygame menu s'aperçoit que ces deux couleurs sont trop proches, il met un message dans la console.
+    #C'est pour éviter ça que l'une est un noir invisible et l'autre un blanc invisible.
     transparentTheme.background_color=(0, 0, 0, 0)
     transparentTheme.title_background_color=(255, 255, 255, 0)
     
     #Définition du Menu (ici, le menu est généré via le module pygame_menu)
     Menus.MainMenu = pygame_menu.Menu('', UiManager.width, UiManager.height, theme=transparentTheme)#le thème du menu
     
+    #On charge le logo du menu principal
     logo = pygame.image.load("Assets/logos/SPFTRTXT.png")
     
+    #Quantité de place libérée en cas de changement de taille du logo
     additionalHeight = 0
     
+    #Si l'écran est trop étroit...
     if UiManager.width < 1500:
+        #On calcule une nouvelle taille pour que le logo tienne dans l'écran en lui laissant le même ratio
         logoWidth = UiManager.width * 0.8
         logoHeight = logoWidth * 0.25
+        #On règle la nouvelle taille du logo
         logo = pygame.transform.scale(logo,(logoWidth, logoHeight))
+        #On stocke la quantité de place libérée par ce changement de taille
         additionalHeight = 300 - logoHeight
     
+    #On affiche le logo
     Menus.MainMenu.add.surface(logo)
     
+    #On calcule un facteur de taille afin de gérer l'espace entre le logo, les boutons et le bouton de crédits. Calculé sur la base d'un écran en 1920*1080p
     hFactor = (UiManager.height-600)*(23/24)
     
-    if hFactor > 0:
+    #Si le facteur plus la taille additionnelle est positive, on place un espace vide
+    if hFactor*(13/46) + additionalHeight > 0:
         Menus.MainMenu.add.vertical_margin(hFactor*(13/46)+additionalHeight)
     
+    #Création d'un cadre pour contenir un bouton
     f = Menus.MainMenu.add.frame_v(300, 50, background_color=(50,50,50), padding=0)
     b = Menus.MainMenu.add.button(Localization.GetLoc('Game.Play'), OpenSavesList)#Bouton pour lancer le jeu
-    FunctionUtils.EncapsulateButtonInFrame(b, f)
+    FunctionUtils.EncapsulateButtonInFrame(b, f)#Encapsulation du bouton dans le cadre
     
-    Menus.MainMenu.add.vertical_margin(20)
+    Menus.MainMenu.add.vertical_margin(20)#Petit espace entre deux boutons
     
+    #Création d'un cadre pour contenir un bouton
     f = Menus.MainMenu.add.frame_v(300, 50, background_color=(50,50,50), padding=0)
     b = Menus.MainMenu.add.button(Localization.GetLoc('Settings.Title'), lambda:SettingsManager.OpenSettings(UiManager.DisplayBackground))#Bouton pour ouvrir les options
-    FunctionUtils.EncapsulateButtonInFrame(b, f)
+    FunctionUtils.EncapsulateButtonInFrame(b, f)#Encapsulation du bouton dans le cadre
     
-    Menus.MainMenu.add.vertical_margin(20)
+    Menus.MainMenu.add.vertical_margin(20)#Petit espace entre deux boutons
     
+    #Création d'un cadre pour contenir un bouton
     f = Menus.MainMenu.add.frame_v(300, 50, background_color=(50,50,50), padding=0)
     b = Menus.MainMenu.add.button(Localization.GetLoc('Game.Quit'), pygame_menu.events.EXIT)#Quitter le jeu
-    FunctionUtils.EncapsulateButtonInFrame(b, f)
+    FunctionUtils.EncapsulateButtonInFrame(b, f)#Encapsulation du bouton dans le cadre
     
+    #Si le facteur de taille est positif, on inclut un espace vide
     if hFactor > 0:
         Menus.MainMenu.add.vertical_margin(hFactor*(33/46))
     
+    #On ajoute le bouton pour accéder aux crédits
     Menus.MainMenu.add.button(Localization.GetLoc('Game.Credits'), OpenCredits, font_size=20, align=pygame_menu.locals.ALIGN_LEFT).set_onselect(FunctionUtils.setSelectedFrame)
     
     Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
 
 def OpenSavesList():
-    
-    if not os.path.exists("Saves/"):#si le dossier de sauvegarde n'existe pas, le créer
+    """
+    Ouvre le menu listant les sauvegardes
+    """
+    if not os.path.exists("Saves/"):#si le dossier de sauvegardes n'existe pas, le créer
         os.makedirs("Saves/")
     
     saveNames = []
+    #On liste toutes les sauvegardes existant dans le dossier de sauvegardes
     for saveFile in os.listdir('Saves/'):
         if SaveManager.SaveExists(saveFile):
             saveNames.append(saveFile)
     
-    if Menus.SavesList != None:
+    if Menus.SavesList != None:#Si ce menu existe déjà, on le ferme par précaution
         Menus.SavesList.disable()
     
+    #Si aucune sauvegarde n'est disponible, on lance directement le menu de création de sauvegardes
     if len(saveNames) == 0:
         OpenSaveCreationMenu(True)
         return
     
-    def GetLastPlayTime(saveName:str)->str:
+    #Dictionnaire de métadonnées
+    savesMetaDatas = {}
+    
+    #Pour chaque sauvegarde de la liste...
+    for saveName in saveNames:
+        #Si la sauvegarde a un fichier de métadonnées, on les charge et on les stocke dans le dictionnaire au nom de la save
         if os.path.isfile("Saves/" + saveName + "/meta.json"):
             with open("Saves/" + saveName + "/meta.json", "r") as f:
-                return json.load(f)["lastPlayed"]
-        return "0"
+                savesMetaDatas[saveName] = json.load(f)
+        
+    #Fonction interne pour directement récupérer la date du dernier lancement d'une sauvegarde
+    def GetLastPlayTime(saveName:str)->str:
+        return savesMetaDatas.get(saveName,{"lastPlayed":"0"})["lastPlayed"]
     
+    #On trie la liste des sauvegardes de la plus récente à la plus ancienne
     saveNames.sort(key=GetLastPlayTime,reverse=True)
     
-    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 450, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    #On crée le menu et on y ajoute un bouton retour
+    Menus.SavesList = pygame_menu.Menu('Sauvegardes', 500, 450, theme=pygame_menu.themes.THEME_DARK)
     Menus.SavesList.add.button(Localization.GetLoc('Game.Back'), Menus.SavesList.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
+    #Ajout d'un bouton de création de sauvegardes
     Menus.SavesList.add.button(Localization.GetLoc('Saves.NewSave'), OpenSaveCreationMenu)
     
+    #Ajout du cadre qui contiendra la liste des sauvegardes
     frame = Menus.SavesList.add.frame_v(460, max(len(saveNames) * 112, 245), max_height=245, background_color=(30, 30, 30), padding=0)
     frame.relax(True)
     
+    #Récupération de variables globales pour stocker quelle sauvegarde et quel cadre sont sélectionnée par l'utilisateur
     global selectedMap, selectedFrame
     selectedMap = selectedFrame = None
     
+    #Pour chaque sauvegarde de la liste...
     for saveName in saveNames:
         
+        #On rajoute un nouveau cadre pour représenter la sauvegarde dans le cadre listant les sauvegarde
         saveFrame = Menus.SavesList.add.frame_v(460, 110, background_color=(50, 50, 50), padding=0)
         saveFrame.relax(True)
         frame.pack(saveFrame)
         
+        #Fonction variante de FunctionUtils.setSelectedFrame() pour correspondre aux besoins de cette liste
         def setSelectedFrame(f,name):
             global selectedMap, selectedFrame
             if selectedFrame != None:
@@ -147,45 +188,78 @@ def OpenSavesList():
             selectedFrame = f
             selectedMap = name
         
+        #On ajoute le bouton contenant le nom de la sauvegarde
         frameButton = Menus.SavesList.add.button(FunctionUtils.ReduceStr(saveName, 22))
-        
+        #On encapsule le bouton dans le cadre en changeant la fonction de sélection et l'alignement
         FunctionUtils.EncapsulateButtonInFrame(frameButton, saveFrame, onSelect=lambda f=saveFrame, name=saveName:setSelectedFrame(f,name), buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
+        #Métadonnées basiques au cas où la sauvegarde n'en contienne pas
         meta = {
-            "lastPlayed":"Inconnue",
-            "difficulty":"?",
-            "planetaryConditions":"?",
-            "gameMode":"?"
+            "lastPlayed":"Inconnue   ",
+            "difficulty":-1,
+            "planetaryConditions":-1,
+            "gameMode":-1
         }
-        if os.path.isfile("Saves/" + saveName + "/meta.json"):
-            with open("Saves/" + saveName + "/meta.json", "r") as f:
-                meta = json.load(f)
+        #On tente de les récupérer depuis la sauvegarde
+        if saveName in savesMetaDatas:
+            meta = savesMetaDatas[saveName]
         
-        saveFrame.pack(Menus.SavesList.add.label(meta["difficulty"] + " - " + meta["planetaryConditions"] + " - " + meta["gameMode"],font_size=15))
+        #On récupère la difficulté depuis les métadonnées. Si on ne la trouve pas, on le note.
+        difficulty = meta.get("difficulty",-1)
+        if difficulty == -1:
+            difficulty = "Saves.UnknownInfo"
+        else:
+            difficulty = SaveManager.difficultiesDict[difficulty]
+        #On récupère le type d'environment depuis les métadonnées. Si on ne la trouve pas, on le note.
+        conditions = meta.get("planetaryConditions",-1)
+        if conditions == -1:
+            conditions = "Saves.UnknownInfo"
+        else:
+            conditions = SaveManager.environmentsDict[conditions]
+        #On récupère le mode de jeu depuis les métadonnées. Si on ne la trouve pas, on le note.
+        gameMode = meta.get("gameMode",-1)
+        if gameMode == -1:
+            gameMode = "Saves.UnknownInfo"
+        else:
+            gameMode = SaveManager.gameModesDict[gameMode]
         
-        saveFrame.pack(Menus.SavesList.add.label("Dernière session: " + meta["lastPlayed"],font_size=15))
+        #On ajoute au cadre une ligne contenant les infos sur la sauvegarde
+        saveFrame.pack(Menus.SavesList.add.label(Localization.GetLoc(difficulty) + " - " +
+                                                 Localization.GetLoc(conditions) + " - " +
+                                                 Localization.GetLoc(gameMode),font_size=15))
+        #On ajoute au cadre une ligne contenant la date de la dernière session
+        saveFrame.pack(Menus.SavesList.add.label("Dernière session: " + meta["lastPlayed"][:-3],font_size=15))
         
+        #On tente de récupérer l'icône de la sauvegarde
         planetTex = TextureManager.GetTexture("missingThumb")
         texPath = "Saves/" + saveName + "/planet.png"
         if os.path.isfile(texPath):
             planetTex = pygame.image.load(texPath)
-            
+        
+        #Si l'icône ne fait pas une taille de 100*100, on règle la taille de force
         if planetTex.get_width() != 100 or planetTex.get_height() != 100:
             planetTex = pygame.transform.scale(planetTex,(100, 100))
+        
+        #On ajoute cette icône au cadre en la remontant pour qu'elle ne dépasse pas
         saveFrame.pack(Menus.SavesList.add.surface(planetTex), align=pygame_menu.locals.ALIGN_RIGHT).translate(0, -106)
         
+        #On ajoute un espace vide sous le cadre
         frame.pack(Menus.SavesList.add.vertical_margin(2))
     
+    #Création d'un cadre contenant les boutons au bas de l'image
     bottomFrame = Menus.SavesList.add.frame_h(460, 50, padding=0)
-    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Game.Play'),lambda: TryLoadSave(selectedMap)), align=pygame_menu.locals.ALIGN_CENTER)
-    bottomFrame.pack(Menus.SavesList.add.frame_v(50,50),align=pygame_menu.locals.ALIGN_CENTER)
-    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Saves.Delete'),
+    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Game.Play'),lambda: TryLoadSave(selectedMap)), align=pygame_menu.locals.ALIGN_CENTER)#Bouton de lancement de sauvegarde
+    bottomFrame.pack(Menus.SavesList.add.frame_v(50,50),align=pygame_menu.locals.ALIGN_CENTER)#Espace vide entre les deux boutons
+    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Saves.Delete'),#Bouton de supression de sauvegarde avec demande de confirmation
         lambda:UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Saves.Delete.Warn',selectedMap),lambda:(rmtree("Saves/" + selectedMap),OpenSavesList()),None)),
         align=pygame_menu.locals.ALIGN_CENTER)
     
-    Menus.SavesList.mainloop(UiManager.screen, lambda:(UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
+    Menus.SavesList.mainloop(UiManager.screen, lambda:(UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))#Boucle principale du Menu
    
 def OpenSaveCreationMenu(defaultTuto:bool=False):
+    """
+    Ouvre le menu de création des sauvegardes
+    """
     if Menus.SaveCreation != None:
         Menus.SaveCreation.disable()
     Menus.SaveCreation = pygame_menu.Menu(Localization.GetLoc('Saves.NewSave'), 700, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
@@ -206,31 +280,33 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     seedInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Seed'),maxchar=10)
     creationTools.pack(seedInput, align=pygame_menu.locals.ALIGN_LEFT)
     
-    difficultiesDict = {0: 'Saves.NewSave.Difficulty.Easy',
-                        1: 'Saves.NewSave.Difficulty.Normal',
-                        2: 'Saves.NewSave.Difficulty.Hard'}
-    DifficultySlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Difficulty'), 1, list(difficultiesDict.keys()),
+    global chosenSettings
+    chosenSettings = [1, 2 if defaultTuto else 0]
+    def setDiff(x:int):
+        chosenSettings[0] = x
+    def setMode(x:int):
+        chosenSettings[1] = x
+    
+
+    DifficultySlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Difficulty'), 1, list(SaveManager.difficultiesDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
-                      value_format=lambda x: Localization.GetLoc(difficultiesDict[x]))
+                      onchange=lambda x: setDiff(x),
+                      value_format=lambda x: Localization.GetLoc(SaveManager.difficultiesDict[x]))
     creationTools.pack(DifficultySlider, align=pygame_menu.locals.ALIGN_LEFT)
     
-    environmentsDict = {0: 'Saves.NewSave.Environment.Random',
-                        1: 'Saves.NewSave.Environment.Lunar',
-                        2: 'Saves.NewSave.Environment.Desertic',
-                        3: 'Saves.NewSave.Environment.Lifefull'}
-    EnvironmentSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Environment'), 0, list(environmentsDict.keys()),
+
+    EnvironmentSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Environment'), 0, list(SaveManager.environmentsDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
-                      onchange=lambda x: (SetLabelText(Localization.GetLoc(environmentsDict[x] + '.desc')), SetCorrectPlanetMap(x,GetSeedFromInput())),
+                      onchange=lambda x: (SetLabelText(Localization.GetLoc(SaveManager.environmentsDict[x] + '.desc')), SetCorrectPlanetMap(x,GetSeedFromInput())),
                       #range_values=int,
-                      value_format=lambda x: Localization.GetLoc(environmentsDict[x]))
+                      value_format=lambda x: Localization.GetLoc(SaveManager.environmentsDict[x]))
     creationTools.pack(EnvironmentSlider, align=pygame_menu.locals.ALIGN_LEFT)
     
-    gameModesDict = {0: 'Saves.NewSave.Gamemode.Career',
-                     1: 'Saves.NewSave.Gamemode.Sandbox',
-                     2: 'Saves.NewSave.Gamemode.Tutorial'}
-    GameModeSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.NewSave.Gamemode'), 2 if defaultTuto else 0, list(gameModesDict.keys()),
+
+    GameModeSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Gamemode'), 2 if defaultTuto else 0, list(SaveManager.gameModesDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
-                      value_format=lambda x: Localization.GetLoc(gameModesDict[x]))
+                      onchange=lambda x: setMode(x),
+                      value_format=lambda x: Localization.GetLoc(SaveManager.gameModesDict[x]))
     creationTools.pack(GameModeSlider, align=pygame_menu.locals.ALIGN_LEFT)
     
     thumbDisplayer = Menus.SaveCreation.add.surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
@@ -273,7 +349,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
                 DescLabel[i].set_title(lines[i])
             else:
                 DescLabel[i].set_title('')
-    SetLabelText(Localization.GetLoc('Saves.NewSave.Environment.Random.desc'))
+    SetLabelText(Localization.GetLoc('Saves.Environment.Random.desc'))
     
     Menus.SaveCreation.add.vertical_margin(20)
     
@@ -296,7 +372,9 @@ def TryCreateSave(saveNameInput):
         Menus.SavesList.disable()
     
     global conditions
-    SessionManager.Play(saveName,seed=GetSeedFromInput(),tuto=1,planetaryConditions=conditions)
+    global chosenSettings
+    
+    SessionManager.Play(saveName,seed=GetSeedFromInput(),planetaryConditions=conditions,difficulty=chosenSettings[0],gamemode=chosenSettings[1])
     
 def TryLoadSave(saveName:str):
     if SessionManager.Play(saveName):
@@ -358,7 +436,9 @@ def OpenCredits():
     creditsMenu.mainloop(UiManager.screen, UiManager.DisplayBackground)
 
 def Intro()->bool:
-    
+    """
+    Lance l'intro du jeu
+    """
     #récupération des logos à afficher dans l'ordre d'affichage
     logos = [
         pygame.Surface((2, 2)),#juste une texture noire avant le premier logo
@@ -411,5 +491,6 @@ def Intro()->bool:
     
     return True
 
+#Lancement de l'intro, et si il est concluant, lancement du menu principal
 if Intro():
     OpenMainMenu()
