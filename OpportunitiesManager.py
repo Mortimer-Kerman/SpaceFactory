@@ -33,6 +33,8 @@ def OpenMap():
     h = int((UiManager.height//2)-105)
     w = int(UiManager.height)
     
+    columnW = w//2
+    
     menu = pygame_menu.Menu(Localization.GetLoc("Opportunities.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
@@ -43,7 +45,7 @@ def OpenMap():
     frame = menu.add.frame_h(w, h, padding=0)
     frame.relax(True)
     
-    listFrame = menu.add.frame_v(500, max(len(opportunities) * 155, h), max_height=h, padding=0)
+    listFrame = menu.add.frame_v(columnW, max(len(opportunities) * (int(columnW * (5/18)) + 5), h), max_height=h, padding=0)
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
@@ -52,15 +54,15 @@ def OpenMap():
     
     for opportunity in opportunities:
         
-        oppFrame = menu.add.frame_v(500, 150, background_color=(50, 50, 50), padding=0)
+        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=(50, 50, 50), padding=0)
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
-        b = menu.add.button(FunctionUtils.ReduceStr(opportunity.GetTitle(), 30), lambda opp=opportunity:OpenOpportunity(opp))
+        b = menu.add.button(FunctionUtils.ReduceStr(opportunity.GetTitle(), 30), lambda opp=opportunity:OpenOpportunity(opp),font_size=int(columnW/18))
         
         FunctionUtils.EncapsulateButtonInFrame(b, oppFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
-        oppFrame.pack(menu.add.vertical_margin(50))
+        oppFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
         
         
         if opportunity.GetWalkDistance() >= 24:
@@ -73,8 +75,8 @@ def OpenMap():
             suffix += "s"
         distance = str(distance) + suffix
         
-        subtext = menu.add.label("Temps de voyage: " + distance)
-        subtext.set_font(TextureManager.nasalization, 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
+        subtext = menu.add.label("Temps de voyage: " + distance, font_size=int(columnW/27))
+        #subtext.set_font(TextureManager.nasalization, 11, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         
         listFrame.pack(menu.add.vertical_margin(5))
@@ -85,14 +87,14 @@ def OpenMap():
         global currentOpportunity
         currentOpportunity = opportunity
     
-    detailsFrame = menu.add.frame_v(w-500, h, max_height=h, padding=0)
+    detailsFrame = menu.add.frame_v(columnW, h, max_height=h, padding=0)
     detailsFrame.relax(True)
     frame.pack(detailsFrame)
     
-    title = menu.add.label("",font_size=int((UiManager.height-500)*(2/29)))#40 en 1080
+    title = menu.add.label("",font_size=int(columnW*(2/29)))#40 en 1080
     detailsFrame.pack(title,align=pygame_menu.locals.ALIGN_CENTER)
     
-    label = menu.add.label("\n\n\n\n\n",font_size=int((UiManager.height-500)*(1/29)))#20 en 1080
+    label = menu.add.label("\n\n\n\n\n",font_size=int(columnW*(1/29)))#20 en 1080
     detailsFrame.pack(label)
     
     detailsFrame.pack(menu.add.vertical_margin(100))
@@ -196,9 +198,9 @@ class Opportunity:
             "prefix": randint(0, 1),
             "discover": randint(0, 4),
             "way": randint(0, 6),
-            "thing": randint(0, 7),
-            "place": randint(0, 4),
-            "contains": randint(0, 7),
+            "place": randint(0, 8),
+            "distance": randint(0, 4),
+            "contains": randint(0, 6),
             "quantity": randint(0, 1),
             "ressource": choice(["Gold","Coal","Copper","Iron","M1"])
         }
@@ -206,11 +208,11 @@ class Opportunity:
         possibleTitles = []
         if self.descCodes["ressource"] == "Gold":
             possibleTitles.append(1)
-        if self.descCodes["thing"] == 4:
+        if self.descCodes["place"] == 4:
             possibleTitles.append(2)
         if self.descCodes["way"] == 1:
             possibleTitles.append(3)
-        if self.descCodes["place"] == 4:
+        if self.descCodes["distance"] == 4:
             possibleTitles.append(4)
         if self.descCodes["way"] == 2 or self.descCodes["way"] == 4:
             possibleTitles.append(5)
@@ -222,7 +224,7 @@ class Opportunity:
             possibleTitles.append(0)
         self.title = choice(possibleTitles)
         
-        self.distance = [randint(100,400),randint(80,240),randint(8,28),randint(200,800),randint(400,2000)][self.descCodes["place"]]
+        self.distance = [randint(100,400),randint(80,240),randint(8,28),randint(200,800),randint(400,2000)][self.descCodes["distance"]]
         
     def GetDesc(self):
         q = Localization.GetLoc("Opportunities.Quantity." + str(self.descCodes["quantity"]))
@@ -235,8 +237,8 @@ class Opportunity:
             Localization.GetLoc("Opportunities.Prefix." + ("Singular" if self.singular else "Plurial") + str(self.descCodes["prefix"])),
             Localization.GetLoc("Opportunities.Discover." + str(self.descCodes["discover"])),
             Localization.GetLoc("Opportunities.Way." + str(self.descCodes["way"])),
-            Localization.GetLoc("Opportunities.Place." + str(self.descCodes["thing"])),
-            Localization.GetLoc("Opportunities.Distance." + str(self.descCodes["place"])),
+            Localization.GetLoc("Opportunities.Place." + str(self.descCodes["place"])),
+            Localization.GetLoc("Opportunities.Distance." + str(self.descCodes["distance"])),
             Localization.GetLoc("Opportunities.Contains." + str(self.descCodes["contains"])),
             q,
             r,

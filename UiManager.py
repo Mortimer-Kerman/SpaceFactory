@@ -58,7 +58,9 @@ def DisplayUi():
 
     forme2(0,height,width,100,50,200)#forme2 affichée en bas de l'écran
     
-    place_text(str(list(pygame.mouse.get_pos()))+" "+str(SaveManager.GetCamPos()) + " " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.aquire)#placement du texte (position du curseur + caméra + FPS)
+    mousePos = GetMouseWorldPos()
+    
+    place_text("[" + str(mousePos[0]) + "," + str(mousePos[1]) + "] " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.aquire)#placement du texte (position du curseur + caméra + FPS)
 
     ItemMenu()#placement du menu de sélection d'item
 

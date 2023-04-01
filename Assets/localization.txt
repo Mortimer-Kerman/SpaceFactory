@@ -105,6 +105,7 @@ GameItems.d.m1 : M1, est un minerais, dont l'existence a été théorisé durant
 GameItems.d.error : Une erreur est survenue : Item introuvable/non documenté
 
 //Opportunités
+Opportunities.Title : Opportunités
 Opportunities.People.Singular0 : Un groupe de chercheurs 
 Opportunities.People.Singular1 : Une équipe 
 Opportunities.People.Singular2 : Une mission de reconnaissance 
@@ -139,20 +140,19 @@ Opportunities.Place.4 : un cratère
 Opportunities.Place.5 : une plaine 
 Opportunities.Place.6 : une steppe désertique 
 Opportunities.Place.7 : un ancien bassin volcanique 
-Opportunities.Place.8 : une grotte
+Opportunities.Place.8 : une grotte 
 Opportunities.Distance.0 : à plusieurs jours de marche 
 Opportunities.Distance.1 : à quelques heures de route 
 Opportunities.Distance.2 : près d'ici 
 Opportunities.Distance.3 : de l'autre coté des montagnes 
-Opportunities.Distance.4 : de l'autre coté de la planète
+Opportunities.Distance.4 : de l'autre coté de la planète 
 Opportunities.Contains.0 : abritant 
 Opportunities.Contains.1 : semblant contenir 
 Opportunities.Contains.2 : pouvant receler 
-Opportunities.Contains.3 : contenant
+Opportunities.Contains.3 : contenant 
 Opportunities.Contains.4 : concentrant 
-Opportunities.Contains.5 : renfermant
-Opportunities.Contains.6 : pouvant cacher
-Opportunities.Contains.7 : détenir
+Opportunities.Contains.5 : renfermant 
+Opportunities.Contains.6 : pouvant détenir 
 Opportunities.Quantity.0 : d'importants gisements de 
 Opportunities.Quantity.1 : de grandes quantités de 
 Opportunities.Title.0 : Intrigantes ressources
@@ -176,6 +176,3 @@ Market.Title : GalacticMarket
 Market.Motto : Pour des achats intergalactiques!
 Market.Buy : Acheter
 //Une expédition commerciale vers l'infini et au-delà
-
-//Opportunities
-Opportunities.Title : Carte
