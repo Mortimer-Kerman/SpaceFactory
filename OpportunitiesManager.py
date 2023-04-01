@@ -197,8 +197,8 @@ class Opportunity:
             "discover": randint(0, 4),
             "way": randint(0, 6),
             "thing": randint(0, 7),
-            "place": randint(0, 4),
-            "contains": randint(0, 3),
+            "place": randint(0, 8),
+            "contains": randint(0, 7),
             "quantity": randint(0, 1),
             "ressource": choice(["Gold","Coal","Copper","Iron","M1"])
         }

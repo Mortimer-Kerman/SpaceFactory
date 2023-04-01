@@ -107,7 +107,7 @@ GameItems.d.error : Une erreur est survenue : Item introuvable/non documenté
 //Opportunités
 Opportunities.People.Singular0 : Un groupe de chercheurs 
 Opportunities.People.Singular1 : Une équipe 
-Opportunities.People.Singular2 : Une mission de reconaissance 
+Opportunities.People.Singular2 : Une mission de reconnaissance 
 Opportunities.People.Singular3 : On 
 Opportunities.People.Singular4 : Une patrouille 
 Opportunities.People.Plurial0 : Des scientifiques 
@@ -121,7 +121,7 @@ Opportunities.Prefix.Plurial1 : semblent avoir
 Opportunities.Discover.0 : trouvé 
 Opportunities.Discover.1 : identifié 
 Opportunities.Discover.2 : découvert 
-Opportunities.Discover.3 : détécté 
+Opportunities.Discover.3 : détecté 
 Opportunities.Discover.4 : décelé 
 Opportunities.Way.0 : grâce à des données satellites 
 Opportunities.Way.1 : en analysant des archives 
@@ -139,18 +139,23 @@ Opportunities.Place.4 : un cratère
 Opportunities.Place.5 : une plaine 
 Opportunities.Place.6 : une steppe désertique 
 Opportunities.Place.7 : un ancien bassin volcanique 
+Opportunities.Place.8 : une grotte
 Opportunities.Distance.0 : à plusieurs jours de marche 
 Opportunities.Distance.1 : à quelques heures de route 
 Opportunities.Distance.2 : près d'ici 
 Opportunities.Distance.3 : de l'autre coté des montagnes 
-Opportunities.Distance.4 : de l'autre coté de la planète 
+Opportunities.Distance.4 : de l'autre coté de la planète
 Opportunities.Contains.0 : abritant 
 Opportunities.Contains.1 : semblant contenir 
 Opportunities.Contains.2 : pouvant receler 
-Opportunities.Contains.3 : contenant 
+Opportunities.Contains.3 : contenant
+Opportunities.Contains.4 : concentrant 
+Opportunities.Contains.5 : renfermant
+Opportunities.Contains.6 : pouvant cacher
+Opportunities.Contains.7 : détenir
 Opportunities.Quantity.0 : d'importants gisements de 
 Opportunities.Quantity.1 : de grandes quantités de 
-Opportunities.Title.0 : Intriguantes ressources
+Opportunities.Title.0 : Intrigantes ressources
 Opportunities.Title.1 : Ruée vers l'or
 Opportunities.Title.2 : Deep Inpact
 Opportunities.Title.3 : Archives

@@ -10,7 +10,7 @@ import SaveManager
 import Localization as L
 import FunctionUtils
 
-marketItem={"Onion":501,"Sovietiu":5386,"Siberiu":542,"Titlu":254,"Monika":57}
+marketItem={"Onion":275272,"Sovietiu":78578575,"Siberiu":7585785,"Titlu":785785785,"Monika":57}
 
 currentItem=None
 LabelCoins=None
