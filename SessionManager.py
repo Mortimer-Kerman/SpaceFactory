@@ -205,6 +205,9 @@ def HandleMouseClicks(button):
         elif UiManager.UIelements.get("select2",False):
             for i in GameItems.menuElements:
                 if UiManager.UIelements.get("selectElements_"+i,False):
+                    if UiManager.showMenu["delete"]:
+                        UiManager.showMenu["delete"]=0
+                        UiManager.LightPopup("Mode destruction désactivé")
                     if UiManager.showMenu.get("question",False):
                         GameItems.getDescription(i)
                     else:
@@ -214,7 +217,7 @@ def HandleMouseClicks(button):
                     GameItems.getDescription("delete")
                 else:
                     UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
-                    UiManager.LightPopup("Mode destruction activé")
+                    UiManager.LightPopup("Mode destruction "+ "activé" if UiManager.showMenu["delete"] else "désactivé")
             if UiManager.UIelements.get("selectElements_question",False):
                 UiManager.showMenu["question"]=1-UiManager.showMenu.get("question",0)
                 UiManager.showMenu["delete"]=0
