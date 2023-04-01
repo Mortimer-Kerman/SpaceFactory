@@ -169,6 +169,7 @@ Resources.M1 : m1
 //Market
 Market.Title : GalacticMarket
 Market.Motto : Pour des achats intergalactiques!
+Market.Buy : Acheter
 //Une expédition commerciale vers l'infini et au-delà
 
 //Opportunities
