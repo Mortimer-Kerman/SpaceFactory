@@ -15,9 +15,10 @@ import GameItems
 import TextureManager
 import UiManager
 import PlanetGenerator
+import OpportunitiesManager
 import Localization as L
 
-SaveFileVersion="f0.13"
+SaveFileVersion="f0.14"
 
 difficultiesDict = {0: 'Saves.Difficulty.Easy',
                     1: 'Saves.Difficulty.Normal',
@@ -50,6 +51,7 @@ class Data:
         self.inv=[]
         self.gamemode=0
         self.difficulty=1
+        self.opportunities=[]
         
     def toJson(self):
         """
@@ -104,6 +106,11 @@ def Load(name:str)->bool:
         conditions = PlanetGenerator.PlanetaryConditions(template=True)
         conditions.__dict__ = mainData.planetaryConditions
         mainData.planetaryConditions = conditions
+    
+    for i in range(len(mainData.opportunities)):
+        opportunity = OpportunitiesManager.Opportunity()
+        opportunity.__dict__ = mainData.opportunities[i]
+        mainData.opportunities[i] = opportunity
     
     print("File loaded!")
     return True

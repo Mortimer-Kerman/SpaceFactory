@@ -294,7 +294,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
                       value_format=lambda x: Localization.GetLoc(SaveManager.difficultiesDict[x]))
     creationTools.pack(DifficultySlider, align=pygame_menu.locals.ALIGN_LEFT)
     
-
+    
     EnvironmentSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Environment'), 0, list(SaveManager.environmentsDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
                       onchange=lambda x: (SetLabelText(Localization.GetLoc(SaveManager.environmentsDict[x] + '.desc')), SetCorrectPlanetMap(x,GetSeedFromInput())),
@@ -302,7 +302,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
                       value_format=lambda x: Localization.GetLoc(SaveManager.environmentsDict[x]))
     creationTools.pack(EnvironmentSlider, align=pygame_menu.locals.ALIGN_LEFT)
     
-
+    
     GameModeSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Gamemode'), 2 if defaultTuto else 0, list(SaveManager.gameModesDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
                       onchange=lambda x: setMode(x),

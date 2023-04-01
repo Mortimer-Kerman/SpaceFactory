@@ -20,13 +20,19 @@ import numpy
 import Localization
 import TextureManager
 
+openedMap = None
+background = None
 
 def OpenMap():
+    global openedMap
+    global background
     
-    screenFilter = pygame.Surface((UiManager.width,UiManager.height))
-    screenFilter.set_alpha(50)
-    background = pygame.display.get_surface().copy()
-    background.blit(screenFilter,(0,0))
+    if openedMap == None:
+        screenFilter = pygame.Surface((UiManager.width,UiManager.height))
+        screenFilter.set_alpha(50)
+        background = pygame.display.get_surface().copy()
+        background.blit(screenFilter,(0,0))
+    
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
     
@@ -36,25 +42,31 @@ def OpenMap():
     columnW = w//2
     
     menu = pygame_menu.Menu(Localization.GetLoc("Opportunities.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    menu.add.button(Localization.GetLoc('Game.Back'), CloseMap, align=pygame_menu.locals.ALIGN_LEFT)
+    openedMap = menu
     
     #menu.add.surface(SaveManager.planetTex)
     
-    opportunities = [Opportunity() for i in range(5)]
+    while len(SaveManager.mainData.opportunities) < 5:
+        SaveManager.mainData.opportunities.append(Opportunity())
     
     frame = menu.add.frame_h(w, h, padding=0)
     frame.relax(True)
     
-    listFrame = menu.add.frame_v(columnW, max(len(opportunities) * (int(columnW * (5/18)) + 5), h), max_height=h, padding=0)
+    listFrame = menu.add.frame_v(columnW, max(len(SaveManager.mainData.opportunities) * (int(columnW * (5/18)) + 5), h), max_height=h, padding=0)
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
     global currentOpportunity
     currentOpportunity = None
     
-    for opportunity in opportunities:
+    for opportunity in SaveManager.mainData.opportunities:
         
-        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=(50, 50, 50), padding=0)
+        color = (50, 50, 50)
+        if opportunity.state == Opportunity.State.GOING:
+            color = (199, 86, 0)
+        
+        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=color, padding=0)
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
@@ -75,7 +87,7 @@ def OpenMap():
             suffix += "s"
         distance = str(distance) + suffix
         
-        subtext = menu.add.label("Temps de voyage: " + distance, font_size=int(columnW/27))
+        subtext = menu.add.label("Temps de voyage: " + distance, font_size=int(columnW/27), font_name=TextureManager.nasalization)
         #subtext.set_font(TextureManager.nasalization, 11, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         
@@ -123,10 +135,15 @@ def OpenMap():
             else:
                 label[i].set_title('')
     
-    if len(opportunities) != 0:
-        OpenOpportunity(opportunities[0])
+    if len(SaveManager.mainData.opportunities) != 0:
+        OpenOpportunity(SaveManager.mainData.opportunities[0])
     
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
+    def MenuTick():
+        if Tick():
+            openedMap.disable()
+            OpenMap()
+    
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick()))
 
 def OpenExpeditionLauncher():
     
@@ -178,17 +195,39 @@ def OpenExpeditionLauncher():
     
     menu.add.vertical_margin(50)
     
-    menu.add.button("Lancer l'expédition")
+    menu.add.button("Lancer l'expédition",lambda:(currentOpportunity.Begin(),menu.disable(),openedMap.disable(),OpenMap()))
     
     SetTravelTime(True)
     
     menu.mainloop(UiManager.screen, DisplayBackground)
 
+def CloseMap():
+    global openedMap
+    if openedMap != None:
+        openedMap.disable()
+        openedMap = None
 
-def Tick():
-    datetime.now()
+def Tick()->bool:
+    notedChange = False
+    for opportunity in SaveManager.mainData.opportunities:
+        if opportunity.state != Opportunity.State.PROPOSED:
+            beginTime = datetime.fromisoformat(opportunity.beginTime)
+            beginTime = beginTime.replace(minute=beginTime.minute+1)
+            if datetime.now() > beginTime:
+                print("done")
+                opportunity.state = Opportunity.State.PROPOSED
+                notedChange = True
+    return notedChange
 
 class Opportunity:
+    
+    class State:
+        PROPOSED = 0
+        GOING = 1
+        ONSITE = 2
+        RETURNING = 3
+        RETURNED = 4
+    
     def __init__(self):
         
         self.singular = choice([True,False])
@@ -226,6 +265,12 @@ class Opportunity:
         
         self.distance = [randint(100,400),randint(80,240),randint(8,28),randint(200,800),randint(400,2000)][self.descCodes["distance"]]
         
+        self.state = Opportunity.State.PROPOSED
+        
+        self.beginTime = datetime.now().isoformat()
+        
+        self.resources = None
+        
     def GetDesc(self):
         q = Localization.GetLoc("Opportunities.Quantity." + str(self.descCodes["quantity"]))
         r = Localization.GetLoc("Resources." + self.descCodes["ressource"])
@@ -258,3 +303,9 @@ class Opportunity:
     
     def GetDriveDistance(self):
         return self.distance//40
+    
+    def Begin(self):
+        self.state = Opportunity.State.GOING
+        self.beginTime = datetime.now().isoformat()
+
+

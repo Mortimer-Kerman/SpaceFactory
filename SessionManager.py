@@ -117,7 +117,8 @@ def Play(saveName:str,**kwargs):
         runtime+=SaveManager.clock.get_time() / 8
         if runtime > 50:
             runtime = 0
-            OpportunitiesManager.Tick()
+            if SaveManager.SaveLoaded():
+                OpportunitiesManager.Tick()
     return True
     
         
