@@ -216,9 +216,21 @@ def GetItems()->list:
 
 def PlaceItem(item):
     """
-    Ajoute un item aux items
+    Ajoute un item aux items en retirant le coût en minerais
     """
-    mainData.items[str(list(item.pos))]=item
+    if mainData.gamemode!=1:
+        tempInv=mainData.inv
+        a=[True]
+        for i,n in GameItems.doc.get(item.name,{"c":{}}).get("c",{}).items():
+            for j in range(n):
+                a+=[GetFromInv(i)]
+        if all(a):
+            mainData.items[str(list(item.pos))]=item
+        else:
+            mainData.inv=tempInv
+            UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
+    else:
+        mainData.items[str(list(item.pos))]=item
 
 def DeleteItem(pos):
     if IsItemHere(pos):
@@ -302,5 +314,4 @@ def GetFromInv(d):
         mainData.inv[a]["m"]-=1
         return True
     else:
-        UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
         return False

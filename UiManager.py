@@ -347,6 +347,7 @@ def interactItem(item):
                     if not SaveManager.AddToInv(r[1]["n"]):
                         SaveManager.mainData.inv=tempInv
                         item.metadata["biginv"]=tempBigInv
+                        Popup(Localization.GetLoc("SaveManager.GetFromInv.error"))
                         return
     
     if item.name=="market":

@@ -19,12 +19,13 @@ import SettingsManager
 import FunctionUtils
 import Localization as L
 import OpportunitiesManager
+import MarketManager
 
 
 showTuto=9**9
 def Tuto(t=1):
     global showTuto
-    if showTuto in [1,2,3,4,5,6]:
+    if showTuto in [1,2,3,4,5,6,7,8]:
         for i,popup in enumerate(UiManager.UIPopup):
             popup.close(i)
     showTuto=showTuto+1 if t else t
@@ -180,7 +181,7 @@ def HandleMouseClicks(button):
                                 GameItems.getDescription(a)
                         else:
                             SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
-                        if (showTuto==2 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==3 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==4 and SaveManager.GetSelectedItem()=="stockage"):
+                        if (showTuto==3 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==4 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==5 and SaveManager.GetSelectedItem()=="stockage"):
                             Tuto()
                 else:
                     SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
@@ -224,6 +225,14 @@ def HandleMouseClicks(button):
                 UiManager.LightPopup("Mode interrogation activé")
                 if UiManager.showMenu.get("question",False):
                     UiManager.Popup(L.GetLoc("Session.Question"))
+        
+        elif UiManager.UIelements.get("inv2",False):
+            for i,e in enumerate(SaveManager.mainData.inv):
+                if UiManager.UIelements.get("invElements_"+str(i),False):
+                    if UiManager.showMenu.get("question",False):
+                        GameItems.getDescription(i)
+                    elif e["n"] in MarketManager.marketItem.keys():
+                        SaveManager.SetSelectedItem(e["n"])
 
         elif UiManager.UIelements.get("popup_area",False):
             for index,popup in enumerate(UiManager.UIPopup):
@@ -238,6 +247,13 @@ def HandleMouseClicks(button):
             if clickedItem != None:
                 UiManager.LightPopup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
                 if clickedItem.name in ["trieur","stockage","market"]:clickedItem.edit(UiManager.interactItem(clickedItem))
+            else:
+                a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
+                if a:
+                    SaveManager.AddToInv(d=a)
+                    UiManager.LightPopup(str(a)+" ajouté à l'inventaire")
+                    if showTuto==2:
+                            Tuto()
     
     return False
 

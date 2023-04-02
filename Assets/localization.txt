@@ -30,13 +30,13 @@ Saves.Difficulty.Normal : Normal
 Saves.Difficulty.Hard : Difficile
 Saves.Environment : Environment
 Saves.Environment.Random : Aléatoire
-Saves.Environment.Random.desc : Commencez sur une planète inconnue.%$rDe quoi sera fait le monde qui vous attend? A vous de le découvrir!
+Saves.Environment.Random.desc : Commencez sur une planète inconnue.%$rDe quoi sera fait le monde qui vous attend? A vous de le découvrir !
 Saves.Environment.Lunar : Lunaire
 Saves.Environment.Lunar.desc : Vous avez été envoyé sur un monde sans air, exposé au vide spatial.%$rC'est un petit pas pour l'Homme...
 Saves.Environment.Desertic : Désertique
 Saves.Environment.Desertic.desc : Votre prochaine destination : Un monde plein de potentiel.%$rUn désert rocailleux, des océans vierges,%$rune graine pour la vie.
 Saves.Environment.Lifefull : Vivant
-Saves.Environment.Lifefull.desc : Nous ne sommes peut-être pas seuls dans l'univers.%$rCe monde, lui reste la preuve irréfutable que la vie est possible ailleurs.%$rQu'en ferez vous?
+Saves.Environment.Lifefull.desc : Nous ne sommes peut-être pas seuls dans l'univers.%$rCe monde, lui, reste la preuve irréfutable que la vie est possible ailleurs.%$rQu'en ferez-vous?
 Saves.Gamemode : Mode de jeu
 Saves.Gamemode.Career : Carrière
 Saves.Gamemode.Sandbox : Bac à sable
@@ -71,14 +71,15 @@ Settings.Reset.Message : Voulez-vous vraiment remettre%$rtous vos paramètres à
 
 //Session de jeu
 Session.AskTuto : Souhaitez-vous lancer le tutoriel ?
-Session.Tuto.0 : Déplace toi avec %$1 %$2 %$3 %$4
+Session.Tuto.0 : Déplace-toi avec %$1 %$2 %$3 %$4
 Session.Tuto.1 : Zoom et dézoome avec la molette
-Session.Tuto.2 : Commence par placer une foreuse sur un minerais
-Session.Tuto.3 : Place ensuite des tapis pour faire sortir les minerais de la foreuse
-Session.Tuto.4 : Place un stockage à la fin du chemin que tu viens de créer
-Session.Tuto.5 : Bravo, tu connaît maintenant les bases, n'hésite pas à cliquer sur l’icône "interrogation" si tu te poses des questions sur un item
+Session.Tuto.2 : Trouve un minerai, et effectue un clic droit pour miner le minerai
+Session.Tuto.3 : Automatisons maintenant ce processus, collecte assez de minerais pour pouvoir créer un foreuse et place la foreuse sur un minerai
+Session.Tuto.4 : Place ensuite des tapis pour faire sortir les minerais de la foreuse
+Session.Tuto.5 : Place un stockage à la fin du chemin que tu viens de créer
+Session.Tuto.6 : Bravo, tu connais maintenant les bases, n'hésite pas à cliquer sur l’icône "interrogation" si tu te poses des questions sur un item
 Session.AlreadyItemHere : Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé
-Session.Question : Clique sur un élément pour voir apparaître sa description. Recliquez sur le bouton "Interrogation" pour quitter ce mode
+Session.Question : Clique sur un élément pour voir apparaître sa description. Reclique sur le bouton "Interrogation" pour quitter ce mode
 Session.Pause : Pause
 Session.Continue : Reprendre
 
@@ -94,16 +95,16 @@ Items.market : Market
 Item.MolecularAssembler : Assembleur moléculaire
 
 //Description des items
-GameItems.d.foreuse : La foreuse est une machine servant à extraire du minerais automatiquement
+GameItems.d.foreuse : La foreuse est une machine servant à extraire des minerais automatiquement
 GameItems.d.tapis : Les tapis roulants sont un merveilleux moyen de déplacer des items d'une machine vers une autre
-GameItems.d.stockage : Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, cliquez sur un stockage pour récupérer son contenu dans votre inventaire]
-GameItems.d.jonction : La jonction permet de lier deux tapis roulant
+GameItems.d.stockage : Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, clique sur un stockage pour récupérer son contenu dans votre inventaire]
+GameItems.d.jonction : La jonction permet de lier deux tapis roulants
 GameItems.d.trieur : Permet de trier les différents items
 GameItems.d.delete : Le menu de destruction permet de détruire un item
-GameItems.d.charbon : Le charbon est un minerais qui peut servir de combustible
-GameItems.d.cuivre : Le cuivre est le plus ancien métal utilisé par l’Espèce humaine. Le point de fusion de ce minerais n'est pas trop élevé
-GameItems.d.or : L'or est un excellent conducteur électrique, c'est un minerais apprécié pour son fort éclat de "petit soleil"
-GameItems.d.m1 : M1, est un minerais, dont l'existence a été théorisé durant les années 1950 via l'un des premier ordinateurs soviétique, le M-1
+GameItems.d.charbon : Le charbon est un minerai qui peut servir de combustible
+GameItems.d.cuivre : Le cuivre est le plus ancien métal utilisé par l’espèce humaine. Le point de fusion de ce minerai n'est pas trop élevé
+GameItems.d.or : L'or est un excellent conducteur électrique, c'est un minerai apprécié pour son fort éclat de "petit soleil"
+GameItems.d.m1 : M1, est un minerai, dont l'existence a été théorisée durant les années 1950 via l'un des premiers ordinateurs soviétiques, le M-1
 GameItems.d.error : Une erreur est survenue : Item introuvable/non documenté
 
 //Opportunités

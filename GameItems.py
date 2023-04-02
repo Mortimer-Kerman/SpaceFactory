@@ -332,6 +332,7 @@ doc={
      "stockage":{"c":{"cuivre":100}},
      "jonction":{"c":{"cuivre":20}},
      "trieur":{"c":{"cuivre":20,"or":10}},
+     "market":{"c":{"m1":50,"cuivre":50,"or":10}},
      "delete":{},
      "charbon":{"g":1},
      "cuivre":{"g":2},
