@@ -195,15 +195,21 @@ def OpenSavesList():
         
         #Métadonnées basiques au cas où la sauvegarde n'en contienne pas
         meta = {
-            "lastPlayed":"Inconnue   ",
+            "lastPlayed":-1,
             "difficulty":-1,
-            "planetaryConditions":-1,
+            "environment":-1,
             "gameMode":-1
         }
         #On tente de les récupérer depuis la sauvegarde
         if saveName in savesMetaDatas:
             meta = savesMetaDatas[saveName]
         
+        #On récupère le temps de jeu depuis les métadonnées. Si on ne la trouve pas, on le note.
+        lastPlayed = meta.get("lastPlayed",-1)
+        if lastPlayed == -1:
+            lastPlayed = Localization.GetLoc('Saves.UnknownInfo')
+        else:
+            lastPlayed = lastPlayed[:-3]
         #On récupère la difficulté depuis les métadonnées. Si on ne la trouve pas, on le note.
         difficulty = meta.get("difficulty",-1)
         if difficulty == -1:
@@ -211,7 +217,7 @@ def OpenSavesList():
         else:
             difficulty = SaveManager.difficultiesDict[difficulty]
         #On récupère le type d'environment depuis les métadonnées. Si on ne la trouve pas, on le note.
-        conditions = meta.get("planetaryConditions",-1)
+        conditions = meta.get("environment",-1)
         if conditions == -1:
             conditions = "Saves.UnknownInfo"
         else:
@@ -226,9 +232,9 @@ def OpenSavesList():
         #On ajoute au cadre une ligne contenant les infos sur la sauvegarde
         saveFrame.pack(Menus.SavesList.add.label(Localization.GetLoc(difficulty) + " - " +
                                                  Localization.GetLoc(conditions) + " - " +
-                                                 Localization.GetLoc(gameMode),font_size=15))
+                                                 Localization.GetLoc(gameMode), font_size=15))
         #On ajoute au cadre une ligne contenant la date de la dernière session
-        saveFrame.pack(Menus.SavesList.add.label("Dernière session: " + meta["lastPlayed"][:-3],font_size=15))
+        saveFrame.pack(Menus.SavesList.add.label(Localization.GetLoc('Saves.LastSession') + lastPlayed, font_size=15))
         
         #On tente de récupérer l'icône de la sauvegarde
         planetTex = TextureManager.GetTexture("missingThumb")

@@ -8,7 +8,7 @@ Created on Tue Mar 14 15:26:04 2023
 import pygame
 import pygame_menu
 
-from random import choice, randint
+import random
 from datetime import datetime
 
 import SettingsManager
@@ -19,6 +19,7 @@ import NoiseTools
 import numpy
 import Localization
 import TextureManager
+import PlanetGenerator
 
 openedMap = None
 background = None
@@ -27,11 +28,16 @@ def OpenMap():
     global openedMap
     global background
     
+    alreadyOpen = False
+    translateVal = 0
     if openedMap == None:
         screenFilter = pygame.Surface((UiManager.width,UiManager.height))
         screenFilter.set_alpha(50)
         background = pygame.display.get_surface().copy()
         background.blit(screenFilter,(0,0))
+    else:
+        translateVal = openedMap.get_widget('oppList', recursive=True).get_scroll_value_percentage(pygame_menu.locals.ORIENTATION_VERTICAL)
+        alreadyOpen = True
     
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
@@ -53,29 +59,37 @@ def OpenMap():
     frame = menu.add.frame_h(w, h, padding=0)
     frame.relax(True)
     
-    listFrame = menu.add.frame_v(columnW, max(len(SaveManager.mainData.opportunities) * (int(columnW * (5/18)) + 5), h), max_height=h, padding=0)
+    listFrame = menu.add.frame_v(columnW, max(len(SaveManager.mainData.opportunities) * (int(columnW * (5/18)) + 5), h), max_height=h, padding=0, frame_id='oppList')
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
     global currentOpportunity
-    currentOpportunity = None
+    if not alreadyOpen:
+        currentOpportunity = None
     
     for opportunity in SaveManager.mainData.opportunities:
         
         color = (50, 50, 50)
-        if opportunity.state == Opportunity.State.GOING:
-            color = (199, 86, 0)
+        
+        if opportunity.state != Opportunity.State.PROPOSED:
+            path = "Assets/textures/ui/orange.png"
+            if opportunity.state == Opportunity.State.ONSITE:
+                path = "Assets/textures/ui/green.png"
+            if opportunity.state == Opportunity.State.RETURNING:
+                path = "Assets/textures/ui/blue.png"
+            if opportunity.state == Opportunity.State.RETURNED:
+                path = "Assets/textures/ui/brown.png"
+            color = pygame_menu.baseimage.BaseImage(path, drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
         
         oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=color, padding=0)
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
-        b = menu.add.button(FunctionUtils.ReduceStr(opportunity.GetTitle(), 30), lambda opp=opportunity:OpenOpportunity(opp),font_size=int(columnW/18))
+        b = menu.add.button(FunctionUtils.ReduceStr(opportunity.GetTitle(), 30), lambda opp=opportunity:OpenOpportunity(opp),font_size=int(columnW/18),font_color=(255,255,255))
         
         FunctionUtils.EncapsulateButtonInFrame(b, oppFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
         oppFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
-        
         
         if opportunity.GetWalkDistance() >= 24:
             distance = round(opportunity.GetWalkDistance()/24)
@@ -87,11 +101,14 @@ def OpenMap():
             suffix += "s"
         distance = str(distance) + suffix
         
-        subtext = menu.add.label("Temps de voyage: " + distance, font_size=int(columnW/27), font_name=TextureManager.nasalization)
+        subtext = menu.add.label("Temps de voyage: " + distance, font_size=int(columnW/27), font_name=TextureManager.nasalization,font_color=(255,255,255))
         #subtext.set_font(TextureManager.nasalization, 11, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         
         listFrame.pack(menu.add.vertical_margin(5))
+        
+        if alreadyOpen and opportunity == currentOpportunity:
+            b.select(update_menu=True)
     
     def OpenOpportunity(opportunity):
         title.set_title(opportunity.GetTitle())
@@ -111,7 +128,7 @@ def OpenMap():
     
     detailsFrame.pack(menu.add.vertical_margin(100))
     
-    detailsFrame.pack(menu.add.button("Lancer une expédition", OpenExpeditionLauncher),align=pygame_menu.locals.ALIGN_CENTER)
+    detailsFrame.pack(menu.add.button(Localization.GetLoc('Opportunities.StartAnExpedition'), OpenExpeditionLauncher),align=pygame_menu.locals.ALIGN_CENTER)
     
     def SetLabelText(text:str):
         
@@ -135,7 +152,10 @@ def OpenMap():
             else:
                 label[i].set_title('')
     
-    if len(SaveManager.mainData.opportunities) != 0:
+    if alreadyOpen:
+        listFrame.scrollv(translateVal)
+        OpenOpportunity(currentOpportunity)
+    elif len(SaveManager.mainData.opportunities) != 0:
         OpenOpportunity(SaveManager.mainData.opportunities[0])
     
     def MenuTick():
@@ -195,7 +215,7 @@ def OpenExpeditionLauncher():
     
     menu.add.vertical_margin(50)
     
-    menu.add.button("Lancer l'expédition",lambda:(currentOpportunity.Begin(),menu.disable(),openedMap.disable(),OpenMap()))
+    menu.add.button(Localization.GetLoc('Opportunities.StartExpedition'),lambda:(currentOpportunity.Begin(),menu.disable(),openedMap.disable(),OpenMap()))
     
     SetTravelTime(True)
     
@@ -212,10 +232,19 @@ def Tick()->bool:
     for opportunity in SaveManager.mainData.opportunities:
         if opportunity.state != Opportunity.State.PROPOSED:
             beginTime = datetime.fromisoformat(opportunity.beginTime)
-            beginTime = beginTime.replace(minute=beginTime.minute+1)
-            if datetime.now() > beginTime:
-                print("done")
-                opportunity.state = Opportunity.State.PROPOSED
+            beginTime = beginTime.replace(second=(beginTime.second+5)%60)
+            now = datetime.now()
+            if now > beginTime:
+                if opportunity.state == Opportunity.State.GOING:
+                    opportunity.state = Opportunity.State.ONSITE
+                elif opportunity.state == Opportunity.State.ONSITE:
+                    opportunity.state = Opportunity.State.RETURNING
+                elif opportunity.state == Opportunity.State.RETURNING:
+                    opportunity.state = Opportunity.State.RETURNED
+                else:
+                    opportunity.state = Opportunity.State.PROPOSED
+                
+                opportunity.beginTime = now.isoformat()
                 notedChange = True
     return notedChange
 
@@ -230,40 +259,9 @@ class Opportunity:
     
     def __init__(self):
         
-        self.singular = choice([True,False])
+        self.seed = random.randint(-9**9, 9**9)
         
-        self.descCodes = {
-            "people": randint(0, 4 if self.singular else 3),
-            "prefix": randint(0, 1),
-            "discover": randint(0, 4),
-            "way": randint(0, 6),
-            "place": randint(0, 8),
-            "distance": randint(0, 4),
-            "contains": randint(0, 6),
-            "quantity": randint(0, 1),
-            "ressource": choice(["Gold","Coal","Copper","Iron","M1"])
-        }
-        
-        possibleTitles = []
-        if self.descCodes["ressource"] == "Gold":
-            possibleTitles.append(1)
-        if self.descCodes["place"] == 4:
-            possibleTitles.append(2)
-        if self.descCodes["way"] == 1:
-            possibleTitles.append(3)
-        if self.descCodes["distance"] == 4:
-            possibleTitles.append(4)
-        if self.descCodes["way"] == 2 or self.descCodes["way"] == 4:
-            possibleTitles.append(5)
-        if self.descCodes["way"] == 5:
-            possibleTitles.append(6)
-        if self.descCodes["way"] == 0:
-            possibleTitles.append(7)
-        if len(possibleTitles) == 0:
-            possibleTitles.append(0)
-        self.title = choice(possibleTitles)
-        
-        self.distance = [randint(100,400),randint(80,240),randint(8,28),randint(200,800),randint(400,2000)][self.descCodes["distance"]]
+        self.distance = [random.randint(100,400),random.randint(80,240),random.randint(8,28),random.randint(200,800),random.randint(400,2000)][self.GetDescCodes()["distance"]]
         
         self.state = Opportunity.State.PROPOSED
         
@@ -271,38 +269,87 @@ class Opportunity:
         
         self.resources = None
         
+    def GetDescCodes(self)->dict:
+        
+        random.seed(self.seed)
+        
+        singular = random.choice([True,False])
+        
+        places = [0,1,2,4,5,7,8]
+        
+        if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike:
+            places += [3,6]
+        
+        return {
+            "singular" : singular,
+            "people": random.randint(0, 4 if singular else 3),
+            "prefix": random.randint(0, 1),
+            "discover": random.randint(0, 4),
+            "way": random.randint(0, 6),
+            "place": random.choice(places),
+            "distance": random.randint(0, 4),
+            "contains": random.randint(0, 6),
+            "quantity": random.randint(0, 1),
+            "ressource": random.choice(["Gold","Coal","Copper","Iron","M1"])
+        }
+        
+        
     def GetDesc(self):
-        q = Localization.GetLoc("Opportunities.Quantity." + str(self.descCodes["quantity"]))
-        r = Localization.GetLoc("Resources." + self.descCodes["ressource"])
+        
+        descCodes = self.GetDescCodes()
+        
+        q = Localization.GetLoc("Opportunities.Quantity." + str(descCodes["quantity"]))
+        r = Localization.GetLoc("Resources." + descCodes["ressource"])
         if FunctionUtils.IsVowel(r[0]):
             q = q[:-2] + "'"
         
         codes = [
-            Localization.GetLoc("Opportunities.People." + ("Singular" if self.singular else "Plurial") + str(self.descCodes["people"])),
-            Localization.GetLoc("Opportunities.Prefix." + ("Singular" if self.singular else "Plurial") + str(self.descCodes["prefix"])),
-            Localization.GetLoc("Opportunities.Discover." + str(self.descCodes["discover"])),
-            Localization.GetLoc("Opportunities.Way." + str(self.descCodes["way"])),
-            Localization.GetLoc("Opportunities.Place." + str(self.descCodes["place"])),
-            Localization.GetLoc("Opportunities.Distance." + str(self.descCodes["distance"])),
-            Localization.GetLoc("Opportunities.Contains." + str(self.descCodes["contains"])),
+            Localization.GetLoc("Opportunities.People." + ("Singular" if descCodes["singular"] else "Plurial") + str(descCodes["people"])),
+            Localization.GetLoc("Opportunities.Prefix." + ("Singular" if descCodes["singular"] else "Plurial") + str(descCodes["prefix"])),
+            Localization.GetLoc("Opportunities.Discover." + str(descCodes["discover"])),
+            Localization.GetLoc("Opportunities.Way." + str(descCodes["way"])),
+            Localization.GetLoc("Opportunities.Place." + str(descCodes["place"])),
+            Localization.GetLoc("Opportunities.Distance." + str(descCodes["distance"])),
+            Localization.GetLoc("Opportunities.Contains." + str(descCodes["contains"])),
             q,
             r,
             "."
         ]
         
         return "".join(codes)
-        
+    
     def GetTitle(self):
-        return Localization.GetLoc("Opportunities.Title." + str(self.title))
+        
+        descCodes = self.GetDescCodes()
+        
+        possibleTitles = []
+        if descCodes["ressource"] == "Gold":
+            possibleTitles.append(1)
+        if descCodes["place"] == 4:
+            possibleTitles.append(2)
+        if descCodes["way"] == 1:
+            possibleTitles.append(3)
+        if descCodes["distance"] == 4:
+            possibleTitles.append(4)
+        if descCodes["way"] == 2 or descCodes["way"] == 4:
+            possibleTitles.append(5)
+        if descCodes["way"] == 5:
+            possibleTitles.append(6)
+        if descCodes["way"] == 0:
+            possibleTitles.append(7)
+        if len(possibleTitles) == 0:
+            possibleTitles.append(0)
+        
+        return Localization.GetLoc("Opportunities.Title." + str(random.choice(possibleTitles)))
     
     def GetDistance(self):
         return self.distance
     
     def GetWalkDistance(self):
-        return self.distance//4
+        return self.GetDistance()//4
     
     def GetDriveDistance(self):
-        return self.distance//40
+        return self.GetDistance()//40
     
     def Begin(self):
         self.state = Opportunity.State.GOING

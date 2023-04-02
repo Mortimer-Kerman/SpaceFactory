@@ -131,7 +131,7 @@ def Save():
         metaData = {
             "lastPlayed":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "difficulty":mainData.difficulty,
-            "planetaryConditions":mainData.planetaryConditions.type,
+            "environment":mainData.planetaryConditions.type,
             "gameMode":mainData.gamemode
         }
         f.write(json.dumps(metaData, default=str, indent = 4))
@@ -229,6 +229,12 @@ def GetSeed()->int:
     Renvoie la seed de la sauvegarde
     """
     return mainData.seed
+
+def GetEnvironmentType()->int:
+    """
+    Renvoie le type d'environment de la planète
+    """
+    return mainData.planetaryConditions.type
 
 def SetSelectedItem(item):
     """

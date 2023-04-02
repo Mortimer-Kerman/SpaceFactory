@@ -72,6 +72,10 @@ def GetSign(n:float)->int:
         return -1
     return 0
 
+def StretchSurfaceToSurface(target:pygame.Surface,source:pygame.Surface):
+    source = pygame.transform.scale(source, target.get_size())
+    target.blit(source, (0,0))
+
 selectedFrame = None
 mouseOverFB = False
 hoveredFB = None
