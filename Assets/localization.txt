@@ -80,6 +80,7 @@ Session.Tuto.5 : Place un stockage à la fin du chemin que tu viens de créer
 Session.Tuto.6 : Bravo, tu connais maintenant les bases, n'hésite pas à cliquer sur l’icône "interrogation" si tu te poses des questions sur un item
 Session.AlreadyItemHere : Vous ne pouvez pas placer d'éléments ici, cet emplacement est déjà occupé
 Session.Question : Clique sur un élément pour voir apparaître sa description. Reclique sur le bouton "Interrogation" pour quitter ce mode
+Session.Craft : Clique sur un élément pour voir sa composition. Reclique sur le bouton pour quitter ce mode
 Session.Pause : Pause
 Session.Continue : Reprendre
 

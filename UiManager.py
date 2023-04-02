@@ -29,7 +29,7 @@ width = 0
 height = 0
 
 UIelements={}#dictionnaire stockant les interaction souris/éléments interface
-showMenu={"select":0,"inv":0,"delete":0,"question":0}#affichage ou non des menus interne à l'UI
+showMenu={"select":0,"inv":0,"delete":0,"question":0,"craft":0}#affichage ou non des menus interne à l'UI
 
 def Init():
     """
@@ -165,7 +165,7 @@ def ItemMenu():
     #on dessine le petit triangle 
     pygame.draw.polygon(screen, (255,255,255),t[showMenu.get("select",0)])
     #on mets du texte
-    place_text("Séléctionner",width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.aquire)
+    place_text("Sélectionner",width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.aquire)
     
     #On stocke la valeur bool en cas d'hover sur l'élément (ici le rectangle sous "forme2" du menu de sélection) dans UIelements["select"]
     UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-500*showMenu.get("select",0)),(width,height-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
@@ -176,6 +176,10 @@ def ItemMenu():
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
         place_text(Localization.GetLoc('Items.' + menuElements[i]),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
     
+    UIelements["selectElements_craft"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*2,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
+    screen.blit(TextureManager.GetTexture("hammer-and-wrench", 78, True),(width-500+11+102*2,height-100*showMenu.get("select",0)))
+    place_text("Requis pour créer",width-500+102*2,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+
     UIelements["selectElements_question"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("question", 78, True),(width-500+11+102*3,height-100*showMenu.get("select",0)))
     place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
@@ -184,7 +188,7 @@ def ItemMenu():
     screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*4,height-100*showMenu.get("select",0)))
     place_text("détruire",width-500+102*4,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
 
-    place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(300,100))
+    place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.aquire,auto_size=(500,100))
     
 
 def InvMenu():

@@ -348,3 +348,6 @@ def getDescription(type):
         loc = L.GetLoc("GameItems.d.error")
     
     UiManager.Popup(loc)
+
+def getPrice(type):
+    UiManager.Popup(str(list(doc.get(type,{}).get("c",{}).items())))

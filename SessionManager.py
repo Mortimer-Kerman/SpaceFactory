@@ -193,6 +193,8 @@ def HandleMouseClicks(button):
                             GameItems.getDescription(a)
                 elif UiManager.showMenu["delete"]:
                     SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
+                elif UiManager.showMenu.get("craft",False):
+                                GameItems.getPrice(a)
                 else:
                     UiManager.LightPopup(L.GetLoc("Session.AlreadyItemHere"))
 
@@ -209,8 +211,10 @@ def HandleMouseClicks(button):
                     if UiManager.showMenu["delete"]:
                         UiManager.showMenu["delete"]=0
                         UiManager.LightPopup("Mode destruction désactivé")
-                    if UiManager.showMenu.get("question",False):
+                    elif UiManager.showMenu.get("question",False):
                         GameItems.getDescription(i)
+                    elif UiManager.showMenu.get("craft",False):
+                        GameItems.getPrice(i)
                     else:
                         SaveManager.SetSelectedItem(i)
             if UiManager.UIelements.get("selectElements_delete",False):
@@ -225,6 +229,10 @@ def HandleMouseClicks(button):
                 UiManager.LightPopup("Mode interrogation activé")
                 if UiManager.showMenu.get("question",False):
                     UiManager.Popup(L.GetLoc("Session.Question"))
+            if UiManager.UIelements.get("selectElements_craft",False):
+                UiManager.showMenu["craft"]=1-UiManager.showMenu["craft"]
+                UiManager.Popup(L.GetLoc("Session.Craft"))
+                UiManager.LightPopup(text="Mode composition activé")
         
         elif UiManager.UIelements.get("inv2",False):
             for i,e in enumerate(SaveManager.mainData.inv):
