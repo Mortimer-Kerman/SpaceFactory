@@ -184,3 +184,6 @@ Market.Title : GalacticMarket
 Market.Motto : Pour des achats intergalactiques!
 Market.Buy : Acheter
 //Une expédition commerciale vers l'infini et au-delà
+
+//TaskManager
+TaskManager.Title : Gestionnaire de taches

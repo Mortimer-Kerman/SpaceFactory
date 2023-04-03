@@ -20,7 +20,7 @@ import FunctionUtils
 import Localization as L
 import OpportunitiesManager
 import MarketManager
-
+import TaskManager
 
 showTuto=9**9
 def Tuto(t=1):
@@ -164,6 +164,8 @@ def HandleShortKeyInputs(key):
         UiManager.TakeScreenshot()
     if key == pygame.K_m:
         OpportunitiesManager.OpenMap()
+    if key == pygame.K_t:
+        TaskManager.showMenu()
     if key == pygame.K_ESCAPE:
         if Pause():#On fait pause
             return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
