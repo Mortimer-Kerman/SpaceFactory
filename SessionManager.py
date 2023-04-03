@@ -162,6 +162,8 @@ def HandleShortKeyInputs(key):
         SaveManager.UpdateRotation()#mise à jour de la rotation
     if key == pygame.K_F2:
         UiManager.TakeScreenshot()
+    if key == SettingsManager.GetKeybind("inv"):
+        UiManager.showMenu["inv"]=1-UiManager.showMenu["inv"]
     if key == pygame.K_m:
         OpportunitiesManager.OpenMap()
     if key == pygame.K_t:
