@@ -262,6 +262,11 @@ def HandleMouseClicks(button):
                     UiManager.LightPopup(str(a)+" ajouté à l'inventaire")
                     if showTuto==2:
                             Tuto()
+        elif UiManager.UIelements.get("select2",False):
+            for i in GameItems.menuElements:
+                if UiManager.UIelements.get("selectElements_"+i,False):
+                    GameItems.getPrice(i)
+
     
     return False
 

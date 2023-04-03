@@ -311,7 +311,10 @@ def AddToInv(d):
 def GetFromInv(d):
     a=IsInInv(d,1)
     if a!="NotIn":
-        mainData.inv[a]["m"]-=1
-        return True
+        if mainData.inv[a]["m"]>1:
+            mainData.inv[a]["m"]-=1
+            return True
+        else:
+            return False
     else:
         return False

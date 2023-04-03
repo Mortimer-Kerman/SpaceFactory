@@ -69,7 +69,8 @@ def DisplayUi():
     for index,popup in enumerate(UIPopup):#pour index , popup dans UiManager.UIPopup
             popup.show(index)
             UIelements["popup_area"]=pygame.Rect(width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
-
+    for index,popup in enumerate(UiLightPopup):#pour index , popup dans UiManager.UILightPopup
+            popup.show(index)
 
 def GetMouseWorldPos():
     """
@@ -338,6 +339,7 @@ def interactItem(item):
         tempBigInv=item.metadata["biginv"]
         SaveManager.ClearInv()
         item.metadata["biginv"]=[]
+
         for r in zip(rects,inv):
             if r[0].x<width//2:
                 for i in range(r[1]["m"]):
@@ -362,6 +364,7 @@ def interactItem(item):
 
 
 UIPopup=[]
+UiLightPopup=[]
 class Popup:
     """
     Des popups
@@ -410,16 +413,14 @@ class LightPopup:
         self.text=text
         self.time=int(pygame.time.get_ticks())
         self.d=d
-        UIPopup.append(self)
+        UiLightPopup.append(self)
     def show(self,i):
         if int(pygame.time.get_ticks())>(self.time+10000) and not self.d:
                self.close(i)
         else:
             place_text(self.text, width//4, (height//4)*3+i*20, 20, (255,255,255),TextureManager.nasalization,auto_size=(width//2,height//10))
     def close(self,i):
-        UIPopup.remove(self)
-        UIelements["popup_"+str(i)]=False
-        UIelements["popup_area"]=False
+        UiLightPopup.remove(self)
 
 
 MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
