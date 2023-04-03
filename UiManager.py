@@ -21,6 +21,8 @@ import SessionManager
 import Localization
 import MarketManager
 import AudioManager
+import NoiseTools
+import PlanetGenerator
 
 #Les variables importantes
 screen = None#la fenêtre principale (élément pygame.display)
@@ -76,9 +78,15 @@ def GetMouseWorldPos():
     """
     Renvoie la position du curseur dans le monde
     """
+    return ScreenPosToWorldPos(pygame.mouse.get_pos())
+
+def ScreenPosToWorldPos(pos:tuple):
+    """
+    Convertit une position sur l'écran en position dans le monde
+    """
     cam = SaveManager.GetCamPos()#on obtient les coordonnées de la caméra
     zoom = SaveManager.GetZoom()#obtention du zoom
-    return ((pygame.mouse.get_pos()[0]-cam[0]-(width/2))//zoom,(pygame.mouse.get_pos()[1]-cam[1]-(height/2))//zoom)#renvoie la position par rapport à la caméra+zoom
+    return ((pos[0]-cam[0]-(width/2))//zoom,(pos[1]-cam[1]-(height/2))//zoom)#renvoie la position par rapport à la caméra+zoom
 
 def IsClickOnUI():
     """
@@ -148,9 +156,32 @@ def UpdateBackground():
     cam = SaveManager.GetCamPos()#récupération de la position de la caméra
     for posX in range(-1,(width//zoom)+1):#pour posX dans -1,(width//zoom)+1 
             for posY in range(-1,(height//zoom)+1):#pour posY dans -1,(height//zoom)+1
+                
                 Xpos = posX*zoom+((cam[0]+(width/2))%zoom)#coordonnées selon zoom
                 Ypos = posY*zoom+((cam[1]+(height/2))%zoom)#coordonnées selon zoom
-                screen.blit(TextureManager.GetTexture("ground", zoom), (Xpos, Ypos))#placement du fond
+                
+                tex = "rock"
+                """
+                worldPos = ScreenPosToWorldPos((Xpos,Ypos))
+                
+                val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (0,0), 1)
+                
+                env = SaveManager.GetEnvironmentType()
+                
+                if env == PlanetGenerator.PlanetTypes.Dead:
+                    tex = "sand"
+                    if val < 0.5:
+                        tex = "rock"
+                else:
+                    if env == PlanetGenerator.PlanetTypes.Desertic:
+                        tex = "sand"
+                    else:
+                        tex = "grass"
+                    
+                    if val < 0.3:
+                        tex = "rock"
+                """
+                screen.blit(TextureManager.GetTexture("ground/" + tex, zoom), (Xpos, Ypos))#placement du fond
 
 def ItemMenu():
     """
