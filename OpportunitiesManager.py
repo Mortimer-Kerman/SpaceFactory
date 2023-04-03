@@ -47,7 +47,7 @@ def OpenMap():
     
     columnW = w//2
     
-    menu = pygame_menu.Menu(Localization.GetLoc("Opportunities.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK,onclose=CloseMap)#le thème du menu
+    menu = pygame_menu.Menu(Localization.GetLoc("Opportunities.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     menu.add.button(Localization.GetLoc('Game.Back'), CloseMap, align=pygame_menu.locals.ALIGN_LEFT)
     openedMap = menu
     
