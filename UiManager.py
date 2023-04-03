@@ -241,8 +241,8 @@ def InvMenu():
     for i,e in enumerate(SaveManager.mainData.inv):
         UIelements["invElements_"+str(i)]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),-500+500*showMenu.get("inv",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
         screen.blit(TextureManager.GetTexture(e["n"], 78, True),(width-500+11+102*(i%5),-500+11+500*showMenu.get("inv",0)+102*(i//5)))
-        place_text(e["n"],width-500+102*(i%5),-500+500*showMenu.get("inv",0)+102*(i//5),20)
-        place_text(str(Localization.GetLoc("Items."+e["m"])),width-500+102*(i%5),-480+500*showMenu.get("inv",0)+102*(i//5),20)
+        place_text(str(Localization.GetLoc("Items."+e["n"])),width-500+102*(i%5),-500+500*showMenu.get("inv",0)+102*(i//5),20)
+        place_text(str(e["m"]),width-500+102*(i%5),-480+500*showMenu.get("inv",0)+102*(i//5),20)
 
 def addNewlines(text,l):
     """

@@ -21,6 +21,7 @@ import Localization as L
 import OpportunitiesManager
 import MarketManager
 import TaskManager
+import AnimationsManager
 
 showTuto=9**9
 def Tuto(t=1):
@@ -63,11 +64,15 @@ def Play(saveName:str,**kwargs):
     if SaveManager.mainData.gamemode == 2:
         Tuto(0)
     
+    drone=AnimationsManager.Drone()
+    
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
         UiManager.UpdateBackground()#mise à jour du fond
         
         DisplayObjects(int(runtime))
+
+        drone.show()
         
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
@@ -111,7 +116,7 @@ def Play(saveName:str,**kwargs):
                     return True
             
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
-                if HandleMouseClicks(event.button):
+                if HandleMouseClicks(event.button,drone):
                     return True
         
         SaveManager.clock.tick()#on mets à jour l'horloge des FPS
@@ -120,6 +125,7 @@ def Play(saveName:str,**kwargs):
             runtime = 0
             if SaveManager.SaveLoaded():
                 OpportunitiesManager.Tick()
+                drone.update()
     return True
     
         
@@ -176,7 +182,7 @@ def HandleShortKeyInputs(key):
             return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
     return False
     
-def HandleMouseClicks(button):
+def HandleMouseClicks(button,drone):
     if button == 1: # 1 == left button
         if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
             if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
@@ -265,6 +271,7 @@ def HandleMouseClicks(button):
             else:
                 a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
                 if a:
+                    pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,UiManager.GetMouseWorldPos(),(UiManager.GetMouseWorldPos()[0]-20,UiManager.GetMouseWorldPos()[1]-20)))
                     SaveManager.AddToInv(d=a)
                     UiManager.LightPopup(str(a)+" ajouté à l'inventaire")
                     if showTuto==2:
