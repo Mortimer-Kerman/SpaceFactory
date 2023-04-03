@@ -130,7 +130,7 @@ def OpenSettings(background):
     global SettingsMenu
     if SettingsMenu != None:
         SettingsMenu.disable()
-    SettingsMenu = pygame_menu.Menu(Localization.GetLoc('Settings.Title'), 800, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    SettingsMenu = pygame_menu.Menu(Localization.GetLoc('Settings.Title'), 800, 600, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)#le thème du menu
     
     def TryLeave():
         if not SettingsChanged:
