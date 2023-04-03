@@ -94,7 +94,8 @@ Items.jonction : Jonction
 Items.pont : Pont
 Items.four : Four
 Items.market : Market
-Item.MolecularAssembler : Assembleur moléculaire
+Items.MolecularAssembler : Assembleur moléculaire
+Items.CoalCentral : Centrale à charbon
 
 //Description des items
 GameItems.d.foreuse : La foreuse est une machine servant à extraire des minerais automatiquement

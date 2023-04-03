@@ -11,7 +11,7 @@ import Localization as L
 import FunctionUtils
 
 # Définition d'un dictionnaire d'articles de marché et initialisation des variables currentItem et LabelCoins à None
-marketItem = {"MolecularAssembler": 50000, "Sovietiu": 78578575, "Siberiu": 7585785, "Titlu": 785785785, "Monika": 57}
+marketItem = {"MolecularAssembler": 50000, "CoalCentral": 8000, "Siberiu": 7585785, "Titlu": 785785785, "Monika": 57}
 currentItem = None
 LabelCoins = None
 
@@ -38,7 +38,7 @@ def showMenu():
     h = int((UiManager.height//2)-105)
     w = int(UiManager.height)
     
-    menu = pygame_menu.Menu(L.GetLoc("Market.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    menu = pygame_menu.Menu(L.GetLoc("Market.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)#le thème du menu
     f=menu.add.frame_h(w, 50, max_width=w, max_height=50, padding=0)
     f.relax(True)
     f.pack(menu.add.button(L.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT),align=pygame_menu.locals.ALIGN_LEFT)
@@ -58,7 +58,7 @@ def showMenu():
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
-        b = menu.add.button(FunctionUtils.ReduceStr(L.GetLoc("Item."+i), 30), lambda i=i:setCurrent(i))
+        b = menu.add.button(FunctionUtils.ReduceStr(L.GetLoc("Items."+i), 30), lambda i=i:setCurrent(i))
         
         FunctionUtils.EncapsulateButtonInFrame(b, oppFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
