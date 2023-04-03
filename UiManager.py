@@ -267,7 +267,7 @@ def interactItem(item):
     SessionManager.PauseMenuBackground = pygame.display.get_surface().copy()
     SessionManager.PauseMenuBackground.blit(screenFilter,(0,0))
     
-    interactMenu = pygame_menu.Menu("Configurez cet élément", 400, 300, theme=pygame_menu.themes.THEME_DARK)
+    interactMenu = pygame_menu.Menu("Configurez cet élément", 400, 300, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)
     
     interactMenu.add.button('Reprendre', interactMenu.disable)#Reprendre la partie
     b=None

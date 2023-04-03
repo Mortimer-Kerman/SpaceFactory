@@ -28,7 +28,7 @@ def showMenu():
     h = int((UiManager.height//2)-105)
     w = int(UiManager.height)
     
-    menu = pygame_menu.Menu(L.GetLoc("TaskManager.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    menu = pygame_menu.Menu(L.GetLoc("TaskManager.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)#le thème du menu
     f=menu.add.frame_h(w, 50, max_width=w, max_height=50, padding=0)
     f.relax(True)
     f.pack(menu.add.button(L.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT),align=pygame_menu.locals.ALIGN_LEFT)
