@@ -154,6 +154,7 @@ def UpdateBackground():
     """
     zoom = SaveManager.GetZoom()*10#récupération du zoom
     cam = SaveManager.GetCamPos()#récupération de la position de la caméra
+    env = SaveManager.GetEnvironmentType()
     for posX in range(-1,(width//zoom)+1):#pour posX dans -1,(width//zoom)+1 
             for posY in range(-1,(height//zoom)+1):#pour posY dans -1,(height//zoom)+1
                 
@@ -162,11 +163,11 @@ def UpdateBackground():
                 
                 tex = "rock"
                 """
+                """
                 worldPos = ScreenPosToWorldPos((Xpos,Ypos))
                 
                 val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (0,0), 1)
                 
-                env = SaveManager.GetEnvironmentType()
                 
                 if env == PlanetGenerator.PlanetTypes.Dead:
                     tex = "sand"
@@ -180,7 +181,7 @@ def UpdateBackground():
                     
                     if val < 0.3:
                         tex = "rock"
-                """
+                """"""
                 screen.blit(TextureManager.GetTexture("ground/" + tex, zoom), (Xpos, Ypos))#placement du fond
 
 def ItemMenu():

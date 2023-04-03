@@ -156,6 +156,9 @@ def HandleLongKeyInputs():
         GameItems.Minerais.SpawnBorder()#on spawn les minerais aux bordures
         if showTuto==0:
             Tuto()
+    if SaveManager.GetZoom()<30 and camOffset!=[0,0]:
+        SaveManager.mainData.zoom=SaveManager.GetZoom()+1#On augmente la zoom
+        TextureManager.RefreshZoom()#on actualise les textures
             
 def HandleShortKeyInputs(key):
     if key == SettingsManager.GetKeybind("rotate"):
