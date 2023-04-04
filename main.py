@@ -254,7 +254,9 @@ def OpenSavesList():
     
     #Création d'un cadre contenant les boutons au bas de l'image
     bottomFrame = Menus.SavesList.add.frame_h(460, 50, padding=0)
-    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Game.Play'),lambda: TryLoadSave(selectedMap)), align=pygame_menu.locals.ALIGN_CENTER)#Bouton de lancement de sauvegarde
+    def ShowLoading():
+        Menus.SavesList.add.label("Chargement")
+    bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Game.Play'),lambda: (ShowLoading(),TryLoadSave(selectedMap))), align=pygame_menu.locals.ALIGN_CENTER)#Bouton de lancement de sauvegarde
     bottomFrame.pack(Menus.SavesList.add.frame_v(50,50),align=pygame_menu.locals.ALIGN_CENTER)#Espace vide entre les deux boutons
     bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Saves.Delete'),#Bouton de supression de sauvegarde avec demande de confirmation
         lambda:UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Saves.Delete.Warn',selectedMap),lambda:(rmtree("Saves/" + selectedMap),OpenSavesList()),None)),

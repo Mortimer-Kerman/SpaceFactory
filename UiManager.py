@@ -162,8 +162,6 @@ def UpdateBackground():
                 Ypos = posY*zoom+((cam[1]+(height/2))%zoom)#coordonnées selon zoom
                 
                 tex = "rock"
-                """
-                """
                 worldPos = ScreenPosToWorldPos((Xpos,Ypos))
                 
                 val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (0,0), 1)
@@ -184,7 +182,6 @@ def UpdateBackground():
                         tex="rock-"+tex
                     if val < 0.3:
                         tex = "rock"
-                """"""
                 screen.blit(TextureManager.GetTexture("ground/" + tex, zoom), (Xpos, Ypos))#placement du fond
 
 def ItemMenu():
@@ -396,7 +393,6 @@ def interactItem(item):
 
     SessionManager.PauseMenuBackground = None
     return b.get_value() if b is not None else None
-
 
 UIPopup=[]
 UiLightPopup=[]
