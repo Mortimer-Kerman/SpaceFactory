@@ -148,6 +148,8 @@ def forme2(x,y,w,wr,h,o,color=(47,48,51)):
     f = x, y - h
     return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))#affichage du polygone (renvoie l'élément pygame.Rect lié au polygone)
 
+chunkTex = {}
+
 def UpdateBackground():
     """
     Mise à jour du fond
@@ -161,28 +163,32 @@ def UpdateBackground():
                 Xpos = posX*zoom+((cam[0]+(width/2))%zoom)#coordonnées selon zoom
                 Ypos = posY*zoom+((cam[1]+(height/2))%zoom)#coordonnées selon zoom
                 
-                tex = "rock"
                 worldPos = ScreenPosToWorldPos((Xpos,Ypos))
                 
-                val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (0,0), 1)
+                if not worldPos in chunkTex:
                 
-                
-                if env == PlanetGenerator.PlanetTypes.Dead:
-                    tex = "sand"
-                    if 0.45<val<0.5:
-                        text="rock-sand"
-                    if val < 0.5:
-                        tex = "rock"
-                else:
-                    if env == PlanetGenerator.PlanetTypes.Desertic:
+                    val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (0,0), 1)
+                    
+                    tex = "rock"
+                    if env == PlanetGenerator.PlanetTypes.Dead:
                         tex = "sand"
+                        if 0.45<val<0.5:
+                            tex="rock-sand"
+                        if val < 0.5:
+                            tex = "rock"
                     else:
-                        tex = "grass"
-                    if 0.3 < val < 0.32:
-                        tex="rock-"+tex
-                    if val < 0.3:
-                        tex = "rock"
-                screen.blit(TextureManager.GetTexture("ground/" + tex, zoom), (Xpos, Ypos))#placement du fond
+                        if env == PlanetGenerator.PlanetTypes.Desertic:
+                            tex = "sand"
+                        else:
+                            tex = "grass"
+                        if 0.3 < val < 0.32:
+                            tex="rock-"+tex
+                        if val < 0.3:
+                            tex = "rock"
+                            
+                    chunkTex[worldPos] = tex
+                
+                screen.blit(TextureManager.GetTexture("ground/" + chunkTex[worldPos], zoom), (Xpos, Ypos))#placement du fond
 
 def ItemMenu():
     """

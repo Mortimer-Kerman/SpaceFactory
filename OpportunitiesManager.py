@@ -126,7 +126,7 @@ def OpenMap():
     label = menu.add.label("\n\n\n\n\n",font_size=int(columnW*(1/29)))#20 en 1080
     detailsFrame.pack(label)
     
-    detailsFrame.pack(menu.add.vertical_margin(100))
+    detailsFrame.pack(menu.add.vertical_margin(int(h * (20/87))))
     
     detailsFrame.pack(menu.add.button(Localization.GetLoc('Opportunities.StartAnExpedition'), OpenExpeditionLauncher),align=pygame_menu.locals.ALIGN_CENTER)
     
