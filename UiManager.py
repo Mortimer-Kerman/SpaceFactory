@@ -171,6 +171,8 @@ def UpdateBackground():
                 
                 if env == PlanetGenerator.PlanetTypes.Dead:
                     tex = "sand"
+                    if 0.45<val<0.5:
+                        text="rock-sand"
                     if val < 0.5:
                         tex = "rock"
                 else:
@@ -178,7 +180,8 @@ def UpdateBackground():
                         tex = "sand"
                     else:
                         tex = "grass"
-                    
+                    if 0.3 < val < 0.32:
+                        tex="rock-"+tex
                     if val < 0.3:
                         tex = "rock"
                 """"""
