@@ -64,15 +64,17 @@ def DisplayUi():
     
     place_text("[" + str(mousePos[0]) + "," + str(mousePos[1]) + "] " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.GetFont("aquire"))#placement du texte (position du curseur + caméra + FPS)
 
-    ItemMenu()#placement du menu de sélection d'item
-
-    InvMenu()#placement du menu inventaire
-
     for index,popup in enumerate(UIPopup):#pour index , popup dans UiManager.UIPopup
             popup.show(index)
             UIelements["popup_area"]=pygame.Rect(width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
     for index,popup in enumerate(UiLightPopup):#pour index , popup dans UiManager.UILightPopup
             popup.show(index)
+            
+    ItemMenu()#placement du menu de sélection d'item
+
+    InvMenu()#placement du menu inventaire
+
+    
 
 def GetMouseWorldPos():
     """
