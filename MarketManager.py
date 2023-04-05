@@ -26,7 +26,7 @@ def showMenu():
         UiManager.screen.blit(background,(0,0)) # Affichage de l'arrière-plan sur l'écran
         pygame.draw.polygon(UiManager.screen,(198, 136, 102),((0,0),(0,UiManager.height//3),(UiManager.width//3,0))) # Dessin d'une forme polygonale sur l'écran
         pygame.draw.polygon(UiManager.screen,(198, 136, 102),((UiManager.width,UiManager.height),(0,(UiManager.height//3)*2),((UiManager.width//3)*2,0))) # Dessin d'une autre forme polygonale sur l'écran
-        UiManager.place_text(L.GetLoc("Market.Title"), 20, 50, 100,font=TextureManager.nasalization100) # Affichage de du texte sur l'écran
+        UiManager.place_text(L.GetLoc("Market.Title"), 20, 50, 100,font=TextureManager.TextureManager.GetFont("nasalization",100)) # Affichage de du texte sur l'écran
         UiManager.place_text(L.GetLoc("Market.Motto"), 20, 150, 50) # Affichage de du texte sur l'écran
 
     def setCurrent(a): # Définition d'une fonction pour définir l'article en cours à une valeur donnée
@@ -65,7 +65,7 @@ def showMenu():
         oppFrame.pack(menu.add.vertical_margin(50))
 
         subtext = menu.add.label("Prix: " + str(marketItem[i]))
-        subtext.set_font(TextureManager.nasalization, 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
+        subtext.set_font(TextureManager.GetFont("nasalization"), 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         
         listFrame.pack(menu.add.vertical_margin(5))

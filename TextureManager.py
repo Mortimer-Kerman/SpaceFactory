@@ -11,12 +11,6 @@ texturesPath = "./Assets/textures/"#le chemin des textures
 
 missingTexture = None#Si la texture n'existe pas
 
-aquire = None#variable stockant la police principale "aquire"
-
-nasalization = None#variable stockant la police "nasalization"
-
-nasalization100 = None#variable stockant la police "nasalization100"
-
 loadedTextures = {"no":missingTexture}
 menuTextures = {}
 def GetTexture(textureName:str,scale:float=1,is_menu:bool=False)->pygame.Surface:
@@ -48,16 +42,17 @@ def LoadAllTextures():
     """
     Chargement de toutes les textures
     """
-    global aquire, nasalization, nasalization100
+
     try:
-        aquire=pygame.font.Font("./Assets/font/Aquire.ttf",26)#on tente de charger aquire
-        nasalization=pygame.font.Font("./Assets/font/nasalization.ttf",30)#on tente de charger nasalization
-        nasalization100=pygame.font.Font("./Assets/font/nasalization.ttf",100)#on tente de charger nasalization100
+        fonts["aquire"] = pygame.font.Font("./Assets/font/aquire.ttf",26)#on tente de charger aquire
     except:
-        aquire=pygame.font.get_default_font()
-        nasalization=pygame.font.get_default_font()# en cas d'erreur, on tente avec la police par défaut
-        nasalization100=pygame.font.get_default_font()# en cas d'erreur, on tente avec la police par défaut
-        
+        fonts["aquire"] = pygame.font.Font(pygame.font.get_default_font(),20)# en cas d'erreur, on tente avec la police par défaut
+    
+    try:
+        fonts["nasalization"] = pygame.font.Font("./Assets/font/nasalization.ttf",30)#on tente de charger nasalization
+    except:
+        fonts["nasalization"] = pygame.font.Font(pygame.font.get_default_font(),20)# en cas d'erreur, on tente avec la police par défaut
+    
     for subdir, dirs, files in os.walk(texturesPath):#on explore tous les fichiers dans le chemin des textures
         for file in files:#pour chaque fichier dans les fichiers
             filepath = os.path.join(subdir, file)
@@ -91,3 +86,17 @@ def GetColorFilter(color:tuple,scale:float):
 
 filters = {}
 zoomedFilters = {}
+
+
+fonts = {}
+def GetFont(fontName:str,fontSize:int=None)->pygame.font.Font:
+    
+    fullFontName = fontName + ("" if fontSize == None else "." + str(fontSize))
+    
+    if not fullFontName in fonts:
+        try:
+            fonts[fullFontName] = pygame.font.Font("Assets/font/" + fontName + ".ttf", fontSize if fontSize != None else 20)
+        except:
+            return pygame.font.Font(pygame.font.get_default_font(),fontSize if fontSize != None else 20)
+    
+    return fonts[fullFontName]

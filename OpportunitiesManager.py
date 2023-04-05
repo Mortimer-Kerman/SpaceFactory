@@ -101,7 +101,7 @@ def OpenMap():
             suffix += "s"
         distance = str(distance) + suffix
         
-        subtext = menu.add.label("Temps de voyage: " + distance, font_size=int(columnW/27), font_name=TextureManager.nasalization,font_color=(255,255,255))
+        subtext = menu.add.label("Temps de voyage: " + distance, font_name=TextureManager.GetFont("nasalization",int(columnW/27)),font_color=(255,255,255))
         #subtext.set_font(TextureManager.nasalization, 11, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         

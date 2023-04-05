@@ -55,7 +55,7 @@ def showMenu():
         oppFrame.pack(menu.add.vertical_margin(50))
 
         subtext = menu.add.label("Récompense: " + str(task[i]))
-        subtext.set_font(TextureManager.nasalization, 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
+        subtext.set_font(TextureManager.GetFont("nasalization"), 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         
         listFrame.pack(menu.add.vertical_margin(5))

@@ -62,7 +62,7 @@ def DisplayUi():
     
     mousePos = GetMouseWorldPos()
     
-    place_text("[" + str(mousePos[0]) + "," + str(mousePos[1]) + "] " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.aquire)#placement du texte (position du curseur + caméra + FPS)
+    place_text("[" + str(mousePos[0]) + "," + str(mousePos[1]) + "] " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.GetFont("aquire"))#placement du texte (position du curseur + caméra + FPS)
 
     ItemMenu()#placement du menu de sélection d'item
 
@@ -115,7 +115,7 @@ def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=Fa
         else:
             taille=32
             while taille > 0:
-                font = pygame.font.Font("./Assets/font/Aquire.ttf",taille)#on tente de charger aquire
+                font = TextureManager.GetFont("aquire",taille)
                 text_surface = font.render(text, True, (255, 255, 255))
                 if text_surface.get_width() <= auto_size[0] and text_surface.get_height() <= auto_size[1]:
                     break
@@ -204,7 +204,7 @@ def ItemMenu():
     #on dessine le petit triangle 
     pygame.draw.polygon(screen, (255,255,255),t[showMenu.get("select",0)])
     #on mets du texte
-    place_text("Sélectionner",width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.aquire)
+    place_text("Sélectionner",width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.GetFont("aquire"))
     
     #On stocke la valeur bool en cas d'hover sur l'élément (ici le rectangle sous "forme2" du menu de sélection) dans UIelements["select"]
     UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-500*showMenu.get("select",0)),(width,height-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
@@ -213,21 +213,21 @@ def ItemMenu():
     for i in range(len(menuElements)):
         UIelements["selectElements_"+menuElements[i]]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
-        place_text(Localization.GetLoc('Items.' + menuElements[i]),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+        place_text(Localization.GetLoc('Items.' + menuElements[i]),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
     
     UIelements["selectElements_craft"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*2,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("hammer-and-wrench", 78, True),(width-500+11+102*2,height-100*showMenu.get("select",0)))
-    place_text("Requis pour créer",width-500+102*2,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+    place_text("Requis pour créer",width-500+102*2,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
 
     UIelements["selectElements_question"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("question", 78, True),(width-500+11+102*3,height-100*showMenu.get("select",0)))
-    place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+    place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
 
     UIelements["selectElements_delete"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*4,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*4,height-100*showMenu.get("select",0)))
-    place_text("détruire",width-500+102*4,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.aquire,auto_size=(100,20))
+    place_text("détruire",width-500+102*4,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
 
-    place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.aquire,auto_size=(500,100))
+    place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(500,100))
     
 
 def InvMenu():
@@ -240,7 +240,7 @@ def InvMenu():
     #on dessine le petit triangle 
     pygame.draw.polygon(screen, (255,255,255),t[showMenu.get("inv",0)])
     #on mets du texte
-    place_text("Inventaire",width-400,20+500*showMenu.get("inv",0),100,(255,255,255),TextureManager.aquire)
+    place_text("Inventaire",width-400,20+500*showMenu.get("inv",0),100,(255,255,255),TextureManager.GetFont("aquire"))
 
     UIelements["inv2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,500*showMenu.get("inv",0)),(width,500*showMenu.get("inv",0)),(width,0),(width-500,0)]).collidepoint(pygame.mouse.get_pos())
 
@@ -358,10 +358,10 @@ def interactItem(item):
             SessionManager.DisplayPauseMenuBackground()
             forme2(width//4-250,height//2-300,500,100,50,200,(98,99,102))
             pygame.draw.polygon(screen, (98,99,102), [(width//4-250,height//2-300),(width//4+250,height//2-300),(width//4+250,height//2+300),(width//4-250,height//2+300)])
-            place_text("Stockage",width//4-245,height//2-330,100,(255,255,255),TextureManager.aquire)
+            place_text("Stockage",width//4-245,height//2-330,100,(255,255,255),TextureManager.GetFont("aquire"))
             forme2((width//4)*3-250,height//2-300,500,100,50,200,(98,99,102))
             pygame.draw.polygon(screen, (98,99,102), [((width//4)*3-250,height//2-300),((width//4)*3+250,height//2-300),((width//4)*3+250,height//2+300),((width//4)*3-250,height//2+300)])
-            place_text("Inventaire",(width//4)*3-245,height//2-330,100,(255,255,255),TextureManager.aquire)
+            place_text("Inventaire",(width//4)*3-245,height//2-330,100,(255,255,255),TextureManager.GetFont("aquire"))
             for r in zip(rects,inv):
                 pygame.draw.rect(screen,  (47,48,51), r[0])
                 screen.blit(TextureManager.GetTexture(r[1]["n"], 78, True),(r[0].x,r[0].y))
@@ -425,12 +425,12 @@ class Popup:
             place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.nasalization,n=30)
             if self.command is None:
                 UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
-                place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.aquire)
+                place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
             else:
                 UIelements["popup_launch_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,100,25)).collidepoint(pygame.mouse.get_pos())
-                place_text("Lancer",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.aquire)
+                place_text("Lancer",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
                 UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding+150,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
-                place_text("Non",width-self.sliding+150,225+205*i,26,(255,255,255),TextureManager.aquire)
+                place_text("Non",width-self.sliding+150,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
     def close(self,i):
         UIPopup.remove(self)
         UIelements["popup_"+str(i)]=False
