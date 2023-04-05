@@ -120,15 +120,19 @@ def OpenMap():
     detailsFrame.relax(True)
     frame.pack(detailsFrame)
     
+    textFrame = menu.add.frame_v(columnW, h-50-int(h*(2/29)), max_height=h-50-int(h*(2/29)), padding=0)
+    textFrame.relax(True)
+    detailsFrame.pack(textFrame,align=pygame_menu.locals.ALIGN_CENTER)
+    
     title = menu.add.label("",font_size=int(columnW*(2/29)))#40 en 1080
-    detailsFrame.pack(title,align=pygame_menu.locals.ALIGN_CENTER)
+    textFrame.pack(title,align=pygame_menu.locals.ALIGN_CENTER)
     
     label = menu.add.label("\n\n\n\n\n",font_size=int(columnW*(1/29)))#20 en 1080
-    detailsFrame.pack(label)
+    textFrame.pack(label)
     
-    detailsFrame.pack(menu.add.vertical_margin(int(h * (20/87))))
+    btn = menu.add.button(Localization.GetLoc('Opportunities.StartAnExpedition'), OpenExpeditionLauncher,font_size=int(h*(2/29)))
     
-    detailsFrame.pack(menu.add.button(Localization.GetLoc('Opportunities.StartAnExpedition'), OpenExpeditionLauncher),align=pygame_menu.locals.ALIGN_CENTER)
+    detailsFrame.pack(btn,align=pygame_menu.locals.ALIGN_CENTER)
     
     def SetLabelText(text:str):
         
