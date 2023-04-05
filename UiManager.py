@@ -422,7 +422,7 @@ class Popup:
                self.close(i)
         else:
             UIelements["popup_"+str(i)]=pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,50+205*i,500,200)).collidepoint(pygame.mouse.get_pos())
-            place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.nasalization,n=30)
+            place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.GetFont("nasalization"),n=30)
             if self.command is None:
                 UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
                 place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
@@ -455,7 +455,7 @@ class LightPopup:
         if int(pygame.time.get_ticks())>(self.time+10000) and not self.d:
                self.close(i)
         else:
-            place_text(self.text, width//4, (height//4)*3+i*20, 20, (255,255,255),TextureManager.nasalization,auto_size=(width//2,height//10))
+            place_text(self.text, width//4, (height//4)*3+i*20, 20, (255,255,255),TextureManager.GetFont("nasalization"),auto_size=(width//2,height//10))
     def close(self,i):
         UiLightPopup.remove(self)
 
