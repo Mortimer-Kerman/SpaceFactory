@@ -81,7 +81,7 @@ def OpenMap():
                 path = "Assets/textures/ui/brown.png"
             color = pygame_menu.baseimage.BaseImage(path, drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
         
-        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=color, padding=0)
+        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=color, padding=0, frame_id=str(opportunity.seed))
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
@@ -160,10 +160,34 @@ def OpenMap():
     
     def MenuTick():
         if Tick():
-            openedMap.disable()
-            OpenMap()
+            RefreshMenu()
     
     menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick()))
+
+def RefreshMenu():
+    if openedMap == None:
+        return
+    #openedMap.disable()
+    #OpenMap()
+    for opportunity in SaveManager.mainData.opportunities:
+        
+        frame = openedMap.get_widget(str(opportunity.seed), recursive=True)
+        
+        color = (50, 50, 50)
+        
+        if opportunity.state != Opportunity.State.PROPOSED:
+            path = "Assets/textures/ui/orange.png"
+            if opportunity.state == Opportunity.State.ONSITE:
+                path = "Assets/textures/ui/green.png"
+            if opportunity.state == Opportunity.State.RETURNING:
+                path = "Assets/textures/ui/blue.png"
+            if opportunity.state == Opportunity.State.RETURNED:
+                path = "Assets/textures/ui/brown.png"
+            color = pygame_menu.baseimage.BaseImage(path, drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
+            
+        frame.set_background_color(color)
+        
+    openedMap.force_surface_update()
 
 def OpenExpeditionLauncher():
     
@@ -215,7 +239,7 @@ def OpenExpeditionLauncher():
     
     menu.add.vertical_margin(50)
     
-    menu.add.button(Localization.GetLoc('Opportunities.StartExpedition'),lambda:(currentOpportunity.Begin(),menu.disable(),openedMap.disable(),OpenMap()))
+    menu.add.button(Localization.GetLoc('Opportunities.StartExpedition'),lambda:(currentOpportunity.Begin(),menu.disable(),RefreshMenu()))
     
     SetTravelTime(True)
     
