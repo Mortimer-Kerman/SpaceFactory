@@ -122,6 +122,7 @@ def OpenSavesList():
     """
     Ouvre le menu listant les sauvegardes
     """
+    UiManager.Loading()
     if not os.path.exists("Saves/"):#si le dossier de sauvegardes n'existe pas, le créer
         os.makedirs("Saves/")
     

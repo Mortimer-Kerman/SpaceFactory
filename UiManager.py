@@ -411,6 +411,12 @@ def interactItem(item):
     SessionManager.PauseMenuBackground = None
     return b.get_value() if b is not None else None
 
+def Loading():
+    FillScreen((0,0,0))
+    DisplayBackground()
+    place_text(Localization.GetLoc("Game.Loading"),width/2, height/2,100,(255,255,255),font=TextureManager.GetFont("aquire",100))
+    pygame.display.update()
+
 UIPopup=[]
 UiLightPopup=[]
 class Popup:

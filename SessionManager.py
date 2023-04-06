@@ -38,8 +38,7 @@ def Play(saveName:str,**kwargs):
     """
     Lance le jeu
     """
-    UiManager.FillScreen((0,0,0))
-    #pygame.display.update()
+    UiManager.Loading()
     if not SaveManager.Load(saveName):#Chargement de la sauvegarde
         return False
     
@@ -273,7 +272,7 @@ def HandleMouseClicks(button,drone):
             else:
                 a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
                 if a:
-                    pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,UiManager.GetMouseWorldPos(),(UiManager.GetMouseWorldPos()[0]-20,UiManager.GetMouseWorldPos()[1]-20)))
+                    pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
                     SaveManager.AddToInv(d=a)
                     UiManager.LightPopup(str(a)+" ajouté à l'inventaire")
                     if showTuto==2:

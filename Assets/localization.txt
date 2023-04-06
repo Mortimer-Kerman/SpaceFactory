@@ -16,6 +16,7 @@ Game.Credits : Crédits
 Game.Warning : Attention
 Game.Confirm : Confirmer
 Game.Cancel : Annuler
+Game.Loading : Chargement...
 
 //Menu des sauvegardes
 Saves.Title : Sauvegardes
