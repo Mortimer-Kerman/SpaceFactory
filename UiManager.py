@@ -47,6 +47,8 @@ def Init():
     
     width, height = pygame.display.Info().current_w, pygame.display.Info().current_h#on prends la plus grande taille possible
 
+    screen.convert()
+
 def FillScreen(color:tuple):
     """
     Cette fonction sert juste à remplir l'écran d'une couleur (en cas de problème avec le chargement de la texture du sol ["ground"])

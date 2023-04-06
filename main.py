@@ -24,7 +24,6 @@ import SaveManager
 import Localization
 import FunctionUtils
 
-
 pygame.init()#initialisation pygame
 
 UiManager.Init()#initialisation du l'UiManager
@@ -264,7 +263,7 @@ def OpenSavesList():
         align=pygame_menu.locals.ALIGN_CENTER)
     
     Menus.SavesList.mainloop(UiManager.screen, lambda:(UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))#Boucle principale du Menu
-   
+
 def OpenSaveCreationMenu(defaultTuto:bool=False):
     """
     Ouvre le menu de création des sauvegardes

@@ -65,7 +65,6 @@ clock = pygame.time.Clock()#horloge du jeu
 saveName = None#nom de la sauvegarde
 mainData = None#va bientôt contenir la classe Data principale
 planetTex = None
-
 def Load(name:str)->bool:
     """
     Sert au chargement des sauvegardes
@@ -118,7 +117,6 @@ def Load(name:str)->bool:
     
     print("File loaded!")
     return True
-    
 def Save():
     """
     Sauvegarde
