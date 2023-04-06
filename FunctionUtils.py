@@ -197,7 +197,7 @@ class NumpyDict:
     def values(self):
         return self._values
     
-    def get(self,a,b):
+    def get(self,a,b=None):
         try:return self.__getitem__(a)
         except:return b
     
