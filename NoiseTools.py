@@ -9,14 +9,17 @@ from PIL import Image
 import numpy as np
 #récupération des deux textures sous forme d'arrays de couelurs
 
-perlinTex = np.array(Image.open("Assets/precomputedNoise/perlinTexture.png"))
-craterTex = np.array(Image.open("Assets/precomputedNoise/craterTexture.png"))
+perlinTex = list(Image.open("Assets/precomputedNoise/perlinTexture.png").getdata())
+craterTex = list(Image.open("Assets/precomputedNoise/craterTexture.png").getdata())
 
 def perlinNoise(x:float, y:float)->float:
     """
     Le bruit de perlin permet de générer des cartes de valeurs aléatoires entre 0 et 1 avec des transitions douces entre les valeurs adjacentes.
     """
-    return perlinTex[np.round(x*32).astype(int)%1024, np.round(y*32).astype(int)%1024, 0] / 255
+    return perlinTex[round(x*32)%1024+((round(y*32)%1024)*1024)][0] / 255
+		
+
+
 
 
 def FractalNoise(posX:float, posY:float, offset:tuple, octaves:int, lacunarity:float=6.7, persistance:float=0.28):

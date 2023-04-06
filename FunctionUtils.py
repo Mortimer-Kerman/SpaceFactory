@@ -184,9 +184,19 @@ class NumpyDict:
             items.append(item)
 
         return "{" + ", ".join(items) + "}"
+    
+    def __dict__(self):
+        s={}
+        for key, value in zip(self._keys, self._values):
+            s[key]=value
+        return s
 
     def keys(self):
         return self._keys
 
     def values(self):
         return self._values
+    
+    def get(self,a,b):
+        try:return self.__getitem__(a)
+        except:return b
