@@ -414,7 +414,7 @@ def interactItem(item):
 def Loading():
     FillScreen((0,0,0))
     DisplayBackground()
-    place_text(Localization.GetLoc("Game.Loading"),width/2, height/2,100,(255,255,255),font=TextureManager.GetFont("aquire",100))
+    place_text(Localization.GetLoc("Game.Loading"),0, height/2,100,(255,255,255),font=TextureManager.GetFont("aquire",100))
     pygame.display.update()
 
 UIPopup=[]
