@@ -174,6 +174,13 @@ class NumpyDict:
 
     def __contains__(self, key):
         return key in self._keys
+    def __repr__(self):
+        items = []
+        for key, value in zip(self._keys, self._values):
+            item = f"{key}: {value}"
+            items.append(item)
+
+        return "{" + ", ".join(items) + "}"
 
     def keys(self):
         return self._keys

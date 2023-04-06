@@ -17,6 +17,7 @@ import UiManager
 import PlanetGenerator
 import OpportunitiesManager
 import Localization as L
+import FunctionUtils
 
 SaveFileVersion="f0.14"
 
@@ -43,7 +44,7 @@ class Data:
         self.zoom = 100
         self.seed = random.randint(-(9**9),9**9)
         self.planetaryConditions = PlanetGenerator.PlanetaryConditions(seed=self.seed)
-        self.items = {}
+        self.items = FunctionUtils.NumpyDict()
         self.coins=0
         self.selectedItem="foreuse"
         self.rotation=0
