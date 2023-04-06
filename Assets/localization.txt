@@ -97,6 +97,10 @@ Items.four : Four
 Items.market : Market
 Items.MolecularAssembler : Assembleur moléculaire
 Items.CoalCentral : Centrale à charbon
+Items.charbon : charbon
+Items.cuivre : cuivre
+Items.or : or
+Items.m1 : m1
 
 //Description des items
 GameItems.d.foreuse : La foreuse est une machine servant à extraire des minerais automatiquement
