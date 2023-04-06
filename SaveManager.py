@@ -163,6 +163,7 @@ def Unload():
     TextureManager.RefreshZoom()
     UiManager.UIPopup.clear()
     GameItems.Minerais.Clear()
+    UiManager.chunkTex.clear()
     print("File unloaded")
 
 def SaveExists(name:str):
