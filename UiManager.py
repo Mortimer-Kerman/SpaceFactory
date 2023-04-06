@@ -186,10 +186,12 @@ def UpdateBackground():
                             tex = "sand"
                         else:
                             tex = "grass"
-                        if 0.3 < val < 0.32:
+                        if 0.5 < val < 0.55:
                             tex="rock-"+tex
-                        if val < 0.3:
+                        if 0.7>val > 0.55:
                             tex = "rock"
+                        if val > 0.7:
+                            tex = "water"
                             
                     chunkTex[str(worldPos)] = tex
                 
