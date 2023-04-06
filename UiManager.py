@@ -153,7 +153,7 @@ def forme2(x,y,w,wr,h,o,color=(47,48,51)):
     f = x, y - h
     return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))#affichage du polygone (renvoie l'élément pygame.Rect lié au polygone)
 
-#chunkTex = {}
+
 chunkTex=FunctionUtils.NumpyDict()
 def UpdateBackground():
     """

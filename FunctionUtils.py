@@ -141,9 +141,9 @@ class NumpyDict:
     """
     La clé doit être un entier, ou un str, les tuples peuvent causer problème
     """
-    def __init__(self):
-        self._keys = np.array([], dtype=object)
-        self._values = np.array([], dtype=object)
+    def __init__(self,sourceDict={}):
+        self._keys = np.array(list(sourceDict.keys()), dtype=object)
+        self._values = np.array(list(sourceDict.values()), dtype=object)
 
     def __getitem__(self, key):
         if key not in self._keys:
@@ -200,3 +200,7 @@ class NumpyDict:
     def get(self,a,b):
         try:return self.__getitem__(a)
         except:return b
+    
+    def clear(self):
+        self._keys = np.array([], dtype=object)
+        self._values = np.array([], dtype=object)

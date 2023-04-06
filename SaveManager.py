@@ -113,6 +113,9 @@ def Load(name:str)->bool:
         opportunity.__dict__ = mainData.opportunities[i]
         mainData.opportunities[i] = opportunity
     
+    if type(mainData.items) == dict:
+        mainData.items = FunctionUtils.NumpyDict(mainData.items)
+    
     print("File loaded!")
     return True
     

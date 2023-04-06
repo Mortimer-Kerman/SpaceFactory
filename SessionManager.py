@@ -39,6 +39,7 @@ def Play(saveName:str,**kwargs):
     Lance le jeu
     """
     UiManager.FillScreen((0,0,0))
+    #pygame.display.update()
     if not SaveManager.Load(saveName):#Chargement de la sauvegarde
         return False
     
