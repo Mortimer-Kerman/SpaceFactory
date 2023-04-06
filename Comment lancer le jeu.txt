@@ -6,5 +6,6 @@ Requis pour le lancement :
 -python >= 3.10
 -pygame >= 2.0.0
 -pygame_menu >=4.3.6
+numpy >=
 
 Un écran disposant d'une résolution supérieure à 800*600

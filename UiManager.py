@@ -10,7 +10,9 @@ import pygame
 import pygame_menu
 
 from datetime import datetime
+import time
 import os
+import numpy as np
 import random
 
 import SaveManager
@@ -23,6 +25,7 @@ import MarketManager
 import AudioManager
 import NoiseTools
 import PlanetGenerator
+import FunctionUtils
 
 #Les variables importantes
 screen = None#la fenêtre principale (élément pygame.display)
@@ -150,8 +153,8 @@ def forme2(x,y,w,wr,h,o,color=(47,48,51)):
     f = x, y - h
     return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))#affichage du polygone (renvoie l'élément pygame.Rect lié au polygone)
 
-chunkTex = {}
-
+#chunkTex = {}
+chunkTex=FunctionUtils.NumpyDict()
 def UpdateBackground():
     """
     Mise à jour du fond
@@ -167,7 +170,7 @@ def UpdateBackground():
                 
                 worldPos = ScreenPosToWorldPos((Xpos,Ypos))
                 
-                if not worldPos in chunkTex:
+                if not str(worldPos) in chunkTex:
                 
                     val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (0,0), 1)
                     
@@ -188,9 +191,13 @@ def UpdateBackground():
                         if val < 0.3:
                             tex = "rock"
                             
-                    chunkTex[worldPos] = tex
+                    chunkTex[str(worldPos)] = tex
                 
-                screen.blit(TextureManager.GetTexture("ground/" + chunkTex[worldPos], zoom), (Xpos, Ypos))#placement du fond
+                screen.blit(TextureManager.GetTexture("ground/" + chunkTex[str(worldPos)], zoom), (Xpos, Ypos))#placement du fond
+
+
+
+                #print("3. "+str(time.monotonic()))
 
 def ItemMenu():
     """

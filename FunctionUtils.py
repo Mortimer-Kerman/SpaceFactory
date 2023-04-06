@@ -7,6 +7,8 @@ Created on Sun Mar 12 21:13:26 2023
 import pygame
 import pygame_menu
 
+import numpy as np
+
 def clamp(val:float,minv:float,maxv:float)->float:
     """
     Bloque une valeur entre un minimum et un maximum
@@ -135,3 +137,46 @@ def ManageEncapsulatedButtons():
         
     lastMousePressSequence = pressSequence
 
+class NumpyDict:
+    def __init__(self):
+        self._keys = np.array([], dtype=object)
+        self._values = np.array([], dtype=object)
+
+    def __getitem__(self, key):
+        if key not in self._keys:
+            raise KeyError(key)
+
+        value_idx = np.argwhere(self._keys == key)
+        if len(value_idx) == 0 or value_idx[0][0] >= len(self._values):
+            raise KeyError(key)
+
+        return self._values[value_idx[0][0]]
+
+
+    def __setitem__(self, key, value):
+        if key in self._keys:
+            value_idx = np.argwhere(self._keys == key).flatten()[0]
+            self._values[value_idx] = value
+        else:
+            self._keys = np.append(self._keys, key)
+            self._values = np.append(self._values, value)
+
+    def __delitem__(self, key):
+        if key not in self._keys:
+            raise KeyError(key)
+
+        value_idx = np.argwhere(self._keys == key).flatten()[0]
+        self._keys = np.delete(self._keys, value_idx)
+        self._values = np.delete(self._values, value_idx)
+
+    def __len__(self):
+        return len(self._keys)
+
+    def __contains__(self, key):
+        return key in self._keys
+
+    def keys(self):
+        return self._keys
+
+    def values(self):
+        return self._values

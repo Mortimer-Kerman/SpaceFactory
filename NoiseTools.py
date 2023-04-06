@@ -6,37 +6,39 @@ Created on Fri Mar 10 09:11:39 2023
 """
 #importation de PIL pour la lecture des images
 from PIL import Image
-
+import numpy as np
 #récupération des deux textures sous forme d'arrays de couelurs
-perlinTex = list(Image.open("Assets/precomputedNoise/perlinTexture.png").getdata())
-craterTex = list(Image.open("Assets/precomputedNoise/craterTexture.png").getdata())
 
-#Note: Le bruit ici est précalculé afin d'améliorer les performances.
-#Utiliser des textures a permis dans ce cas de diviser le temps d'exécution du code par plus de 30.
+perlinTex = np.array(Image.open("Assets/precomputedNoise/perlinTexture.png"))
+craterTex = np.array(Image.open("Assets/precomputedNoise/craterTexture.png"))
 
 def perlinNoise(x:float, y:float)->float:
     """
     Le bruit de perlin permet de générer des cartes de valeurs aléatoires entre 0 et 1 avec des transitions douces entre les valeurs adjacentes.
     """
-    return perlinTex[round(x*32)%1024+((round(y*32)%1024)*1024)][0] / 255
+    return perlinTex[np.round(x*32).astype(int)%1024, np.round(y*32).astype(int)%1024, 0] / 255
+
 
 def FractalNoise(posX:float, posY:float, offset:tuple, octaves:int, lacunarity:float=6.7, persistance:float=0.28):
     """
     Le bruit fractal combine plusieurs cartes de bruit de perlin pour augmenter le niveau de détail.
     """
-    value = 0
-    maxValue = 0
-    
+    frequency = lacunarity ** np.arange(octaves)
+    amplitude = persistance ** np.arange(octaves)
+
+    # Création d'un tableau de valeurs de bruit de Perlin pour chaque octave
+    perlin_octaves = np.zeros(octaves)
     for i in range(octaves):
-        #Fréquence = lacunarité puissance octave et amplitude = persistance puissance octave
-        frequency = lacunarity**i
-        amplitude = persistance**i
-        #L'idée est d'empiler des cartes de plus en plus petites et ayant une influence de plus en plus faible sur le résultat final.
-        value += perlinNoise((posX * frequency) + offset[0], (posY * frequency) + offset[1]) * amplitude
-        #on garde trace de la valeur maximale pour pouvoir ajuster la valeur entre 0 et 1
-        maxValue += amplitude
-    
-    return value / maxValue
+        perlin_octaves[i] = perlinNoise((posX * frequency[i]) + offset[0], (posY * frequency[i]) + offset[1])
+
+    # Calcul de la valeur finale en combinant les valeurs de chaque octave
+    value = np.sum(perlin_octaves * amplitude)
+
+    # Normalisation de la valeur entre 0 et 1
+    value = value / np.sum(amplitude)
+
+    return value
+
 
 
 def craterNoise(x:float, y:float)->float:
