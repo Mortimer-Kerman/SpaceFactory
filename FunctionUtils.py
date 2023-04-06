@@ -138,6 +138,9 @@ def ManageEncapsulatedButtons():
     lastMousePressSequence = pressSequence
 
 class NumpyDict:
+    """
+    La clé doit être un entier, ou un str, les tuples peuvent causer problème
+    """
     def __init__(self):
         self._keys = np.array([], dtype=object)
         self._values = np.array([], dtype=object)
