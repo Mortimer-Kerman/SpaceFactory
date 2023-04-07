@@ -45,9 +45,7 @@ def Init():
     
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)#on définit l'élément pygame.display (la fenêtre sera en plein écran)
     
-    width, height = pygame.display.Info().current_w, pygame.display.Info().current_h#on prends la plus grande taille possible
-
-    screen.convert()
+    width, height = pygame.display.Info().current_w, pygame.display.Info().current_h#on prend la plus grande taille possible
 
 def FillScreen(color:tuple):
     """

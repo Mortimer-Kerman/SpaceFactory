@@ -24,6 +24,7 @@ import SaveManager
 import Localization
 import FunctionUtils
 
+
 pygame.init()#initialisation pygame
 
 UiManager.Init()#initialisation du l'UiManager
