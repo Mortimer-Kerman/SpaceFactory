@@ -51,7 +51,7 @@ def OpenMap():
     frame = menu.add.frame_h(w, h, padding=0)
     frame.relax(True)
     
-    listFrame = menu.add.frame_v(columnW, max(len(SaveManager.mainData.opportunities) * (int(columnW * (5/18)) + 5), h), max_height=h, padding=0, frame_id='oppList')
+    listFrame = menu.add.frame_v(columnW, max(len(SaveManager.mainData.opportunities) * (int(columnW * (5/18)) + 5), h), max_height=h, padding=0)
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
@@ -104,6 +104,7 @@ def OpenMap():
         SetLabelText(opportunity.GetDesc())
         global currentOpportunity
         currentOpportunity = opportunity
+        UpdateOppButtonTitle()
     
     detailsFrame = menu.add.frame_v(columnW, h, max_height=h, padding=0)
     detailsFrame.relax(True)
@@ -119,7 +120,7 @@ def OpenMap():
     label = menu.add.label("\n\n\n\n\n",font_size=int(columnW*(1/29)))#20 en 1080
     textFrame.pack(label)
     
-    btn = menu.add.button(Localization.GetLoc('Opportunities.StartAnExpedition'), OpenExpeditionLauncher,font_size=int(h*(2/29)))
+    btn = menu.add.button(Localization.GetLoc('Opportunities.StartAnExpedition'), ManageExpeditionAccordingly,font_size=int(h*(2/29)), button_id='oppButton')
     
     detailsFrame.pack(btn,align=pygame_menu.locals.ALIGN_CENTER)
     
@@ -157,8 +158,6 @@ def OpenMap():
 def RefreshMenu():
     if openedMap == None:
         return
-    #openedMap.disable()
-    #OpenMap()
     for opportunity in SaveManager.mainData.opportunities:
         
         frame = openedMap.get_widget(str(opportunity.seed), recursive=True)
@@ -176,8 +175,26 @@ def RefreshMenu():
             color = pygame_menu.baseimage.BaseImage(path, drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
             
         frame.set_background_color(color)
-        
     openedMap.force_surface_update()
+    UpdateOppButtonTitle()
+
+def ManageExpeditionAccordingly():
+    
+    if currentOpportunity == None:
+        return
+    
+    if currentOpportunity.state == Opportunity.State.PROPOSED:
+        OpenExpeditionLauncher()
+    elif currentOpportunity.state == Opportunity.State.GOING:
+        pass
+    elif currentOpportunity.state == Opportunity.State.WAITING:
+        currentOpportunity.SetState(Opportunity.State.WORKING)
+        RefreshMenu()
+    elif currentOpportunity.state == Opportunity.State.WORKING:
+        pass
+    else:
+        currentOpportunity.SetState(Opportunity.State.PROPOSED)
+        RefreshMenu()
 
 def OpenExpeditionLauncher():
     
@@ -231,7 +248,7 @@ def OpenExpeditionLauncher():
     
     menu.add.button(Localization.GetLoc('Opportunities.StartExpedition'),lambda:(currentOpportunity.Begin(),menu.disable(),RefreshMenu()))
     
-    SetTravelTime(True)
+    SetTravelTime(False)
     
     menu.mainloop(UiManager.screen, DisplayBackground)
 
@@ -240,6 +257,21 @@ def CloseMap():
     if openedMap != None:
         openedMap.disable()
         openedMap = None
+
+def UpdateOppButtonTitle():
+    if openedMap != None:
+        
+        title = 'Opportunities.StartAnExpedition'
+        if currentOpportunity.state == Opportunity.State.GOING:
+            title = 'Rappeler'
+        elif currentOpportunity.state == Opportunity.State.WAITING:
+            title = "Lire le rapport"
+        elif currentOpportunity.state == Opportunity.State.WORKING:
+            title = "L'expédition travaille..."
+        elif currentOpportunity.state == Opportunity.State.RETURNED:
+            title = "Dissoudre l'expédition"
+        
+        openedMap.get_widget('oppButton', recursive=True).set_title(Localization.GetLoc(title))
 
 def Tick()->bool:
     notedChange = False
@@ -260,17 +292,15 @@ def Tick()->bool:
             if TravelAdvancement > nextInterruption > opportunity.lastInterruption:
                 opportunity.RefreshActivitySeed()
                 opportunity.lastInterruption = nextInterruption
+                opportunity.SetState(Opportunity.State.WAITING)
                 UiManager.Popup("Opportunité interrompue!")
+                
             
             if now > arrivalTime:
                 if opportunity.state == Opportunity.State.GOING:
-                    opportunity.state = Opportunity.State.WAITING
-                elif opportunity.state == Opportunity.State.WAITING:
-                    opportunity.state = Opportunity.State.WORKING
+                    opportunity.SetState(Opportunity.State.WAITING)
                 elif opportunity.state == Opportunity.State.WORKING:
-                    opportunity.state = Opportunity.State.RETURNED
-                else:
-                    opportunity.state = Opportunity.State.PROPOSED
+                    opportunity.SetState(Opportunity.State.RETURNED)
                 
                 opportunity.beginTime = now.isoformat()
                 notedChange = True
@@ -426,9 +456,7 @@ class Opportunity:
         """
         Lance l'opportunité
         """
-        self.state = Opportunity.State.GOING
-        self.beginTime = datetime.now().isoformat()
-        self.RefreshActivitySeed()
+        self.SetState(Opportunity.State.GOING)
 
     def GetNextInterruption(self):
         """
@@ -440,3 +468,16 @@ class Opportunity:
             return random.randint(0, self.GetTravelDuration())
         return 0
 
+    def SetState(self,state):
+        """
+        Règle l'état de l'opportunité
+        """
+        self.state = state
+        self.beginTime = datetime.now().isoformat()
+        self.RefreshActivitySeed()
+        
+    def IsTravelling(self):
+        """
+        Dit si l'expédition est en train de voyager
+        """
+        return self.state == Opportunity.State.GOING

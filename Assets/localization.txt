@@ -59,6 +59,10 @@ Settings.Title : Options
 Settings.NotSaved : Certains paramètres ne sont pas sauvegardés.%$rVoulez-vous quand même quitter?%$r
 Settings.Save : Enregistrer
 Settings.MusicVolume : Volume de la musique
+Settings.GameVolume : Volume du jeu
+Settings.NiceBiomeBorders : Bordures de biomes : 
+Settings.NiceBiomeBorders.True : Détaillées
+Settings.NiceBiomeBorders.False : Non
 Settings.Keys.Title : Touches
 Settings.Keys.up : Haut
 Settings.Keys.down : Bas

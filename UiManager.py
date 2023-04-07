@@ -211,44 +211,48 @@ def UpdateBackground():
                 tex = chunkTex[posCode]
                 
                 screen.blit(TextureManager.GetTexture("ground/" + tex, zoom), (Xpos, Ypos))#placement du fond
-
-                if posCode not in chunkLimits or unRefreshed:
-                    
-                    limitTex = ""
-                    
-                    if tex != "sand":
-                        for x in range(-1,2):
-                            for y in range(-1,2):
-                                tPos = str((worldPos[0]-(x*10),worldPos[1]+(y*10)))
-                                if (x != 0 or y != 0) and tPos in chunkTex:
-                                    grabbedTex = chunkTex[tPos]
-                                    if grabbedTex != tex and grabbedTex in ["sand","rock"]:
-                                        limitTex += grabbedTex + str(x) + str(y) + ";"
-                    
-                    chunkLimits[posCode] = limitTex
                 
-                limitTex = chunkLimits[posCode]
-                if limitTex != "":
-                    if "ground/" + limitTex + ".png" not in TextureManager.loadedTextures:
+                if SettingsManager.GetSetting("niceBiomeBorders"):
+                    if posCode not in chunkLimits or unRefreshed:
                         
-                        texture = None
+                        limitTex = ""
                         
-                        for t in limitTex.split(";"):
-                            if t != "":
-                                if texture == None:
-                                    texture = TextureManager.loadedTextures["ground/" + t + ".png"].copy()
-                                else:
-                                    texture.blit(TextureManager.loadedTextures["ground/" + t + ".png"],(0,0))
+                        if tex != "sand":
+                            for x in range(-1,2):
+                                for y in range(-1,2):
+                                    tPos = str((worldPos[0]-(x*10),worldPos[1]+(y*10)))
+                                    if (x != 0 or y != 0) and tPos in chunkTex:
+                                        grabbedTex = chunkTex[tPos]
+                                        if grabbedTex != tex and grabbedTex in ["sand","rock"]:
+                                            limitTex += grabbedTex + str(x) + str(y) + ";"
                         
-                        TextureManager.loadedTextures["ground/" + limitTex + ".png"] = texture
-                        
+                        chunkLimits[posCode] = limitTex
+                    
+                    limitTex = chunkLimits[posCode]
+                    if limitTex != "":
+                        if "ground/" + limitTex + ".png" not in TextureManager.loadedTextures:
                             
-                    screen.blit(TextureManager.GetTexture("ground/" + limitTex, zoom), (Xpos, Ypos))#placement du fond
+                            texture = None
+                            
+                            for t in limitTex.split(";"):
+                                if t != "":
+                                    if texture == None:
+                                        texture = TextureManager.loadedTextures["ground/" + t + ".png"].copy()
+                                    else:
+                                        texture.blit(TextureManager.loadedTextures["ground/" + t + ".png"],(0,0))
+                            
+                            TextureManager.loadedTextures["ground/" + limitTex + ".png"] = texture
+                            
+                                
+                        screen.blit(TextureManager.GetTexture("ground/" + limitTex, zoom), (Xpos, Ypos))#placement du fond
                 
                 #print("3. "+str(time.monotonic()))
     
     unRefreshed = needsRefresh
     
+def ForceBackgroundRefresh():
+    global unRefreshed
+    unRefreshed = True
 
 def ItemMenu():
     """

@@ -21,6 +21,7 @@ def DefaultSettingsInstance():
     return {
         "musicVolume": 70,
         "gameVolume": 100,
+        "niceBiomeBorders": True,
         "keybinds": {
             "up": pygame.K_z,
             "down": pygame.K_s,
@@ -149,6 +150,8 @@ def OpenSettings(background):
     
     SettingsMenu.add.range_slider(Localization.GetLoc('Settings.MusicVolume'), GetSetting("musicVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.music.set_volume(int(x)/100),SetSetting("musicVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
     SettingsMenu.add.range_slider(Localization.GetLoc('Settings.GameVolume'), GetSetting("gameVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:SetSetting("gameVolume", int(x)), align=pygame_menu.locals.ALIGN_LEFT)
+    
+    SettingsMenu.add.toggle_switch(Localization.GetLoc('Settings.NiceBiomeBorders'), GetSetting("niceBiomeBorders"), state_text=(Localization.GetLoc('Settings.NiceBiomeBorders.False'), Localization.GetLoc('Settings.NiceBiomeBorders.True')), onchange=lambda x:(SetSetting("niceBiomeBorders", x),UiManager.ForceBackgroundRefresh()))
     
     SettingsMenu.add.vertical_margin(20)
     
