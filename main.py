@@ -31,7 +31,7 @@ UiManager.Init()#initialisation du l'UiManager
 
 pygame.display.set_caption('SpaceFactory')#Définition du tire de la fenêtre
 
-pygame.display.set_icon(pygame.image.load("Assets/logos/SPFTR.png"))
+pygame.display.set_icon(pygame.image.load("Assets/textures/logos/SPFTR.png"))
 
 TextureManager.LoadAllTextures()#chargement des textures
 
@@ -65,7 +65,7 @@ def OpenMainMenu():
     Menus.MainMenu = pygame_menu.Menu('', UiManager.width, UiManager.height, theme=transparentTheme)#le thème du menu
     
     #On charge le logo du menu principal
-    logo = pygame.image.load("Assets/logos/SPFTRTXT.png")
+    logo = TextureManager.GetTexture("logos/SPFTRTXT")
     
     #Quantité de place libérée en cas de changement de taille du logo
     additionalHeight = 0
@@ -451,9 +451,9 @@ def Intro()->bool:
     #récupération des logos à afficher dans l'ordre d'affichage
     logos = [
         pygame.Surface((2, 2)),#juste une texture noire avant le premier logo
-        pygame.transform.scale(pygame.image.load("Assets/logos/SPFTR.png"),(UiManager.height/2,UiManager.height/2)),
-        pygame.transform.scale(pygame.image.load("Assets/logos/PYTHONLIBS.png"),(UiManager.height/1.5,UiManager.height/1.5)),
-        pygame.transform.scale(pygame.image.load("Assets/logos/TROPHEES.png"),(UiManager.height/1.5,UiManager.height/1.5))
+        pygame.transform.scale(TextureManager.GetTexture("logos/SPFTR"),(UiManager.height/2,UiManager.height/2)),
+        pygame.transform.scale(TextureManager.GetTexture("logos/PYTHONLIBS"),(UiManager.height/1.5,UiManager.height/1.5)),
+        pygame.transform.scale(TextureManager.GetTexture("logos/TROPHEES"),(UiManager.height/1.5,UiManager.height/1.5))
     ]
     
     changedIcon = False

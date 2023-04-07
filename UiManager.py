@@ -103,7 +103,7 @@ def IsClickOnUI():
     return False#renvoyer faux
 
 autoSize={}
-def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=False):
+def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=False,centerText:bool=False):
     """
     Fonction utilitaire servant au placement du texte sur l'écran
     """
@@ -112,11 +112,19 @@ def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=Fa
         t=text.splitlines()
         for i,l in enumerate(t):
             text_surface = font.render(l, True, color)#on crée l'image du texte
-            screen.blit(text_surface, (x, y+n*i))#on affiche le texte
+            if centerText:
+                rect = text_surface.get_rect(center=(width/2-x, height/2-y))
+                screen.blit(text_surface, rect)#on affiche le texte
+            else:
+                screen.blit(text_surface, (x, y+n*i))#on affiche le texte
     else:
         if (auto_size,text) in autoSize.keys():
             text_surface = autoSize[(auto_size,text)]
-            screen.blit(text_surface, (x, y))#on affiche le texte
+            if centerText:
+                rect = text_surface.get_rect(center=(width/2-x, height/2-y))
+                screen.blit(text_surface, rect)#on affiche le texte
+            else:
+                screen.blit(text_surface, (x, y))#on affiche le texte
         else:
             taille=32
             while taille > 0:
@@ -126,7 +134,11 @@ def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=Fa
                     break
                 taille -= 1
             autoSize[(auto_size,text)]=text_surface
-            screen.blit(text_surface, (x, y))#on affiche le texte
+            if centerText:
+                rect = text_surface.get_rect(center=(width/2-x, height/2-y))
+                screen.blit(text_surface, rect)#on affiche le texte
+            else:
+                screen.blit(text_surface, (x, y))#on affiche le texte
 
 def forme(x,y,w,wr,h,o,color=(47,48,51)):
     """
@@ -467,7 +479,11 @@ def interactItem(item):
 def Loading():
     FillScreen((0,0,0))
     DisplayBackground()
-    place_text(Localization.GetLoc("Game.Loading"),0, height/2,100,(255,255,255),font=TextureManager.GetFont("aquire",100))
+    
+    logoTex = pygame.transform.scale(TextureManager.GetTexture("logos/SPFTR"),(height/2,height/2))
+    screen.blit(logoTex,((width-logoTex.get_width())/2, (height-logoTex.get_height())/2))
+    
+    place_text(Localization.GetLoc("Game.Loading"),0,-height/3,100,(255,255,255),font=TextureManager.GetFont("aquire",100),centerText=True)
     pygame.display.update()
 
 UIPopup=[]
