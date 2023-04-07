@@ -155,10 +155,17 @@ def forme2(x,y,w,wr,h,o,color=(47,48,51)):
 
 
 chunkTex=FunctionUtils.NumpyDict()
+chunkLimits=FunctionUtils.NumpyDict()
+unRefreshed=False
 def UpdateBackground():
     """
     Mise à jour du fond
     """
+    
+    global unRefreshed
+    
+    needsRefresh = False
+    
     zoom = SaveManager.GetZoom()*10#récupération du zoom
     cam = SaveManager.GetCamPos()#récupération de la position de la caméra
     env = SaveManager.GetEnvironmentType()
@@ -170,36 +177,78 @@ def UpdateBackground():
                 
                 worldPos = ScreenPosToWorldPos((Xpos,Ypos))
                 
-                if not str(worldPos) in chunkTex:
+                posCode = str(worldPos)
                 
-                    val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (0,0), 1)
+                if not posCode in chunkTex:
+                
+                    val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (SaveManager.GetSeed(),SaveManager.GetSeed()), 1)
                     
                     tex = "rock"
                     if env == PlanetGenerator.PlanetTypes.Dead:
                         tex = "sand"
-                        if 0.45<val<0.5:
-                            tex="rock-sand"
-                        if val < 0.5:
+                        if val > 0.5:
                             tex = "rock"
                     else:
                         if env == PlanetGenerator.PlanetTypes.Desertic:
-                            tex = "sand"
-                        else:
-                            tex = "grass"
-                        if 0.5 < val < 0.55:
-                            tex="rock-"+tex
-                        if 0.7>val > 0.55:
                             tex = "rock"
-                        if val > 0.7:
-                            tex = "water"
-                            
-                    chunkTex[str(worldPos)] = tex
+                            if val < 0.7:
+                                tex = "sand"
+                            if val < 0.34:
+                                tex = "water"
+                        else:
+                            tex = "rock"
+                            if val < 0.7:
+                                tex = "grass"
+                            if val < 0.4:
+                                tex = "sand"
+                            if val < 0.34:
+                                tex = "water"
+                    
+                    chunkTex[posCode] = tex
+                    
+                    needsRefresh = True
                 
-                screen.blit(TextureManager.GetTexture("ground/" + chunkTex[str(worldPos)], zoom), (Xpos, Ypos))#placement du fond
+                tex = chunkTex[posCode]
+                
+                screen.blit(TextureManager.GetTexture("ground/" + tex, zoom), (Xpos, Ypos))#placement du fond
 
-
-
+                if posCode not in chunkLimits or unRefreshed:
+                    
+                    limitTex = ""
+                    
+                    if tex != "sand":
+                        for x in range(-1,2):
+                            for y in range(-1,2):
+                                tPos = str((worldPos[0]-(x*10),worldPos[1]+(y*10)))
+                                if (x != 0 or y != 0) and tPos in chunkTex:
+                                    grabbedTex = chunkTex[tPos]
+                                    if grabbedTex != tex and grabbedTex in ["sand","rock"]:
+                                        limitTex += grabbedTex + str(x) + str(y) + ";"
+                    
+                    chunkLimits[posCode] = limitTex
+                
+                limitTex = chunkLimits[posCode]
+                if limitTex != "":
+                    if "ground/" + limitTex + ".png" not in TextureManager.loadedTextures:
+                        
+                        texture = None
+                        
+                        for t in limitTex.split(";"):
+                            if t != "":
+                                if texture == None:
+                                    texture = TextureManager.loadedTextures["ground/" + t + ".png"].copy()
+                                else:
+                                    texture.blit(TextureManager.loadedTextures["ground/" + t + ".png"],(0,0))
+                        
+                        TextureManager.loadedTextures["ground/" + limitTex + ".png"] = texture
+                        
+                            
+                    screen.blit(TextureManager.GetTexture("ground/" + limitTex, zoom), (Xpos, Ypos))#placement du fond
+                
                 #print("3. "+str(time.monotonic()))
+    
+    unRefreshed = needsRefresh
+    
 
 def ItemMenu():
     """

@@ -22,22 +22,14 @@ import TextureManager
 import PlanetGenerator
 
 openedMap = None
-background = None
 
 def OpenMap():
     global openedMap
-    global background
     
-    alreadyOpen = False
-    translateVal = 0
-    if openedMap == None:
-        screenFilter = pygame.Surface((UiManager.width,UiManager.height))
-        screenFilter.set_alpha(50)
-        background = pygame.display.get_surface().copy()
-        background.blit(screenFilter,(0,0))
-    else:
-        translateVal = openedMap.get_widget('oppList', recursive=True).get_scroll_value_percentage(pygame_menu.locals.ORIENTATION_VERTICAL)
-        alreadyOpen = True
+    screenFilter = pygame.Surface((UiManager.width,UiManager.height))
+    screenFilter.set_alpha(50)
+    background = pygame.display.get_surface().copy()
+    background.blit(screenFilter,(0,0))
     
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
@@ -64,8 +56,7 @@ def OpenMap():
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
     global currentOpportunity
-    if not alreadyOpen:
-        currentOpportunity = None
+    currentOpportunity = None
     
     for opportunity in SaveManager.mainData.opportunities:
         
@@ -73,9 +64,9 @@ def OpenMap():
         
         if opportunity.state != Opportunity.State.PROPOSED:
             path = "Assets/textures/ui/orange.png"
-            if opportunity.state == Opportunity.State.ONSITE:
+            if opportunity.state == Opportunity.State.WAITING:
                 path = "Assets/textures/ui/green.png"
-            if opportunity.state == Opportunity.State.RETURNING:
+            if opportunity.state == Opportunity.State.WORKING:
                 path = "Assets/textures/ui/blue.png"
             if opportunity.state == Opportunity.State.RETURNED:
                 path = "Assets/textures/ui/brown.png"
@@ -107,8 +98,6 @@ def OpenMap():
         
         listFrame.pack(menu.add.vertical_margin(5))
         
-        if alreadyOpen and opportunity == currentOpportunity:
-            b.select(update_menu=True)
     
     def OpenOpportunity(opportunity):
         title.set_title(opportunity.GetTitle())
@@ -156,10 +145,7 @@ def OpenMap():
             else:
                 label[i].set_title('')
     
-    if alreadyOpen:
-        listFrame.scrollv(translateVal)
-        OpenOpportunity(currentOpportunity)
-    elif len(SaveManager.mainData.opportunities) != 0:
+    if len(SaveManager.mainData.opportunities) != 0:
         OpenOpportunity(SaveManager.mainData.opportunities[0])
     
     def MenuTick():
@@ -181,9 +167,9 @@ def RefreshMenu():
         
         if opportunity.state != Opportunity.State.PROPOSED:
             path = "Assets/textures/ui/orange.png"
-            if opportunity.state == Opportunity.State.ONSITE:
+            if opportunity.state == Opportunity.State.WAITING:
                 path = "Assets/textures/ui/green.png"
-            if opportunity.state == Opportunity.State.RETURNING:
+            if opportunity.state == Opportunity.State.WORKING:
                 path = "Assets/textures/ui/blue.png"
             if opportunity.state == Opportunity.State.RETURNED:
                 path = "Assets/textures/ui/brown.png"
@@ -260,14 +246,28 @@ def Tick()->bool:
     for opportunity in SaveManager.mainData.opportunities:
         if opportunity.state != Opportunity.State.PROPOSED:
             beginTime = datetime.fromisoformat(opportunity.beginTime)
-            beginTime = beginTime.replace(second=(beginTime.second+5)%60)
+            
+            duration = opportunity.GetTravelDuration()
+            
+            arrivalTime = beginTime.replace(second=(beginTime.second+duration)%60)
+            
             now = datetime.now()
-            if now > beginTime:
+            
+            TravelAdvancement = (arrivalTime - now).total_seconds()
+            
+            nextInterruption = opportunity.GetNextInterruption()
+            
+            if TravelAdvancement > nextInterruption > opportunity.lastInterruption:
+                opportunity.RefreshActivitySeed()
+                opportunity.lastInterruption = nextInterruption
+                UiManager.Popup("Opportunité interrompue!")
+            
+            if now > arrivalTime:
                 if opportunity.state == Opportunity.State.GOING:
-                    opportunity.state = Opportunity.State.ONSITE
-                elif opportunity.state == Opportunity.State.ONSITE:
-                    opportunity.state = Opportunity.State.RETURNING
-                elif opportunity.state == Opportunity.State.RETURNING:
+                    opportunity.state = Opportunity.State.WAITING
+                elif opportunity.state == Opportunity.State.WAITING:
+                    opportunity.state = Opportunity.State.WORKING
+                elif opportunity.state == Opportunity.State.WORKING:
                     opportunity.state = Opportunity.State.RETURNED
                 else:
                     opportunity.state = Opportunity.State.PROPOSED
@@ -277,17 +277,25 @@ def Tick()->bool:
     return notedChange
 
 class Opportunity:
+    """
+    Classe permettant de stocker et gérer les opportunités
+    """
     
     class State:
+        """
+        Les différents états d'opportunités
+        """
         PROPOSED = 0
         GOING = 1
-        ONSITE = 2
-        RETURNING = 3
+        WAITING = 2
+        WORKING = 3
         RETURNED = 4
     
     def __init__(self):
         
         self.seed = random.randint(-9**9, 9**9)
+        
+        self.activitySeed = random.randint(-9**9, 9**9)
         
         self.distance = [random.randint(100,400),random.randint(80,240),random.randint(8,28),random.randint(200,800),random.randint(400,2000)][self.GetDescCodes()["distance"]]
         
@@ -295,10 +303,19 @@ class Opportunity:
         
         self.beginTime = datetime.now().isoformat()
         
+        self.team = {
+            "members" : 5,
+            "onRover" : False
+        }
+        
+        self.lastInterruption = 0
+        
         self.resources = None
         
     def GetDescCodes(self)->dict:
-        
+        """
+        Renvoie les codes de description. Utilisé pour générer la description et le titre de l'opportunité
+        """
         random.seed(self.seed)
         
         singular = random.choice([True,False])
@@ -323,7 +340,9 @@ class Opportunity:
         
         
     def GetDesc(self):
-        
+        """
+        Renvoie la description de l'opportunité
+        """
         descCodes = self.GetDescCodes()
         
         q = Localization.GetLoc("Opportunities.Quantity." + str(descCodes["quantity"]))
@@ -347,7 +366,9 @@ class Opportunity:
         return "".join(codes)
     
     def GetTitle(self):
-        
+        """
+        Renvoie le titre de l'opportunité
+        """
         descCodes = self.GetDescCodes()
         
         possibleTitles = []
@@ -371,16 +392,51 @@ class Opportunity:
         return Localization.GetLoc("Opportunities.Title." + str(random.choice(possibleTitles)))
     
     def GetDistance(self):
+        """
+        Renvoie la distance brute en kilomètres
+        """
         return self.distance
     
     def GetWalkDistance(self):
+        """
+        Renvoie le temps de marche en heures
+        """
         return self.GetDistance()//4
     
     def GetDriveDistance(self):
+        """
+        Renvoie le temps de route en heures
+        """
         return self.GetDistance()//40
     
+    def GetTravelDuration(self):
+        """
+        Renvoie le temps de trajet en heures
+        """
+        return self.GetDriveDistance() if self.team["onRover"] else self.GetWalkDistance()
+    
+    def RefreshActivitySeed(self):
+        """
+        Met à jour la graine d'activité
+        """
+        random.seed(self.activitySeed)
+        self.activitySeed = random.randint(-9**9, 9**9)
+    
     def Begin(self):
+        """
+        Lance l'opportunité
+        """
         self.state = Opportunity.State.GOING
         self.beginTime = datetime.now().isoformat()
+        self.RefreshActivitySeed()
 
+    def GetNextInterruption(self):
+        """
+        Renvoie à quel moment la prochaine interruption aura lieu
+        """
+        random.seed(self.activitySeed)
+        
+        if random.choice((True,False)):
+            return random.randint(0, self.GetTravelDuration())
+        return 0
 
