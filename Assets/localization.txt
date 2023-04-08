@@ -70,6 +70,7 @@ Settings.Keys.left : Gauche
 Settings.Keys.right : Droite
 Settings.Keys.rotate : Tourner
 Settings.Keys.inv : Inventaire
+Settings.Keys.opportunities : Opportunités
 Settings.EditKey : Changer la touche
 Settings.EditKey.Current : Touche actuelle: %$1
 Settings.Reset : Réinitialiser les paramètres

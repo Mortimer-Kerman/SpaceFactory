@@ -19,7 +19,7 @@ import OpportunitiesManager
 import Localization as L
 import FunctionUtils
 
-SaveFileVersion="f0.14"
+SaveFileVersion="f0.15"
 
 difficultiesDict = {0: 'Saves.Difficulty.Easy',
                     1: 'Saves.Difficulty.Normal',

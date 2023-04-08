@@ -9,7 +9,7 @@ import pygame
 import pygame_menu
 
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import SettingsManager
 import SaveManager
@@ -60,19 +60,7 @@ def OpenMap():
     
     for opportunity in SaveManager.mainData.opportunities:
         
-        color = (50, 50, 50)
-        
-        if opportunity.state != Opportunity.State.PROPOSED:
-            path = "Assets/textures/ui/orange.png"
-            if opportunity.state == Opportunity.State.WAITING:
-                path = "Assets/textures/ui/green.png"
-            if opportunity.state == Opportunity.State.WORKING:
-                path = "Assets/textures/ui/blue.png"
-            if opportunity.state == Opportunity.State.RETURNED:
-                path = "Assets/textures/ui/brown.png"
-            color = pygame_menu.baseimage.BaseImage(path, drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
-        
-        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=color, padding=0, frame_id=str(opportunity.seed))
+        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=(50, 50, 50), padding=0, frame_id=str(opportunity.seed))
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
@@ -82,17 +70,7 @@ def OpenMap():
         
         oppFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
         
-        if opportunity.GetWalkDistance() >= 24:
-            distance = round(opportunity.GetWalkDistance()/24)
-            suffix = " jour"
-        else :
-            distance = opportunity.GetWalkDistance()
-            suffix = " heure"
-        if distance > 1:
-            suffix += "s"
-        distance = str(distance) + suffix
-        
-        subtext = menu.add.label("Temps de voyage: " + distance, font_name=TextureManager.GetFont("nasalization",int(columnW/27)),font_color=(255,255,255))
+        subtext = menu.add.label("Temps de voyage: " + Opportunity.FormatTravelTime(opportunity.GetWalkDistance()), font_name=TextureManager.GetFont("nasalization",int(columnW/27)),font_color=(255,255,255))
         #subtext.set_font(TextureManager.nasalization, 11, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         
@@ -104,7 +82,7 @@ def OpenMap():
         SetLabelText(opportunity.GetDesc())
         global currentOpportunity
         currentOpportunity = opportunity
-        UpdateOppButtonTitle()
+        RefreshMenu()
     
     detailsFrame = menu.add.frame_v(columnW, h, max_height=h, padding=0)
     detailsFrame.relax(True)
@@ -149,8 +127,14 @@ def OpenMap():
     if len(SaveManager.mainData.opportunities) != 0:
         OpenOpportunity(SaveManager.mainData.opportunities[0])
     
+    global runtime
+    runtime = 0
     def MenuTick():
-        if Tick():
+        global runtime
+        SaveManager.clock.tick()
+        runtime+=SaveManager.clock.get_time() / 8
+        if Tick() or runtime > 50:
+            runtime = 0
             RefreshMenu()
     
     menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick()))
@@ -173,6 +157,20 @@ def RefreshMenu():
             if opportunity.state == Opportunity.State.RETURNED:
                 path = "Assets/textures/ui/brown.png"
             color = pygame_menu.baseimage.BaseImage(path, drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
+        
+        
+        subText = "Temps de voyage: " + Opportunity.FormatTravelTime(opportunity.GetWalkDistance())
+        
+        if opportunity.state == Opportunity.State.GOING:
+            subText = "Temps de voyage: " + Opportunity.FormatTravelTime(opportunity.GetLeftActivityTime())
+        if opportunity.state == Opportunity.State.WAITING:
+            subText = "L'expédition attend vos ordres..."
+        if opportunity.state == Opportunity.State.WORKING:
+            subText = "Temps de travail: " + Opportunity.FormatTravelTime(opportunity.GetLeftActivityTime())
+        if opportunity.state == Opportunity.State.RETURNED:
+            subText = "L'expédition est rentrée!"
+        
+        frame.get_widgets()[2].set_title(subText)
             
         frame.set_background_color(color)
     openedMap.force_surface_update()
@@ -186,14 +184,30 @@ def ManageExpeditionAccordingly():
     if currentOpportunity.state == Opportunity.State.PROPOSED:
         OpenExpeditionLauncher()
     elif currentOpportunity.state == Opportunity.State.GOING:
-        pass
+        if not currentOpportunity.IsReturning():
+            currentOpportunity.Recall()
+            RefreshMenu()
     elif currentOpportunity.state == Opportunity.State.WAITING:
-        currentOpportunity.SetState(Opportunity.State.WORKING)
+        print(currentOpportunity.lastInterruption)
+        print(currentOpportunity.GetTravelDuration())
+        if currentOpportunity.lastInterruption == currentOpportunity.GetTravelDuration():
+            if currentOpportunity.IsReturning():
+                currentOpportunity.SetState(Opportunity.State.GOING)
+                currentOpportunity.SetActivityDuration(currentOpportunity.GetTravelDuration())
+            else:
+                lastInterruption = currentOpportunity.lastInterruption
+                currentOpportunity.SetState(Opportunity.State.WORKING)
+                currentOpportunity.lastInterruption = lastInterruption
+                currentOpportunity.SetActivityDuration(10)
+        else:
+            lastInterruption = currentOpportunity.lastInterruption
+            currentOpportunity.SetState(Opportunity.State.GOING)
+            currentOpportunity.SetBeginTime(datetime.now() - timedelta(seconds=lastInterruption))
         RefreshMenu()
     elif currentOpportunity.state == Opportunity.State.WORKING:
         pass
     else:
-        currentOpportunity.SetState(Opportunity.State.PROPOSED)
+        currentOpportunity.Dissolve()
         RefreshMenu()
 
 def OpenExpeditionLauncher():
@@ -214,39 +228,18 @@ def OpenExpeditionLauncher():
     
     menu.add.vertical_margin(50)
     
-    menu.add.range_slider("Nombre de membres: ", 5, (2, 10), 1, value_format=lambda x: str(int(x)), align=pygame_menu.locals.ALIGN_LEFT)
+    memberSlider = menu.add.range_slider("Nombre de membres: ", 5, (2, 10), 1, value_format=lambda x: str(int(x)), align=pygame_menu.locals.ALIGN_LEFT)
     
     def SetTravelTime(Rover:bool):
-        if Rover:
-            if currentOpportunity.GetDriveDistance() >= 24:
-                distance = round(currentOpportunity.GetDriveDistance()/24)
-                suffix = " jour"
-            else :
-                distance = currentOpportunity.GetDriveDistance()
-                suffix = " heure"
-            if distance > 1:
-                suffix += "s"
-            distance = str(distance) + suffix
-            travelTimeLabel.set_title("Temps de route: " + distance)
-        else:
-            if currentOpportunity.GetWalkDistance() >= 24:
-                distance = round(currentOpportunity.GetWalkDistance()/24)
-                suffix = " jour"
-            else :
-                distance = currentOpportunity.GetWalkDistance()
-                suffix = " heure"
-            if distance > 1:
-                suffix += "s"
-            distance = str(distance) + suffix
-            travelTimeLabel.set_title("Temps de marche: " + distance)
+        travelTimeLabel.set_title("Temps de route: " + Opportunity.FormatTravelTime(currentOpportunity.GetDriveDistance() if Rover else currentOpportunity.GetWalkDistance()))
     
-    menu.add.toggle_switch('Moyen de transport', state_text=('A pied', 'Rover'), state_color=((100, 100, 100), (100, 100, 100)), onchange=SetTravelTime)
+    roverToggle = menu.add.toggle_switch('Moyen de transport', state_text=('A pied', 'Rover'), state_color=((100, 100, 100), (100, 100, 100)), onchange=SetTravelTime)
     
     travelTimeLabel = menu.add.label("")
     
     menu.add.vertical_margin(50)
     
-    menu.add.button(Localization.GetLoc('Opportunities.StartExpedition'),lambda:(currentOpportunity.Begin(),menu.disable(),RefreshMenu()))
+    menu.add.button(Localization.GetLoc('Opportunities.StartExpedition'),lambda:(currentOpportunity.Begin(memberSlider.get_value(),roverToggle.get_value()),menu.disable(),RefreshMenu()))
     
     SetTravelTime(False)
     
@@ -263,7 +256,10 @@ def UpdateOppButtonTitle():
         
         title = 'Opportunities.StartAnExpedition'
         if currentOpportunity.state == Opportunity.State.GOING:
-            title = 'Rappeler'
+            if currentOpportunity.IsReturning():
+                title = "L'expédition rentre à la base..."
+            else:
+                title = 'Rappeler'
         elif currentOpportunity.state == Opportunity.State.WAITING:
             title = "Lire le rapport"
         elif currentOpportunity.state == Opportunity.State.WORKING:
@@ -276,33 +272,40 @@ def UpdateOppButtonTitle():
 def Tick()->bool:
     notedChange = False
     for opportunity in SaveManager.mainData.opportunities:
-        if opportunity.state != Opportunity.State.PROPOSED:
-            beginTime = datetime.fromisoformat(opportunity.beginTime)
+        if opportunity.state not in [Opportunity.State.PROPOSED,Opportunity.State.WAITING,Opportunity.State.RETURNED]:
             
-            duration = opportunity.GetTravelDuration()
+            beginTime = opportunity.GetBeginTime()
             
-            arrivalTime = beginTime.replace(second=(beginTime.second+duration)%60)
+            duration = opportunity.GetActivityDuration()
+            
+            arrivalTime = beginTime + timedelta(seconds=duration)
             
             now = datetime.now()
             
-            TravelAdvancement = (arrivalTime - now).total_seconds()
+            TravelAdvancement = duration - opportunity.GetLeftActivityTime()
             
             nextInterruption = opportunity.GetNextInterruption()
             
             if TravelAdvancement > nextInterruption > opportunity.lastInterruption:
                 opportunity.RefreshActivitySeed()
-                opportunity.lastInterruption = nextInterruption
                 opportunity.SetState(Opportunity.State.WAITING)
+                opportunity.lastInterruption = nextInterruption
                 UiManager.Popup("Opportunité interrompue!")
-                
+                notedChange = True
             
             if now > arrivalTime:
                 if opportunity.state == Opportunity.State.GOING:
-                    opportunity.SetState(Opportunity.State.WAITING)
+                    if opportunity.IsReturning():
+                        opportunity.SetState(Opportunity.State.RETURNED)
+                    else:
+                        opportunity.SetState(Opportunity.State.WAITING)
+                        opportunity.lastInterruption = opportunity.GetTravelDuration()
+                    
                 elif opportunity.state == Opportunity.State.WORKING:
-                    opportunity.SetState(Opportunity.State.RETURNED)
-                
-                opportunity.beginTime = now.isoformat()
+                    lastInterruption = opportunity.lastInterruption
+                    opportunity.SetState(Opportunity.State.WAITING)
+                    opportunity.lastInterruption = lastInterruption
+                    opportunity.Recall()
                 notedChange = True
     return notedChange
 
@@ -331,7 +334,11 @@ class Opportunity:
         
         self.state = Opportunity.State.PROPOSED
         
+        self.returning = False
+        
         self.beginTime = datetime.now().isoformat()
+        
+        self.activityDuration = 0
         
         self.team = {
             "members" : 5,
@@ -369,7 +376,7 @@ class Opportunity:
         }
         
         
-    def GetDesc(self):
+    def GetDesc(self)->str:
         """
         Renvoie la description de l'opportunité
         """
@@ -395,7 +402,7 @@ class Opportunity:
         
         return "".join(codes)
     
-    def GetTitle(self):
+    def GetTitle(self)->str:
         """
         Renvoie le titre de l'opportunité
         """
@@ -421,29 +428,67 @@ class Opportunity:
         
         return Localization.GetLoc("Opportunities.Title." + str(random.choice(possibleTitles)))
     
-    def GetDistance(self):
+    def GetDistance(self)->int:
         """
         Renvoie la distance brute en kilomètres
         """
         return self.distance
     
-    def GetWalkDistance(self):
+    def GetWalkDistance(self)->int:
         """
         Renvoie le temps de marche en heures
         """
         return self.GetDistance()//4
     
-    def GetDriveDistance(self):
+    def GetDriveDistance(self)->int:
         """
         Renvoie le temps de route en heures
         """
         return self.GetDistance()//40
     
-    def GetTravelDuration(self):
+    def GetTravelDuration(self)->int:
         """
         Renvoie le temps de trajet en heures
         """
-        return self.GetDriveDistance() if self.team["onRover"] else self.GetWalkDistance()
+        return self.GetDriveDistance() if self.IsOnRover() else self.GetWalkDistance()
+    
+    def FormatTravelTime(travelTime:int)->str:
+        """
+        Renvoie un temps de trajet formatté
+        """
+        hours = travelTime%24
+        days = travelTime//24
+        
+        result = ""
+        
+        if days > 0:
+            result += str(days) + " " + ("jour" if days == 1 else "jours")
+        if hours > 0:
+            if days > 0:
+                result += " "
+            result += str(hours) + " " + ("heure" if hours == 1 else "heures")
+        
+        return result
+    
+    def GetActivityDuration(self)->int:
+        """
+        Renvoie la durée de l'activité actuelle
+        """
+        return self.activityDuration
+    
+    def SetActivityDuration(self,duration:int):
+        """
+        Règle la durée de l'activité actuelle
+        """
+        self.activityDuration = duration
+    
+    def GetLeftActivityTime(self)->int:
+        """
+        Renvoie le temps d'activité restant
+        """
+        beginTime = self.GetBeginTime()
+        now = datetime.now()
+        return self.GetActivityDuration() - round((now-beginTime).total_seconds())
     
     def RefreshActivitySeed(self):
         """
@@ -452,20 +497,23 @@ class Opportunity:
         random.seed(self.activitySeed)
         self.activitySeed = random.randint(-9**9, 9**9)
     
-    def Begin(self):
+    def Begin(self,teamMembers=5,onRover=False):
         """
         Lance l'opportunité
         """
+        self.team["members"] = teamMembers
+        self.team["onRover"] = onRover
         self.SetState(Opportunity.State.GOING)
+        self.SetActivityDuration(self.GetTravelDuration())
 
-    def GetNextInterruption(self):
+    def GetNextInterruption(self)->float:
         """
         Renvoie à quel moment la prochaine interruption aura lieu
         """
         random.seed(self.activitySeed)
         
         if random.choice((True,False)):
-            return random.randint(0, self.GetTravelDuration())
+            return random.randint(0, self.GetActivityDuration())
         return 0
 
     def SetState(self,state):
@@ -473,11 +521,108 @@ class Opportunity:
         Règle l'état de l'opportunité
         """
         self.state = state
-        self.beginTime = datetime.now().isoformat()
+        self.SetBeginTime(datetime.now())
         self.RefreshActivitySeed()
+        self.lastInterruption = 0
         
-    def IsTravelling(self):
+    def IsTravelling(self)->bool:
         """
         Dit si l'expédition est en train de voyager
         """
         return self.state == Opportunity.State.GOING
+    
+    def GetBeginTime(self)->datetime:
+        """
+        Renvoie la date de l'ordinateur au début de l'activité actuelle
+        """
+        return datetime.fromisoformat(self.beginTime)
+    
+    def SetBeginTime(self,date:datetime):
+        """
+        Règle la date de l'ordinateur au début de l'activité actuelle
+        """
+        self.beginTime = date.isoformat()
+    
+    def Recall(self):
+        """
+        Rappelle l'expédition.
+        Elle ne revient pas directement à la base, mais la destination du prochain trajet (ou du trajet actuel) sera la base.
+        """
+        if self.IsTravelling() and not self.IsReturning():
+            self.SetActivityDuration(self.GetActivityDuration() - self.GetLeftActivityTime())
+            self.SetBeginTime(datetime.now())
+        self.returning = True
+        
+    def Dissolve(self):
+        """
+        Dissout l'expédition et transfère ses membres et ses ressources vers la base.
+        """
+        self.SetState(Opportunity.State.PROPOSED)
+        self.SetActivityDuration(0)
+        self.returning = False
+        self.resources = None
+        self.team["members"] = 5
+        self.team["onRover"] = False
+
+    def GetMembersAmount(self):
+        """
+        Renvoie le nombre de membres de l'expédition
+        """
+        return self.team["members"]
+
+    def IsOnRover(self)->bool:
+        """
+        Dit si l'expédition se déplace en rover
+        """
+        return self.team["onRover"]
+
+    def IsReturning(self)->bool:
+        """
+        Dit si l'expédition est sur le chemin du retour
+        """
+        return self.returning
+
+
+class ExpeditionInteraction:
+    """
+    Classe permettant de gérer les interactions avec les opportunités
+    """
+    
+    def __init__(self,seed:int,isInterruption:bool,opportunity):
+        self.seed = seed
+        self.isInterruption = isInterruption
+        self.firstChoicePlayed = False
+        
+        if isInterruption:
+            self.message = "Sur le chemin, l'équipe a découvert que c'était la merde. Que faire?"
+            self.resultMessage = "L'équipe considère que c'est plus la merde, et continue."
+        else:
+            self.message = "L'équipe est arrivée à destination ! Cependant, c'est la merde. Que faire?"
+            self.resultMessage = "YOLO ON EST PÉTÉS DE THUNES"
+        
+    def Play(self,playResult=False):
+        """
+        Ouvre un menu pour utiliser l'interaction
+        """
+        if playResult and not self.firstChoicePlayed:
+            return
+        
+        
+        
+        self.firstChoicePlayed = True
+        
+    def IsInterruption(self):
+        """
+        Dit si cette interaction est une interruption de trajet
+        """
+        return self.isInterruption
+
+
+
+
+
+
+
+
+
+

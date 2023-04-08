@@ -174,7 +174,7 @@ def HandleShortKeyInputs(key):
         UiManager.TakeScreenshot()
     if key == SettingsManager.GetKeybind("inv"):
         UiManager.showMenu["inv"]=1-UiManager.showMenu["inv"]
-    if key == pygame.K_m:
+    if key == SettingsManager.GetKeybind("opportunities"):
         OpportunitiesManager.OpenMap()
     if key == pygame.K_t:
         TaskManager.showMenu()

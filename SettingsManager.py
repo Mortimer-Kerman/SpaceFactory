@@ -28,7 +28,8 @@ def DefaultSettingsInstance():
             "left": pygame.K_q,
             "right": pygame.K_d,
             "rotate": pygame.K_r,
-            "inv": pygame.K_i
+            "inv": pygame.K_i,
+            "opportunities" : pygame.K_m
         }
     }
 
@@ -151,7 +152,7 @@ def OpenSettings(background):
     SettingsMenu.add.range_slider(Localization.GetLoc('Settings.MusicVolume'), GetSetting("musicVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.music.set_volume(int(x)/100),SetSetting("musicVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
     SettingsMenu.add.range_slider(Localization.GetLoc('Settings.GameVolume'), GetSetting("gameVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:SetSetting("gameVolume", int(x)), align=pygame_menu.locals.ALIGN_LEFT)
     
-    SettingsMenu.add.toggle_switch(Localization.GetLoc('Settings.NiceBiomeBorders'), GetSetting("niceBiomeBorders"), state_text=(Localization.GetLoc('Settings.NiceBiomeBorders.False'), Localization.GetLoc('Settings.NiceBiomeBorders.True')), onchange=lambda x:(SetSetting("niceBiomeBorders", x),UiManager.ForceBackgroundRefresh()))
+    SettingsMenu.add.toggle_switch(Localization.GetLoc('Settings.NiceBiomeBorders'), GetSetting("niceBiomeBorders"), state_text=(Localization.GetLoc('Settings.NiceBiomeBorders.False'), Localization.GetLoc('Settings.NiceBiomeBorders.True')), onchange=lambda x:(SetSetting("niceBiomeBorders", x),UiManager.ForceBackgroundRefresh()),align=pygame_menu.locals.ALIGN_LEFT)
     
     SettingsMenu.add.vertical_margin(20)
     
@@ -186,7 +187,7 @@ def ChangeKey(KeyButton,KeyId,background):
     
     KeyChanger = pygame_menu.Menu(Localization.GetLoc('Settings.EditKey'), 400, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
-    KeyChanger.add.label(KeyId)
+    KeyChanger.add.label(Localization.GetLoc('Settings.Keys.'+KeyId))
     KeyChanger.add.label(Localization.GetLoc('Settings.EditKey.Current',keyName))
     
     def kLoop():
