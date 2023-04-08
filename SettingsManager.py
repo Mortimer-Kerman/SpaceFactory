@@ -172,7 +172,7 @@ def OpenSettings(background):
         for i in range(leak):
             name = " " + name + " "
         
-        button = SettingsMenu.add.button(name)
+        button = SettingsMenu.add.button(name).resize(100, 50,True)
         frame.pack(button, align=pygame_menu.locals.ALIGN_RIGHT)
         button.set_onreturn(lambda btn=button,kname=key:ChangeKey(btn,kname,background))
     
