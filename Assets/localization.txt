@@ -17,6 +17,7 @@ Game.Warning : Attention
 Game.Confirm : Confirmer
 Game.Cancel : Annuler
 Game.Loading : Chargement...
+Game.Ok : Ok
 
 //Menu des sauvegardes
 Saves.Title : Sauvegardes

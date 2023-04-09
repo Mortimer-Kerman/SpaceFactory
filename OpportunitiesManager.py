@@ -20,6 +20,7 @@ import numpy
 import Localization
 import TextureManager
 import PlanetGenerator
+import OpportunitiesInteractions
 
 openedMap = None
 
@@ -182,27 +183,20 @@ def ManageExpeditionAccordingly():
         return
     
     if currentOpportunity.state == Opportunity.State.PROPOSED:
+        #PlayExpeditionInteraction(currentOpportunity,InteractionType.ONSITE)
         OpenExpeditionLauncher()
     elif currentOpportunity.state == Opportunity.State.GOING:
         if not currentOpportunity.IsReturning():
             currentOpportunity.Recall()
             RefreshMenu()
     elif currentOpportunity.state == Opportunity.State.WAITING:
-        print(currentOpportunity.lastInterruption)
-        print(currentOpportunity.GetTravelDuration())
         if currentOpportunity.lastInterruption == currentOpportunity.GetTravelDuration():
             if currentOpportunity.IsReturning():
-                currentOpportunity.SetState(Opportunity.State.GOING)
-                currentOpportunity.SetActivityDuration(currentOpportunity.GetTravelDuration())
+                PlayExpeditionInteraction(currentOpportunity,InteractionType.ONSITERESULT)
             else:
-                lastInterruption = currentOpportunity.lastInterruption
-                currentOpportunity.SetState(Opportunity.State.WORKING)
-                currentOpportunity.lastInterruption = lastInterruption
-                currentOpportunity.SetActivityDuration(10)
+                PlayExpeditionInteraction(currentOpportunity,InteractionType.ONSITE)
         else:
-            lastInterruption = currentOpportunity.lastInterruption
-            currentOpportunity.SetState(Opportunity.State.GOING)
-            currentOpportunity.SetBeginTime(datetime.now() - timedelta(seconds=lastInterruption))
+            PlayExpeditionInteraction(currentOpportunity,InteractionType.INTERRUPTION)
         RefreshMenu()
     elif currentOpportunity.state == Opportunity.State.WORKING:
         pass
@@ -583,6 +577,18 @@ class Opportunity:
         """
         return self.returning
 
+    def GetLastChoiceMade(self)->int:
+        """
+        Renvoie le dernier choix fait.
+        Si aucun choix n'a été fait ou si le joueur a déjà prit conaissance des conséquences de son choix, cette fonction renverra None.
+        """
+        return self.lastChoiceMade
+    
+    def SetLastChoiceMade(self,choiceIndex:int):
+        """
+        Définit le dernier choix fait par le joueur.
+        """
+        self.lastChoiceMade = choiceIndex
 
 class InteractionType:
     """
@@ -598,6 +604,16 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
     """
     Ouvre un menu permettant d'interagir avec les opportunités
     """
+    interaction = OpportunitiesInteractions.GetRandomInteraction(opportunity, interactionType)
+    
+    if interactionType in [InteractionType.ONSITERESULT,InteractionType.INTERRUPTIONRESULT]:
+        
+        interaction.GetOptions()[opportunity.lastChoiceMade][1](opportunity)
+        
+        opportunity.SetLastChoiceMade(None)
+        
+        return
+    
     screenFilter = pygame.Surface((UiManager.width,UiManager.height))
     screenFilter.set_alpha(50)
     background = pygame.display.get_surface().copy()
@@ -605,14 +621,57 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
     
-    menu = pygame_menu.Menu(currentOpportunity.GetTitle(), 400, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    menu = pygame_menu.Menu(currentOpportunity.GetTitle(), 800, 600, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)#le thème du menu
     
+    srf = interaction.GetImage()
+    srf = pygame.transform.scale(srf,(550,srf.get_height()*550/srf.get_width()))
     
+    menu.add.surface(srf)
     
+    label = menu.add.label("\n\n\n\n\n\n",font_size=15)
     
+    lines = interaction.GetMessage().split("\n")
+    for i in range(7):
+        if i < len(lines):
+            label[i].set_title(lines[i])
+        else:
+            label[i].set_title('')
     
+    #SetLabelText("Voici une longue description de ce qui attend l'expédition.\nDe nombreux détails peuvent être fournis afin de donner un rendu sympa.\nCa le fait?")
     
+    menu.add.vertical_margin(5)
+    
+    bottomBar=menu.add.frame_h(400, 50, padding=0)
+    bottomBar.relax(True)
+    """
+    bottomBar.pack(menu.add.button("Action 1",font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
+    bottomBar.pack(menu.add.button("Action 2",font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
+    bottomBar.pack(menu.add.button("Action 3",font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
+    """
+    
+    options = interaction.GetOptions()
+    
+    for i in range(len(options)):
+        option = options[i]
+        
+        
+        activityTime = None
+        if interactionType == InteractionType.ONSITE:
+            activityTime = option[2]
+        
+        if interactionType == InteractionType.INTERRUPTION or activityTime == None:
+            result = lambda res=option[1]:(menu.disable(),res(opportunity))
+        else:
+            
+            def BeginOnSiteActivity(opportunity,duration:int):
+                lastInterruption = opportunity.lastInterruption
+                opportunity.SetState(Opportunity.State.WORKING)
+                opportunity.lastInterruption = lastInterruption
+                opportunity.SetActivityDuration(duration)
+            
+            result = lambda choice=i,t=activityTime:(menu.disable(),opportunity.SetLastChoiceMade(choice),BeginOnSiteActivity(opportunity,activityTime))
+        
+        bottomBar.pack(menu.add.button(option[0],result,font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
     
     menu.mainloop(UiManager.screen, DisplayBackground)
 
