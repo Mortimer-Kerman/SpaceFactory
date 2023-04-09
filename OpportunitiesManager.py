@@ -346,6 +346,7 @@ class Opportunity:
         }
         
         self.lastInterruption = 0
+        self.lastChoiceMade
         
         self.resources = None
         
@@ -583,42 +584,37 @@ class Opportunity:
         return self.returning
 
 
-class ExpeditionInteraction:
+class InteractionType:
     """
-    Classe permettant de gérer les interactions avec les opportunités
+    Les différents types d'interactions
     """
+    ONSITE=0
+    ONSITERESULT=1
+    INTERRUPTION=2
+    INTERRUPTIONRESULT=3
     
-    def __init__(self,seed:int,isInterruption:bool,opportunity):
-        self.seed = seed
-        self.isInterruption = isInterruption
-        self.firstChoicePlayed = False
-        
-        if isInterruption:
-            self.message = "Sur le chemin, l'équipe a découvert que c'était la merde. Que faire?"
-            self.resultMessage = "L'équipe considère que c'est plus la merde, et continue."
-        else:
-            self.message = "L'équipe est arrivée à destination ! Cependant, c'est la merde. Que faire?"
-            self.resultMessage = "YOLO ON EST PÉTÉS DE THUNES"
-        
-    def Play(self,playResult=False):
-        """
-        Ouvre un menu pour utiliser l'interaction
-        """
-        if playResult and not self.firstChoicePlayed:
-            return
-        
-        
-        
-        self.firstChoicePlayed = True
-        
-    def IsInterruption(self):
-        """
-        Dit si cette interaction est une interruption de trajet
-        """
-        return self.isInterruption
 
-
-
+def PlayExpeditionInteraction(opportunity,interactionType:int):
+    """
+    Ouvre un menu permettant d'interagir avec les opportunités
+    """
+    screenFilter = pygame.Surface((UiManager.width,UiManager.height))
+    screenFilter.set_alpha(50)
+    background = pygame.display.get_surface().copy()
+    background.blit(screenFilter,(0,0))
+    def DisplayBackground():
+        UiManager.screen.blit(background,(0,0))
+    
+    menu = pygame_menu.Menu(currentOpportunity.GetTitle(), 400, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
+    menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    
+    
+    
+    
+    
+    
+    menu.mainloop(UiManager.screen, DisplayBackground)
 
 
 

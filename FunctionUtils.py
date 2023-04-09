@@ -7,6 +7,7 @@ Created on Sun Mar 12 21:13:26 2023
 import pygame
 import pygame_menu
 
+import math
 import numpy as np
 
 def clamp(val:float,minv:float,maxv:float)->float:
@@ -73,6 +74,12 @@ def GetSign(n:float)->int:
     if n < 0:
         return -1
     return 0
+
+def Distance(a:tuple,b:tuple):
+    """
+    Calcul de distance entre deux positions
+    """
+    return math.sqrt(((b[0]-a[0])**2) + ((b[1]-a[1])**2))
 
 def StretchSurfaceToSurface(target:pygame.Surface,source:pygame.Surface):
     source = pygame.transform.scale(source, target.get_size())
