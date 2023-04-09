@@ -32,6 +32,9 @@ class OpportunityInteraction:
         ("Explorer la zone pendant 5h",lambda o:InteractionResult.OpenResultPanel(o,"L'expédition a exploré la zone, sans résultat.","interactionBackgrounds/impactCrater"),5),
         ("Explorer la zone pendant 10h",lambda o:InteractionResult.OpenResultPanel(o,"L'expédition a trouvé des ressources!","interactionBackgrounds/impactCrater"),10),
         ("Faire demi tour",lambda o:InteractionResult.ReturnToBase(o),None),
+        
+    Attention: TOUT doit être précisé. Si à la fin d'une activité sur site vous ne précisez pas que l'expédition doit repartir, rien ne se passe.
+    Même chose si vous ne précisez pas que l'équipe doit continuer son trajet après une interruption.
     """
     
 
