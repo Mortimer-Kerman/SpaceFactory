@@ -346,7 +346,7 @@ class Opportunity:
         }
         
         self.lastInterruption = 0
-        self.lastChoiceMade
+        self.lastChoiceMade = None
         
         self.resources = None
         
