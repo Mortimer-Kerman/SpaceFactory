@@ -28,11 +28,18 @@ class OpportunityInteraction:
         ("Revenir à la base",lambda o: InteractionResult.ReturnToBase(o)),
         ("Continuer",lambda o: InteractionResult.AddDistanceToPath(o, 15)),
     
+    C'est un tuple avec comme première valeur le texte du bouton et seconde valeur le code à exécuter lorsque le bouton est pressé.
+    
     Format des options sur site:
         ("Explorer la zone moins de 5h",lambda o:InteractionResult.OpenResultPanel(o,"L'expédition a exploré la zone, sans résultat.","interactionBackgrounds/impactCrater"),(3,5)),
         ("Explorer la zone pendant 10h",lambda o:InteractionResult.OpenResultPanel(o,"L'expédition a trouvé des ressources!","interactionBackgrounds/impactCrater"),10),
         ("Faire demi tour",lambda o:InteractionResult.ReturnToBase(o),None),
         
+    Comme les interruptions, sauf qu'une troisième valeur vient s'y attacher. Elle peut être:
+        -Un entier, pour symboliser une durée stricte de l'activité
+        -Un tuple, pour pouvoir choisir une durée aléatoire entre les deux
+        -None, pour pouvoir exécuter directement le code au lieu de faire une activité
+    
     Attention: TOUT doit être précisé. Si à la fin d'une activité sur site vous ne précisez pas que l'expédition doit repartir, rien ne se passe.
     Même chose si vous ne précisez pas que l'équipe doit continuer son trajet après une interruption.
     """
@@ -128,6 +135,22 @@ class InteractionResult:
         """
         opportunity.team["members"] += amount
 
+    def EndExpedition(opportunity,recoverTeam:bool):
+        """
+        Met directement fin à l'expédition.
+        Utile pour simuler une catastrophe ayant mis fin à la vie de l'équipe ou pour simuler sa récupération par une autre équipe.
+        """
+        if recoverTeam:
+            opportunity.Dissolve()
+            return
+        
+        opportunity.SetState(OpportunitiesManager.Opportunity.State.PROPOSED)
+        opportunity.SetActivityDuration(0)
+        opportunity.returning = False
+        opportunity.resources = None
+        opportunity.team["members"] = 5
+        opportunity.team["onRover"] = False
+
     def ReturnToBase(opportunity):
         """
         Met l'expédtion sur le chemin du retour, indépendamment du contexte.
@@ -196,10 +219,14 @@ onSiteInteractions=[
                            ("Rebrousser chemin",
                             lambda o:InteractionResult.ReturnToBase(o),
                             None),
-                           ("Explorer la zone pendant 5h",
+                           ("Explorer la zone moins de 5h",
                             lambda o:(InteractionResult.OpenResultPanel(o,"L'expédition a exploré la zone, sans résultat.","interactionBackgrounds/impactCrater"),
                                       InteractionResult.ReturnToBase(o)),
-                            5),
+                            (3,5)),
+                           ("Explorer la zone pendant 24h",
+                            lambda o:(InteractionResult.OpenResultPanel(o,"8h après être entré dans le bassin, des capteurs sismiques sur toute la planète ont\nenregistré un séisme de magnitude 9,7 sur l'échelle de Richter au cœur de la zone.\nLes images satellites confirment l'impact d'une immense sidérite au cœur du bassin.\n\nLes membres de l'équipe sont tous déclarés comme morts.","interactionBackgrounds/impactCrater"),
+                                      InteractionResult.EndExpedition(o,False)),
+                            24),
                            ),
 ]
 
