@@ -44,9 +44,6 @@ class OpportunityInteraction:
     Même chose si vous ne précisez pas que l'équipe doit continuer son trajet après une interruption.
     """
     
-
-        
-    
     def __init__(self,message:str,imagePath:str,tags:dict,*args):
         self.message = message
         self.imagePath = imagePath
@@ -200,7 +197,7 @@ class InteractionResult:
         
         label = menu.add.label("\n\n\n\n\n\n",font_size=15)
         
-        lines = message.split("\n")
+        lines = Localization.GetLoc(message).split("\n")
         for i in range(7):
             if i < len(lines):
                 label[i].set_title(lines[i])
@@ -214,32 +211,32 @@ class InteractionResult:
         menu.mainloop(UiManager.screen, DisplayBackground)
 
 onSiteInteractions=[
-    OpportunityInteraction("L'équipe de reconnaissance est arrivée à hauteur du bassin d'impact!\nCependant, une gigantesque masse ferreuse au centre du bassin provoque un champ magnétique qui brouille\ntous les signaux radio. Au moment où l'équipe entrera dans la zone, elle perdra toute connexion avec la\nbase. Si elle s'aventure longtemps dans la zone, elle ne pourra donc pas être prévenue en cas de\ndanger, mais pourra peut-être découvrir plus de choses. Elle peut également rentrer et revenir plus tard.\n\nQue faire ?", "interactionBackgrounds/impactCrater",
+    OpportunityInteraction("OppInteractions.OnSite.1", "interactionBackgrounds/impactCrater",
                            {Tags.DEADPLANET:True},
-                           ("Rebrousser chemin",
+                           ("OppInteractions.OnSite.1.b1",
                             lambda o:InteractionResult.ReturnToBase(o),
                             None),
-                           ("Explorer la zone moins de 5h",
-                            lambda o:(InteractionResult.OpenResultPanel(o,"L'expédition a exploré la zone, sans résultat.","interactionBackgrounds/impactCrater"),
+                           ("OppInteractions.OnSite.1.b2",
+                            lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b2.1","interactionBackgrounds/impactCrater"),
                                       InteractionResult.ReturnToBase(o)),
                             (3,5)),
-                           ("Explorer la zone pendant 24h",
-                            lambda o:(InteractionResult.OpenResultPanel(o,"8h après être entré dans le bassin, des capteurs sismiques sur toute la planète ont\nenregistré un séisme de magnitude 9,7 sur l'échelle de Richter au cœur de la zone.\nLes images satellites confirment l'impact d'une immense sidérite au cœur du bassin.\n\nLes membres de l'équipe sont tous déclarés comme morts.","interactionBackgrounds/impactCrater"),
+                           ("OppInteractions.OnSite.1.b3",
+                            lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b3.1","interactionBackgrounds/impactCrater"),
                                       InteractionResult.EndExpedition(o,False)),
                             24),
                            ),
 ]
 
 interruptionInteractions=[
-    OpportunityInteraction("L'expédition est prise dans une tempête de sable!\nLa visibilité est nulle, la progression est au point mort et le châssis du rover commence à protester.\nL'équipe de reconaissance peut attendre la fin de la tempête dans le rover, mais il ne sera peut-être\nplus en état de fonctionnement, et ils peuvent se retrouver bloqués par le sable accumulé autour.\nIls peuvent également continuer à pied et abandonner le rover, mais leur progression sera ralentie.\n\nQue faire?", "interactionBackgrounds/sandstorm",
+    OpportunityInteraction("OppInteractions.Interruption.1", "interactionBackgrounds/sandstorm",
                            {Tags.ONROVER:True,Tags.DESERTICPLANET:True},
-                           ("Abandonner le rover",
+                           ("OppInteractions.Interruption.1.b1",
                             lambda o:(InteractionResult.SetOnRover(o, False),
                                       InteractionResult.ResumeTravel(o))),
-                           ("Attendre la fin de la tempête",
+                           ("OppInteractions.Interruption.1.b2",
                             lambda o:(InteractionResult.DoWithChance(o,0.1,
                                 lambda o:(InteractionResult.SetOnRover(o, False),
-                                          InteractionResult.OpenResultPanel(o,"L'expédition a abandonné le rover et continue à avancer vers la destination.", "interactionBackgrounds/roverJungle"))),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.1.b2.1", "interactionBackgrounds/roverJungle"))),
                                       InteractionResult.ResumeTravel(o)))
                            ),
 ]

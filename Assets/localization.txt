@@ -185,6 +185,19 @@ Opportunities.Title.5 : Mirages et rumeurs
 Opportunities.Title.6 : Découverte fortuite
 Opportunities.Title.7 : Données orbitales
 
+//Interactions avec les expéditions
+OppInteractions.OnSite.1 : L'équipe de reconnaissance est arrivée à hauteur du bassin d'impact!%$rCependant, une gigantesque masse ferreuse au centre du bassin provoque un champ magnétique qui brouille%$rtous les signaux radio. Au moment où l'équipe entrera dans la zone, elle perdra toute connexion avec la%$rbase. Si elle s'aventure longtemps dans la zone, elle ne pourra donc pas être prévenue en cas de%$rdanger, mais pourra peut-être découvrir plus de choses. Elle peut également rentrer et revenir plus tard.%$r%$rQue faire ?
+OppInteractions.OnSite.1.b1 : Rebrousser chemin
+OppInteractions.OnSite.1.b2 : Explorer la zone moins de 5h
+OppInteractions.OnSite.1.b2.1 : L'expédition a exploré la zone, sans résultat.
+OppInteractions.OnSite.1.b3 : Explorer la zone pendant 24h
+OppInteractions.OnSite.1.b3.1 : 8h après être entré dans le bassin, des capteurs sismiques sur toute la planète ont%$renregistré un séisme de magnitude 9,7 sur l'échelle de Richter au cœur de la zone.%$rLes images satellites confirment l'impact d'une immense sidérite au cœur du bassin.%$r%$rLes membres de l'équipe sont tous déclarés comme morts.
+
+OppInteractions.Interruption.1 : L'expédition est prise dans une tempête de sable!%$rLa visibilité est nulle, la progression est au point mort et le châssis du rover commence à protester.%$rL'équipe de reconaissance peut attendre la fin de la tempête dans le rover, mais il ne sera peut-être%$rplus en état de fonctionnement, et ils peuvent se retrouver bloqués par le sable accumulé autour.%$rIls peuvent également continuer à pied et abandonner le rover, mais leur progression sera ralentie.%$r%$rQue faire?
+OppInteractions.Interruption.1.b1 : Abandonner le rover
+OppInteractions.Interruption.1.b2 : Attendre la fin de la tempête
+OppInteractions.Interruption.1.b2.1 : L'expédition a abandonné le rover et continue à avancer vers la destination.
+
 //Ressources
 Resources.Gold : or
 Resources.Coal : charbon

@@ -276,16 +276,18 @@ def Tick()->bool:
             
             now = datetime.now()
             
-            TravelAdvancement = duration - opportunity.GetLeftActivityTime()
+            if opportunity.state == Opportunity.State.GOING:
             
-            nextInterruption = opportunity.GetNextInterruption()
-            
-            if TravelAdvancement > nextInterruption > opportunity.lastInterruption:
-                opportunity.RefreshActivitySeed()
-                opportunity.SetState(Opportunity.State.WAITING)
-                opportunity.lastInterruption = nextInterruption
-                UiManager.Popup("Opportunité interrompue!")
-                notedChange = True
+                TravelAdvancement = duration - opportunity.GetLeftActivityTime()
+                
+                nextInterruption = opportunity.GetNextInterruption()
+                
+                if TravelAdvancement > nextInterruption > opportunity.lastInterruption:
+                    opportunity.RefreshActivitySeed()
+                    opportunity.SetState(Opportunity.State.WAITING)
+                    opportunity.lastInterruption = nextInterruption
+                    UiManager.Popup("Opportunité interrompue!")
+                    notedChange = True
             
             if now > arrivalTime:
                 if opportunity.state == Opportunity.State.GOING:
@@ -588,6 +590,7 @@ class Opportunity:
         """
         Définit le dernier choix fait par le joueur.
         """
+        print(choiceIndex)
         self.lastChoiceMade = choiceIndex
 
 class InteractionType:
@@ -637,17 +640,10 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
         else:
             label[i].set_title('')
     
-    #SetLabelText("Voici une longue description de ce qui attend l'expédition.\nDe nombreux détails peuvent être fournis afin de donner un rendu sympa.\nCa le fait?")
-    
     menu.add.vertical_margin(5)
     
     bottomBar=menu.add.frame_h(400, 50, padding=0)
     bottomBar.relax(True)
-    """
-    bottomBar.pack(menu.add.button("Action 1",font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
-    bottomBar.pack(menu.add.button("Action 2",font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
-    bottomBar.pack(menu.add.button("Action 3",font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
-    """
     
     options = interaction.GetOptions()
     
@@ -671,9 +667,9 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
                 opportunity.lastInterruption = lastInterruption
                 opportunity.SetActivityDuration(duration)
             
-            result = lambda choice=i,t=activityTime:(menu.disable(),opportunity.SetLastChoiceMade(choice),BeginOnSiteActivity(opportunity,activityTime))
+            result = lambda choice=i,t=activityTime:(menu.disable(),opportunity.SetLastChoiceMade(choice),BeginOnSiteActivity(opportunity,t))
         
-        bottomBar.pack(menu.add.button(option[0],result,font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
+        bottomBar.pack(menu.add.button(Localization.GetLoc(option[0]),result,font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
     
     menu.mainloop(UiManager.screen, DisplayBackground)
 
