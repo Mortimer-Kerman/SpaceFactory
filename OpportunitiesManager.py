@@ -606,6 +606,8 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
     """
     Ouvre un menu permettant d'interagir avec les opportunités
     """
+    random.seed(pygame.time.get_ticks())
+    
     interaction = OpportunitiesInteractions.GetRandomInteraction(opportunity, interactionType)
     
     if interactionType in [InteractionType.ONSITERESULT,InteractionType.INTERRUPTIONRESULT]:

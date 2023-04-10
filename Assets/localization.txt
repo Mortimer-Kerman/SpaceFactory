@@ -188,15 +188,31 @@ Opportunities.Title.7 : Données orbitales
 //Interactions avec les expéditions
 OppInteractions.OnSite.1 : L'équipe de reconnaissance est arrivée à hauteur du bassin d'impact!%$rCependant, une gigantesque masse ferreuse au centre du bassin provoque un champ magnétique qui brouille%$rtous les signaux radio. Au moment où l'équipe entrera dans la zone, elle perdra toute connexion avec la%$rbase. Si elle s'aventure longtemps dans la zone, elle ne pourra donc pas être prévenue en cas de%$rdanger, mais pourra peut-être découvrir plus de choses. Elle peut également rentrer et revenir plus tard.%$r%$rQue faire ?
 OppInteractions.OnSite.1.b1 : Rebrousser chemin
+OppInteractions.OnSite.1.b1.1 : L'expédition a fait demi tour et rentre à la base. Vous pourrez revenir plus tard.
 OppInteractions.OnSite.1.b2 : Explorer la zone moins de 5h
 OppInteractions.OnSite.1.b2.1 : L'expédition a exploré la zone, sans résultat.
 OppInteractions.OnSite.1.b3 : Explorer la zone pendant 24h
 OppInteractions.OnSite.1.b3.1 : 8h après être entré dans le bassin, des capteurs sismiques sur toute la planète ont%$renregistré un séisme de magnitude 9,7 sur l'échelle de Richter au cœur de la zone.%$rLes images satellites confirment l'impact d'une immense sidérite au cœur du bassin.%$r%$rLes membres de l'équipe sont tous déclarés comme morts.
 
+OppInteractions.OnSite.2 : L'équipe est arrivée à destination!%$rEn explorant, elle a rapidement remarqué un immense gisement de cuivre trônant au milieu de la vallée.%$rSon exploitation complète pourrait rapporter de grandes quantités de cuivre à la base, mais cela%$rdétruirait entièrement l'écosystème aux alentours. Il est également possible de n'en exploiter%$rqu'une partie, ce qui pourrait préserver la vallée.%$r%$rQue faire?
+OppInteractions.OnSite.2.b1 : Extraire le cuivre en totalité
+OppInteractions.OnSite.2.b1.1 : L'équipe a exploité le filon en totalité, au détriment de la faune locale, mais a pu en%$rextraire beaucoup de cuivre. Elle rentre à la base avec de grandes quantités de ressources.
+OppInteractions.OnSite.2.b2 : N'exploiter qu'une partie du filon
+OppInteractions.OnSite.2.b2.1 : L'équipe a pu extraire de petites quantités de cuivre, et en a également profité pour faire%$rdes prélèvement sur la flore locale. Elle rentre à la base avec des données prometteuses.
+
 OppInteractions.Interruption.1 : L'expédition est prise dans une tempête de sable!%$rLa visibilité est nulle, la progression est au point mort et le châssis du rover commence à protester.%$rL'équipe de reconaissance peut attendre la fin de la tempête dans le rover, mais il ne sera peut-être%$rplus en état de fonctionnement, et ils peuvent se retrouver bloqués par le sable accumulé autour.%$rIls peuvent également continuer à pied et abandonner le rover, mais leur progression sera ralentie.%$r%$rQue faire?
 OppInteractions.Interruption.1.b1 : Abandonner le rover
+OppInteractions.Interruption.1.b1.1 : L'expédition a abandonné le rover aux éléments et continue à avancer vers la destination.
 OppInteractions.Interruption.1.b2 : Attendre la fin de la tempête
-OppInteractions.Interruption.1.b2.1 : L'expédition a abandonné le rover et continue à avancer vers la destination.
+OppInteractions.Interruption.1.b2.1 : La tempête s'est enfin apaisée!%$rCependant, le rover, à moitié enseveli dans le sable, ne peut plus démarrer.%$r%$rL'expédition doit l'abandonner sur place et continuer à pied.
+OppInteractions.Interruption.1.b2.2 : La tempête s'est enfin apaisée!%$rAprès quelques vérifications et des réparations rapides, le rover peut de nouveau rouler.%$r%$rL'expédition peut reprendre la route.
+
+OppInteractions.Interruption.2 : L'expédition est en face d'un massif rocheux qui leur barre la route.%$rIl y a deux possibilités: Traverser ou contourner.%$rContourner rallongerait le trajet de plusieurs heures, mais en traversant, les membres de l'expédition%$rdevraient escalader, s'exposant à un faux pas et à une chute mortelle de plusieurs dizaines de mètres.%$r%$rQue faire?
+OppInteractions.Interruption.2.b1 : Contourner
+OppInteractions.Interruption.2.b1.1 : L'équipe a repris la route pour contourner le massif, rallongeant le trajet de quelques heures.
+OppInteractions.Interruption.2.b2 : Traverser
+OppInteractions.Interruption.2.b2.1 : En passant sur un surplomb très étroit, un membre de l'expédition a perdu l'équilibre et a fait une%$rchute de plusieurs centaines de mètres, le tuant sur le coup. Les autres membres de l'équipe sont%$rsains et saufs et ont repris la route.
+OppInteractions.Interruption.2.b2.2 : L'équipe a traversé la zone en ligne droite, et est saine est sauve. Elle continue à avancer.
 
 //Ressources
 Resources.Gold : or
