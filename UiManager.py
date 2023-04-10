@@ -77,6 +77,8 @@ def DisplayUi():
 
     InvMenu()#placement du menu inventaire
 
+    CostMenu()#placement du menu de coût
+
     
 
 def GetMouseWorldPos():
@@ -159,6 +161,18 @@ def forme2(x,y,w,wr,h,o,color=(47,48,51)):
     #calcul des coordonnées du polygone
     a = x, y
     b = x + w - 1, y
+    c = x + w - 1, y - h * 0.6
+    d = x + wr + 25 + o, y - h * 0.6
+    e = x + wr + 5 + o, y - h
+    f = x, y - h
+    return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))#affichage du polygone (renvoie l'élément pygame.Rect lié au polygone)
+def forme3(x,y,w,wr,h,o,color=(47,48,51)):
+    """
+    Crée une forme miroire à forme
+    """
+    #calcul des coordonnées du polygone
+    a = x, y
+    b = x - w - 1, y
     c = x + w - 1, y - h * 0.6
     d = x + wr + 25 + o, y - h * 0.6
     e = x + wr + 5 + o, y - h
@@ -291,10 +305,6 @@ def ItemMenu():
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
         place_text(Localization.GetLoc('Items.' + menuElements[i]),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
     
-    UIelements["selectElements_craft"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*2,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
-    screen.blit(TextureManager.GetTexture("hammer-and-wrench", 78, True),(width-500+11+102*2,height-100*showMenu.get("select",0)))
-    place_text("Requis pour créer",width-500+102*2,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
-
     UIelements["selectElements_question"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("question", 78, True),(width-500+11+102*3,height-100*showMenu.get("select",0)))
     place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
@@ -305,6 +315,13 @@ def ItemMenu():
 
     place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(500,100))
     
+def CostMenu():
+    p=GameItems.getPrice(SaveManager.mainData.selectedItem)
+    UIelements["cost"]=pygame.draw.rect(screen, (47,51,52), pygame.Rect(width-550, height-250*showMenu.get("select",0), 50,250) ).collidepoint(pygame.mouse.get_pos())
+    for n,(i,c) in enumerate(p):
+        screen.blit(TextureManager.GetTexture(i,20), (width-550,height-250*showMenu.get("select",0)+40*n))
+        place_text(str(c), width-550, height-250*showMenu.get("select",0)+40*n, 40)
+
 
 def InvMenu():
     global UIelements

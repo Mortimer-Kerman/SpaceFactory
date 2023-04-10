@@ -82,7 +82,7 @@ Session.AskTuto : Souhaitez-vous lancer le tutoriel ?
 Session.Tuto.0 : Déplace-toi avec %$1 %$2 %$3 %$4
 Session.Tuto.1 : Zoom et dézoome avec la molette
 Session.Tuto.2 : Trouve un minerai, et effectue un clic droit pour miner le minerai
-Session.Tuto.3 : Automatisons maintenant ce processus, collecte assez de minerais pour pouvoir créer un foreuse et place la foreuse sur un minerai
+Session.Tuto.3 : Automatisons maintenant ce processus, collecte assez de minerais de cuivre pour pouvoir créer un foreuse et place la foreuse sur un minerai
 Session.Tuto.4 : Place ensuite des tapis pour faire sortir les minerais de la foreuse
 Session.Tuto.5 : Place un stockage à la fin du chemin que tu viens de créer
 Session.Tuto.6 : Bravo, tu connais maintenant les bases, n'hésite pas à cliquer sur l’icône "interrogation" si tu te poses des questions sur un item

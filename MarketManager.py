@@ -38,6 +38,8 @@ def showMenu():
     h = int((UiManager.height//2)-105)
     w = int(UiManager.height)
     
+    columnW = w//2
+    
     menu = pygame_menu.Menu(L.GetLoc("Market.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)#le thème du menu
     f=menu.add.frame_h(w, 50, max_width=w, max_height=50, padding=0)
     f.relax(True)
@@ -49,12 +51,12 @@ def showMenu():
     frame = menu.add.frame_h(w, h,padding=0)
     frame.relax(True)
 
-    listFrame = menu.add.frame_v(500, max(len(marketItem) * 155, h), max_height=h, padding=0)
+    listFrame = menu.add.frame_v(columnW, max(len(marketItem) * 155, h), max_height=h, padding=0)
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
     for i in marketItem.keys():
-        oppFrame = menu.add.frame_v(500, 150, background_color=(50, 50, 50), padding=0)
+        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=(50, 50, 50), padding=0)
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         

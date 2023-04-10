@@ -350,4 +350,5 @@ def getDescription(type):
     UiManager.Popup(loc)
 
 def getPrice(type):
-    UiManager.Popup(str(list(doc.get(type,{}).get("c",{}).items())))
+    #UiManager.Popup(str(list(doc.get(type,{}).get("c",{}).items())))
+    return list(doc.get(type,{}).get("c",{}).items())
