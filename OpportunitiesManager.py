@@ -590,7 +590,6 @@ class Opportunity:
         """
         Définit le dernier choix fait par le joueur.
         """
-        print(choiceIndex)
         self.lastChoiceMade = choiceIndex
 
 class InteractionType:
