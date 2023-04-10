@@ -658,6 +658,8 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
         activityTime = None
         if interactionType == InteractionType.ONSITE:
             activityTime = option[2]
+            if type(activityTime) == tuple:
+                activityTime = random.randint(activityTime[0], activityTime[1])
         
         if interactionType == InteractionType.INTERRUPTION or activityTime == None:
             result = lambda res=option[1]:(menu.disable(),res(opportunity))

@@ -29,7 +29,7 @@ class OpportunityInteraction:
         ("Continuer",lambda o: InteractionResult.AddDistanceToPath(o, 15)),
     
     Format des options sur site:
-        ("Explorer la zone pendant 5h",lambda o:InteractionResult.OpenResultPanel(o,"L'expédition a exploré la zone, sans résultat.","interactionBackgrounds/impactCrater"),5),
+        ("Explorer la zone moins de 5h",lambda o:InteractionResult.OpenResultPanel(o,"L'expédition a exploré la zone, sans résultat.","interactionBackgrounds/impactCrater"),(3,5)),
         ("Explorer la zone pendant 10h",lambda o:InteractionResult.OpenResultPanel(o,"L'expédition a trouvé des ressources!","interactionBackgrounds/impactCrater"),10),
         ("Faire demi tour",lambda o:InteractionResult.ReturnToBase(o),None),
         
@@ -58,10 +58,13 @@ class OpportunityInteraction:
         """
         return self.options
     
-    def AppliesTo(self,opportunity)->bool:
+    def AppliesTo(self,opportunity,oppDescCodes:list=None)->bool:
         """
         Dit si l'interaction s'applique à une opportunité en fonction des tags
         """
+        if oppDescCodes == None:
+            oppDescCodes = opportunity.GetDescCodes()
+        
         return True
     
     def GetImage(self):
@@ -223,7 +226,9 @@ def GetRandomInteraction(opportunity,InteractionType:int)->OpportunityInteractio
         
         i = random.randint(0, len(onSiteInteractions)-1)
         
-        while not onSiteInteractions[i].AppliesTo(opportunity):
+        oppDescCodes = opportunity.GetDescCodes()
+        
+        while not onSiteInteractions[i].AppliesTo(opportunity,oppDescCodes):
             i = random.randint(0, len(onSiteInteractions)-1)
         
         return onSiteInteractions[i]
@@ -232,7 +237,9 @@ def GetRandomInteraction(opportunity,InteractionType:int)->OpportunityInteractio
         
         i = random.randint(0, len(interruptionInteractions)-1)
         
-        while not interruptionInteractions[i].AppliesTo(opportunity):
+        oppDescCodes = opportunity.GetDescCodes()
+        
+        while not interruptionInteractions[i].AppliesTo(opportunity,oppDescCodes):
             i = random.randint(0, len(interruptionInteractions)-1)
         
         return interruptionInteractions[i]
