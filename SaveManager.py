@@ -58,6 +58,7 @@ class Data:
         """
         renvoye toutes les Datas en JSON
         """
+        self.items=dict(self.items)
         return json.dumps(self, default=lambda o: o.__dict__, indent = 4)
 
 clock = pygame.time.Clock()#horloge du jeu
