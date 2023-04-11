@@ -227,7 +227,6 @@ def PlaceItem(item):
         tempInv=[]
         for i in mainData.inv:
             tempInv.append(dict(i))
-        tempInv=mainData.inv[:]
         print(str(tempInv))
         a=[True]
         for i,n in GameItems.doc.get(item.name,{"c":{}}).get("c",{}).items():

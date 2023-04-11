@@ -473,8 +473,13 @@ def interactItem(item):
             clock.tick(25)
         
         #change l'environnement de stockage/inv
-        tempInv=SaveManager.mainData.inv[:]
-        tempBigInv=item.metadata["biginv"][:]
+        tempInv=[]
+        for i in mainData.inv:
+            tempInv.append(dict(i))
+        tempBigInv=[]
+        for i in item.metadata["biginv"]:
+            tempInv.append(dict(i))
+            
         SaveManager.ClearInv()
         item.metadata["biginv"]=[]
 
