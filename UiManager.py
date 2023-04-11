@@ -468,7 +468,7 @@ def interactItem(item):
 
                 place_text(str(r[1]["n"]),r[0].x,r[0].y,20)
                 place_text(str(r[1]["m"]),r[0].x,r[0].y+20,20)
-                
+            place_text("[Echap] pour quitter", 0, 0, 40, (255,255,255))
             pygame.display.update()
             clock.tick(25)
         
