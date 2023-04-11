@@ -343,6 +343,7 @@ class Opportunity:
         
         self.lastInterruption = 0
         self.lastChoiceMade = None
+        self.lastInteraction = None
         
         self.resources = None
         
@@ -607,15 +608,25 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
     Ouvre un menu permettant d'interagir avec les opportunités
     """
     
-    interaction = OpportunitiesInteractions.GetRandomInteraction(opportunity, interactionType)
-    
     if interactionType in [InteractionType.ONSITERESULT,InteractionType.INTERRUPTIONRESULT]:
+        
+        interaction = OpportunitiesInteractions.GetInteractionByCode(opportunity.lastInteraction, interactionType)
         
         interaction.GetOptions()[opportunity.lastChoiceMade][1](opportunity)
         
         opportunity.SetLastChoiceMade(None)
         
+        opportunity.lastInteraction = None
+        
         return
+    
+    random.seed(pygame.time.get_ticks())
+    
+    code = OpportunitiesInteractions.GetRandomInteractionCode(opportunity, interactionType)
+    
+    interaction = OpportunitiesInteractions.GetInteractionByCode(code, interactionType)
+    
+    opportunity.lastInteraction = code
     
     screenFilter = pygame.Surface((UiManager.width,UiManager.height))
     screenFilter.set_alpha(50)

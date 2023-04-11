@@ -281,6 +281,18 @@ def GetItemAtPos(pos):
     """
     return mainData.items.get(str(list(pos)),None)
 
+def GetTextureAtPos(pos:tuple)->str:
+    """
+    Renvoie la texture d'un chunk à une certaine position
+    """
+    return UiManager.GetChunkTextureAtChunkPos((pos[0]//10,pos[1]//10))
+
+def IsPosWet(pos:tuple)->bool:
+    """
+    Dit si une position est dans un point d'eau ou proche de celui-ci
+    """
+    return GetTextureAtPos(pos) == "water"
+
 def GetRotation():
     """
     Renvoie la rotation actuelle

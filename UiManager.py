@@ -58,15 +58,15 @@ def DisplayUi():
     Affichage de l'Interface Utilisateur
     """
     forme(0,0,width,100,50,200)#forme affichée en haut de l'écran
-
+    
     UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
-
+    
     forme2(0,height,width,100,50,200)#forme2 affichée en bas de l'écran
     
     mousePos = GetMouseWorldPos()
     
     place_text("[" + str(mousePos[0]) + "," + str(mousePos[1]) + "] " + str(round(SaveManager.clock.get_fps())),0,height-50,20,(250,250,250),TextureManager.GetFont("aquire"))#placement du texte (position du curseur + caméra + FPS)
-
+    
     for index,popup in enumerate(UIPopup):#pour index , popup dans UiManager.UIPopup
             popup.show(index)
             UIelements["popup_area"]=pygame.Rect(width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
@@ -74,12 +74,11 @@ def DisplayUi():
             popup.show(index)
             
     ItemMenu()#placement du menu de sélection d'item
-
+    
     InvMenu()#placement du menu inventaire
-
+    
     CostMenu()#placement du menu de coût
 
-    
 
 def GetMouseWorldPos():
     """
@@ -279,6 +278,14 @@ def UpdateBackground():
 def ForceBackgroundRefresh():
     global unRefreshed
     unRefreshed = True
+
+
+def GetChunkTextureAtChunkPos(pos:tuple)->str:
+    """
+    Renvoie la texture du chunk à une position de chunk (position entière d'un bloc divisée par 10)
+    """
+    return chunkTex.get(str((pos[0]*10,pos[1]*10)),None)
+
 
 def ItemMenu():
     """

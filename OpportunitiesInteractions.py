@@ -269,9 +269,9 @@ interruptionInteractions=[
 ]
 
 
-def GetRandomInteraction(opportunity,InteractionType:int)->OpportunityInteraction:
+def GetRandomInteractionCode(opportunity,InteractionType:int)->int:
     """
-    Renvoie une interaction aléatoire.
+    Renvoie le code d'une interaction aléatoire.
     """
     if InteractionType in [OpportunitiesManager.InteractionType.ONSITE,OpportunitiesManager.InteractionType.ONSITERESULT]:
         
@@ -282,7 +282,7 @@ def GetRandomInteraction(opportunity,InteractionType:int)->OpportunityInteractio
         while not onSiteInteractions[i].AppliesTo(opportunity,oppDescCodes):
             i = random.randint(0, len(onSiteInteractions)-1)
         
-        return onSiteInteractions[i]
+        return i
     
     elif InteractionType in [OpportunitiesManager.InteractionType.INTERRUPTION,OpportunitiesManager.InteractionType.INTERRUPTIONRESULT]:
         
@@ -293,7 +293,14 @@ def GetRandomInteraction(opportunity,InteractionType:int)->OpportunityInteractio
         while not interruptionInteractions[i].AppliesTo(opportunity,oppDescCodes):
             i = random.randint(0, len(interruptionInteractions)-1)
         
-        return interruptionInteractions[i]
+        return i
 
 
-
+def GetInteractionByCode(code:int,InteractionType:int)->OpportunityInteraction:
+    """
+    Renvoie une interaction par son type et son code.
+    """
+    if InteractionType in [OpportunitiesManager.InteractionType.ONSITE,OpportunitiesManager.InteractionType.ONSITERESULT]:
+        return onSiteInteractions[code]
+    else:
+        return interruptionInteractions[code]
