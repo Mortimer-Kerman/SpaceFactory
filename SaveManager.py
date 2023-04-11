@@ -233,13 +233,13 @@ def PlaceItem(item):
                 a+=[GetFromInv(i)]
         if all(a):
             mainData.items[str(list(item.pos))]=item
-            #return True
+            return True
         mainData.inv=tempInv
         UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
-        #return False
+        return False
     else:
         mainData.items[str(list(item.pos))]=item
-        #return True
+        return True
 
 def DeleteItem(pos):
     if IsItemHere(pos):
