@@ -34,7 +34,7 @@ width = 0
 height = 0
 
 UIelements={}#dictionnaire stockant les interaction souris/éléments interface
-showMenu={"select":0,"inv":0,"delete":0,"question":0,"craft":0}#affichage ou non des menus interne à l'UI
+showMenu={"select":0,"inv":0,"delete":0,"question":0,"freeMouse":1}#affichage ou non des menus interne à l'UI
 
 def Init():
     """
@@ -305,6 +305,10 @@ def ItemMenu():
         screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
         place_text(Localization.GetLoc('Items.' + menuElements[i]),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
     
+    UIelements["selectElements_free"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
+    screen.blit(TextureManager.GetTexture("cursor", 78, True),(width-500+11+102,height-100*showMenu.get("select",0)))
+    place_text("Souris libre",width-500+102,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
+
     UIelements["selectElements_question"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("question", 78, True),(width-500+11+102*3,height-100*showMenu.get("select",0)))
     place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
@@ -316,11 +320,13 @@ def ItemMenu():
     place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(500,100))
     
 def CostMenu():
-    p=GameItems.getPrice(SaveManager.mainData.selectedItem)
-    UIelements["cost"]=pygame.draw.rect(screen, (47,51,52), pygame.Rect(width-550, height-250*showMenu.get("select",0), 50,250) ).collidepoint(pygame.mouse.get_pos())
-    for n,(i,c) in enumerate(p):
-        screen.blit(TextureManager.GetTexture(i,20), (width-550,height-250*showMenu.get("select",0)+40*n))
-        place_text(str(c), width-550, height-250*showMenu.get("select",0)+40*n, 40)
+    if not showMenu["freeMouse"]:
+        p=GameItems.getPrice(SaveManager.mainData.selectedItem)
+        UIelements["cost"]=pygame.draw.rect(screen, (47,51,52), pygame.Rect(width-600, height-250*showMenu.get("select",0), 100,250) ).collidepoint(pygame.mouse.get_pos())
+        place_text(Localization.GetLoc("UiManager.cost"), width-600, height-250*showMenu.get("select",0), 20,auto_size=(100,40))
+        for n,(i,c) in enumerate(p):
+            screen.blit(TextureManager.GetTexture(i,78,is_menu=True), (width-600,height-250*showMenu.get("select",0)+40*(n+1)))
+            place_text(str(c), width-600, height-250*showMenu.get("select",0)+40*(n+1), 40)
 
 
 def InvMenu():
@@ -372,7 +378,8 @@ def DisplayItemToPlace():
     elif showMenu["question"]:
         ItemTexture = "question"
     else:
-        ItemTexture = SaveManager.mainData.selectedItem
+        if not showMenu["freeMouse"]:
+            ItemTexture = SaveManager.mainData.selectedItem
 
     if ItemTexture == None or (IsClickOnUI() and not showMenu["question"]):
         return
@@ -466,8 +473,8 @@ def interactItem(item):
             clock.tick(25)
         
         #change l'environnement de stockage/inv
-        tempInv=SaveManager.mainData.inv
-        tempBigInv=item.metadata["biginv"]
+        tempInv=SaveManager.mainData.inv[:]
+        tempBigInv=item.metadata["biginv"][:]
         SaveManager.ClearInv()
         item.metadata["biginv"]=[]
 

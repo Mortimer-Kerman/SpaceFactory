@@ -194,9 +194,10 @@ def HandleMouseClicks(button,drone):
                             if a:
                                 GameItems.getDescription(a)
                         else:
-                            SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
-                        if (showTuto==3 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==4 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==5 and SaveManager.GetSelectedItem()=="stockage"):
-                            Tuto()
+                            if not UiManager.showMenu["freeMouse"]:
+                                b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
+                                if b and ((showTuto==3 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==4 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==5 and SaveManager.GetSelectedItem()=="stockage")):
+                                    Tuto()
                 else:
                     SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
             else:
@@ -207,8 +208,6 @@ def HandleMouseClicks(button,drone):
                             GameItems.getDescription(a)
                 elif UiManager.showMenu["delete"]:
                     SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
-                elif UiManager.showMenu.get("craft",False):
-                                GameItems.getPrice(a)
                 else:
                     UiManager.LightPopup(L.GetLoc("Session.AlreadyItemHere"))
 
@@ -227,10 +226,11 @@ def HandleMouseClicks(button,drone):
                         UiManager.LightPopup("Mode destruction désactivé")
                     elif UiManager.showMenu.get("question",False):
                         GameItems.getDescription(i)
-                    elif UiManager.showMenu.get("craft",False):
-                        GameItems.getPrice(i)
                     else:
                         SaveManager.SetSelectedItem(i)
+                        UiManager.showMenu["freeMouse"]=0
+            if UiManager.UIelements.get("selectElements_free",False):
+                UiManager.showMenu["freeMouse"]=1
             if UiManager.UIelements.get("selectElements_delete",False):
                 if UiManager.showMenu.get("question",False):
                     GameItems.getDescription("delete")
@@ -243,10 +243,6 @@ def HandleMouseClicks(button,drone):
                 UiManager.LightPopup("Mode interrogation activé")
                 if UiManager.showMenu.get("question",False):
                     UiManager.Popup(L.GetLoc("Session.Question"))
-            if UiManager.UIelements.get("selectElements_craft",False):
-                UiManager.showMenu["craft"]=1-UiManager.showMenu["craft"]
-                UiManager.Popup(L.GetLoc("Session.Craft"))
-                UiManager.LightPopup(text="Mode composition activé")
         
         elif UiManager.UIelements.get("inv2",False):
             for i,e in enumerate(SaveManager.mainData.inv):

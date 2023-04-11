@@ -12,6 +12,8 @@ Background.png réalisé via StableDiffusion
 question.png est issue du projet Mozilla FirefoxEmoji
 https://mozilla.github.io/fxemoji/dist/FirefoxEmoji/index.html
 hammer-and-wrench.png icones est créée par Freepik - Flaticon https://www.flaticon.com/free-icons/hammer-and-wrench
+cursor.png icones est créée par Freepik - Flaticon https://www.flaticon.com/free-icon/cursor_587335
+
 
 Genesis et Lost in Space sont des musiques de Karl Casey @ White Bat Audio distribuées sans droits d'auteur.
 Moon Men est une musique de Jake Chudnow, distribué sans droits d'auteur.

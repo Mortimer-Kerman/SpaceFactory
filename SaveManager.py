@@ -224,18 +224,25 @@ def PlaceItem(item):
     Ajoute un item aux items en retirant le coût en minerais
     """
     if mainData.gamemode!=1:
-        tempInv=mainData.inv
+        tempInv=[]
+        for i in mainData.inv:
+            tempInv.append(dict(i))
+        tempInv=mainData.inv[:]
+        print(str(tempInv))
         a=[True]
         for i,n in GameItems.doc.get(item.name,{"c":{}}).get("c",{}).items():
             for j in range(n):
                 a+=[GetFromInv(i)]
         if all(a):
             mainData.items[str(list(item.pos))]=item
-        else:
-            mainData.inv=tempInv
-            UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
+            #return True
+        mainData.inv=tempInv
+        print("doing"+str(mainData.inv))
+        UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
+        #return False
     else:
         mainData.items[str(list(item.pos))]=item
+        #return True
 
 def DeleteItem(pos):
     if IsItemHere(pos):

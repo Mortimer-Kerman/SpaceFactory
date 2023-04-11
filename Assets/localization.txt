@@ -54,6 +54,7 @@ SaveManager.AddToInv.error : Vous n'avez pas assez de place dans votre inventair
 SaveManager.GetFromInv.error : Vous n'avez pas assez d'items requis dans votre inventaire
 //
 UiManager.biginv.error : Il n'y a pas assez de place dans ce stockage
+UiManager.cost : coût
 
 //Menu des options
 Settings.Title : Options
