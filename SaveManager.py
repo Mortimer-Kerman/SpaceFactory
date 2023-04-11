@@ -227,7 +227,6 @@ def PlaceItem(item):
         tempInv=[]
         for i in mainData.inv:
             tempInv.append(dict(i))
-        print(str(tempInv))
         a=[True]
         for i,n in GameItems.doc.get(item.name,{"c":{}}).get("c",{}).items():
             for j in range(n):
@@ -236,7 +235,6 @@ def PlaceItem(item):
             mainData.items[str(list(item.pos))]=item
             #return True
         mainData.inv=tempInv
-        print("doing"+str(mainData.inv))
         UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
         #return False
     else:
