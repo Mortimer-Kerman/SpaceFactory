@@ -12,6 +12,8 @@ import TextureManager
 import random
 import Localization as L
 
+import numpy as np
+
 import pygame
 
 menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four","market"]#éléments du menu de sélection
@@ -238,23 +240,28 @@ class Item:
         else:
             return False
 
-current=[]#liste des minerais affichés
+
+
+current = []  # liste des minerais affichés
+
 class Minerais:
     """
     Toutes les fonctions relatives aux Minerais
     """
+
     def SpawnAllScreen():
         """
         Apparition des minerais sur tout l'écran
         """
         cam = SaveManager.GetCamPos()
-        cam = [cam[0],cam[1]]
+        cam = [cam[0], cam[1]]
         zoom = SaveManager.GetZoom()
         cam[0] += UiManager.width / 2
         cam[1] += UiManager.height / 2
-        for x in range(int((0-cam[0])//zoom),int((UiManager.width+cam[0])//zoom)):
-            for y in range(int((0-cam[1])//zoom),int((UiManager.height+cam[1])//zoom)):
-                Minerais.Place(x,y)
+        for x in np.arange((0 - cam[0]) // zoom, (UiManager.width + cam[0]) // zoom).astype(int):
+            for y in np.arange((0 - cam[1]) // zoom, (UiManager.height + cam[1]) // zoom).astype(int):
+                Minerais.Place(x, y)
+
     def SpawnBorder():
         """
         Ne fais spawn les minerais que sur les bordures
@@ -263,31 +270,33 @@ class Minerais:
         zoom = SaveManager.GetZoom()
         cam[0] += UiManager.width / 2
         cam[1] += UiManager.height / 2
-        for x in range(int((0-cam[0])//zoom)-1,int((UiManager.width+cam[0])//zoom)+1):
-            Minerais.Place(x,int((0-cam[1])//zoom))
-            Minerais.Place(x,int((UiManager.height+cam[1])//zoom))
-        for y in range(int((0-cam[1])//zoom)-1,int((UiManager.height+cam[1])//zoom)+1):
-            Minerais.Place(int((0-cam[0])//zoom),y)
-            Minerais.Place(int((UiManager.width+cam[0])//zoom),y)
-        #retirer les minerais non affichés (loin du joueur)
+        for x in np.arange((0 - cam[0]) // zoom - 1, (UiManager.width + cam[0]) // zoom + 1).astype(int):
+            Minerais.Place(x, int((0 - cam[1]) // zoom))
+            Minerais.Place(x, int((UiManager.height + cam[1]) // zoom))
+        for y in np.arange((0 - cam[1]) // zoom - 1, (UiManager.height + cam[1]) // zoom + 1).astype(int):
+            Minerais.Place(int((0 - cam[0]) // zoom), y)
+            Minerais.Place(int((UiManager.width + cam[0]) // zoom), y)
+        # retirer les minerais non affichés (loin du joueur)
         for i in current:
-            if not (-cam[0]+UiManager.width+9000>=i[0]*zoom>=-cam[0]-9000 and -cam[1]+UiManager.height+9000>=i[1]*zoom>=-cam[1]-9000):
+            if not (-cam[0] + UiManager.width + 9000 >= i[0] * zoom >= -cam[0] - 9000 and
+                    -cam[1] + UiManager.height + 9000 >= i[1] * zoom >= -cam[1] - 9000):
                 current.remove(i)
-        
 
-    def Place(x,y):
+    def Place(x, y):
         """
         Place le minerais selon son type
         """
         cam = SaveManager.GetCamPos()
-        cam = [cam[0],cam[1]]
+        cam = [cam[0], cam[1]]
         zoom = SaveManager.GetZoom()
         cam[0] += UiManager.width / 2
         cam[1] += UiManager.height / 2
-        a=Minerais.Type(x,y)
+        a = Minerais.Type(x, y)
         if a:
-            if [x,y,a] not in current:current.append([x,y,a])
-            UiManager.screen.blit(TextureManager.GetTexture(a, zoom), (x*zoom+cam[0], y*zoom+cam[1]))
+            if [x, y, a] not in current:
+                current.append([x, y, a])
+            UiManager.screen.blit(TextureManager.GetTexture(a, zoom), (x * zoom + cam[0], y * zoom + cam[1]))
+
 
     def PlaceFromCurrent(a):
         """
@@ -309,16 +318,17 @@ class Minerais:
         y=int(y)
         random.seed(x*y*se+x+y+se+x)#la graine
         r=3#plus r est grand, moins les minerais spawneront
-        if random.randint(0,60*r)==40:
-            return "charbon"
-        elif random.randint(0,80*r)==40:
-            return "cuivre"
-        elif random.randint(0,100*r)==10:
-            return "or"
-        elif random.randint(0,120*r)==50:
-            return "m1"
-        else:
-            return False
+        if UiManager.GetChunkTextureAtChunkPos((x,y))!="water":
+            if random.randint(0,60*r)==40:
+                return "charbon"
+            elif random.randint(0,80*r)==40:
+                return "cuivre"
+            elif random.randint(0,100*r)==10:
+                return "or"
+            elif random.randint(0,120*r)==50:
+                return "m1"
+            else:
+                return False
         
     def Clear():
         """
