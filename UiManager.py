@@ -478,7 +478,7 @@ def interactItem(item):
             tempInv.append(dict(i))
         tempBigInv=[]
         for i in item.metadata["biginv"]:
-            tempInv.append(dict(i))
+            tempBigInv.append(dict(i))
             
         SaveManager.ClearInv()
         item.metadata["biginv"]=[]
