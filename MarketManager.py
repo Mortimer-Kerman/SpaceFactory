@@ -64,7 +64,7 @@ def showMenu():
         
         FunctionUtils.EncapsulateButtonInFrame(b, oppFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
-        oppFrame.pack(menu.add.vertical_margin(50))
+        oppFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
 
         subtext = menu.add.label("Prix: " + str(marketItem[i]))
         subtext.set_font(TextureManager.GetFont("nasalization"), 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))

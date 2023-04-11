@@ -180,6 +180,7 @@ class Item:
                 self.metadata["inv"]=None
         if self.name=="market" and self.metadata.get("inv",None) is not None:
             MarketManager.Sell(self.metadata["inv"])
+            self.metadata["inv"]=None
         
         item=self.GetItemToGive()
         if item is not None:
@@ -318,7 +319,7 @@ class Minerais:
         y=int(y)
         random.seed(x*y*se+x+y+se+x)#la graine
         r=3#plus r est grand, moins les minerais spawneront
-        if UiManager.GetChunkTextureAtChunkPos((x,y))!="water":
+        if not SaveManager.IsPosWet((x,y)):
             if random.randint(0,60*r)==40:
                 return "charbon"
             elif random.randint(0,80*r)==40:
