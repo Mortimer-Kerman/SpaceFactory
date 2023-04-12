@@ -28,12 +28,15 @@ def showMenu():
         pygame.draw.polygon(UiManager.screen,(198, 136, 102),((UiManager.width,UiManager.height),(0,(UiManager.height//3)*2),((UiManager.width//3)*2,0))) # Dessin d'une autre forme polygonale sur l'écran
         UiManager.place_text(L.GetLoc("Market.Title"), 20, 50, 100,font=TextureManager.GetFont("nasalization",100)) # Affichage de du texte sur l'écran
         UiManager.place_text(L.GetLoc("Market.Motto"), 20, 150, 50) # Affichage de du texte sur l'écran
+        for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
+            popup.show(index)
+            UiManager.UIelements["popup_area"]=pygame.Rect(UiManager.width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
 
     def setCurrent(a): # Définition d'une fonction pour définir l'article en cours à une valeur donnée
         global currentItem # Déclaration de la variable globale currentItem pour l'utiliser dans la fonction
         currentItem = a # Définition de la valeur de currentItem à l'argument donné
-
-
+        title.set_title(L.GetLoc("Items."+a))
+        SetLabelText(L.GetLoc("GameItems.d."+a)) # Définition des textes de la fenêtre
 
     h = int((UiManager.height//2)-105)
     w = int(UiManager.height)
@@ -85,6 +88,28 @@ def showMenu():
     
     label = menu.add.label("\n\n\n\n\n",font_size=int(columnW*(1/29)))#20 en 1080
     textFrame.pack(label)
+
+    def SetLabelText(text:str):
+            
+            lineLength = 55#int((UiManager.height-500)*(11/116))
+            
+            cuts = [0]
+            lastSpace = 0
+            for i in range(len(text)):
+                if text[i] == " ":
+                    lastSpace = i
+                lastCut = cuts[-1]
+                if i - lastCut > lineLength:
+                    cuts.append(lastSpace)
+            
+            
+            lines = [text[i:j].strip() for i,j in zip(cuts, cuts[1:]+[None])]
+            
+            for i in range(6):
+                if i < len(lines):
+                    label[i].set_title(lines[i])
+                else:
+                    label[i].set_title('')
     
     btn = menu.add.button(L.GetLoc('Market.Buy'), Buy,font_size=int(h*(2/29)), button_id='oppButton')
     
@@ -102,9 +127,13 @@ def Buy():
             SaveManager.AddToInv(currentItem)
             # Met à jour le label affichant la quantité de "coins" du joueur
             LabelCoins.set_title(str(SaveManager.mainData.coins))
+        else:
+            # Si le jouerai n'a pas suffisamment de "coins"
+            # affiche un message d'erreur
+            UiManager.Popup("Vous n'avez pas assez de coins")
 
+# Dictionnaire des prix des différents items
+price = {"charbon": 1, "cuivre": 2, "or": 5, "m1": 8,"nanoM1":25,"m2":15,"melted_copper":4}
 def Sell(item):
-    # Dictionnaire des prix des différents items
-    price = {"charbon": 1, "cuivre": 2, "or": 5, "m1": 8}
     # Ajoute le prix correspondant à la quantité de "coins" du joueur si l'item est dans le dictionnaire
     SaveManager.mainData.coins += price.get(item, 0)
