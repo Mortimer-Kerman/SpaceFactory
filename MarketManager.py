@@ -72,7 +72,7 @@ def showMenu():
         
         listFrame.pack(menu.add.vertical_margin(5))
 
-    detailsFrame = menu.add.frame_v(w-500, h, max_height=h, padding=0)
+    detailsFrame = menu.add.frame_v(columnW, h, max_height=h, padding=0)
     detailsFrame.relax(True)
     frame.pack(detailsFrame)
     
