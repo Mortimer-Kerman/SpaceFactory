@@ -18,9 +18,13 @@ import pygame
 
 menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four","market"]#éléments du menu de sélection
 
-allTransportableItems={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110)}
+allTransportableItems={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110),"melted_copper":(255,0,0)}
 
 Anim=1
+
+craft={
+    "four":{"c":("cuivre","charbon"),"r":"melted_copper"}
+}
 
 RenderQueues = {}
 def AddToRender(order:int,action):
@@ -47,10 +51,13 @@ class Item:
         self.metadata["trieur_choice"]="or"
         self.metadata["biginv"]=self.metadata.get("biginv",[])
         giveTo={"foreuse":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"stockage":[1,1,1,1]}#[up down left right]
+
         self.rotation=SaveManager.GetRotation()
         if name in ["tapis","jonction","trieur"]:
             name=str(self.rotation)
         self.giveto=giveTo.get(name,[0,0,0,0])
+        if self.name in list(craft.keys()):
+            self.giveto=[1,1,1,1]
         if self.name == "trieur":
             if 1 in self.giveto[0:2]:
                 self.giveto[0]*=2
@@ -129,24 +136,27 @@ class Item:
     def GetItemToGive(self):
         g=self.giveto
         item=None
-        if self.name!="trieur":
-            if g[0]:
-                item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
+        if self.metadata.get("nextItem",None) is None and self.name!="trieur":
+            if self.name!="trieur":
+                if g[0]:
+                    item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
+                    if item is not None:
+                        if item.giveto==[0,1,0,0] or item.metadata.get("inv",None) is not None:item=None
+                if g[1] and item is None:
+                    item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]+1))#on récupère l'item du dessous
+                    if item is not None:
+                        if item.giveto==[1,0,0,0] or item.metadata.get("inv",None) is not None:item=None
+                if g[2] and item is None:
+                    item=SaveManager.GetItemAtPos((self.pos[0]-1,self.pos[1]))#on récupère l'item de gauche
+                    if item is not None:
+                        if item.giveto==[0,0,0,1] or item.metadata.get("inv",None) is not None:item=None
+                if g[3] and item is None:
+                    item=SaveManager.GetItemAtPos((self.pos[0]+1,self.pos[1]))#on récupère l'item de droite
+                    if item is not None:
+                        if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
                 if item is not None:
-                    if item.giveto==[0,1,0,0] or item.metadata.get("inv",None) is not None:item=None
-            if g[1] and item is None:
-                item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]+1))#on récupère l'item du dessous
-                if item is not None:
-                    if item.giveto==[1,0,0,0] or item.metadata.get("inv",None) is not None:item=None
-            if g[2] and item is None:
-                item=SaveManager.GetItemAtPos((self.pos[0]-1,self.pos[1]))#on récupère l'item de gauche
-                if item is not None:
-                    if item.giveto==[0,0,0,1] or item.metadata.get("inv",None) is not None:item=None
-            if g[3] and item is None:
-                item=SaveManager.GetItemAtPos((self.pos[0]+1,self.pos[1]))#on récupère l'item de droite
-                if item is not None:
-                    if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
-        else:
+                    self.metadata["nextItem"]=item.pos
+        elif self.name=="trieur":
             a=self.metadata.get("trieur_choice")==self.metadata.get("inv")
             if ((g[0]==2 and a) or (g[0]==1 and not a)) and item is None:
                 item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
@@ -164,6 +174,7 @@ class Item:
                 item=SaveManager.GetItemAtPos((self.pos[0]+1,self.pos[1]))#on récupère l'item de droite
                 if item is not None:
                     if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
+        else: item=SaveManager.GetItemAtPos(self.metadata.get("nextItem",None))
         return item
     
     def Give(self):
@@ -174,13 +185,19 @@ class Item:
                 self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
                 if self.metadata["minerais"] is False:self.metadata["minerais"]=None
             self.metadata["inv"]=self.metadata["minerais"]
-        if self.name=="stockage":
+        if self.name in ["stockage","four"]:
             self.metadata["biginv"]=self.metadata.get("biginv",[])
             if self.AddToInv(self.metadata.get("inv",None)):
                 self.metadata["inv"]=None
         if self.name=="market" and self.metadata.get("inv",None) is not None:
             MarketManager.Sell(self.metadata["inv"])
             self.metadata["inv"]=None
+        if self.name in list(craft.keys()):
+            c=craft[self.name]
+            if all(self.IsInInv(i) for i in c["c"]):
+                for i in c["c"]:
+                    self.GetFromInv(i)
+                self.metadata["inv"]=c["r"]
         
         item=self.GetItemToGive()
         if item is not None:
@@ -201,7 +218,7 @@ class Item:
                     
     def Obtain(self,inv,giver):
         self.metadata["g"]=1
-        if self.name=="jonction" and list(self.metadata.get("last",[]))==list(giver.pos):
+        if self.name in ["jonction"]+list(craft.keys()) and list(self.metadata.get("last",[]))==list(giver.pos):
             self.metadata["last"]=[]
         else:
             self.metadata["last"]=list(giver.pos)
