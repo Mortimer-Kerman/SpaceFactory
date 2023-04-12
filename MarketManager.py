@@ -56,7 +56,7 @@ def showMenu():
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
     for i in marketItem.keys():
-        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=(50, 50, 50), padding=0)
+        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=(50, 50, 50), padding=0,frame_id=str(i))
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
@@ -66,8 +66,8 @@ def showMenu():
         
         oppFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
 
-        subtext = menu.add.label("Prix: " + str(marketItem[i]))
-        subtext.set_font(TextureManager.GetFont("nasalization"), 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
+        subtext = menu.add.label("Prix: " + str(marketItem[i]),font_name=TextureManager.GetFont("nasalization",int(columnW/27)),font_color=(255,255,255))
+        #subtext.set_font(TextureManager.GetFont("nasalization"), 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
         oppFrame.pack(subtext)
         
         listFrame.pack(menu.add.vertical_margin(5))
@@ -76,15 +76,19 @@ def showMenu():
     detailsFrame.relax(True)
     frame.pack(detailsFrame)
     
-    title = menu.add.label("",font_size=int((UiManager.height-500)*(2/29)))#40 en 1080
-    detailsFrame.pack(title,align=pygame_menu.locals.ALIGN_CENTER)
+    textFrame = menu.add.frame_v(columnW, h-50-int(h*(2/29)), max_height=h-50-int(h*(2/29)), padding=0)
+    textFrame.relax(True)
+    detailsFrame.pack(textFrame,align=pygame_menu.locals.ALIGN_CENTER)
     
-    label = menu.add.label("\n\n\n\n\n",font_size=int((UiManager.height-500)*(1/29)))#20 en 1080
-    detailsFrame.pack(label)
+    title = menu.add.label("",font_size=int(columnW*(2/29)))#40 en 1080
+    textFrame.pack(title,align=pygame_menu.locals.ALIGN_CENTER)
     
-    detailsFrame.pack(menu.add.vertical_margin(100))
+    label = menu.add.label("\n\n\n\n\n",font_size=int(columnW*(1/29)))#20 en 1080
+    textFrame.pack(label)
     
-    detailsFrame.pack(menu.add.button(L.GetLoc("Market.Buy"), Buy),align=pygame_menu.locals.ALIGN_CENTER)
+    btn = menu.add.button(L.GetLoc('Market.Buy'), Buy,font_size=int(h*(2/29)), button_id='oppButton')
+    
+    detailsFrame.pack(btn,align=pygame_menu.locals.ALIGN_CENTER)
 
     menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
 

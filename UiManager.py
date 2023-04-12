@@ -203,6 +203,7 @@ def UpdateBackground():
                 worldPos = ScreenPosToWorldPos((Xpos,Ypos))
                 
                 posCode = str(worldPos)
+                #print(posCode)
                 
                 if not posCode in chunkTex:
                 
@@ -284,7 +285,7 @@ def GetChunkTextureAtChunkPos(pos:tuple)->str:
     """
     Renvoie la texture du chunk à une position de chunk (position entière d'un bloc divisée par 10)
     """
-    return chunkTex.get(str((pos[0]*10,pos[1]*10)),None)
+    return chunkTex.get(str((pos[0]*10.0,pos[1]*10.0)),None)
 
 
 def ItemMenu():

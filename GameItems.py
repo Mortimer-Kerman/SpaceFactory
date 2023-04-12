@@ -319,6 +319,11 @@ class Minerais:
         y=int(y)
         random.seed(x*y*se+x+y+se+x)#la graine
         r=3#plus r est grand, moins les minerais spawneront
+        
+        varTuple=(x//10,y//10)
+        #print(UiManager.GetChunkTextureAtChunkPos(varTuple))
+        #print(str((varTuple[0]*10.0,varTuple[1]*10.0)))
+        
         if not SaveManager.IsPosWet((x,y)):
             if random.randint(0,60*r)==40:
                 return "charbon"
@@ -330,6 +335,7 @@ class Minerais:
                 return "m1"
             else:
                 return False
+        return False
         
     def Clear():
         """
