@@ -236,6 +236,7 @@ def PlaceItem(item):
                 a+=[GetFromInv(i)]
         if all(a):
             mainData.items[str(list(item.pos))]=item
+            FormatInv()
             return True
         mainData.inv=tempInv
         UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
@@ -344,3 +345,11 @@ def GetFromInv(d):
             return False
     else:
         return False
+def FormatInv():
+    tempInv=[]
+    for i in mainData.inv:
+        tempInv.append(dict(i))
+    mainData.inv=[]
+    for i in tempInv:
+        for j in range(i["m"]):
+            AddToInv(i["n"])
