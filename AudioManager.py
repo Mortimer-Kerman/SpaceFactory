@@ -10,7 +10,7 @@ import random
 
 MUSIC_ENDED = pygame.USEREVENT#MUSIC_ENDED est un événement
 
-playlist=["theme","Genesis","LostInSpace","buran-voskresenie"]#définition de notre playlist
+playlist=["Genesis","LostInSpace","buran-voskresenie"]#définition de notre playlist
 
 lastRandomMusic = None#Variable stockant la dernière musique aléatoire jouée
 
