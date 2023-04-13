@@ -5,6 +5,7 @@ import random
 
 import UiManager
 import TextureManager
+import SaveManager
 
 class Drone:
     def __init__(self):
@@ -13,8 +14,10 @@ class Drone:
         self.speed = 0.005
         self.dest = list(pygame.mouse.get_pos())
     def show(self):
-        self.pos[0] += self.speed * (self.dest[0]-self.pos[0])
-        self.pos[1] += self.speed * (self.dest[1]-self.pos[1])
+        timeDelta = SaveManager.clock.get_time() / 10
+        
+        self.pos[0] += self.speed * (self.dest[0]-self.pos[0]) * timeDelta
+        self.pos[1] += self.speed * (self.dest[1]-self.pos[1]) * timeDelta
         UiManager.screen.blit(self.texture, self.pos)
     def update(self):
         self.dest = list(pygame.mouse.get_pos())
