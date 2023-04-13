@@ -344,18 +344,18 @@ class Minerais:
         #print(UiManager.GetChunkTextureAtChunkPos(varTuple))
         #print(str((varTuple[0]*10.0,varTuple[1]*10.0)))
         
-        if not SaveManager.IsPosWet((x,y)):
-            if random.randint(0,60*r)==40:
+        #if not SaveManager.IsPosWet((x,y)):
+        if random.randint(0,60*r)==40:
                 return "charbon"
-            elif random.randint(0,80*r)==40:
+        elif random.randint(0,80*r)==40:
                 return "cuivre"
-            elif random.randint(0,100*r)==10:
+        elif random.randint(0,100*r)==10:
                 return "or"
-            elif random.randint(0,120*r)==50:
+        elif random.randint(0,120*r)==50:
                 return "m1"
-            else:
+        else:
                 return False
-        return False
+        
         
     def Clear():
         """
