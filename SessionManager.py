@@ -285,6 +285,7 @@ def HandleMouseClicks(button,drone):
 PauseMenuBackground = None    
         
 def DisplayPauseMenuBackground():
+    SaveManager.clock.tick()
     if PauseMenuBackground != None:
         UiManager.screen.blit(PauseMenuBackground,(0,0))
         
