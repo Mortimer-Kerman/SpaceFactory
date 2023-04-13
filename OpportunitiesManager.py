@@ -345,7 +345,7 @@ class Opportunity:
         self.lastChoiceMade = None
         self.lastInteraction = None
         
-        self.resources = None
+        self.resources = {}
         
     def GetDescCodes(self)->dict:
         """
@@ -558,9 +558,14 @@ class Opportunity:
         self.SetState(Opportunity.State.PROPOSED)
         self.SetActivityDuration(0)
         self.returning = False
-        self.resources = None
         self.team["members"] = 5
         self.team["onRover"] = False
+        
+        for rName in self.resources.keys():
+            for i in range(self.resources[rName]):
+                SaveManager.AddToInv(rName)
+        
+        self.resources = {}
 
     def GetMembersAmount(self):
         """

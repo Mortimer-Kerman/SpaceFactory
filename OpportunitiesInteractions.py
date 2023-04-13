@@ -15,6 +15,8 @@ import TextureManager
 import OpportunitiesManager
 import UiManager
 import Localization
+import SaveManager
+import PlanetGenerator
 
 
 class OpportunityInteraction:
@@ -69,7 +71,33 @@ class OpportunityInteraction:
         if oppDescCodes == None:
             oppDescCodes = opportunity.GetDescCodes()
         
-        return True
+        applies = True
+        """
+        if Tags.ONROVER in oppDescCodes:
+            if oppDescCodes[Tags.ONROVER] != opportunity.IsOnRover():
+                applies = False
+        
+        if Tags.DEADPLANET in oppDescCodes:
+                if oppDescCodes[Tags.DEADPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead):
+                    applies = False
+        
+        if Tags.DESERTICPLANET in oppDescCodes:
+                if oppDescCodes[Tags.DESERTICPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Desertic):
+                    applies = False
+        
+        if Tags.LIVINGPLANET in oppDescCodes:
+                if oppDescCodes[Tags.LIVINGPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike):
+                    applies = False
+        
+        if Tags.MINMEMBERS in oppDescCodes:
+            if oppDescCodes[Tags.MINMEMBERS] > opportunity.GetMembersAmount():
+                applies = False
+        
+        if Tags.MAXMEMBERS in oppDescCodes:
+                if oppDescCodes[Tags.MAXMEMBERS] < opportunity.GetMembersAmount():
+                    applies = False
+        """
+        return applies
     
     def GetImage(self):
         """
@@ -144,7 +172,7 @@ class InteractionResult:
         opportunity.SetState(OpportunitiesManager.Opportunity.State.PROPOSED)
         opportunity.SetActivityDuration(0)
         opportunity.returning = False
-        opportunity.resources = None
+        opportunity.resources = {}
         opportunity.team["members"] = 5
         opportunity.team["onRover"] = False
 
@@ -176,7 +204,24 @@ class InteractionResult:
             success(opportunity)
         elif defeat != None:
             defeat(opportunity)
-            
+    
+    def AddResourceToInv(opportunity,rName:str,amount:int):
+        """
+        Permet d'ajouter ou de retirer des ressources de l'inventaire de l'expédition.
+        Utile pour simuler la découverte de ressources ou leur perte.
+        amount peut être un entier ou un tuple pour une quantité aléatoire de resources (bornes inclues)
+        """
+        if not rName in opportunity.resources:
+            opportunity.resources[rName] = 0
+        
+        if type(amount) == tuple:
+            amount = random.randint(amount[0], amount[1])
+        
+        opportunity.resources[rName] += amount
+        
+        if opportunity.resources[rName] <= 0:
+            opportunity.resources.pop(rName)
+    
     def OpenResultPanel(opportunity,message:str,imagePath:str):
         """
         Ouvre un panneau de résultat d'interaction.
@@ -230,10 +275,12 @@ onSiteInteractions=[
                            {Tags.LIVINGPLANET:True},
                            ("OppInteractions.OnSite.2.b1",
                             lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.2.b1.1","interactionBackgrounds/mineJungle"),
+                                      InteractionResult.AddResourceToInv(o, "cuivre", (150,400)),
                                       InteractionResult.ReturnToBase(o)),
                             (20,30)),
                            ("OppInteractions.OnSite.2.b2",
                             lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.2.b2.1","interactionBackgrounds/greenValley"),
+                                      InteractionResult.AddResourceToInv(o, "cuivre", (50,90)),
                                       InteractionResult.ReturnToBase(o)),
                             (10,15)),
                            ),
@@ -253,14 +300,14 @@ interruptionInteractions=[
                                 lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.1.b2.2","interactionBackgrounds/roverDesert")),
                                       InteractionResult.ResumeTravel(o)))
                            ),
-    OpportunityInteraction("OppInteractions.Interruption.2", "interactionBackgrounds/mesa",
+    OpportunityInteraction("OppInteractions.Interruption.2", "interactionBackgrounds/blockedWay",
                            {Tags.ONROVER:False},
                            ("OppInteractions.Interruption.2.b1",
                             lambda o:(InteractionResult.AddDistanceToPath(o, 3),
                                       InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.2.b1.1","interactionBackgrounds/walkingDesert"),
                                       InteractionResult.ResumeTravel(o))),
                            ("OppInteractions.Interruption.2.b2",
-                            lambda o:(InteractionResult.DoWithChance(o,0.1,
+                            lambda o:(InteractionResult.DoWithChance(o,0.4,
                                 lambda o:(InteractionResult.AddMembers(o, -1),
                                           InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.2.b2.1","interactionBackgrounds/falling")),
                                 lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.2.b2.2","interactionBackgrounds/walkingDesert")),
