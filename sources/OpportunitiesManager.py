@@ -134,7 +134,7 @@ def OpenMap():
         global runtime
         SaveManager.clock.tick()
         runtime+=SaveManager.clock.get_time() / 8
-        if Tick() or runtime > 50:
+        if Tick() or runtime > 20:
             runtime = 0
             RefreshMenu()
     

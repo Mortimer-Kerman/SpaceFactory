@@ -25,7 +25,8 @@ def Open(tab:str=None):
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
     
-    menu = pygame_menu.Menu(Localization.GetLoc("Aide"), 800, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
-    menu.add.button(Localization.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT)
+    menu = pygame_menu.Menu(Localization.GetLoc("Aide"), 800, 600, theme=pygame_menu.themes.THEME_DARK, onclose=pygame_menu.events.BACK)#le thème du menu
+    
+    
     
     menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
