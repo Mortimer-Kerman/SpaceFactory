@@ -6,7 +6,6 @@ import numpy as np
 import UiManager
 import SaveManager
 import TextureManager
-import IA
 import FunctionUtils
 
 from math import copysign
@@ -30,16 +29,16 @@ class Ennemis:
             if dist < min_dist:
                 min_dist = dist
                 nearest_pos = pos
-        self.go=nearest_pos
+        self.go=list(nearest_pos)
     def spawn():
         global EnnemisList
         a=SaveManager.GetCamPos()
         a[0]+=random.randint(-100, 100)
         a[1]+=random.randint(-100, 100)
         EnnemisList.append(Ennemis(a))
-    def __del__(self):
-        global EnnemisList
-        EnnemisList.remove(self)
+    #def __del__(self):
+        #global EnnemisList
+        #EnnemisList.remove(self)
     def __str__(self):
         return "Ennemis(%s)"%self.pos
     def ia(self):
@@ -52,7 +51,16 @@ class Ennemis:
         elif v[1]!=0:
             pos[1]=signe(v[0])
         else:
-            UiManager.Popup(text="Attention, un ennemi est toujours toujours dans un rayon de 5")
+            nearest_pos = [0,0]
+            min_dist = float('inf')
+
+            for pos in SaveManager.mainData.items.keys():
+                pos=FunctionUtils.strToList(pos)
+                dist = FunctionUtils.Distance(pos, self.pos)
+                if dist < min_dist:
+                    min_dist = dist
+                    nearest_pos = pos
+            self.go=list(nearest_pos)
         self.pos=pos
     def show(self):
         cam = SaveManager.GetCamPos()

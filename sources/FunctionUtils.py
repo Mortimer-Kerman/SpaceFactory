@@ -148,7 +148,7 @@ def strToList(str:str):
     """
     Convertit un string en liste de caractère
     """
-    return str.replace("(","").replace(")", "").split(",")
+    return str.replace("[","").replace("]", "").split(",")
 
 class NumpyDict:
     """
