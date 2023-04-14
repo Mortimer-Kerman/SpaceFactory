@@ -18,7 +18,7 @@ class Ennemis:
     def __init__(self,co):
         self.pos=co
         self.name="Ennemy"
-        self.rotation=1
+        self.rotation=random.randint(0, 3)
         
         nearest_pos = [0,0]
         min_dist = float('inf')

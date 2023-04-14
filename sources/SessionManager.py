@@ -297,7 +297,7 @@ def HandleMouseClicks(button,drone):
                 if a:
                     pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
                     SaveManager.AddToInv(d=a)
-                    UiManager.LightPopup(str(a)+" ajouté à l'inventaire")
+                    UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")
                     if showTuto==2:
                             Tuto()
         elif UiManager.UIelements.get("select2",False):
