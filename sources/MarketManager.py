@@ -133,7 +133,7 @@ def Buy():
             UiManager.Popup("Vous n'avez pas assez de coins")
 
 # Dictionnaire des prix des différents items
-price = {"charbon": 1, "cuivre": 2, "or": 5, "m1": 8,"nanoM1":25,"m2":15,"melted_copper":4}
+price = {"Coal": 1, "Copper": 2, "Gold": 5, "M1": 8,"NanoM1":25,"M2":15,"MeltedCopper":4}
 def Sell(item):
     # Ajoute le prix correspondant à la quantité de "coins" du joueur si l'item est dans le dictionnaire
     SaveManager.mainData.coins += price.get(item, 0)

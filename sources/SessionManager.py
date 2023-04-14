@@ -216,7 +216,7 @@ def HandleMouseClicks(button,drone):
                         else:
                             if not UiManager.showMenu["freeMouse"]:
                                 b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
-                                if b and ((showTuto==3 and SaveManager.GetSelectedItem()=="foreuse") or (showTuto==4 and "tapis" in SaveManager.GetSelectedItem()) or (showTuto==5 and SaveManager.GetSelectedItem()=="stockage")):
+                                if b and ((showTuto==3 and SaveManager.GetSelectedItem()=="Drill") or (showTuto==4 and "ConveyorBelt" in SaveManager.GetSelectedItem()) or (showTuto==5 and SaveManager.GetSelectedItem()=="Storage")):
                                     Tuto()
                 else:
                     SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
@@ -287,7 +287,7 @@ def HandleMouseClicks(button,drone):
             clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
             if clickedItem != None:
                 UiManager.LightPopup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
-                if clickedItem.name in ["trieur","stockage","market"]:clickedItem.edit(UiManager.interactItem(clickedItem))
+                if clickedItem.name in ["Sorter","Storage","Market"]:clickedItem.edit(UiManager.interactItem(clickedItem))
             else:
                 a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
                 if a:

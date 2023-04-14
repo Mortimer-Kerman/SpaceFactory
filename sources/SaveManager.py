@@ -19,7 +19,7 @@ import OpportunitiesManager
 import Localization as L
 import FunctionUtils
 
-SaveFileVersion="f0.15"
+SaveFileVersion="f0.16"
 
 difficultiesDict = {0: 'Saves.Difficulty.Easy',
                     1: 'Saves.Difficulty.Normal',
@@ -46,7 +46,7 @@ class Data:
         self.planetaryConditions = PlanetGenerator.PlanetaryConditions(seed=self.seed)
         self.items = FunctionUtils.NumpyDict()
         self.coins=0
-        self.selectedItem="foreuse"
+        self.selectedItem="Drill"
         self.rotation=0
         self.saveVersion=SaveFileVersion
         self.inv=[]

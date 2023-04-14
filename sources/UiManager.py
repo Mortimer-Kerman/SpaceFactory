@@ -417,11 +417,11 @@ def interactItem(item):
     
     interactMenu.add.button('Reprendre', interactMenu.disable)#Reprendre la partie
     b=None
-    if item.name=="trieur":
+    if item.name=="Sorter":
         a=[[i] for i in list(GameItems.allTransportableItems.keys())]
         b=interactMenu.add.selector("Choisissez : ",a)
         interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)
-    if item.name in ["stockage"]:
+    if item.name in ["Storage"]:
         
         in_menu=1
         BLOCK_SIZE=100
@@ -507,7 +507,7 @@ def interactItem(item):
                         Popup(Localization.GetLoc("SaveManager.GetFromInv.error"))
                         return
     
-    if item.name=="market":
+    if item.name=="Market":
         MarketManager.showMenu()
 
     SessionManager.PauseMenuBackground = None

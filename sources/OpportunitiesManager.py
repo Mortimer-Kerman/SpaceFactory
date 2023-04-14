@@ -381,7 +381,7 @@ class Opportunity:
         descCodes = self.GetDescCodes()
         
         q = Localization.GetLoc("Opportunities.Quantity." + str(descCodes["quantity"]))
-        r = Localization.GetLoc("Resources." + descCodes["ressource"])
+        r = Localization.GetLoc("Items." + descCodes["ressource"])
         if FunctionUtils.IsVowel(r[0]):
             q = q[:-2] + "'"
         
@@ -465,6 +465,9 @@ class Opportunity:
             if days > 0:
                 result += " "
             result += str(hours) + " " + ("heure" if hours == 1 else "heures")
+        
+        if result == "":
+            result = "moins d'une heure"
         
         return result
     

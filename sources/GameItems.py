@@ -16,17 +16,17 @@ import numpy as np
 
 import pygame
 
-menuElements=["foreuse","tapis","stockage","trieur","jonction","pont","four","market"]#éléments du menu de sélection
+menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market"]#éléments du menu de sélection
 
-allTransportableItems={"or":(219, 180, 44),"cuivre":(196, 115, 53),"charbon":(0,10,0),"m1":(78, 100, 110),"m2":(78,130,110),"melted_copper":(255,0,0),"nanoM1":(50,10,110)}
+allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"NanoM1":(50,10,110)}
 
 Anim=1
 
 craft={
     #id_block:{"c":(item 1, item 2),"r":résultat}
-    "four":{"c":("cuivre","charbon"),"r":"melted_copper"},
-    "MolecularAssembler":{"c":("m1","or"),"r":"m2"},
-    "NanoFabricator":{"c":("m1","melted_copper"),"r":"nanoM1"}
+    "Furnace":{"c":("Copper","Coal"),"r":"MeltedCopper"},
+    "MolecularAssembler":{"c":("M1","Gold"),"r":"M2"},
+    "NanoFabricator":{"c":("M1","MeltedCopper"),"r":"NanoM1"}
 }
 
 RenderQueues = {}
@@ -51,17 +51,17 @@ class Item:
         self.name=name
         self.pos=pos
         self.metadata=metadata
-        self.metadata["trieur_choice"]="or"
+        self.metadata["sorter_choice"]="Gold"
         self.metadata["biginv"]=self.metadata.get("biginv",[])
-        giveTo={"foreuse":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"stockage":[1,1,1,1],"jonction":[1,1,1,1]}#[up down left right]
+        giveTo={"Drill":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"Storage":[1,1,1,1],"Junction":[1,1,1,1]}#[up down left right]
 
         self.rotation=SaveManager.GetRotation()
-        if name in ["tapis","trieur"]:
+        if name in ["ConveyorBelt","Sorter"]:
             name=str(self.rotation)
         self.giveto=giveTo.get(name,[0,0,0,0])
         if self.name in list(craft.keys()):
             self.giveto=[1,1,1,1]
-        if self.name == "trieur":
+        if self.name == "Sorter":
             if 1 in self.giveto[0:2]:
                 self.giveto[0]*=2
                 self.giveto[1]*=2
@@ -95,22 +95,22 @@ class Item:
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
         
-        order = 0 if self.name in ["tapis","trieur"] else 2
+        order = 0 if self.name in ["ConveyorBelt","Sorter"] else 2
         
         AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))#afficher
         
         #UiManager.place_text(str(self.metadata.get("inv",None)),self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1],20,(255,0,0))
         
-        if self.name in ["tapis","trieur"]:
+        if self.name in ["ConveyorBelt","Sorter"]:
             col=allTransportableItems
-            a=col.get(self.metadata.get("inv",None),False) if self.name=="tapis" else col.get(self.metadata.get("trieur_choice",None),(255,0,0))
+            a=col.get(self.metadata.get("inv",None),False) if self.name=="ConveyorBelt" else col.get(self.metadata.get("sorter_choice",None),(255,0,0))
             #b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2])}
             #b=[([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2]),([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2])]
             #b,ca=b[self.rotation]# if runtime<40 else (0,0)
             
             if a:
                 renderOffset = (0,0)
-                if Anim and self.name=="tapis":
+                if Anim and self.name=="ConveyorBelt":
 
                     item=self.GetItemToGive()
                     renderOffset = (0,-runtime/50)
@@ -139,7 +139,7 @@ class Item:
     def GetItemToGive(self):
         g=self.giveto
         item=None
-        if self.name!="trieur":
+        if self.name!="Sorter":
                 if g[0]:
                     item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
                     if item is not None:
@@ -156,8 +156,8 @@ class Item:
                     item=SaveManager.GetItemAtPos((self.pos[0]+1,self.pos[1]))#on récupère l'item de droite
                     if item is not None:
                         if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
-        elif self.name=="trieur":
-            a=self.metadata.get("trieur_choice")==self.metadata.get("inv")
+        elif self.name=="Sorter":
+            a=self.metadata.get("sorter_choice")==self.metadata.get("inv")
             if ((g[0]==2 and a) or (g[0]==1 and not a)) and item is None:
                 item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
                 if item is not None:
@@ -179,16 +179,16 @@ class Item:
     def Give(self):
         if self.metadata.get("g",False):
             return
-        if self.name=="foreuse" and self.metadata.get("inv",None) is None:
-            if self.metadata.get("minerais", None) is None:
-                self.metadata["minerais"]=Minerais.Type(self.pos[0],self.pos[1])
-                if self.metadata["minerais"] is False:self.metadata["minerais"]=None
-            self.metadata["inv"]=self.metadata["minerais"]
-        if self.name in ["stockage"]+list(craft.keys()):
+        if self.name=="Drill" and self.metadata.get("inv",None) is None:
+            if self.metadata.get("ores", None) is None:
+                self.metadata["ores"]=Minerais.Type(self.pos[0],self.pos[1])
+                if self.metadata["ores"] is False:self.metadata["ores"]=None
+            self.metadata["inv"]=self.metadata["ores"]
+        if self.name in ["Storage"]+list(craft.keys()):
             self.metadata["biginv"]=self.metadata.get("biginv",[])
             if self.AddToInv(self.metadata.get("inv",None)):
                 self.metadata["inv"]=None
-        if self.name=="market" and self.metadata.get("inv",None) is not None:
+        if self.name=="Market" and self.metadata.get("inv",None) is not None:
             MarketManager.Sell(self.metadata["inv"])
             self.metadata["inv"]=None
         if self.name in list(craft.keys()):
@@ -200,7 +200,7 @@ class Item:
         item=self.GetItemToGive()
         if item is not None:
             if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
-                if self.name=="stockage":
+                if self.name=="Storage":
                     a=self.IsInInv(None)
                     if a!="NotIn":
                         del self.metadata["biginv"][a]
@@ -216,7 +216,7 @@ class Item:
                     
     def Obtain(self,inv,giver):
         self.metadata["g"]=1
-        if self.name in ["jonction"]+list(craft.keys()) and list(self.metadata.get("last",[]))==list(giver.pos):
+        if self.name in ["Junction"]+list(craft.keys()) and list(self.metadata.get("last",[]))==list(giver.pos):
             self.metadata["last"]=[]
         else:
             self.metadata["last"]=list(giver.pos)
@@ -225,7 +225,7 @@ class Item:
                 giver.metadata["inv"]=None
     
     def edit(self,a):
-        if self.name == "trieur":self.metadata["trieur_choice"]=a[0][0]
+        if self.name == "Sorter":self.metadata["sorter_choice"]=a[0][0]
     
     def IsInInv(self,a,p=0):
         for i,e in enumerate(self.metadata["biginv"]):
@@ -360,13 +360,13 @@ class Minerais:
         
         if not SaveManager.IsPosWet((x,y)):
             if random.randint(0,60*r)==40:
-                return "charbon"
+                return "Coal"
             elif random.randint(0,80*r)==40:
-                return "cuivre"
+                return "Copper"
             elif random.randint(0,100*r)==10:
-                return "or"
+                return "Gold"
             elif random.randint(0,120*r)==50:
-                return "m1"
+                return "M1"
             
         return False
         
@@ -378,19 +378,19 @@ class Minerais:
         current.clear()
 
 doc={
-    "foreuse":{"c":{"cuivre":50}},
-     "tapis":{"c":{"cuivre":10}},
-     "stockage":{"c":{"cuivre":100}},
-     "jonction":{"c":{"cuivre":20}},
-     "trieur":{"c":{"cuivre":20,"or":10}},
-     "market":{"c":{"m1":50,"cuivre":50,"or":10}},
+    "Drill":{"c":{"Copper":50}},
+     "ConveyorBelt":{"c":{"Copper":10}},
+     "Storage":{"c":{"Copper":100}},
+     "Junction":{"c":{"Copper":20}},
+     "Sorter":{"c":{"Copper":20,"Gold":10}},
+     "Market":{"c":{"M1":50,"Copper":50,"Gold":10}},
      "delete":{},
-     "charbon":{"g":1},
-     "cuivre":{"g":2},
-     "or":{"g":5},
-     "m1":{"g":10},
+     "Coal":{"g":1},
+     "Copper":{"g":2},
+     "Gold":{"g":5},
+     "M1":{"g":10},
      #objets du shop
-     "téléporteur":{"c":{"coins":100},"s":1}
+     "Teleporter":{"c":{"coins":100},"s":1}
      }
 def getDescription(type):
     loc = L.GetLoc("GameItems.d." + type)

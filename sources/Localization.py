@@ -14,7 +14,7 @@ def Init():
     """
     try:
         #Ouverture du fichier
-        with open("Assets/localization.txt", "r", encoding="utf-8") as f:
+        with open("./Assets/localization.txt", "r", encoding="utf-8") as f:
             #Pour chaque ligne du fichier
             for LocKey in f.readlines():
                 LocKey = LocKey[:-1]#retrait du dernier caractère, celui de retour à la ligne
