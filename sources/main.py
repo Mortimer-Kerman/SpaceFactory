@@ -31,7 +31,7 @@ UiManager.Init()#initialisation du l'UiManager
 
 pygame.display.set_caption('SpaceFactory')#Définition du tire de la fenêtre
 
-pygame.display.set_icon(pygame.image.load("Assets/textures/logos/SPFTR.png"))
+pygame.display.set_icon(pygame.image.load("./Assets/textures/logos/SPFTR.png"))
 
 TextureManager.LoadAllTextures()#chargement des textures
 
@@ -146,8 +146,8 @@ def OpenSavesList():
     #Pour chaque sauvegarde de la liste...
     for saveName in saveNames:
         #Si la sauvegarde a un fichier de métadonnées, on les charge et on les stocke dans le dictionnaire au nom de la save
-        if os.path.isfile("Saves/" + saveName + "/meta.json"):
-            with open("Saves/" + saveName + "/meta.json", "r") as f:
+        if os.path.isfile("./Saves/" + saveName + "/meta.json"):
+            with open("./Saves/" + saveName + "/meta.json", "r") as f:
                 savesMetaDatas[saveName] = json.load(f)
         
     #Fonction interne pour directement récupérer la date du dernier lancement d'une sauvegarde
@@ -239,7 +239,7 @@ def OpenSavesList():
         
         #On tente de récupérer l'icône de la sauvegarde
         planetTex = TextureManager.GetTexture("missingThumb")
-        texPath = "Saves/" + saveName + "/planet.png"
+        texPath = "./Saves/" + saveName + "/planet.png"
         if os.path.isfile(texPath):
             planetTex = pygame.image.load(texPath)
         

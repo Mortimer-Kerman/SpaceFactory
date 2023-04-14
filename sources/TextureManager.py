@@ -96,7 +96,7 @@ def GetFont(fontName:str,fontSize:int=None)->pygame.font.Font:
     
     if not fullFontName in fonts:
         try:
-            fonts[fullFontName] = pygame.font.Font("Assets/font/" + fontName + ".ttf", fontSize if fontSize != None else 20)
+            fonts[fullFontName] = pygame.font.Font("./Assets/font/" + fontName + ".ttf", fontSize if fontSize != None else 20)
         except:
             return pygame.font.Font(pygame.font.get_default_font(),fontSize if fontSize != None else 20)
     

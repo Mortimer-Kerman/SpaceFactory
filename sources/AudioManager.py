@@ -16,7 +16,7 @@ lastRandomMusic = None#Variable stockant la dernière musique aléatoire jouée
 
 def Init():
     global playlist
-    playlist = os.listdir('Assets/audio/')#définition de notre playlist
+    playlist = os.listdir('./Assets/audio/')#définition de notre playlist
     
     pygame.mixer.music.set_endevent(MUSIC_ENDED)#si la musique s'arrête, lancer événement MUSIC_ENDED
     

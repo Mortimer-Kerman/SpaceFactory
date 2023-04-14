@@ -82,7 +82,7 @@ def Load(name:str)->bool:
     global mainData
     CreateSave(name)#Création de la sauvegarde
     if SaveExists(name):#si la sauvegarde existe
-        path = "Saves/" + saveName + "/"
+        path = "./Saves/" + saveName + "/"
         with open(path + "save.spf", "r") as f:
             mainData.__dict__ = json.load(f)#charger les Datas
         try:
@@ -126,7 +126,7 @@ def Save():
     """
     Sauvegarde
     """
-    path = "Saves/" + saveName + "/"
+    path = "./Saves/" + saveName + "/"
     if not os.path.exists(path):#si le dossier de sauvegarde n'existe pas, le créer
         os.makedirs(path)
     with open(path + "save.spf", "w") as f:
@@ -173,7 +173,7 @@ def SaveExists(name:str):
     """
     Vérifie si la sauvegarde existe
     """
-    path = "Saves/" + name + "/"
+    path = "./Saves/" + name + "/"
     return os.path.exists(path) and os.path.isfile(path + "save.spf")
 
 def SaveLoaded()->bool:

@@ -9,8 +9,8 @@ from PIL import Image
 import numpy as np
 #récupération des deux textures sous forme d'arrays de couelurs
 
-perlinTex = list(Image.open("Assets/precomputedNoise/perlinTexture.png").getdata())
-craterTex = list(Image.open("Assets/precomputedNoise/craterTexture.png").getdata())
+perlinTex = list(Image.open("./Assets/precomputedNoise/perlinTexture.png").getdata())
+craterTex = list(Image.open("./Assets/precomputedNoise/craterTexture.png").getdata())
 
 def perlinNoise(x:float, y:float)->float:
     """

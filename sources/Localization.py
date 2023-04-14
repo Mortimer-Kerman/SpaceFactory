@@ -29,7 +29,7 @@ def Init():
 
 def GetLoc(LocKey:str, *args):
     """
-    Permet d'obtenir une traduction formatée à partir de son code. Les paramètres en entrée remplaçeront %$n, avec n de 1 à 9 inclus suivant l'ordre des paramètres.
+    Permet d'obtenir une traduction formatée à partir de son code. Les paramètres en entrée remplaceront %$n, avec n de 1 à 9 inclus suivant l'ordre des paramètres.
     """
     try:
         #On tente de récupérer la clé et on remplace %$r par des retours à la ligne
