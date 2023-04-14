@@ -202,9 +202,9 @@ OppInteractions.OnSite.1.b3.1 : 8h après être entré dans le bassin, des capte
 
 OppInteractions.OnSite.2 : L'équipe est arrivée à destination!%$rEn explorant, elle a rapidement remarqué un immense gisement de cuivre trônant au milieu de la vallée.%$rSon exploitation complète pourrait rapporter de grandes quantités de cuivre à la base, mais cela%$rdétruirait entièrement l'écosystème aux alentours. Il est également possible de n'en exploiter%$rqu'une partie, ce qui pourrait préserver la vallée.%$r%$rQue faire?
 OppInteractions.OnSite.2.b1 : Extraire le cuivre en totalité
-OppInteractions.OnSite.2.b1.1 : L'équipe a exploité le filon en totalité, au détriment de la faune locale, mais a pu en%$rextraire beaucoup de cuivre. Elle rentre à la base avec de grandes quantités de ressources.
+OppInteractions.OnSite.2.b1.1 : L'équipe a exploité le filon en totalité, au détriment de la faune locale, mais a pu en%$rextraire beaucoup de cuivre (%$1). Elle rentre à la base avec de grandes quantités de ressources.
 OppInteractions.OnSite.2.b2 : N'exploiter qu'une partie du filon
-OppInteractions.OnSite.2.b2.1 : L'équipe a pu extraire de petites quantités de cuivre, et en a également profité pour faire%$rdes prélèvement sur la flore locale. Elle rentre à la base avec des données prometteuses.
+OppInteractions.OnSite.2.b2.1 : L'équipe a pu extraire de petites quantités de cuivre (%$1), et en a également profité pour faire%$rdes prélèvement sur la flore locale. Elle rentre à la base avec des données prometteuses.
 
 OppInteractions.Interruption.1 : L'expédition est prise dans une tempête de sable!%$rLa visibilité est nulle, la progression est au point mort et le châssis du rover commence à protester.%$rL'équipe de reconaissance peut attendre la fin de la tempête dans le rover, mais il ne sera peut-être%$rplus en état de fonctionnement, et ils peuvent se retrouver bloqués par le sable accumulé autour.%$rIls peuvent également continuer à pied et abandonner le rover, mais leur progression sera ralentie.%$r%$rQue faire?
 OppInteractions.Interruption.1.b1 : Abandonner le rover

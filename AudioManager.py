@@ -6,15 +6,18 @@ Created on Sun Feb 26 22:20:35 2023
 """
 
 import pygame
+
 import random
+import os
 
 MUSIC_ENDED = pygame.USEREVENT#MUSIC_ENDED est un événement
-
-playlist=["Genesis","LostInSpace","buran-voskresenie"]#définition de notre playlist
 
 lastRandomMusic = None#Variable stockant la dernière musique aléatoire jouée
 
 def Init():
+    global playlist
+    playlist = os.listdir('Assets/audio/')#définition de notre playlist
+    
     pygame.mixer.music.set_endevent(MUSIC_ENDED)#si la musique s'arrête, lancer événement MUSIC_ENDED
     
     pygame.mixer.music.set_volume(0.7)#On règle le volume de la musique
@@ -33,7 +36,7 @@ def PlayRandomMusic():
     Lance une musique aléatoire différente de la dernière musique aléatoire
     """
     global lastRandomMusic
-    
+    global playlist
     #On récupère une musique aléatoire
     music = random.choice(playlist)
     
@@ -48,5 +51,5 @@ def PlayMusic(musicName:str):
     """
     Lance une musique d'après son nom
     """
-    pygame.mixer.music.load("./Assets/audio/" + musicName + ".mp3")#on charge une nouvelle musique
+    pygame.mixer.music.load("./Assets/audio/" + musicName)#on charge une nouvelle musique
     pygame.mixer.music.play(start=0.0, fade_ms=200)#lancement de la lecture de la musique

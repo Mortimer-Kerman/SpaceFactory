@@ -59,6 +59,8 @@ def Play(saveName:str,**kwargs):
     if gamemode != None:
         SaveManager.mainData.gamemode = gamemode
     
+    UiManager.UpdateBackground()#Première mise à jour du fond
+    
     runtime=0
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
     
@@ -71,8 +73,6 @@ def Play(saveName:str,**kwargs):
     EventM=EventManager.Events()
     
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
-
-        EventM.LaunchEvent()
         
         UiManager.UpdateBackground()#mise à jour du fond
         
@@ -111,7 +111,7 @@ def Play(saveName:str,**kwargs):
                     SaveManager.SetCamPos([pos[0] * zoomDiff, pos[1] * zoomDiff])
                     
                     TextureManager.RefreshZoom()#On mets à jour le zoom
-                    GameItems.Minerais.SpawnBorder()#On spawn les minerais aux bordures
+                    GameItems.Minerais.SpawnBorder(True)#On spawn les minerais aux bordures
 
                 if showTuto==1:
                     Tuto()
@@ -166,12 +166,26 @@ def HandleLongKeyInputs():
     SaveManager.TranslateCam(camOffset)#On applique les changements de caméra
     
     if camOffset != [0,0]:#si un déplacement a eu lieu
-        GameItems.Minerais.SpawnBorder()#on spawn les minerais aux bordures
+        
         if showTuto==0:
             Tuto()
-    if SaveManager.GetZoom()<30 and camOffset!=[0,0]:
-        SaveManager.mainData.zoom=SaveManager.GetZoom()+1#On augmente la zoom
-        TextureManager.RefreshZoom()#on actualise les textures
+        if SaveManager.GetZoom()<30:
+            
+            zoom = SaveManager.GetZoom()+1
+            
+            #Calcul du facteur de différence entre l'ancien et le nouveau zoom
+            zoomDiff = zoom / SaveManager.mainData.zoom
+            
+            SaveManager.mainData.zoom=zoom#On augmente la zoom
+            
+            #On multiplie la position par la différence de zoom pour éviter un décalage
+            pos = SaveManager.GetCamPos()
+            SaveManager.SetCamPos([pos[0] * zoomDiff, pos[1] * zoomDiff])
+            
+            TextureManager.RefreshZoom()#on actualise les textures
+            GameItems.Minerais.SpawnBorder(True)#on spawn les minerais aux bordures
+        else:
+            GameItems.Minerais.SpawnBorder()#on spawn les minerais aux bordures
             
 def HandleShortKeyInputs(key):
     if key == SettingsManager.GetKeybind("rotate"):
@@ -224,6 +238,9 @@ def HandleMouseClicks(button,drone):
         elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
             if Pause():#On fait pause
                 return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
+        elif UiManager.UIelements.get("opportunities_icon",False):
+            #Si le bouton du menu d'opportunitées est ouvert, on ouvre le menu d'opportunités
+            OpportunitiesManager.OpenMap()
         elif UiManager.UIelements.get("select2",False):
             for i in GameItems.menuElements:
                 if UiManager.UIelements.get("selectElements_"+i,False):

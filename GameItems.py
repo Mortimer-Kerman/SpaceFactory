@@ -262,12 +262,18 @@ current = []  # liste des minerais affichés
 
 class Minerais:
     """
-    Toutes les fonctions relatives aux Minerais
+    Toutes les fonctions relatives aux minerais
     """
 
     def SpawnAllScreen():
         """
-        Apparition des minerais sur tout l'écran
+        Fait apparaître des minerais sur tout l'écran
+        """
+        pos1 = UiManager.ScreenPosToWorldPos((0,0))
+        pos2 = UiManager.ScreenPosToWorldPos((UiManager.width,UiManager.height))
+        for x in range(int(pos1[0]),int(pos2[0])+1):
+            for y in range(int(pos1[1]),int(pos2[1])+1):
+                Minerais.Place(x, y)
         """
         cam = SaveManager.GetCamPos()
         cam = [cam[0], cam[1]]
@@ -276,26 +282,43 @@ class Minerais:
         cam[1] += UiManager.height / 2
         for x in np.arange((0 - cam[0]) // zoom, (UiManager.width + cam[0]) // zoom).astype(int):
             for y in np.arange((0 - cam[1]) // zoom, (UiManager.height + cam[1]) // zoom).astype(int):
-                Minerais.Place(x, y)
+                
+        """
+        
 
-    def SpawnBorder():
+    def SpawnBorder(wideBorder:bool=False):
         """
-        Ne fais spawn les minerais que sur les bordures
+        Fait apparaître des minerais sur les bords de l'écran
         """
-        cam = SaveManager.GetLastCamPos()
-        zoom = SaveManager.GetZoom()
-        cam[0] += UiManager.width / 2
-        cam[1] += UiManager.height / 2
-        for x in np.arange((0 - cam[0]) // zoom - 1, (UiManager.width + cam[0]) // zoom + 1).astype(int):
-            Minerais.Place(x, int((0 - cam[1]) // zoom))
-            Minerais.Place(x, int((UiManager.height + cam[1]) // zoom))
-        for y in np.arange((0 - cam[1]) // zoom - 1, (UiManager.height + cam[1]) // zoom + 1).astype(int):
-            Minerais.Place(int((0 - cam[0]) // zoom), y)
-            Minerais.Place(int((UiManager.width + cam[0]) // zoom), y)
+        
+        pos1 = list(UiManager.ScreenPosToWorldPos((0,0)))
+        pos1[0] = int(pos1[0])-1
+        pos1[1] = int(pos1[1])-1
+        pos2 = list(UiManager.ScreenPosToWorldPos((UiManager.width,UiManager.height)))
+        pos2[0] = int(pos2[0])+1
+        pos2[1] = int(pos2[1])+1
+        
+        if wideBorder:
+            for x in range(pos1[0],pos2[0]+1):
+                for y1 in range(0,5):
+                    Minerais.Place(x, pos1[1]+y1)
+                    Minerais.Place(x, pos2[1]-y1)
+            for y in range(pos1[1],pos2[1]+1):
+                for x1 in range(0,5):
+                    Minerais.Place(pos1[0]+x1, y)
+                    Minerais.Place(pos2[0]-x1, y)
+        else:
+            for x in range(pos1[0],pos2[0]+1):
+                Minerais.Place(x, pos1[1])
+                Minerais.Place(x, pos2[1])
+            for y in range(pos1[1],pos2[1]+1):
+                Minerais.Place(pos1[0], y)
+                Minerais.Place(pos2[0], y)
+                
         # retirer les minerais non affichés (loin du joueur)
         for i in current:
-            if not (-cam[0] + UiManager.width + 9000 >= i[0] * zoom >= -cam[0] - 9000 and
-                    -cam[1] + UiManager.height + 9000 >= i[1] * zoom >= -cam[1] - 9000):
+            if not ((pos1[0] - 9000 < i[0] < pos2[0] + 9000) and 
+                    (pos1[1] - 9000 < i[1] < pos2[1] + 9000)):
                 current.remove(i)
 
     def Place(x, y):
@@ -332,24 +355,20 @@ class Minerais:
         se=SaveManager.GetSeed()
         x=int(x)
         y=int(y)
-        random.seed(x*y*se+x+y+se+x)#la graine
-        r=3#plus r est grand, moins les minerais spawneront
+        random.seed(x*y*se+x+y+se+x)#Calcul d'une graine pour l'aléatoire en fonction de la position et de la graine de la sauvegarde
+        r=3#plus r est grand, moins les minerais apparaîtront
         
-        varTuple=(x//10,y//10)
-        #print(UiManager.GetChunkTextureAtChunkPos(varTuple))
-        #print(str((varTuple[0]*10.0,varTuple[1]*10.0)))
-        
-        #if not SaveManager.IsPosWet((x,y)):
-        if random.randint(0,60*r)==40:
+        if not SaveManager.IsPosWet((x,y)):
+            if random.randint(0,60*r)==40:
                 return "charbon"
-        elif random.randint(0,80*r)==40:
+            elif random.randint(0,80*r)==40:
                 return "cuivre"
-        elif random.randint(0,100*r)==10:
+            elif random.randint(0,100*r)==10:
                 return "or"
-        elif random.randint(0,120*r)==50:
+            elif random.randint(0,120*r)==50:
                 return "m1"
-        else:
-                return False
+            
+        return False
         
         
     def Clear():

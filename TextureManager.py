@@ -55,10 +55,11 @@ def LoadAllTextures():
     
     for subdir, dirs, files in os.walk(texturesPath):#on explore tous les fichiers dans le chemin des textures
         for file in files:#pour chaque fichier dans les fichiers
-            filepath = os.path.join(subdir, file)
-            filename = filepath.replace(texturesPath, "").replace("\\","/")
-            print("Loading " + filename)
-            loadedTextures[filename] = pygame.image.load(filepath).convert_alpha()#chargement via pygame.image.load
+            if file.endswith(".png"):
+                filepath = os.path.join(subdir, file)
+                filename = filepath.replace(texturesPath, "").replace("\\","/")
+                print("Loading " + filename)
+                loadedTextures[filename] = pygame.image.load(filepath).convert_alpha()#chargement via pygame.image.load
     print("All textures loaded!")#message de confirmation que toutes les textures sont chargées
 
 zoomedTextures = {}#dictionnaire des textures zoomées

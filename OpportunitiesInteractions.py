@@ -123,6 +123,8 @@ class InteractionResult:
     Les différentes fonctions résultat des interactions des opportunités. Ont vocation à être stockées dans des lambdas pour utilisation dans les option d'un objet OpportunityInteraction.
     """
     
+    locCodes = {}#Stocke temporairement des valeurs à passer à localization.getloc dans les fonctions ci dessous avec des IDs
+    
     def AddDistanceToPath(opportunity,distance:int):
         """
         Ajoute de la distance au trajet aller retour.
@@ -205,7 +207,7 @@ class InteractionResult:
         elif defeat != None:
             defeat(opportunity)
     
-    def AddResourceToInv(opportunity,rName:str,amount:int):
+    def AddResourceToInv(opportunity,rName:str,amount:int,amountCode:str=None):
         """
         Permet d'ajouter ou de retirer des ressources de l'inventaire de l'expédition.
         Utile pour simuler la découverte de ressources ou leur perte.
@@ -217,12 +219,15 @@ class InteractionResult:
         if type(amount) == tuple:
             amount = random.randint(amount[0], amount[1])
         
+        if amountCode != None:
+            InteractionResult.locCodes[amountCode] = amount
+        
         opportunity.resources[rName] += amount
         
         if opportunity.resources[rName] <= 0:
             opportunity.resources.pop(rName)
     
-    def OpenResultPanel(opportunity,message:str,imagePath:str):
+    def OpenResultPanel(opportunity,message:str,imagePath:str,*args):
         """
         Ouvre un panneau de résultat d'interaction.
         """
@@ -242,7 +247,7 @@ class InteractionResult:
         
         label = menu.add.label("\n\n\n\n\n\n",font_size=15)
         
-        lines = Localization.GetLoc(message).split("\n")
+        lines = Localization.GetLoc(message,*[InteractionResult.locCodes.get(code,code) for code in args]).split("\n")
         for i in range(7):
             if i < len(lines):
                 label[i].set_title(lines[i])
@@ -274,13 +279,13 @@ onSiteInteractions=[
     OpportunityInteraction("OppInteractions.OnSite.2", "interactionBackgrounds/greenValley",
                            {Tags.LIVINGPLANET:True},
                            ("OppInteractions.OnSite.2.b1",
-                            lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.2.b1.1","interactionBackgrounds/mineJungle"),
-                                      InteractionResult.AddResourceToInv(o, "cuivre", (150,400)),
+                            lambda o:(InteractionResult.AddResourceToInv(o, "cuivre", (150,400),"rAmount"),
+                                      InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.2.b1.1","interactionBackgrounds/mineJungle","rAmount"),
                                       InteractionResult.ReturnToBase(o)),
                             (20,30)),
                            ("OppInteractions.OnSite.2.b2",
-                            lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.2.b2.1","interactionBackgrounds/greenValley"),
-                                      InteractionResult.AddResourceToInv(o, "cuivre", (50,90)),
+                            lambda o:(InteractionResult.AddResourceToInv(o, "cuivre", (50,90),"rAmount"),
+                                      InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.2.b2.1","interactionBackgrounds/greenValley","rAmount"),
                                       InteractionResult.ReturnToBase(o)),
                             (10,15)),
                            ),

@@ -60,6 +60,7 @@ def DisplayUi():
     forme(0,0,width,100,50,200)#forme affichée en haut de l'écran
     
     UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    UIelements["opportunities_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100, is_menu=True), (100, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     
     forme2(0,height,width,100,50,200)#forme2 affichée en bas de l'écran
     
@@ -203,10 +204,9 @@ def UpdateBackground():
                 worldPos = ScreenPosToWorldPos((Xpos,Ypos))
                 
                 posCode = str(worldPos)
-                #print(posCode)
                 
                 if not posCode in chunkTex:
-                
+                    
                     val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (SaveManager.GetSeed(),SaveManager.GetSeed()), 1)
                     
                     tex = "rock"
