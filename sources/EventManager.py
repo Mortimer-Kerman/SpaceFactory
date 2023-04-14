@@ -17,7 +17,7 @@ EnnemisList=[]
 class Ennemis:
     def __init__(self,co):
         self.pos=co
-        self.name="ennemi"
+        self.name="Ennemi"
         self.rotation=1
         
         nearest_pos = [0,0]
@@ -32,37 +32,44 @@ class Ennemis:
                 min_dist = dist
                 nearest_pos = pos
         self.go=list(nearest_pos)
+        print(self.go)
     def spawn():
         global EnnemisList
-        a=SaveManager.GetCamPos()
-        a[0]+=random.randint(-100, 100)
-        a[1]+=random.randint(-100, 100)
+        #a=SaveManager.GetCamPos()
+        #a[0]+=random.randint(-100, 100)
+        #a[1]+=random.randint(-100, 100)
+        a=[0,0]
         EnnemisList.append(Ennemis(a))
     #def __del__(self):
         #global EnnemisList
         #EnnemisList.remove(self)
     def __str__(self):
         return "Ennemis(%s)"%self.pos
-    def ia(self):
+    def ia(self,runtime):
+        if runtime<=49:
+            return
         pos=self.pos
         v=[None,None]
         v[0]=self.go[0]-self.pos[0]
         v[1]=self.go[1]-self.pos[1]
         if v[0]!=0:
-            pos[0]=signe(v[0])
+            pos[0]+=signe(v[0])
         elif v[1]!=0:
-            pos[1]=signe(v[0])
+            pos[1]-=signe(v[0])
         else:
-            nearest_pos = [0,0]
+            nearest_pos = [random.randint(-100,100),random.randint(-100,100)]
             min_dist = float('inf')
 
             for pos in SaveManager.mainData.items.keys():
                 pos=FunctionUtils.strToList(pos)
+                pos[0]=float(pos[0])
+                pos[1]=float(pos[1])
                 dist = FunctionUtils.Distance(pos, self.pos)
-                if dist < min_dist:
+                if dist < min_dist and pos!=self.go:
                     min_dist = dist
                     nearest_pos = pos
             self.go=list(nearest_pos)
+            return
         self.pos=pos
     def show(self):
         cam = SaveManager.GetCamPos()
