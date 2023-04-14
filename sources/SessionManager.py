@@ -73,6 +73,8 @@ def Play(saveName:str,**kwargs):
 
     EventM=EventManager.Events()
     
+    EventManager.EnnemisList.clear()
+
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
         UiManager.UpdateBackground()#mise à jour du fond

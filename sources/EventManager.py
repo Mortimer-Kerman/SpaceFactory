@@ -55,7 +55,7 @@ class Ennemis:
         if v[0]!=0:
             pos[0]+=signe(v[0])
         elif v[1]!=0:
-            pos[1]-=signe(v[0])
+            pos[1]+=signe(v[1])
         else:
             nearest_pos = [random.randint(-100,100),random.randint(-100,100)]
             min_dist = float('inf')
