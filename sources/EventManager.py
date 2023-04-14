@@ -17,7 +17,7 @@ EnnemisList=[]
 class Ennemis:
     def __init__(self,co):
         self.pos=co
-        self.name="Ennemi"
+        self.name="Ennemy"
         self.rotation=1
         
         nearest_pos = [0,0]
