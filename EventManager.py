@@ -15,7 +15,7 @@ class Events:
         self.nextEvent = self.lastEvent + random.randint(990,998)
     def LaunchEvent(self):
         self.runtime+=1
-        if self.nextEvent<runtime:
-            self.nextEvent = self.nextEvent + random.randint(99000,99800)
+        if self.nextEvent<self.runtime:
+            self.nextEvent = self.nextEvent + random.randint(990,998)
             self.isEventHappening = True
             UiManager.Popup("text")
