@@ -79,6 +79,10 @@ def Play(saveName:str,**kwargs):
         DisplayObjects(int(runtime))
 
         drone.show()
+
+        for i in EventManager.EnnemisList:
+            i.ia()
+            i.show()
         
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
