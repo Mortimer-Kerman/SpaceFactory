@@ -23,6 +23,7 @@ import MarketManager
 import TaskManager
 import AnimationsManager
 import EventManager
+import HelpMenu
 
 showTuto=9**9
 def Tuto(t=1):
@@ -243,8 +244,11 @@ def HandleMouseClicks(button,drone):
             if Pause():#On fait pause
                 return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
         elif UiManager.UIelements.get("opportunities_icon",False):
-            #Si le bouton du menu d'opportunitées est ouvert, on ouvre le menu d'opportunités
+            #Si le bouton du menu d'opportunitées est choisi, on ouvre le menu d'opportunités
             OpportunitiesManager.OpenMap()
+        elif UiManager.UIelements.get("help_icon",False):
+            #Si le bouton du menu d'aide est choisi, on ouvre le menu d'aide
+            HelpMenu.Open()
         elif UiManager.UIelements.get("select2",False):
             for i in GameItems.menuElements:
                 if UiManager.UIelements.get("selectElements_"+i,False):

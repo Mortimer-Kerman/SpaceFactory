@@ -61,6 +61,7 @@ def DisplayUi():
     
     UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     UIelements["opportunities_icon"]=screen.blit(TextureManager.GetTexture("opportunities_icon", 50, is_menu=True), (100, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    UIelements["help_icon"]=screen.blit(TextureManager.GetTexture("help_icon", 50, is_menu=True), (150, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     
     forme2(0,height,width,100,50,200)#forme2 affichée en bas de l'écran
     
