@@ -79,7 +79,7 @@ def Distance(a:tuple,b:tuple):
     """
     Calcul de distance entre deux positions
     """
-    return math.sqrt(((int(b[0])-int(a[0]))**2) + ((int(b[1])-int(a[1]))**2))
+    return math.sqrt(((b[0]-a[0])**2) + ((b[1]-a[1])**2))
 
 def StretchSurfaceToSurface(target:pygame.Surface,source:pygame.Surface):
     source = pygame.transform.scale(source, target.get_size())
