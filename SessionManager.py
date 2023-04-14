@@ -22,6 +22,7 @@ import OpportunitiesManager
 import MarketManager
 import TaskManager
 import AnimationsManager
+import EventManager
 
 showTuto=9**9
 def Tuto(t=1):
@@ -66,8 +67,12 @@ def Play(saveName:str,**kwargs):
         Tuto(0)
     
     drone=AnimationsManager.Drone()
+
+    EventM=EventManager.Events()
     
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
+
+        EventM.LaunchEvent()
         
         UiManager.UpdateBackground()#mise à jour du fond
         
@@ -127,6 +132,7 @@ def Play(saveName:str,**kwargs):
             if SaveManager.SaveLoaded():
                 OpportunitiesManager.Tick()
                 drone.update()
+                EventM.LaunchEvent()
     return True
     
         
