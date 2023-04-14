@@ -25,6 +25,8 @@ class Ennemis:
 
         for pos in SaveManager.mainData.items.keys():
             pos=FunctionUtils.strToList(pos)
+            pos[0]=float(pos[0])
+            pos[1]=float(pos[1])
             dist = FunctionUtils.Distance(pos, self.pos)
             if dist < min_dist:
                 min_dist = dist
