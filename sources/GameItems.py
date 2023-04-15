@@ -11,6 +11,7 @@ import MarketManager
 import TextureManager
 import random
 import Localization as L
+import HelpMenu
 
 import numpy as np
 
@@ -393,12 +394,15 @@ doc={
      "Teleporter":{"c":{"coins":100},"s":1}
      }
 def getDescription(type):
+    HelpMenu.Open(type)
+    """
     loc = L.GetLoc("GameItems.d." + type)
     
     if loc == "GameItems.d." + type:
         loc = L.GetLoc("GameItems.d.error")
     
     UiManager.Popup(loc)
+    """
 
 def getPrice(type):
     #UiManager.Popup(str(list(doc.get(type,{}).get("c",{}).items())))
