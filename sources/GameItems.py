@@ -396,10 +396,10 @@ doc={
 def getDescription(type):
     HelpMenu.Open(type)
     """
-    loc = L.GetLoc("GameItems.d." + type)
+    loc = L.GetLoc("Items.d." + type)
     
-    if loc == "GameItems.d." + type:
-        loc = L.GetLoc("GameItems.d.error")
+    if loc == "Items.d." + type:
+        loc = L.GetLoc("Items.d.error")
     
     UiManager.Popup(loc)
     """

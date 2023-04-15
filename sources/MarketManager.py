@@ -36,7 +36,7 @@ def showMenu():
         global currentItem # Déclaration de la variable globale currentItem pour l'utiliser dans la fonction
         currentItem = a # Définition de la valeur de currentItem à l'argument donné
         title.set_title(L.GetLoc("Items."+a))
-        SetLabelText(L.GetLoc("GameItems.d."+a)) # Définition des textes de la fenêtre
+        SetLabelText(L.GetLoc("Items.d."+a)) # Définition des textes de la fenêtre
 
     h = int((UiManager.height//2)-105)
     w = int(UiManager.height)

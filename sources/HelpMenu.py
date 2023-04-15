@@ -79,8 +79,8 @@ def Init():
             except AssertionError:
                 rowsLeft = False
         
-        descText = Localization.GetLoc('GameItems.d.' + item)
-        if descText != 'GameItems.d.' + item:
+        descText = Localization.GetLoc('Items.d.' + item)
+        if descText != 'Items.d.' + item:
             SetDescText(descText)
         else:
             SetDescText("")
