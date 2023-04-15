@@ -32,10 +32,13 @@ def Init():
     
     frame = menu.add.frame_h(800, 540, padding=0)
     frame.relax(True)
+    frame.set_float(float_status=True)
     
-    listFrame = menu.add.frame_v(380, max(len(GameItems.craft) * 55, 541), max_height=540, padding=0)
+    listFrame = menu.add.frame_v(380, max(len(GameItems.craft) * 55 + 5, 541), max_height=540, padding=0)
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
+    
+    listFrame.pack(menu.add.vertical_margin(5))
     
     for c in GameItems.craft.keys():
         
@@ -90,13 +93,15 @@ def Init():
         for w in detailsFrame.get_widgets(unpack_subframes=False):
             h += w.get_size()[1]
         
-        """
+        
         detailsFrame.unpack(table)
+        table.set_float(float_status=False)
         detailsFrame.unpack(title)
+        title.set_float(float_status=False)
         detailsFrame.resize(380, max(541,h), max_height=540)
         detailsFrame.pack(title, align=pygame_menu.locals.ALIGN_CENTER)
         detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
-        """
+        
 
 def Open(tab:str=None):
     """
