@@ -65,6 +65,12 @@ class Data:
 
 clock = pygame.time.Clock()#horloge du jeu
 
+def TickClock():
+    """
+    Met à jour l'horloge du jeu
+    """
+    clock.tick()
+
 saveName = None#nom de la sauvegarde
 mainData = None#va bientôt contenir la classe Data principale
 planetTex = None

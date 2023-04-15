@@ -88,6 +88,7 @@ def StretchSurfaceToSurface(target:pygame.Surface,source:pygame.Surface):
 selectedFrame = None
 mouseOverFB = False
 hoveredFB = None
+mouseOverButton = False
 lastMousePressSequence = (0,0,0)
 def EncapsulateButtonInFrame(button:pygame_menu.widgets.Button,frame:pygame_menu.widgets.Frame,onSelect=None, buttonAlign=pygame_menu.locals.ALIGN_CENTER):
     """
@@ -123,9 +124,13 @@ def ManageEncapsulatedButtons():
     """
     Doit être appelé dans la boucle de mise à jour des menus comportant des boutons encapsulés
     """
-    global mouseOverFB, hoveredFB, lastMousePressSequence
+    global mouseOverFB, hoveredFB, lastMousePressSequence, mouseOverButton
     
     pressSequence = pygame.mouse.get_pressed()
+    
+    if hoveredFB != None:
+        mPos = pygame.mouse.get_pos()
+        mouseOverButton = hoveredFB.get_rect(to_real_position=True).collidepoint(mPos[0], mPos[1])
     
     if mouseOverFB:
         
@@ -139,7 +144,7 @@ def ManageEncapsulatedButtons():
         
         if NewPress:
             hoveredFB.select(update_menu=True)
-        if NewRelease:
+        if NewRelease and not mouseOverButton:
             hoveredFB.apply()
         
     lastMousePressSequence = pressSequence

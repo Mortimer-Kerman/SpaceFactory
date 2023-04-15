@@ -132,7 +132,7 @@ def OpenMap():
     runtime = 0
     def MenuTick():
         global runtime
-        SaveManager.clock.tick()
+        SaveManager.TickClock()
         runtime+=SaveManager.clock.get_time() / 8
         if Tick() or runtime > 20:
             runtime = 0

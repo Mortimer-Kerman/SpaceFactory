@@ -60,6 +60,9 @@ def Play(saveName:str,**kwargs):
     if gamemode != None:
         SaveManager.mainData.gamemode = gamemode
     
+    if not HelpMenu.IsInit():
+        HelpMenu.Init()#Création du menu d'aide en amont
+    
     UiManager.UpdateBackground()#Première mise à jour du fond
     
     runtime=0
@@ -132,7 +135,7 @@ def Play(saveName:str,**kwargs):
                 if HandleMouseClicks(event.button,drone):
                     return True
         
-        SaveManager.clock.tick()#on mets à jour l'horloge des FPS
+        SaveManager.TickClock()#on mets à jour l'horloge des FPS
         runtime+=SaveManager.clock.get_time() / 8
         if runtime > 50:
             runtime = 0
@@ -318,7 +321,7 @@ def HandleMouseClicks(button,drone):
 PauseMenuBackground = None    
         
 def DisplayPauseMenuBackground():
-    SaveManager.clock.tick()
+    SaveManager.TickClock()
     if PauseMenuBackground != None:
         UiManager.screen.blit(PauseMenuBackground,(0,0))
         
