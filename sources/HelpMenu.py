@@ -33,7 +33,7 @@ def Init():
     frame = menu.add.frame_h(800, 540, padding=0)
     frame.relax(True)
     
-    listFrame = menu.add.frame_v(380,  max(len(GameItems.craft) * 55, 540), max_height=540, padding=0)
+    listFrame = menu.add.frame_v(380, max(len(GameItems.craft) * 55, 541), max_height=540, padding=0)
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
@@ -48,22 +48,20 @@ def Init():
         FunctionUtils.EncapsulateButtonInFrame(b, helpFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
         listFrame.pack(menu.add.vertical_margin(5))
-        
     
-    detailsFrame = menu.add.frame_v(400, 380, max_height=380, padding=0)
+    detailsFrame = menu.add.frame_v(380, 541, max_height=540, padding=0)
     detailsFrame.relax(True)
     frame.pack(detailsFrame)
     
     title = menu.add.label("Menu d'aide",font_size=30)
     detailsFrame.pack(title, align=pygame_menu.locals.ALIGN_CENTER)
     
-    table = menu.add.table(table_id='my_table', font_size=15, border_width=0)
+    table = menu.add.table(font_size=15, border_width=0)
+    
     detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
     
     def OpenMenu(item):
         title.set_title(Localization.GetLoc('Items.' + item))
-        
-        crafts = GameItems.craft[item]
         
         rowsLeft = True
         while rowsLeft:
@@ -74,16 +72,31 @@ def Init():
             except AssertionError:
                 rowsLeft = False
         
-        row = []
-        for c in crafts["c"]:
-            row.append(Localization.GetLoc('Items.' + c))
-            row.append(" + ")
+        if item in GameItems.craft:
+            crafts = GameItems.craft[item]
         
-        row[-1] = " = "
-        row.append(Localization.GetLoc('Items.' + crafts["r"]))
+            row = []
+            for c in crafts["c"]:
+                row.append(Localization.GetLoc('Items.' + c))
+                row.append(" + ")
+            
+            row[-1] = " = "
+            row.append(Localization.GetLoc('Items.' + crafts["r"]))
+            
+            table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
         
-        table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
-    
+        h = 0
+        
+        for w in detailsFrame.get_widgets(unpack_subframes=False):
+            h += w.get_size()[1]
+        
+        """
+        detailsFrame.unpack(table)
+        detailsFrame.unpack(title)
+        detailsFrame.resize(380, max(541,h), max_height=540)
+        detailsFrame.pack(title, align=pygame_menu.locals.ALIGN_CENTER)
+        detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
+        """
 
 def Open(tab:str=None):
     """
