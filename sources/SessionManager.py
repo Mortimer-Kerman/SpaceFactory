@@ -175,6 +175,9 @@ def HandleLongKeyInputs():
         camOffset[0]+=SaveManager.clock.get_time() / 2
     SaveManager.TranslateCam(camOffset)#On applique les changements de caméra
     
+    global ShiftPressed
+    ShiftPressed = keys[pygame.K_LSHIFT]
+    
     if camOffset != [0,0]:#si un déplacement a eu lieu
         
         if showTuto==0:
@@ -215,108 +218,123 @@ def HandleShortKeyInputs(key):
     
 def HandleMouseClicks(button,drone):
     if button == 1: # 1 == left button
-        if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
-            if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
-                if not UiManager.showMenu["delete"]:
-                    if not SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
-                        if UiManager.showMenu.get("question",False):
-                            a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
-                            if a:
-                                GameItems.getDescription(a)
+        if UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
+            if UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
+                UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
+            elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
+                UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
+            elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
+                if Pause():#On fait pause
+                    return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
+            elif UiManager.UIelements.get("opportunities_icon",False):
+                #Si le bouton du menu d'opportunitées est choisi, on ouvre le menu d'opportunités
+                OpportunitiesManager.OpenMap()
+            elif UiManager.UIelements.get("help_icon",False):
+                #Si le bouton du menu d'aide est choisi, on ouvre le menu d'aide
+                HelpMenu.Open()
+            elif UiManager.UIelements.get("select2",False):
+                for i in GameItems.menuElements:
+                    if UiManager.UIelements.get("selectElements_"+i,False):
+                        if UiManager.showMenu["delete"]:
+                            UiManager.showMenu["delete"]=0
+                            SaveManager.ResetRotation()
+                            SaveManager.SetSelectedItem(None)
+                            UiManager.LightPopup("Mode destruction désactivé")
+                        elif UiManager.showMenu.get("question",False):
+                            GameItems.getDescription(i)
                         else:
-                            if not UiManager.showMenu["freeMouse"]:
-                                b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
-                                if b and ((showTuto==3 and SaveManager.GetSelectedItem()=="Drill") or (showTuto==4 and "ConveyorBelt" in SaveManager.GetSelectedItem()) or (showTuto==5 and SaveManager.GetSelectedItem()=="Storage")):
-                                    Tuto()
-                else:
-                    SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
-            else:
-                if UiManager.showMenu.get("question",False):
-                        GameItems.getDescription(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)
-                        a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
-                        if a:
-                            GameItems.getDescription(a)
-                elif UiManager.showMenu["delete"]:
-                    SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
-                else:
-                    UiManager.LightPopup(L.GetLoc("Session.AlreadyItemHere"))
-
-        elif UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
-            UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
-        elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
-            UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
-        elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
-            if Pause():#On fait pause
-                return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
-        elif UiManager.UIelements.get("opportunities_icon",False):
-            #Si le bouton du menu d'opportunitées est choisi, on ouvre le menu d'opportunités
-            OpportunitiesManager.OpenMap()
-        elif UiManager.UIelements.get("help_icon",False):
-            #Si le bouton du menu d'aide est choisi, on ouvre le menu d'aide
-            HelpMenu.Open()
-        elif UiManager.UIelements.get("select2",False):
-            for i in GameItems.menuElements:
-                if UiManager.UIelements.get("selectElements_"+i,False):
-                    if UiManager.showMenu["delete"]:
-                        UiManager.showMenu["delete"]=0
-                        UiManager.LightPopup("Mode destruction désactivé")
-                    elif UiManager.showMenu.get("question",False):
-                        GameItems.getDescription(i)
-                    else:
-                        SaveManager.SetSelectedItem(i)
-                        UiManager.showMenu["freeMouse"]=0
-            if UiManager.UIelements.get("selectElements_free",False):
-                UiManager.showMenu["freeMouse"]=1
-            if UiManager.UIelements.get("selectElements_delete",False):
-                if UiManager.showMenu.get("question",False):
-                    GameItems.getDescription("delete")
-                else:
-                    UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
-                    UiManager.LightPopup("Mode destruction "+ "activé" if UiManager.showMenu["delete"] else "désactivé")
-            if UiManager.UIelements.get("selectElements_question",False):
-                UiManager.showMenu["question"]=1-UiManager.showMenu.get("question",0)
-                UiManager.showMenu["delete"]=0
-                UiManager.LightPopup("Mode interrogation activé")
-                if UiManager.showMenu.get("question",False):
-                    UiManager.Popup(L.GetLoc("Session.Question"))
-        
-        elif UiManager.UIelements.get("inv2",False):
-            for i,e in enumerate(SaveManager.mainData.inv):
-                if UiManager.UIelements.get("invElements_"+str(i),False):
+                            SaveManager.SetSelectedItem(i)
+                            UiManager.LightPopup("Clic gauche pour placer, maj gauche + clic gauche pour placer plusieurs, clic droit pour annuler")
+                if UiManager.UIelements.get("selectElements_delete",False):
                     if UiManager.showMenu.get("question",False):
-                        GameItems.getDescription(i)
-                    elif e["n"] in MarketManager.marketItem.keys():
-                        SaveManager.SetSelectedItem(e["n"])
+                        GameItems.getDescription("delete")
+                    else:
+                        UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]
+                        UiManager.LightPopup("Mode destruction "+ "activé" if UiManager.showMenu["delete"] else "désactivé")
+                        SaveManager.ResetRotation()
+                        SaveManager.SetSelectedItem(None)
+                if UiManager.UIelements.get("selectElements_question",False):
+                    UiManager.showMenu["question"]=1-UiManager.showMenu.get("question",0)
+                    UiManager.showMenu["delete"]=0
+                    SaveManager.ResetRotation()
+                    SaveManager.SetSelectedItem(None)
+                    UiManager.LightPopup("Mode interrogation activé")
+                    if UiManager.showMenu.get("question",False):
+                        UiManager.Popup(L.GetLoc("Session.Question"))
+            
+            elif UiManager.UIelements.get("inv2",False):
+                for i,e in enumerate(SaveManager.mainData.inv):
+                    if UiManager.UIelements.get("invElements_"+str(i),False):
+                        if UiManager.showMenu.get("question",False):
+                            GameItems.getDescription(i)
+                        elif e["n"] in MarketManager.marketItem.keys():
+                            SaveManager.SetSelectedItem(e["n"])
+                            UiManager.LightPopup("Clic gauche pour placer, maj gauche + clic gauche pour placer plusieurs, clic droit pour annuler")
 
-        elif UiManager.UIelements.get("popup_area",False):
-            for index,popup in enumerate(UiManager.UIPopup):
-                if UiManager.UIelements.get("popup_"+str(index),False):
-                    if UiManager.UIelements.get("popup_launch_button_"+str(index)):
-                        popup.launch()
-                    popup.close(index)
+            elif UiManager.UIelements.get("popup_area",False):
+                for index,popup in enumerate(UiManager.UIPopup):
+                    if UiManager.UIelements.get("popup_"+str(index),False):
+                        if UiManager.UIelements.get("popup_launch_button_"+str(index)):
+                            popup.launch()
+                        popup.close(index)
+            return False
+        
+        if SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
+            if UiManager.showMenu.get("question",False):
+                    GameItems.getDescription(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)
+            elif UiManager.showMenu["delete"]:
+                SaveManager.DeleteItem(UiManager.GetMouseWorldPos())
+                if not ShiftPressed:
+                    UiManager.showMenu["delete"]=0
+            elif SaveManager.IsItemSelected():
+                UiManager.LightPopup(L.GetLoc("Session.AlreadyItemHere"))
+            return False
+        
+        if UiManager.showMenu.get("question",False):
+            a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
+            if a:
+                GameItems.getDescription(a)
+            return False
+        
+        if SaveManager.IsItemSelected():
+            b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
+            if b and ((showTuto==3 and SaveManager.GetSelectedItem()=="Drill")
+                   or (showTuto==4 and "ConveyorBelt" in SaveManager.GetSelectedItem())
+                   or (showTuto==5 and SaveManager.GetSelectedItem()=="Storage")):
+                Tuto()
+            if not ShiftPressed:
+                SaveManager.SetSelectedItem(None)
     
     if button == 3: # 3 == right button
-        if not UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
+        if UiManager.IsClickOnUI():#si c'est un clic sur UI
+            if UiManager.UIelements.get("select2",False):
+                for i in GameItems.menuElements:
+                    if UiManager.UIelements.get("selectElements_"+i,False):
+                        GameItems.getPrice(i)
+            return False
+        
+        SaveManager.SetSelectedItem(None)
+        UiManager.showMenu["delete"]=0
+        UiManager.showMenu["question"]=0
+        SaveManager.ResetRotation()
+        SaveManager.SetSelectedItem(None)
+        
+        if SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):
             clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
-            if clickedItem != None:
-                UiManager.LightPopup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
-                if clickedItem.name in ["Sorter","Storage","Market"]:clickedItem.edit(UiManager.interactItem(clickedItem))
-            else:
-                a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
-                if a:
-                    pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
-                    SaveManager.AddToInv(d=a)
-                    UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")
-                    if showTuto==2:
-                            Tuto()
-        elif UiManager.UIelements.get("select2",False):
-            for i in GameItems.menuElements:
-                if UiManager.UIelements.get("selectElements_"+i,False):
-                    GameItems.getPrice(i)
+            #UiManager.LightPopup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
+            if clickedItem.name in ["Sorter","Storage","Market"]:clickedItem.edit(UiManager.interactItem(clickedItem))
+            return False
+        
+        a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())
+        if a:
+            pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
+            SaveManager.AddToInv(d=a)
+            UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")
+            if showTuto==2:
+                    Tuto()
 
     
     return False
-
 
 PauseMenuBackground = None    
         

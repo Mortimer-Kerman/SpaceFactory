@@ -81,6 +81,14 @@ def Distance(a:tuple,b:tuple):
     """
     return math.sqrt(((b[0]-a[0])**2) + ((b[1]-a[1])**2))
 
+def FirstLetterUpper(string:str):
+    """
+    similaire à str.capitalize(), mais sans mettre le reste des lettres en minuscule
+    """
+    if string == "" or string == None:
+        return string
+    return string[:1].upper() + string[1:]
+
 def StretchSurfaceToSurface(target:pygame.Surface,source:pygame.Surface):
     source = pygame.transform.scale(source, target.get_size())
     target.blit(source, (0,0))

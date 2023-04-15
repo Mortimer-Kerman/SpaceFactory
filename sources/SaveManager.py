@@ -46,8 +46,6 @@ class Data:
         self.planetaryConditions = PlanetGenerator.PlanetaryConditions(seed=self.seed)
         self.items = FunctionUtils.NumpyDict()
         self.coins=0
-        self.selectedItem="Drill"
-        self.rotation=0
         self.saveVersion=SaveFileVersion
         self.inv=[]
         self.gamemode=0
@@ -173,6 +171,8 @@ def Unload():
     UiManager.UIPopup.clear()
     GameItems.Minerais.Clear()
     UiManager.chunkTex.clear()
+    SetSelectedItem(None)
+    ResetRotation()
     print("File unloaded")
 
 def SaveExists(name:str):
@@ -267,17 +267,26 @@ def GetEnvironmentType()->int:
     """
     return mainData.planetaryConditions.type
 
+selectedItem=None
+
 def SetSelectedItem(item):
     """
     Change l'item séléctionné
     """
-    mainData.selectedItem=item
+    global selectedItem
+    selectedItem=item
 
 def GetSelectedItem()->str:
     """
     Renvoie l'item séléctionné
     """
-    return mainData.selectedItem
+    return selectedItem
+
+def IsItemSelected()->bool:
+    """
+    Dit si un item est séléctionné
+    """
+    return GetSelectedItem() != None
 
 def IsItemHere(pos)->bool:
     """
@@ -303,22 +312,31 @@ def IsPosWet(pos:tuple)->bool:
     """
     return GetTextureAtPos(pos) == "water"
 
+rotation = 0
+
 def GetRotation():
     """
     Renvoie la rotation actuelle
     """
-    return mainData.rotation
+    return rotation
 
 def UpdateRotation():
     """
-    Mets à jour la rotation
+    Met à jour la rotation
     """
-    r=GetRotation()
-    if r!=3:
-        r+=1
+    global rotation
+    if rotation!=3:
+        rotation+=1
     else:
-        r=0
-    mainData.rotation=r
+        rotation=0
+
+def ResetRotation():
+    """
+    Réinitialise la rotation
+    """
+    global rotation
+    rotation=0
+
 def ClearInv():
     mainData.inv=[]
 def IsInInv(a,p=0):

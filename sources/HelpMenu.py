@@ -27,7 +27,7 @@ def Init():
     """
     Le panneau d'aide étant lent à charger, il est préférable de le créer en amont.
     """
-    tabsList = list(set(GameItems.menuElements + list(GameItems.craft.keys()) + list(GameItems.allTransportableItems.keys())))
+    tabsList = list(set(GameItems.menuElements + list(GameItems.craft.keys()) + list(GameItems.allTransportableItems.keys()))) + ["delete"]
     
     global menu
     menu = pygame_menu.Menu(Localization.GetLoc("Aide"), 800, 600, enabled=False, theme=pygame_menu.themes.THEME_DARK, onclose=pygame_menu.events.BACK)#le thème du menu
@@ -48,7 +48,7 @@ def Init():
         helpFrame.relax(True)
         listFrame.pack(helpFrame)
         
-        b = menu.add.button(FunctionUtils.ReduceStr(Localization.GetLoc('Items.' + c), 23),lambda item=c:OpenMenu(item),button_id=c)
+        b = menu.add.button(FunctionUtils.ReduceStr(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + c)), 23),lambda item=c:OpenMenu(item),button_id=c)
         
         FunctionUtils.EncapsulateButtonInFrame(b, helpFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
@@ -68,7 +68,7 @@ def Init():
     detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
     
     def OpenMenu(item):
-        title.set_title(Localization.GetLoc('Items.' + item))
+        title.set_title(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + item)))
         
         rowsLeft = True
         while rowsLeft:
@@ -90,11 +90,11 @@ def Init():
         
             row = []
             for c in crafts["c"]:
-                row.append(Localization.GetLoc('Items.' + c))
+                row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + c)))
                 row.append(" + ")
             
             row[-1] = " = "
-            row.append(Localization.GetLoc('Items.' + crafts["r"]))
+            row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + crafts["r"])))
             
             table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
         
