@@ -4,6 +4,8 @@ Created on Wed Feb  8 16:21:49 2023
 
 @author: Thomas Sartre et François Patinec-Haxel
 """
+
+#chargement des bibliothèques
 import pygame
 import os
 
@@ -73,16 +75,19 @@ def RefreshZoom():
 
 
 def GetColorFilter(color:tuple,scale:float):
+    """
+    Fonction permettant d'obtenir le filtre de couleur
+    """
     
-    if not color in filters.keys():
-        colorFilter = pygame.Surface((100,100))
-        colorFilter.fill(color)
-        filters[color] = colorFilter
-    tex = filters[color]
-    if scale != 1:
-        if not color in zoomedFilters.keys():
-            zoomedFilters[color] = pygame.transform.scale(tex,(scale,scale))
-        tex = zoomedFilters[color]
+    if not color in filters.keys():#si la couleur n'est pas dans la liste des clés de filtres
+        colorFilter = pygame.Surface((100,100))#on crée une surface de 100x100
+        colorFilter.fill(color)#on remplis de la couleur
+        filters[color] = colorFilter#on l'enregistre dans le dictionnaire des filtres
+    tex = filters[color]#tex vaut la surface que l'on vient de créer/trouver dans le dictionnaire
+    if scale != 1:#si la taille est différente de 1
+        if not color in zoomedFilters.keys():#si la couleur n'est pas dans la liste de filtres zoomées
+            zoomedFilters[color] = pygame.transform.scale(tex,(scale,scale))#on redimensionne la surface
+        tex = zoomedFilters[color]#tex vaut maintenant la texture zoomée
     return tex
 
 filters = {}
@@ -91,13 +96,16 @@ zoomedFilters = {}
 
 fonts = {}
 def GetFont(fontName:str,fontSize:int=None)->pygame.font.Font:
+    """
+    Fonction de chargement de police
+    """
     
-    fullFontName = fontName + ("" if fontSize == None else "." + str(fontSize))
+    fullFontName = fontName + ("" if fontSize == None else "." + str(fontSize))#définition du nom complet de la police
     
-    if not fullFontName in fonts:
+    if not fullFontName in fonts:#si le nom n'est pas dans le dictionnaire de police
         try:
-            fonts[fullFontName] = pygame.font.Font("./Assets/font/" + fontName + ".ttf", fontSize if fontSize != None else 20)
+            fonts[fullFontName] = pygame.font.Font("./Assets/font/" + fontName + ".ttf", fontSize if fontSize != None else 20)#chargement de la police
         except:
-            return pygame.font.Font(pygame.font.get_default_font(),fontSize if fontSize != None else 20)
+            return pygame.font.Font(pygame.font.get_default_font(),fontSize if fontSize != None else 20)#chargement de la police par défaut
     
-    return fonts[fullFontName]
+    return fonts[fullFontName]#renvoie la police
