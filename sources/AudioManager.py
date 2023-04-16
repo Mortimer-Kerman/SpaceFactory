@@ -30,6 +30,8 @@ def Init():
     """
     LoadAllSounds()#On charge tous les sons
     
+    pygame.mixer.set_num_channels(16)#Nombre de canaux sonores: 16
+    
     pygame.mixer.music.set_endevent(MUSIC_ENDED)#si la musique s'arrête, lancer événement MUSIC_ENDED
     
     pygame.mixer.music.set_volume(0.7)#On règle le volume de la musique
@@ -145,7 +147,6 @@ def StopGameSounds():
     Arrête tous les sons se jouant pendant une partie
     """
     pygame.mixer.stop()
-    global usedChannels
         
 def BeginGameAmbience():
     """

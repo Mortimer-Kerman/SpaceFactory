@@ -12,6 +12,7 @@ import TextureManager
 import random
 import Localization as L
 import HelpMenu
+import AudioManager
 
 import numpy as np
 
@@ -87,7 +88,7 @@ class Item:
         Affichage de l'item
         """
         self.metadata["g"]=0
-
+        
         cam = SaveManager.GetCamPos()
         cam = [cam[0],cam[1]]
         zoom = SaveManager.GetZoom()
@@ -102,6 +103,9 @@ class Item:
         
         #UiManager.place_text(str(self.metadata.get("inv",None)),self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1],20,(255,0,0))
         
+        if self.name == "Drill" and runtime == 0:
+            AudioManager.PlaySound("Drill",self.pos)
+        
         if self.name in ["ConveyorBelt","Sorter"]:
             col=allTransportableItems
             a=col.get(self.metadata.get("inv",None),False) if self.name=="ConveyorBelt" else col.get(self.metadata.get("sorter_choice",None),(255,0,0))
@@ -112,14 +116,20 @@ class Item:
             if a:
                 renderOffset = (0,0)
                 if Anim and self.name=="ConveyorBelt":
-
+                    
                     item=self.GetItemToGive()
                     renderOffset = (0,-runtime/50)
+                    moving = True
                     if item is None:
                         renderOffset=(0,0)
+                        moving = False
                     else:
                         if item.metadata.get("inv",None) is not None:#si l'item n'a rien dans son inventaire
                             renderOffset=(0,0)
+                            moving = False
+
+                    if moving and runtime == 0:
+                        AudioManager.PlaySound("ConveyorBelt",self.pos)
 
                     if self.rotation == 1:
                         renderOffset = (renderOffset[1],-renderOffset[0])
@@ -137,6 +147,7 @@ class Item:
                                                                                  self.pos[1]*zoom+cam[1]+3/4*zoom+renderOffset[1]),
                                                                                 (self.pos[0]*zoom+cam[0]+1/4*zoom+renderOffset[0],
                                                                                  self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1])]))
+            
     def GetItemToGive(self):
         g=self.giveto
         item=None

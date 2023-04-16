@@ -14,6 +14,8 @@ https://mozilla.github.io/fxemoji/dist/FirefoxEmoji/index.html
 hammer-and-wrench.png icones est créée par Freepik - Flaticon https://www.flaticon.com/free-icons/hammer-and-wrench
 cursor.png icones est créée par Freepik - Flaticon https://www.flaticon.com/free-icon/cursor_587335
 
+ConveyorBelt.mp3 est un son de mwl500 distribué sous licence CC BY 3.0:
+https://freesound.org/people/mwl500/sounds/49972/
 
 Genesis et Lost in Space sont des musiques de Karl Casey @ White Bat Audio distribuées sans droits d'auteur.
 Moon Men est une musique de Jake Chudnow, distribué sans droits d'auteur.
