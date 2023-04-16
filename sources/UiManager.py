@@ -410,14 +410,14 @@ def DisplayItemToPlace():
     if showMenu["delete"]:#si le mode suppression est activé
         if SaveManager.IsItemHere(GetMouseWorldPos()):#si un item est présent sur la position de la souris
             ItemTexture = TextureManager.GetColorFilter((255,0,0),SaveManager.GetZoom())#on affiche un filtre de couleur
-    elif showMenu["question"]:
-        ItemTexture = "question"
+    elif showMenu["question"]:#si le mode question est activé
+        ItemTexture = "question"#la texture est celle du mode question
     else:
-        ItemTexture = SaveManager.GetSelectedItem()
+        ItemTexture = SaveManager.GetSelectedItem()#autrement, on récupère l'item sélectionné
 
-    if ItemTexture == None or (IsClickOnUI() and not showMenu["question"]):
+    if ItemTexture == None or (IsClickOnUI() and not showMenu["question"]):#si la texture est nulle ou (c'est un clic UI et le mode question est désactivé)
         return
-    
+    #variables servant au placement
     cam = SaveManager.GetCamPos()
     cam = [cam[0],cam[1]]
     zoom = SaveManager.GetZoom()
@@ -425,20 +425,22 @@ def DisplayItemToPlace():
     cam[1] += height / 2
     pos = GetMouseWorldPos()
     
-    if type(ItemTexture) == str:
-        tex = TextureManager.GetTexture(ItemTexture, zoom).copy()
+    if type(ItemTexture) == str:#si la texture est de type str
+        tex = TextureManager.GetTexture(ItemTexture, zoom).copy()#on fait une copie de la texture via TextureManager
     else:
-        tex = ItemTexture
-    tex.set_alpha(150)
-    tex=pygame.transform.rotate(tex,90*SaveManager.GetRotation())
-    screen.blit(tex, (pos[0]*zoom+cam[0], pos[1]*zoom+cam[1]))
+        tex = ItemTexture#autrement, on prends le contenu d'itemTexture
+    tex.set_alpha(150)#on applique un filtre
+    tex=pygame.transform.rotate(tex,90*SaveManager.GetRotation())#on applique la rotation
+    screen.blit(tex, (pos[0]*zoom+cam[0], pos[1]*zoom+cam[1]))#on affiche
     
 def interactItem(item):
+    """Interface d'interaction avec des objets"""
+    #on définit le fond du menu (voir SessionManager)
     screenFilter = pygame.Surface((width,height))
     screenFilter.set_alpha(50)
     SessionManager.PauseMenuBackground = pygame.display.get_surface().copy()
     SessionManager.PauseMenuBackground.blit(screenFilter,(0,0))
-    
+    #création du menu
     interactMenu = pygame_menu.Menu("Configurez cet élément", 400, 300, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)
     
     interactMenu.add.button('Reprendre', interactMenu.disable)#Reprendre la partie
@@ -447,116 +449,125 @@ def interactItem(item):
         
         a=[[i] for i in list(GameItems.allTransportableItems.keys())]#On récupère la liste des éléments transportables
         
-        chosenElement = [item.metadata["sorter_choice"]]
+        chosenElement = [item.metadata["sorter_choice"]]#on affiche l'item choisit
         
-        b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélécteur pour permettre de choisir l'élément trié
+        b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélecteur pour permettre de choisir l'élément trié
         
-        interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)
+        interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)#on lance le menu
         
-    if item.name in ["Storage"]:
+    if item.name in ["Storage"]:#si l'item peut interagir avec l'inventaire
         
-        in_menu=1
-        BLOCK_SIZE=100
+        in_menu=1#booléen si l'on est dans le menu
+        BLOCK_SIZE=100#taille des blocs
         rects=[]
         inv=[]
-        for x,e in enumerate(item.metadata.get("biginv",[])):
-            if e["n"] is None:
-                del item.metadata["biginv"][x]
-            else:
+        for x,e in enumerate(item.metadata.get("biginv",[])):#pour chaque élément de l'inventaire de l'item
+            if e["n"] is None:#si l'élément est None
+                del item.metadata["biginv"][x]#on supprime l'élément
+            else:#si l'élément n'est pas None
+                #ajout d'un rect à la liste rects
                 rects.append( pygame.Rect(width//4-250+(x%4)*(BLOCK_SIZE+5), height//2-300+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
-                inv.append(e)
-        for x,e in enumerate(SaveManager.mainData.inv):
+                inv.append(e)#ajout de l'objet à la liste inv
+        for x,e in enumerate(SaveManager.mainData.inv):#pour chaque élément de l'inventaire du joueur
+            #ajout d'un rect à la liste rects
             rects.append( pygame.Rect((width//4)*3-250+(x%4)*(BLOCK_SIZE+5), height//2-300+(x//4)*(BLOCK_SIZE+5), BLOCK_SIZE, BLOCK_SIZE) )
-            inv.append(e)
-        clock = pygame.time.Clock()
-        selected=None
+            inv.append(e)#ajout de l'objet a la liste inv
+        clock = pygame.time.Clock()#défintion d'une horloge interne au menu de transfert d'item
+        selected=None#élément sélectionné
         
-        while in_menu:
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        in_menu = False
+        while in_menu:#tant que l'on est dans le menu
+            for event in pygame.event.get():#on parcours la liste des événements
+                if event.type == pygame.KEYDOWN:#en cas de touche pressée
+                    if event.key == pygame.K_ESCAPE:#si la touche [ESC] est pressée
+                        in_menu = False#on sort du menu
  
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        for i, r in enumerate(rects):
-                            if r.collidepoint(event.pos):
-                                selected = i
-                                selected_offset_x = r.x - event.pos[0]
-                                selected_offset_y = r.y - event.pos[1]
+                elif event.type == pygame.MOUSEBUTTONDOWN:#en cas de bouton de la souris pressé
+                    if event.button == 1:#si le btn left est pressé
+                        for i, r in enumerate(rects):#pour chaque rect dans rects
+                            if r.collidepoint(event.pos):#si le rect subis une collision avec la souris
+                                selected = i#on change l'item sélectionné
+                                selected_offset_x = r.x - event.pos[0]#affichage de l'offset de sélection
+                                selected_offset_y = r.y - event.pos[1]#affichage de l'offset de sélection
                
-                elif event.type == pygame.MOUSEBUTTONUP:
-                    if event.button == 1:
-                        selected = None
+                elif event.type == pygame.MOUSEBUTTONUP:#si le bouton de la souris est relaché
+                    if event.button == 1:#s'il s'agit du bouton gauche
+                        selected = None#on ne séléctionne rien
                
-                elif event.type == pygame.MOUSEMOTION:
-                    if selected is not None: # selected can be `0` so `is not None` is required
-                        # move object
+                elif event.type == pygame.MOUSEMOTION:#en cas de mouvement de la souris
+                    if selected is not None: #si selected n'est pas None
+                        # on bouge l'objet selon l'offset
                         rects[selected].x = event.pos[0] + selected_offset_x
                         rects[selected].y = event.pos[1] + selected_offset_y
-               
-            SessionManager.DisplayPauseMenuBackground()
+            #interface
+            SessionManager.DisplayPauseMenuBackground()#on affiche le fond
+            #interface de l'inventaire du stockage
             forme2(width//4-250,height//2-300,500,100,50,200,(98,99,102))
             pygame.draw.polygon(screen, (98,99,102), [(width//4-250,height//2-300),(width//4+250,height//2-300),(width//4+250,height//2+300),(width//4-250,height//2+300)])
             place_text("Stockage",width//4-245,height//2-330,100,(255,255,255),TextureManager.GetFont("aquire"))
+            #interface de l'inventaire du joueur
             forme2((width//4)*3-250,height//2-300,500,100,50,200,(98,99,102))
             pygame.draw.polygon(screen, (98,99,102), [((width//4)*3-250,height//2-300),((width//4)*3+250,height//2-300),((width//4)*3+250,height//2+300),((width//4)*3-250,height//2+300)])
             place_text("Inventaire",(width//4)*3-245,height//2-330,100,(255,255,255),TextureManager.GetFont("aquire"))
-            for r in zip(rects,inv):
-                pygame.draw.rect(screen,  (47,48,51), r[0])
-                screen.blit(TextureManager.GetTexture(r[1]["n"], 78, True),(r[0].x,r[0].y))
+            #affichage des items
+            for r in zip(rects,inv):#pour chaque rects (et inv)
+                pygame.draw.rect(screen,  (47,48,51), r[0])#affichage du rect
+                screen.blit(TextureManager.GetTexture(r[1]["n"], 78, True),(r[0].x,r[0].y))#affichage de l'item
 
-                place_text(str(r[1]["n"]),r[0].x,r[0].y,20)
-                place_text(str(r[1]["m"]),r[0].x,r[0].y+20,20)
-            place_text("[Echap] pour quitter", 0, 0, 40, (255,255,255))
-            pygame.display.update()
+                place_text(str(r[1]["n"]),r[0].x,r[0].y,20)#affichage du nom de l'item
+                place_text(str(r[1]["m"]),r[0].x,r[0].y+20,20)#affichage du nombre d'items
+            place_text("[Echap] pour quitter", 0, 0, 40, (255,255,255))#affichage d'une instruction d'aide
+            pygame.display.update()#mise à jour de l'écran
             clock.tick(25)
         
         #change l'environnement de stockage/inv
+        #on stocke le contenu dans des variables temporaires
         tempInv=[]
         for i in SaveManager.mainData.inv:
             tempInv.append(dict(i))
         tempBigInv=[]
         for i in item.metadata["biginv"]:
             tempBigInv.append(dict(i))
-            
+        #on supprime les deux inventaires
         SaveManager.ClearInv()
         item.metadata["biginv"]=[]
 
-        for r in zip(rects,inv):
-            if r[0].x<width//2:
-                for i in range(r[1]["m"]):
-                    if not item.AddToInv(r[1]["n"]):
+        for r in zip(rects,inv):#pour chaque rects et inv
+            if r[0].x<width//2:#si le rect est dans la zone du stockage
+                for i in range(r[1]["m"]):#pour chaque nombre d'items
+                    if not item.AddToInv(r[1]["n"]):#si l'item ne peut pas être ajouté
+                        #on remets les inventaires à leur états initiaux
                         SaveManager.mainData.inv=tempInv
                         item.metadata["biginv"]=tempBigInv
-                        Popup(Localization.GetLoc("UiManager.biginv.error"))
-                        return
-            else:
-                for i in range(r[1]["m"]):
-                    if not SaveManager.AddToInv(r[1]["n"]):
+                        Popup(Localization.GetLoc("UiManager.biginv.error"))#affichage de l'erreur
+                        return#on quitte cette fonction
+            else:#si le rect est dans la zone de l'inventaire du joueur
+                for i in range(r[1]["m"]):#pour chaque nombre d'items
+                    if not SaveManager.AddToInv(r[1]["n"]):#si l'item ne peut pas être ajouté
+                        #on remets les inventaires à leur états initiaux
                         SaveManager.mainData.inv=tempInv
                         item.metadata["biginv"]=tempBigInv
-                        Popup(Localization.GetLoc("SaveManager.GetFromInv.error"))
-                        return
+                        Popup(Localization.GetLoc("SaveManager.GetFromInv.error"))#affichage de l'erreur
+                        return#on quitte cette fonction
     
-    if item.name=="Market":
-        MarketManager.showMenu()
+    if item.name=="Market":#en cas d'interaction avec un market
+        MarketManager.showMenu()#on affiche le menu du market
 
-    SessionManager.PauseMenuBackground = None
-    return b.get_value() if b is not None else None
+    SessionManager.PauseMenuBackground = None#on vide le fond du menu
+    return b.get_value() if b is not None else None#renvoie la valeur de b si B n'est pas None sinon, renvoie None
 
 def Loading():
-    FillScreen((0,0,0))
-    DisplayBackground()
+    """Affichage de l'écran de chargement"""
+    FillScreen((0,0,0))#on remplis en noir l'écran (la couleur reste si le background ne se charge pas)
+    DisplayBackground()#affichage du fond
     
-    logoTex = pygame.transform.scale(TextureManager.GetTexture("logos/SPFTR"),(height/2,height/2))
-    screen.blit(logoTex,((width-logoTex.get_width())/2, (height-logoTex.get_height())/2))
+    logoTex = pygame.transform.scale(TextureManager.GetTexture("logos/SPFTR"),(height/2,height/2))#Récupération du logo
+    screen.blit(logoTex,((width-logoTex.get_width())/2, (height-logoTex.get_height())/2))#affichage du logo
     
-    place_text(Localization.GetLoc("Game.Loading"),0,-height/3,100,(255,255,255),font=TextureManager.GetFont("aquire",100),centerText=True)
-    pygame.display.update()
+    place_text(Localization.GetLoc("Game.Loading"),0,-height/3,100,(255,255,255),font=TextureManager.GetFont("aquire",100),centerText=True)#Affichage du chargement
+    pygame.display.update()#mise à jour de l'écran
 
-UIPopup=[]
-UiLightPopup=[]
+UIPopup=[]#liste des popups
+UiLightPopup=[]#liste des LightPopup
 class Popup:
     """
     Des popups
@@ -618,10 +629,12 @@ class LightPopup:
 MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
 
 def DisplayBackground():
+    """Affichage du fond, et mise à jour du son"""
     MenuBackground.draw(screen)
     AudioManager.Tick()
 
 def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground):
+    """Menu de prévention pour s'assurer de l'action utilisateur"""
     
     WarnMenu = pygame_menu.Menu(title, 800, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
@@ -643,6 +656,7 @@ def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackgrou
     WarnMenu.mainloop(screen, background)
 
 def TakeScreenshot():
+    """Prendre une capture d'écran"""
     if not os.path.exists("Screenshots/"):
         os.makedirs("Screenshots/")
     pygame.image.save(pygame.display.get_surface(), "Screenshots/screenshot_" + datetime.now().strftime("%Y%m%d%H%M%S%f") + ".png")
