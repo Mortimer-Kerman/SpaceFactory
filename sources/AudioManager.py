@@ -76,7 +76,7 @@ def Tick():
             BeginGameAmbience()
     
     for i in range(pygame.mixer.get_num_channels()-1):
-        if len(pygame.event.get(eventtype=SOUND_ENDED+i)) != 0:
+        if len(pygame.event.get(eventtype=SOUND_ENDED+i)) != 0 and i+1 in usedChannels:
             usedChannels.remove(i+1)
 
 usedChannels = [0]
@@ -147,6 +147,8 @@ def StopGameSounds():
     Arrête tous les sons se jouant pendant une partie
     """
     pygame.mixer.stop()
+    global usedChannels
+    usedChannels = [0]
         
 def BeginGameAmbience():
     """
