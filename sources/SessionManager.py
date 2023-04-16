@@ -360,6 +360,9 @@ def DisplayPauseMenuBackground():
         
 def Pause():
     """Affiche le menu de pause"""
+    
+    AudioManager.ClearUsedChannels()#On vide les canaux de son utilisés
+    
     global PauseMenuBackground
     #création du fond de pause
     screenFilter = pygame.Surface((UiManager.width,UiManager.height))

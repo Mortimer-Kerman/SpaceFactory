@@ -147,9 +147,15 @@ def StopGameSounds():
     Arrête tous les sons se jouant pendant une partie
     """
     pygame.mixer.stop()
+    ClearUsedChannels()
+
+def ClearUsedChannels():
+    """
+    Vide la liste des canaux utilisés
+    """
     global usedChannels
     usedChannels = [0]
-        
+
 def BeginGameAmbience():
     """
     Démarre l'ambience sonore d'une partie
