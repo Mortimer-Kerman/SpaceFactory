@@ -413,10 +413,16 @@ def interactItem(item):
     
     interactMenu.add.button('Reprendre', interactMenu.disable)#Reprendre la partie
     b=None
-    if item.name=="Sorter":
-        a=[[i] for i in list(GameItems.allTransportableItems.keys())]
-        b=interactMenu.add.selector("Choisissez : ",a)
+    if item.name=="Sorter":#Si l'objet à éditer est un trieur...
+        
+        a=[[i] for i in list(GameItems.allTransportableItems.keys())]#On récupère la liste des éléments transportables
+        
+        chosenElement = [item.metadata["sorter_choice"]]
+        
+        b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélécteur pour permettre de choisir l'élément trié
+        
         interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)
+        
     if item.name in ["Storage"]:
         
         in_menu=1

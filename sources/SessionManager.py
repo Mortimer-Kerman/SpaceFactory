@@ -229,7 +229,7 @@ def HandleShortKeyInputs(key):
 def HandleMouseClicks(button,drone):
     """Gestion des clics"""
     if button == 1: # 1 == left button
-        if UiManager.IsClickOnUI():#si ce n'est pas un clic sur UI
+        if UiManager.IsClickOnUI():#si c'est un clic sur UI
             if UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                 UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
             elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
