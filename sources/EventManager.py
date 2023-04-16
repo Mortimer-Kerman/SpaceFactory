@@ -36,10 +36,10 @@ class Ennemis:
                 min_dist = dist#on change la distance minimale
                 nearest_pos = pos#on change la position la plus proche
         self.go=list(nearest_pos)#on stocke la destination dans une variable
-    def spawn():
+    def spawn(a=None):
         """Fonction d'apparition d'un ennemi"""
         global EnnemisList
-        a=UiManager.GetMouseWorldPos()#on récupère la position de la souris dans le monde
+        a=list(UiManager.GetMouseWorldPos())#on récupère la position de la souris dans le monde
         #on ajoute des nombres aléatoire aux coordonnées
         a[0]+=random.randint(-100, 100)
         a[1]+=random.randint(-100, 100)
@@ -95,11 +95,13 @@ class Events:
         self.isEventHappening = False
         self.lastEvent=0
         self.runtime=0
-        self.nextEvent = self.lastEvent + random.randint(9900,90000)#prochain événement
+        self.nextEvent = self.lastEvent + random.randint(99,999)#prochain événement
     def LaunchEvent(self):
         self.runtime+=1
+        print(self.runtime,self.nextEvent)
         if self.nextEvent<self.runtime and not self.isEventHappening:#si aucun événement est lancé et que le runtime est supérieur au nextEvent
-            self.nextEvent = self.nextEvent + random.randint(9900,90000)#prochain événement
+            self.nextEvent = self.nextEvent + random.randint(99,999)#prochain événement
             self.isEventHappening = True
-            Ennemis.spawn()#apparition d'un ennemi
-            UiManager.Popup("Un ennemi viens d'apparaitre")
+            Ennemis.spawn()#apparition d'un ennemi*
+            print("Ennemi.spawn EventManager.105")
+            UiManager.Popup("Un ennemi viens d’apparaître")
