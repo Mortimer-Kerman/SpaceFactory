@@ -174,7 +174,7 @@ def HandleLongKeyInputs():
     """Gestion des pressions de touches longues"""
     #action du clavier
     keys = pygame.key.get_pressed()#On stocke les touches pressées
-    mouseInputs = pygame.mouse.get_pressed()
+    mouseInputs = pygame.mouse.get_pressed()#Boutons de souris pressés
     
     camOffset = [0,0]#Définition de l'offset de la caméra
     if keys[SettingsManager.GetKeybind("up")]:#si touche up
@@ -186,8 +186,9 @@ def HandleLongKeyInputs():
     if keys[SettingsManager.GetKeybind("left")]:#si touche left
         camOffset[0]+=SaveManager.clock.get_time() / 2
         
-    mouseDisplacement = pygame.mouse.get_rel()
-    if mouseInputs[0] and not SaveManager.IsItemSelected():
+    mouseDisplacement = pygame.mouse.get_rel()#On récupère le déplacement de la souris depuis la dernière frame
+    if mouseInputs[0] and not SaveManager.IsItemSelected() and not UiManager.IsClickOnUI():#Si le bouton gauche est enfoncé, qu'aucun objet n'est séléctionné et que le clic de souris n'est pas sur l'UI...
+        #On ajoute le déplacement de la souris au déplacement de la caméra
         camOffset[0] += mouseDisplacement[0]
         camOffset[1] += mouseDisplacement[1]
     
