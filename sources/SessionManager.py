@@ -8,6 +8,7 @@ Created on Sun Feb 26 21:43:27 2023
 #importations des bibliothèques
 import pygame
 import pygame_menu
+import numpy as np
 #importation des bibliothèques système
 import random
 #importation des autres fichiers
@@ -42,11 +43,14 @@ def Tuto(t=1):
     #Affichage de la popup
     UiManager.Popup(a,d=1 if showTuto<len(a)-1 else 0)
 
+
+laser=lambda:None
 def Play(saveName:str,**kwargs):
     """
     Lance le jeu
     Fonction principale de la Session
     """
+    global laser
     UiManager.Loading()#Chargement de l'UI
     if not SaveManager.Load(saveName):#Chargement de la sauvegarde
         return False
@@ -93,14 +97,16 @@ def Play(saveName:str,**kwargs):
         
         DisplayObjects(int(runtime))#Afficher l'objet de manière dynamique
 
-        for i in EventManager.EnnemisList:#pour chaque ennemi dans EnnemisList
+        for c,i in enumerate(EventManager.EnnemisList):#pour chaque ennemi dans EnnemisList
             i.ia(runtime)#calcul de la trajectoire et mouvement
-            i.show()#affichage de l'ennemi
+            i.show(c)#affichage de l'ennemi
+
+        laser()#affichage du laser
 
         drone.show()#affichage du drone
         
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
-        
+
         pygame.display.update()#Mise à jour de l'affichage Pygame
         
         AudioManager.Tick()#Met à jour le gestionnaire de sons
@@ -143,6 +149,9 @@ def Play(saveName:str,**kwargs):
             if event.type == pygame.MOUSEBUTTONDOWN:#en cas de clic
                 if HandleMouseClicks(event.button,drone):#Traitement des clics
                     return True
+            if event.type == pygame.MOUSEBUTTONUP:#si le bouton de la souris est relaché
+                    if event.button == 3:#s'il s'agit du bouton droit
+                        laser = lambda : None#pas de laser
         
         SaveManager.TickClock()#on mets à jour l'horloge des FPS
         runtime+=SaveManager.clock.get_time() / 8#on augmente le runtime
@@ -237,6 +246,7 @@ def HandleShortKeyInputs(key):
     
 def HandleMouseClicks(button,drone):
     """Gestion des clics"""
+    global laser
     if button == 1: # 1 == left button
         if UiManager.IsClickOnUI():#si c'est un clic sur UI
             if UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
@@ -332,6 +342,15 @@ def HandleMouseClicks(button,drone):
         SaveManager.ResetRotation()
         SaveManager.SetSelectedItem(None)
         
+        for c,i in enumerate(EventManager.EnnemisList):
+            if UiManager.UIelements.get("ennemi"+str(c),False):
+                AudioManager.PlaySound("Laser")#jouer le son de laser
+                laser=lambda:pygame.draw.polygon(UiManager.screen, (255, 0, 0), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
+                i.pv-=10
+                if i.pv<=0:
+                    del EventManager.EnnemisList[c]
+                    AudioManager.PlaySound("Explosion")#jouer le son d'explosion
+
         if SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):#si un item est présent à la position de la souris
             clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
             #UiManager.LightPopup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
@@ -341,11 +360,13 @@ def HandleMouseClicks(button,drone):
         a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())#On récupère le type de minerais
         if a:
             #dessin du laser
-            pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
+            AudioManager.PlaySound("Laser")#jouer le son de laser
+            laser=lambda:pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
             SaveManager.AddToInv(d=a)#Ajout à l'inventaire
             UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")#Affiche la LightPopup lié au minage
             if showTuto==2:#si tuto=2
                     Tuto()#afficher le tuto
+        
 
     
     return False

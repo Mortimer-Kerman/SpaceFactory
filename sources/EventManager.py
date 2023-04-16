@@ -12,7 +12,7 @@ import FunctionUtils
 #importation de copysign du module système math
 from math import copysign
 
-signe = lambda x : copysign(1, x)#fonction renvoyant +1 ou -1 selon le signe d'un nombre
+sign = lambda x: 1 if x >= 0 else -1#fonction renvoyant +1 ou -1 selon le signe d'un nombre
 
 EnnemisList=[]#Liste des ennemis
 
@@ -21,12 +21,13 @@ class Ennemis:
     def __init__(self,co):
         self.pos=co
         self.name="Ennemy"
+        self.pv=100
         self.rotation=random.randint(0, 3)
         
         #On donne un objectif à l'ennemi
         nearest_pos = [0,0]
         min_dist = float('inf')#float('inf) renvoie une valeur très très très très très très très très très très grande
-
+        
         for pos in SaveManager.mainData.items.keys():#pour chaque clé du dictionnaire d'item de la sauvegarde
             pos=FunctionUtils.strToList(pos)#on convertit la position en liste (stockée en tant que str) (renvoie une liste de str)
             pos[0]=float(pos[0])#on convertit en flottant
@@ -63,7 +64,7 @@ class Ennemis:
             min_dist = float('inf')
 
             for pos in SaveManager.mainData.items.keys():#pour chaque clé dans la sauvegarde
-                pos=FunctionUtils.strToList(pos)#on transforme la chaine de caractère en liste
+                pos=FunctionUtils.strToList(pos)#on transforme la chaîne de caractère en liste
                 pos[0]=float(pos[0])#on transforme la position x en flottant
                 pos[1]=float(pos[1])#on transforme la position y en flottant
                 dist = FunctionUtils.Distance(pos, self.pos)#on calcule la distance
@@ -73,7 +74,7 @@ class Ennemis:
             self.go=list(nearest_pos)#on change la position de destination
             return
         self.pos=pos
-    def show(self):
+    def show(self,c):
         """
         Fonction servant à afficher l'ennemi
         """
@@ -86,7 +87,7 @@ class Ennemis:
         #si l'ennemi est dans le champ visuel du joueur, on l'affiche, sinon on sort de la fonction
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
-        UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1]))#afficher
+        UiManager.UIelements["ennemi"+str(c)]=UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])).collidepoint(pygame.mouse.get_pos())#afficher
 class Events:
     """
     Classe servant à provoquer la destruction, à provoquer le chaos, à provoquer la chute du joueur
@@ -98,10 +99,8 @@ class Events:
         self.nextEvent = self.lastEvent + random.randint(99,999)#prochain événement
     def LaunchEvent(self):
         self.runtime+=1
-        print(self.runtime,self.nextEvent)
         if self.nextEvent<self.runtime and not self.isEventHappening:#si aucun événement est lancé et que le runtime est supérieur au nextEvent
             self.nextEvent = self.nextEvent + random.randint(99,999)#prochain événement
             self.isEventHappening = True
             Ennemis.spawn()#apparition d'un ennemi*
-            print("Ennemi.spawn EventManager.105")
             UiManager.Popup("Un ennemi viens d’apparaître")
