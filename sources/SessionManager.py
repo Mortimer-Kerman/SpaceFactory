@@ -174,6 +174,7 @@ def HandleLongKeyInputs():
     """Gestion des pressions de touches longues"""
     #action du clavier
     keys = pygame.key.get_pressed()#On stocke les touches pressées
+    mouseInputs = pygame.mouse.get_pressed()
     
     camOffset = [0,0]#Définition de l'offset de la caméra
     if keys[SettingsManager.GetKeybind("up")]:#si touche up
@@ -184,13 +185,18 @@ def HandleLongKeyInputs():
         camOffset[0]-=SaveManager.clock.get_time() / 2
     if keys[SettingsManager.GetKeybind("left")]:#si touche left
         camOffset[0]+=SaveManager.clock.get_time() / 2
+        
+    mouseDisplacement = pygame.mouse.get_rel()
+    if mouseInputs[0] and not SaveManager.IsItemSelected():
+        camOffset[0] += mouseDisplacement[0]
+        camOffset[1] += mouseDisplacement[1]
+    
     SaveManager.TranslateCam(camOffset)#On applique les changements de caméra
     
     global ShiftPressed
     ShiftPressed = keys[pygame.K_LSHIFT]
     
     if camOffset != [0,0]:#si un déplacement a eu lieu
-        
         if showTuto==0:#si le joueur a bougé lors du tuto phase 0
             Tuto()#on affiche le tuto
         if SaveManager.GetZoom()<30:#en cas de dézoom trop grand
