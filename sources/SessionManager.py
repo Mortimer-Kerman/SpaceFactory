@@ -355,6 +355,7 @@ PauseMenuBackground = None#variable stockant le fond du menu de pause
 def DisplayPauseMenuBackground():
     """Affiche le fond du menu de pause"""
     SaveManager.TickClock()#actualisation de l'horloge interne
+    AudioManager.Tick()#Actualisation du son
     if PauseMenuBackground != None:#si le fond du menu de pause est différent de None
         UiManager.screen.blit(PauseMenuBackground,(0,0))#afficher le fond
         

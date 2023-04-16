@@ -114,42 +114,42 @@ def IsClickOnUI():
             return True#renvoyer vrai
     return False#renvoyer faux
 
-autoSize={}
+autoSize={}#dictionnaire contenant les données d'autoSize (utile pour garder une taille constante selon la longueur du texte)
 def place_text(text, x, y, size, color=(255,255,255),font=None,n=20,auto_size=False,centerText:bool=False):
     """
     Fonction utilitaire servant au placement du texte sur l'écran
     """
-    if not auto_size:
+    if not auto_size:#si aucun paramètres d'autosize est donné
         font = pygame.font.Font(None, size) if font==None else font#tentative de charger la police
-        t=text.splitlines()
-        for i,l in enumerate(t):
+        t=text.splitlines()#on sépare chaque ligne en une liste
+        for i,l in enumerate(t):#pour chaque ligne du texte
             text_surface = font.render(l, True, color)#on crée l'image du texte
-            if centerText:
-                rect = text_surface.get_rect(center=(width/2-x, height/2-y))
+            if centerText:#si le texte doit être centré
+                rect = text_surface.get_rect(center=(width/2-x, height/2-y))#on modifie le centre du rect text
                 screen.blit(text_surface, rect)#on affiche le texte
             else:
                 screen.blit(text_surface, (x, y+n*i))#on affiche le texte
-    else:
-        if (auto_size,text) in autoSize.keys():
-            text_surface = autoSize[(auto_size,text)]
-            if centerText:
-                rect = text_surface.get_rect(center=(width/2-x, height/2-y))
+    else:#si un paramètre d'auto_size est donné (sous forme d'un tuple (taille max, hauteur max))
+        if (auto_size,text) in autoSize.keys():#si le texte existe déjà dans le dictionnaire autoSize
+            text_surface = autoSize[(auto_size,text)]#on récupère la surface de texte stockée dans le dictionnaire autoSize
+            if centerText:#si le texte est centré
+                rect = text_surface.get_rect(center=(width/2-x, height/2-y))#on modifie le centre du rect
                 screen.blit(text_surface, rect)#on affiche le texte
             else:
                 screen.blit(text_surface, (x, y))#on affiche le texte
-        else:
-            taille=32
-            while taille > 0:
-                font = TextureManager.GetFont("aquire",taille)
-                text_surface = font.render(text, True, (255, 255, 255))
-                if text_surface.get_width() <= auto_size[0] and text_surface.get_height() <= auto_size[1]:
-                    break
-                taille -= 1
-            autoSize[(auto_size,text)]=text_surface
-            if centerText:
-                rect = text_surface.get_rect(center=(width/2-x, height/2-y))
+        else:#si le texte n'existe pas dans le dictionnaire autoSize
+            taille=32#taille de base
+            while taille > 0:#tant que la taille est supérieure à 0
+                font = TextureManager.GetFont("aquire",taille)#on charge la police à la taille spécifiée
+                text_surface = font.render(text, True, (255, 255, 255))#on fait un rendu du texte
+                if text_surface.get_width() <= auto_size[0] and text_surface.get_height() <= auto_size[1]:#si le texte correspond au paramètres attendus
+                    break#sortir du while
+                taille -= 1#on diminue la taille de la police
+            autoSize[(auto_size,text)]=text_surface#on ajoute la surface de texte dans le dictionnaire autoSize
+            if centerText:#si le texte est centré
+                rect = text_surface.get_rect(center=(width/2-x, height/2-y))#on modifie le centre du rect
                 screen.blit(text_surface, rect)#on affiche le texte
-            else:
+            else:#si le texte n'est pas centré
                 screen.blit(text_surface, (x, y))#on affiche le texte
 
 def forme(x,y,w,wr,h,o,color=(47,48,51)):
@@ -166,7 +166,7 @@ def forme(x,y,w,wr,h,o,color=(47,48,51)):
     return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))#affichage du polygone (renvoie l'élément pygame.Rect lié au polygone)
 def forme2(x,y,w,wr,h,o,color=(47,48,51)):
     """
-    Crée une forme miroire à forme
+    Crée une forme miroir à forme
     """
     #calcul des coordonnées du polygone
     a = x, y
@@ -190,8 +190,8 @@ def forme3(x,y,w,wr,h,o,color=(47,48,51)):
     return pygame.draw.polygon(screen,color,(a,b,c,d,e,f))#affichage du polygone (renvoie l'élément pygame.Rect lié au polygone)
 
 
-chunkTex=FunctionUtils.NumpyDict()
-chunkLimits=FunctionUtils.NumpyDict()
+chunkTex=FunctionUtils.NumpyDict()#la texture des chunks (stockées dans un NumpyDict, car plus rapide)
+chunkLimits=FunctionUtils.NumpyDict()#la texture de la limite des chunks
 unRefreshed=False
 def UpdateBackground():
     """
@@ -211,73 +211,73 @@ def UpdateBackground():
                 Xpos = posX*zoom+((cam[0]+(width/2))%zoom)#coordonnées selon zoom
                 Ypos = posY*zoom+((cam[1]+(height/2))%zoom)#coordonnées selon zoom
                 
-                worldPos = ScreenPosToWorldPos((Xpos,Ypos))
+                worldPos = ScreenPosToWorldPos((Xpos,Ypos))#on converti les coordonnées en coordonnées du monde
                 
-                posCode = str(worldPos)
+                posCode = str(worldPos)#on converti en str (le NumpyDict n'apprécie pas trop les listes)
                 
-                if not posCode in chunkTex:
-                    
+                if not posCode in chunkTex:#si le code de position n'est pas dans le dictionnaire chunkText
+                    #on récupère les données liés au chunk via un bruit fractal
                     val = NoiseTools.FractalNoise(worldPos[0]/100, worldPos[1]/100, (SaveManager.GetSeed(),SaveManager.GetSeed()), 1)
                     
-                    tex = "rock"
-                    if env == PlanetGenerator.PlanetTypes.Dead:
-                        tex = "sand"
-                        if val > 0.5:
-                            tex = "rock"
-                    else:
-                        if env == PlanetGenerator.PlanetTypes.Desertic:
-                            tex = "rock"
-                            if val < 0.7:
-                                tex = "sand"
-                            if val < 0.34:
-                                tex = "water"
-                        else:
-                            tex = "rock"
-                            if val < 0.7:
-                                tex = "grass"
-                            if val < 0.4:
-                                tex = "sand"
-                            if val < 0.34:
-                                tex = "water"
+                    tex = "rock"#texture par défaut
+                    if env == PlanetGenerator.PlanetTypes.Dead:#s'il s'agit d'une planète morte
+                        tex = "sand"#la texture sera du sable
+                        if val > 0.5:#sauf si la valeur du bruit fractal est supérieure à 0.5
+                            tex = "rock"#le sol du chunk devient donc de la roche
+                    else:#s'il ne s'agit pas d'une planète morte
+                        if env == PlanetGenerator.PlanetTypes.Desertic:#s'il s'agit d'une planète désertique
+                            tex = "rock"#la texture par défaut
+                            if val < 0.7:#sauf si la valeur du bruit fractal est inférieure à 0.7
+                                tex = "sand"#la texture devient du sable
+                            if val < 0.34:#si la valeur du bruit fractal est inférieure à 0.34
+                                tex = "water"#le chunk devient de l'eau
+                        else:#s'il s'agit d'un planète vivante
+                            tex = "rock"#texture par défaut
+                            if val < 0.7:#sauf si la valeur du bruit fractal est inférieure à 0.7
+                                tex = "grass"#le chunk devient de l'herbe
+                            if val < 0.4:#si la valeur du bruit fractal est inférieure à 0.4
+                                tex = "sand"#la texture devient du sable
+                            if val < 0.34:#si la valeur du bruit fractal est inférieure à 0.34
+                                tex = "water"#le chunk devient de l'eau
                     
-                    chunkTex[posCode] = tex
+                    chunkTex[posCode] = tex#on ajoute le type de texture du chunk dans le dictionnaire chunkText
                     
-                    needsRefresh = True
+                    needsRefresh = True#on demande un rafraîchissement du monde
                 
-                tex = chunkTex[posCode]
+                tex = chunkTex[posCode]#texture associé avec le code de la position
                 
-                screen.blit(TextureManager.GetTexture("ground/" + tex, zoom), (Xpos, Ypos))#placement du fond
+                screen.blit(TextureManager.GetTexture("ground/" + tex, zoom), (Xpos, Ypos))#placement de la texture du chunks
                 
-                if SettingsManager.GetSetting("niceBiomeBorders"):
-                    if posCode not in chunkLimits or unRefreshed:
+                if SettingsManager.GetSetting("niceBiomeBorders"):#si les bordures détaillées sont activées
+                    if posCode not in chunkLimits or unRefreshed:#si la position n'est pas dans le dictionnaire chunkLimits ou si elle est non rafraîchie
                         
-                        limitTex = ""
+                        limitTex = ""#variable qui va contenir la limite du chunks
                         
-                        if tex != "sand":
-                            for x in range(-1,2):
-                                for y in range(-1,2):
-                                    tPos = str((worldPos[0]-(x*10),worldPos[1]+(y*10)))
-                                    if (x != 0 or y != 0) and tPos in chunkTex:
-                                        grabbedTex = chunkTex[tPos]
-                                        if grabbedTex != tex and grabbedTex in ["sand","rock"]:
-                                            limitTex += grabbedTex + str(x) + str(y) + ";"
+                        if tex != "sand":#si la texture est différente du sable
+                            for x in range(-1,2):#pour tous les chunks à cotés en x
+                                for y in range(-1,2):#pour tous les chunks à cotés en y
+                                    tPos = str((worldPos[0]-(x*10),worldPos[1]+(y*10)))#on définie la position de la texture adjacente
+                                    if (x != 0 or y != 0) and tPos in chunkTex:#si le chunk est différent du chunk d'où l'on a lancé le calcul des bordures
+                                        grabbedTex = chunkTex[tPos]#on stocke la texture du chunk à la position adjacente
+                                        if grabbedTex != tex and grabbedTex in ["sand","rock"]:#si la texture est différente de la texture du chunk de base,et est sable ou de rocher
+                                            limitTex += grabbedTex + str(x) + str(y) + ";"#on ajoute cette texture dans le nom de la texture de transition
                         
-                        chunkLimits[posCode] = limitTex
+                        chunkLimits[posCode] = limitTex#on ajoute la limite aux coordonnées de la position dans le dictionnaire chunkLimits
                     
-                    limitTex = chunkLimits[posCode]
-                    if limitTex != "":
-                        if "ground/" + limitTex + ".png" not in TextureManager.loadedTextures:
+                    limitTex = chunkLimits[posCode]#on récupère la limite du chunk associé avec la position
+                    if limitTex != "":#si la limite de chunk est différente de rien
+                        if "ground/" + limitTex + ".png" not in TextureManager.loadedTextures:#si la texture n'est pas chargée
                             
                             texture = None
                             
-                            for t in limitTex.split(";"):
-                                if t != "":
-                                    if texture == None:
-                                        texture = TextureManager.loadedTextures["ground/" + t + ".png"].copy()
-                                    else:
-                                        texture.blit(TextureManager.loadedTextures["ground/" + t + ".png"],(0,0))
+                            for t in limitTex.split(";"):#pour le nombre de textures différentes à fusionner
+                                if t != "":#si la texture n'est pas rien
+                                    if texture == None:#si la texture est None
+                                        texture = TextureManager.loadedTextures["ground/" + t + ".png"].copy()#on fait une copie de la texture
+                                    else:#si la texture n'est pas None
+                                        texture.blit(TextureManager.loadedTextures["ground/" + t + ".png"],(0,0))#on affiche la texture sur l'autre texture
                             
-                            TextureManager.loadedTextures["ground/" + limitTex + ".png"] = texture
+                            TextureManager.loadedTextures["ground/" + limitTex + ".png"] = texture#on stocke la texture
                             
                                 
                         screen.blit(TextureManager.GetTexture("ground/" + limitTex, zoom), (Xpos, Ypos))#placement du fond
@@ -287,6 +287,7 @@ def UpdateBackground():
     unRefreshed = needsRefresh
     
 def ForceBackgroundRefresh():
+    """Fonction servant à forcer la mise à jour du fond"""
     global unRefreshed
     unRefreshed = True
 
@@ -317,33 +318,40 @@ def ItemMenu():
     #On stocke la valeur bool en cas d'hover sur l'élément (ici le rectangle sous "forme2" du menu de sélection) dans UIelements["select"]
     UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-500*showMenu.get("select",0)),(width,height-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
 
-    menuElements=GameItems.menuElements
-    for i in range(len(menuElements)):
-        UIelements["selectElements_"+menuElements[i]]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
-        screen.blit(TextureManager.GetTexture(menuElements[i], 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
-        place_text(Localization.GetLoc('Items.' + menuElements[i]),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
-    
+    menuElements=GameItems.menuElements#on récupère la liste d'éléments du menu de sélection
+    for i,n in enumerate(menuElements):#pour chaque élément de menuElements
+        #ajout du rect dans le dictionnaire de gestion d'éléments UI
+        UIelements["selectElements_"+n]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
+        #affichage de l'objet
+        screen.blit(TextureManager.GetTexture(n, 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
+        #placement du texte de l'objet
+        place_text(Localization.GetLoc('Items.' + n),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
+    #placement du bouton question
     UIelements["selectElements_question"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("question", 78, True),(width-500+11+102*3,height-100*showMenu.get("select",0)))
     place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
-
+    #placement du bouton delete
     UIelements["selectElements_delete"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*4,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
     screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*4,height-100*showMenu.get("select",0)))
     place_text("détruire",width-500+102*4,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
-
+    #placement d'une aide
     place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(500,100))
     
 def CostMenu():
-    if SaveManager.GetSelectedItem() != None:
-        p=GameItems.getPrice(SaveManager.GetSelectedItem())
+    """Menu d'affichage des coûts de fabrication d'un objet"""
+    if SaveManager.GetSelectedItem() != None:#si l'objet sélectionné n'est pas None
+        p=GameItems.getPrice(SaveManager.GetSelectedItem())#on récupère le prix de l'item
+        #on ajoute cette zone comme un élément Ui
         UIelements["cost"]=pygame.draw.rect(screen, (47,51,52), pygame.Rect(width-600, height-250*showMenu.get("select",0), 100,250) ).collidepoint(pygame.mouse.get_pos())
         place_text(Localization.GetLoc("UiManager.cost"), width-600, height-250*showMenu.get("select",0), 20,auto_size=(100,40))
         for n,(i,c) in enumerate(p):
+            #on place chaque ressources requises pour la création de l'item
             screen.blit(TextureManager.GetTexture(i,78,is_menu=True), (width-600,height-250*showMenu.get("select",0)+40*(n+1)))
             place_text(str(c), width-600, height-250*showMenu.get("select",0)+40*(n+1), 40)
 
 
 def InvMenu():
+    """Affichage de l'inventaire"""
     global UIelements
     UIelements["inv"]=forme(width-500,500*showMenu.get("inv",0),width,100,50,200,(98,99,102)).collidepoint(pygame.mouse.get_pos())
 
@@ -357,38 +365,51 @@ def InvMenu():
 
     UIelements["inv2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,500*showMenu.get("inv",0)),(width,500*showMenu.get("inv",0)),(width,0),(width-500,0)]).collidepoint(pygame.mouse.get_pos())
 
-    for i,e in enumerate(SaveManager.mainData.inv):
+    for i,e in enumerate(SaveManager.mainData.inv):#pour chaque item dans l'inventaire
         UIelements["invElements_"+str(i)]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),-500+500*showMenu.get("inv",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
         screen.blit(TextureManager.GetTexture(e["n"], 78, True),(width-500+11+102*(i%5),-500+11+500*showMenu.get("inv",0)+102*(i//5)))
         place_text(str(Localization.GetLoc("Items."+e["n"])),width-500+102*(i%5),-500+500*showMenu.get("inv",0)+102*(i//5),20)
         place_text(str(e["m"]),width-500+102*(i%5),-480+500*showMenu.get("inv",0)+102*(i//5),20)
 
-def addNewlines(text,l):
+# Définition de la fonction addNewlines qui prend en entrée une chaîne de caractères 'text' et une longueur maximale de ligne 'l'
+def addNewlines(text, l=29):
     """
     Ajoute un caractère \n à une chaîne de caractères tout les 29 caractères, sans couper un mot.
     """
+    # Split de la chaîne de caractères 'text' en mots
     words = text.split()
+    # Initialisation de la nouvelle chaîne de caractères 'new_text' et de la longueur de la ligne actuelle 'line_len'
     new_text = ""
     line_len = 0
+    # Boucle sur tous les mots de 'words'
     for word in words:
+        # Calcul de la longueur du mot actuel 'word_len'
         word_len = len(word)
+        # Si la longueur du mot actuel 'word_len' ajoutée à la longueur actuelle de la ligne 'line_len' et 1 (pour le caractère espace) est inférieure ou égale à la longueur maximale de ligne 'l'
         if line_len + word_len + 1 <= int(l):
+            # Ajout du mot actuel et d'un espace à la nouvelle chaîne de caractères 'new_text'
             new_text += word + " "
+            # Mise à jour de la longueur actuelle de la ligne 'line_len'
             line_len += word_len + 1
         else:
+            # Ajout d'un caractère de nouvelle ligne '\n' à la nouvelle chaîne de caractères 'new_text'
             new_text = new_text.strip() + "\n"
+            # Ajout du mot actuel et d'un espace à la nouvelle chaîne de caractères 'new_text'
             new_text += word + " "
+            # Mise à jour de la longueur actuelle de la ligne 'line_len'
             line_len = word_len + 1
+    # Ajout d'un dernier caractère de nouvelle ligne '\n' à la nouvelle chaîne de caractères 'new_text' et retourne la chaîne de caractères finale en supprimant les éventuels espaces de fin
     return new_text.strip() + "\n"
+
 
 def DisplayItemToPlace():
     """
     Cette fonction a pour but d'afficher l'item que le joueur s'apprête à placer en transparence pour lui donner une indication de visée
     """
     ItemTexture = None
-    if showMenu["delete"]:
-        if SaveManager.IsItemHere(GetMouseWorldPos()):
-            ItemTexture = TextureManager.GetColorFilter((255,0,0),SaveManager.GetZoom())
+    if showMenu["delete"]:#si le mode suppression est activé
+        if SaveManager.IsItemHere(GetMouseWorldPos()):#si un item est présent sur la position de la souris
+            ItemTexture = TextureManager.GetColorFilter((255,0,0),SaveManager.GetZoom())#on affiche un filtre de couleur
     elif showMenu["question"]:
         ItemTexture = "question"
     else:
