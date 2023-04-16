@@ -84,7 +84,9 @@ def Play(saveName:str,**kwargs):
     EventM=EventManager.Events()#Création du gestionnaire d'événements
     
     EventManager.EnnemisList.clear()#On supprime tous les ennemis
-
+    
+    AudioManager.BeginGameAmbience()
+    
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
         UiManager.UpdateBackground()#mise à jour du fond

@@ -18,6 +18,7 @@ import PlanetGenerator
 import OpportunitiesManager
 import Localization as L
 import FunctionUtils
+import AudioManager
 
 SaveFileVersion="f0.16"
 
@@ -173,6 +174,7 @@ def Unload():
     UiManager.chunkTex.clear()
     SetSelectedItem(None)
     ResetRotation()
+    AudioManager.StopGameSounds()
     print("File unloaded")
 
 def SaveExists(name:str):
