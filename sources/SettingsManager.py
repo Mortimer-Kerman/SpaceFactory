@@ -142,7 +142,7 @@ def OpenSettings(background):
         UiManager.WarnUser(Localization.GetLoc('Game.Warning'), Localization.GetLoc('Settings.NotSaved'), lambda:(LoadSettings(), SettingsMenu.disable()), None)
         
         
-    topBar = SettingsMenu.add.frame_h(800,50)
+    topBar = SettingsMenu.add.frame_h(780,50)
     topBar.relax(True)
     topBar.pack(SettingsMenu.add.button(Localization.GetLoc('Game.Back'), TryLeave), align=pygame_menu.locals.ALIGN_LEFT)
     topBar.pack(SettingsMenu.add.button(Localization.GetLoc('Settings.Save'),  lambda : (SaveSettings(),TryLeave())), align=pygame_menu.locals.ALIGN_RIGHT)
@@ -179,6 +179,8 @@ def OpenSettings(background):
     SettingsMenu.add.vertical_margin(20)
     
     SettingsMenu.add.button(Localization.GetLoc('Settings.Reset'), lambda:UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Settings.Reset.Message'),lambda:(ResetSettings(),OpenSettings(background)),None,background))
+    
+    SettingsMenu.add.vertical_margin(20)
     
     SettingsMenu.mainloop(UiManager.screen, background)
 
