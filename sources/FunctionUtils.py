@@ -79,7 +79,10 @@ def Distance(a:tuple,b:tuple):
     """
     Calcul de distance entre deux positions
     """
-    return math.sqrt(((b[0]-a[0])**2) + ((b[1]-a[1])**2))
+    if len(a) != 3 and len(b) != 3:
+        return math.sqrt(((b[0]-a[0])**2) + ((b[1]-a[1])**2))
+    
+    return math.sqrt(((b[0]-a[0])**2) + ((b[1]-a[1])**2) + ((b[2]-a[2])**2))
 
 def FirstLetterUpper(string:str):
     """

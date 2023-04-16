@@ -96,6 +96,15 @@ def ScreenPosToWorldPos(pos:tuple):
     zoom = SaveManager.GetZoom()#obtention du zoom
     return ((pos[0]-cam[0]-(width/2))//zoom,(pos[1]-cam[1]-(height/2))//zoom)#renvoie la position par rapport à la caméra+zoom
 
+def WorldPosToScreenPos(pos:tuple):
+    """
+    Convertit une position dans le monde en position sur l'écran.
+    Si la position est hors de l'écran, la valeur renvoyée sera hors de l'écran également.
+    """
+    cam = SaveManager.GetCamPos()#on obtient les coordonnées de la caméra
+    zoom = SaveManager.GetZoom()#obtention du zoom
+    return (pos[0]*zoom+(width/2)+cam[0],pos[1]*zoom+(height/2)+cam[1])#renvoie la position par rapport à la caméra+zoom
+
 def IsClickOnUI():
     """
     Sert à savoir si l'utilisateur clique sur l'UI

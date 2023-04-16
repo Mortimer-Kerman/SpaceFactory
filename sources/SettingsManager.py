@@ -123,7 +123,7 @@ def ApplySettings():
     Applique les paramètres au jeu
     """
     pygame.mixer.music.set_volume(GetSetting("musicVolume")/100)
-
+    pygame.mixer.Channel(0).set_volume(GetSetting("gameVolume")/150)
 
 SettingsMenu = None
 
@@ -150,7 +150,7 @@ def OpenSettings(background):
     SettingsMenu.add.vertical_margin(20)
     
     SettingsMenu.add.range_slider(Localization.GetLoc('Settings.MusicVolume'), GetSetting("musicVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.music.set_volume(int(x)/100),SetSetting("musicVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
-    SettingsMenu.add.range_slider(Localization.GetLoc('Settings.GameVolume'), GetSetting("gameVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:SetSetting("gameVolume", int(x)), align=pygame_menu.locals.ALIGN_LEFT)
+    SettingsMenu.add.range_slider(Localization.GetLoc('Settings.GameVolume'), GetSetting("gameVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.Channel(0).set_volume(int(x)/150),SetSetting("gameVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
     
     SettingsMenu.add.toggle_switch(Localization.GetLoc('Settings.NiceBiomeBorders'), GetSetting("niceBiomeBorders"), state_text=(Localization.GetLoc('Settings.NiceBiomeBorders.False'), Localization.GetLoc('Settings.NiceBiomeBorders.True')), onchange=lambda x:(SetSetting("niceBiomeBorders", x),UiManager.ForceBackgroundRefresh()),align=pygame_menu.locals.ALIGN_LEFT)
     
