@@ -84,6 +84,7 @@ class Ennemis:
         zoom = SaveManager.GetZoom()
         cam[0] += UiManager.width / 2
         cam[1] += UiManager.height / 2
+        AudioManager.PlaySound("Robot",self.pos)
         #si l'ennemi est dans le champ visuel du joueur, on l'affiche, sinon on sort de la fonction
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction

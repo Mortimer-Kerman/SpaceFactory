@@ -6,7 +6,7 @@ https://www.dafont.com/fr/nasalization.font
 
 Background.png réalisé via StableDiffusion
 
-question.png est issue du projet Mozilla FirefoxEmoji
+question.png est issue du projet Mozilla FirefoxEmoji, distribué sous licence Mozilla Public Licence 2.0
 https://mozilla.github.io/fxemoji/dist/FirefoxEmoji/index.html
 hammer-and-wrench.png icones est créée par Freepik - Flaticon https://www.flaticon.com/free-icons/hammer-and-wrench
 cursor.png icones est créée par Freepik - Flaticon https://www.flaticon.com/free-icon/cursor_587335
@@ -18,7 +18,16 @@ Laser.wav, Explosion.wav est un son de jeremysykes distribué sous licence CC0 1
 https://freesound.org/people/jeremysykes/sounds/344512/
 https://freesound.org/people/jeremysykes/sounds/344506/
 
+Robot.mp3 est un son de MATRIXXX_ distribué sous licence CC0 1.0
+https://freesound.org/people/MATRIXXX_/sounds/441358/
+
 Genesis, Lost in Space, Absynth et Forgotten Planet sont des musiques de Karl Casey @ White Bat Audio distribuées sans droits d'auteur.
 Буран - Воскрешение (Buran -  Voskresenie) est une musique de Буран, distribué sans droits d'auteur.
 
 Autrement, il s'agit d’icônes que nous avons créés, Licence CC-4.0-BY-NC
+
+https://www.mozilla.org/en-US/MPL/2.0/
+https://creativecommons.org/publicdomain/zero/1.0/
+https://creativecommons.org/licenses/by/3.0/
+https://whitebataudio.com/license-agreement/
+https://creativecommons.org/licenses/by-nc-sa/4.0/
