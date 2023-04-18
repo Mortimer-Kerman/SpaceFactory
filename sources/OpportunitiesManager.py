@@ -216,20 +216,20 @@ def RefreshMenu():
             color = pygame_menu.baseimage.BaseImage(path, drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')
         
         #Texte du cadre si l'opportunité est proposée: Simple indication du temps de route
-        subText = "Temps de voyage: " + Opportunity.FormatTravelTime(opportunity.GetWalkDistance())
+        subText = Localization.GetLoc('Opportunities.TravelTime', Opportunity.FormatTravelTime(opportunity.GetWalkDistance()))
         
         #Si l'opportunité est en trajet, on récupère le temps restant
         if opportunity.state == Opportunity.State.GOING:
-            subText = "Temps de voyage: " + Opportunity.FormatTravelTime(opportunity.GetLeftActivityTime())
+            subText = Localization.GetLoc('Opportunities.TravelTime', Opportunity.FormatTravelTime(opportunity.GetLeftActivityTime()))
         #Si elle attend, on le note
         if opportunity.state == Opportunity.State.WAITING:
-            subText = "L'expédition attend vos ordres..."
+            subText = Localization.GetLoc('Opportunities.ExpeditionWaiting')
         #Si elle travaille, on récupère le temps de travail restant
         if opportunity.state == Opportunity.State.WORKING:
-            subText = "Temps de travail: " + Opportunity.FormatTravelTime(opportunity.GetLeftActivityTime())
+            subText = Localization.GetLoc('Opportunities.WorkingTime', Opportunity.FormatTravelTime(opportunity.GetLeftActivityTime()))
         #Si elle est de retour, on le note
         if opportunity.state == Opportunity.State.RETURNED:
-            subText = "L'expédition est rentrée!"
+            subText = Localization.GetLoc('Opportunities.ExpeditionBack')
         
         #On place cette nouvelle indication dans le texte en bas du cadre de l'opportunité
         frame.get_widgets()[2].set_title(subText)
@@ -304,14 +304,14 @@ def OpenExpeditionLauncher():
     menu.add.vertical_margin(50)
     
     #Slider permettant de choisir le nombre de membres de l'expédition
-    memberSlider = menu.add.range_slider("Nombre de membres: ", 5, (2, 10), 1, value_format=lambda x: str(int(x)), align=pygame_menu.locals.ALIGN_LEFT)
+    memberSlider = menu.add.range_slider(Localization.GetLoc('Opportunities.MembersAmount'), 5, (2, 10), 1, value_format=lambda x: str(int(x)), align=pygame_menu.locals.ALIGN_LEFT)
     
     #Fonction temporaire permettant de recacluler et afficher le temps de trajet en fonction de est-ce que l'expédition est en rover ou pas
     def SetTravelTime(Rover:bool):
-        travelTimeLabel.set_title("Temps de route: " + Opportunity.FormatTravelTime(currentOpportunity.GetDriveDistance() if Rover else currentOpportunity.GetWalkDistance()))
+        travelTimeLabel.set_title(Localization.GetLoc('Opportunities.TravelTime', Opportunity.FormatTravelTime(currentOpportunity.GetDriveDistance() if Rover else currentOpportunity.GetWalkDistance())))
     
     #Bouton permettant de choisir le moyen de transport entre le transport à pied et le transport en rover
-    roverToggle = menu.add.toggle_switch('Moyen de transport', state_text=('A pied', 'Rover'), state_color=((100, 100, 100), (100, 100, 100)), onchange=SetTravelTime)
+    roverToggle = menu.add.toggle_switch(Localization.GetLoc('Opportunities.TransportMean'), state_text=tuple(Localization.GetLoc('Opportunities.TransportMean.' + m) for m in ('OnFoot','Rover')), state_color=((100, 100, 100), (100, 100, 100)), onchange=SetTravelTime)
     
     #Zone de texte qui affichera le temps de trajet
     travelTimeLabel = menu.add.label("")
@@ -348,18 +348,18 @@ def UpdateOppButtonTitle():
         #Si l'expédition est en route...
         if currentOpportunity.state == Opportunity.State.GOING:
             if currentOpportunity.IsReturning():#Si elle rentre à la base, on l'indique
-                title = "L'expédition rentre à la base..."
+                title = 'Opportunities.ReturningToBase'
             else:#Sinon, on propose de la rappeler
-                title = 'Rappeler'
+                title = 'Opportunities.Recall'
         elif currentOpportunity.state == Opportunity.State.WAITING:
             #Si l'expédition attend, on propose de savoir pourquoi
-            title = "Lire le rapport"
+            title = 'Opportunities.ReadReport'
         elif currentOpportunity.state == Opportunity.State.WORKING:
             #Si elle travaille, on l'indique
-            title = "L'expédition travaille..."
+            title = 'Opportunities.Working'
         elif currentOpportunity.state == Opportunity.State.RETURNED:
             #Si elle est rentrée, on propose de dissoudre l'expédition
-            title = "Dissoudre l'expédition"
+            title = 'Opportunities.Dissolve'
         #On applique le nouveau texte traduit au bouton d'interaction avec les opportunités
         openedMap.get_widget('oppButton', recursive=True).set_title(Localization.GetLoc(title))
 
@@ -609,15 +609,15 @@ class Opportunity:
         result = ""
         
         if days > 0:#Si il y a plus d'un jour de trajet, on le note dans le résultat, au singulier si il n'y en a qu'un seul, sinon au pluriel
-            result += str(days) + " " + ("jour" if days == 1 else "jours")
+            result += str(days) + " " + Localization.GetLoc('Opportunities.Time.Day' + ('' if days == 1 else 's'))
         if hours > 0:#Si il y a plus d'une heure de trajet, on la note dans le résultat (séparée d'un espace des jours si ils sont notés), au singulier si il n'y en a qu'une seul, sinon au pluriel
             if days > 0:
                 result += " "
-            result += str(hours) + " " + ("heure" if hours == 1 else "heures")
+            result += str(hours) + " " + Localization.GetLoc('Opportunities.Time.Hour' + ('' if hours == 1 else 's'))
         
         #Si rien n'a été mis dans le résultat, il reste moins d'une heure de trajet
         if result == "":
-            result = "moins d'une heure"
+            result = Localization.GetLoc('Opportunities.Time.LessThanAnHour')
         
         #Renvoi du résultat
         return result

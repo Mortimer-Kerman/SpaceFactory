@@ -132,6 +132,24 @@ Items.d.error : Une erreur est survenue : Item introuvable/non documenté
 Opportunities.Title : Opportunités
 Opportunities.StartAnExpedition : Lancer une expédition
 Opportunities.StartExpedition : Lancer l'expédition
+Opportunities.Recall : Rappeler
+Opportunities.ReturningToBase : L'expédition rentre à la base...
+Opportunities.ReadReport : Lire le rapport
+Opportunities.Working : L'expédition travaille...
+Opportunities.Dissolve : Dissoudre l'expédition
+Opportunities.Time.Hour : heure
+Opportunities.Time.Hours : heures
+Opportunities.Time.Day : jour
+Opportunities.Time.Days : jours
+Opportunities.Time.LessThanAnHour : moins d'une heure
+Opportunities.TransportMean : Moyen de transport
+Opportunities.TransportMean.OnFoot : À pied
+Opportunities.TransportMean.Rover : Rover
+Opportunities.TravelTime : Temps de voyage: %$1
+Opportunities.MembersAmount : Nombre de membres: 
+Opportunities.WorkingTime : Temps de travail: %$1
+Opportunities.ExpeditionWaiting : L'expédition attend vos ordres...
+Opportunities.ExpeditionBack : L'expédition est rentrée!
 
 //Éléments de texte des opportunités
 Opportunities.People.Singular0 : Un groupe de chercheurs 
