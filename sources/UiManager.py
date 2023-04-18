@@ -43,7 +43,7 @@ def Init():
     """
     global screen,width,height#on prends les variables comme globales
     
-    screen = pygame.display.set_mode((800, 800), pygame.FULLSCREEN, pygame.HWSURFACE)#on définit l'élément pygame.display (la fenêtre sera en plein écran)
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN, pygame.HWSURFACE)#on définit l'élément pygame.display (la fenêtre sera en plein écran)
     
     width, height = pygame.display.Info().current_w, pygame.display.Info().current_h#on prend la plus grande taille possible
 
