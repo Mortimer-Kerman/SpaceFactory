@@ -245,7 +245,7 @@ OppInteractions.Interruption.3 : En traversant une vallée escarpée, l'expédit
 OppInteractions.Interruption.3.b1 : Passer son chemin
 OppInteractions.Interruption.3.b1.1 : L'équipe a repris la route, laissant la créature derrière elle.
 OppInteractions.Interruption.3.b2 : Observer de loin
-OppInteractions.Interruption.3.b2.1 : Alors qu'une petite bestione s'approchait du cadavre pour lui picorer l'oreille, la créature s'est%$rsoudainement révillée et l'a attrapée avant de l'avaler d'un coup. Cette créature fait donc le mort pour%$rattirer des charognards pour les attraper sans consommer beaucoup d'énergie.
+OppInteractions.Interruption.3.b2.1 : Alors qu'une petite bestiole s'approchait du cadavre pour lui picorer l'oreille, la créature s'est%$rsoudainement révillée et l'a attrapée avant de l'avaler d'un coup. Cette créature fait donc le mort pour%$rattirer des charognards pour les attraper sans consommer beaucoup d'énergie.
 OppInteractions.Interruption.3.b3 : Faire des prélèvements
 OppInteractions.Interruption.3.b3.1 : Alors qu'un scientifique s'approchait du cadavre pour faire des prélèvements, la créature s'est%$rsoudainement révillée et l'a attrapée avant de l'avaler d'un coup avant de pousser un terible rugissement%$ret de poursuivre les autres. En raison de la taille massive de la créature, les survivants%$ront réussi à la distancer, mais ils doivent maintenant%$rpoursuivre leur route sans leur collègue mort.
 
