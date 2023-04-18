@@ -11,7 +11,6 @@ import pygame_menu
 import numpy as np
 #importation des bibliothèques système
 import random
-#import threading
 #importation des autres fichiers
 import TextureManager
 import SaveManager
@@ -172,8 +171,7 @@ def DisplayObjects(runtime:int):
     
     for m in GameItems.current:#pour chaque minerais dans GameItems.current
         GameItems.Minerais.PlaceFromCurrent(m)#placement du minerais
-        #threading.Thread(target=lambda:GameItems.Minerais.PlaceFromCurrent(m)).start()#placement du minerais
-
+        
     for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
         if runtime==0:#si le runtime vaut 0
             item.Give()#transmition de l'inventaire à l'item adjacent
