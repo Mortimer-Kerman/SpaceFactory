@@ -70,15 +70,18 @@ def Tick():
     """
     Met à jour le gestionnaire d'audio, notamment le lancement de nouvelles musiques si la précédente se coupe
     """
-    if len(pygame.event.get(eventtype=MUSIC_ENDED)) != 0:#Si un évenement d'arrêt de musique est recensé
+    if len(pygame.event.get(eventtype=MUSIC_ENDED)) != 0:#Si un évenement d'arrêt de musique est recensé...
             PlayRandomMusic()#Nouvelle musique aléatoire
-    if len(pygame.event.get(eventtype=AMBIENCE_ENDED)) != 0:#Si un évenement d'arrêt de musique est recensé
-            BeginGameAmbience()
+    if len(pygame.event.get(eventtype=AMBIENCE_ENDED)) != 0:#Si le son d'ambience s'est arrêté...
+            BeginGameAmbience()#On le relance
     
+    #Pour chaque canal audio (sauf le n°0)...
     for i in range(pygame.mixer.get_num_channels()-1):
+        #Si ce canal audio s'est arrêté et qu'il était dans la liste des canaux utilisés...
         if len(pygame.event.get(eventtype=SOUND_ENDED+i)) != 0 and i+1 in usedChannels:
-            usedChannels.remove(i+1)
+            usedChannels.remove(i+1)#On l'y retire
 
+#Liste des canaux utilisés
 usedChannels = [0]
 
 def PlaySound(soundName,pos=None):

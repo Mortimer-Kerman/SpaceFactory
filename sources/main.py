@@ -269,26 +269,33 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     """
     Ouvre le menu de création des sauvegardes
     """
+    #Si il y a déjà un menu de création de sauvegardes d'ouvert, on le ferme
     if Menus.SaveCreation != None:
         Menus.SaveCreation.disable()
+    
+    #Création du menu
     Menus.SaveCreation = pygame_menu.Menu(Localization.GetLoc('Saves.NewSave'), 700, 600, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     Menus.SaveCreation.add.button(Localization.GetLoc('Game.Back'), Menus.SaveCreation.disable, align=pygame_menu.locals.ALIGN_LEFT)
     
+    #Cadre qui contiendra les deux moitiés du menu
     menuSections = Menus.SaveCreation.add.frame_h(660, 325, padding=0)
     menuSections.relax(True)
     
+    #Colonne qui contiendra les paramètres de la sauvegarde
     creationTools = Menus.SaveCreation.add.frame_v(520, 325, padding=0)
     creationTools.relax(True)
-    
     menuSections.pack(creationTools, align=pygame_menu.locals.ALIGN_LEFT)
     
+    #Zone de texte permettant de choisir le nom de la sauvegarde
     saveNameInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Name'), default=RandomSaveName(),maxchar=30)
     creationTools.pack(saveNameInput, align=pygame_menu.locals.ALIGN_LEFT)
     
+    #Zone de texte permettant de choisir la graine de la sauvegarde
     global seedInput
     seedInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Seed'),maxchar=10)
     creationTools.pack(seedInput, align=pygame_menu.locals.ALIGN_LEFT)
     
+    #Variables et fonctions pour permettre aux boutons de modifier les paramètres choisis
     global chosenSettings
     chosenSettings = [1, 2 if defaultTuto else 0]
     def setDiff(x:int):
@@ -296,7 +303,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     def setMode(x:int):
         chosenSettings[1] = x
     
-
+    
     DifficultySlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Difficulty'), 1, list(SaveManager.difficultiesDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
                       onchange=lambda x: setDiff(x),

@@ -215,9 +215,11 @@ OppInteractions.OnSite.1 : L'équipe de reconnaissance est arrivée à hauteur d
 OppInteractions.OnSite.1.b1 : Rebrousser chemin
 OppInteractions.OnSite.1.b1.1 : L'expédition a fait demi tour et rentre à la base. Vous pourrez revenir plus tard.
 OppInteractions.OnSite.1.b2 : Explorer la zone moins de 5h
-OppInteractions.OnSite.1.b2.1 : L'expédition a exploré la zone, sans résultat.
+OppInteractions.OnSite.1.b2.1 : Après quelques heures d'exploration, pour ne pas se mettre en danger,%$rl'expédition est forçée de quitter la zone du cratère. Cependant, elle a pu découvrir%$rquelques gisements de cuivre (%$1) qu'elle rapporte à la base.
+OppInteractions.OnSite.1.b2.2 : Après quelques heures d'exploration, pour ne pas se mettre en danger,%$rl'expédition est forçée de quitter la zone du cratère. Cependant, elle n'a rien découvert%$rpendant son exploration et doit rentrer bredouille.
 OppInteractions.OnSite.1.b3 : Explorer la zone pendant 24h
-OppInteractions.OnSite.1.b3.1 : 8h après être entré dans le bassin, des capteurs sismiques sur toute la planète ont%$renregistré un séisme de magnitude 9,7 sur l'échelle de Richter au cœur de la zone.%$rLes images satellites confirment l'impact d'une immense sidérite au cœur du bassin.%$r%$rLes membres de l'équipe sont tous déclarés comme morts.
+OppInteractions.OnSite.1.b3.1 : Après être restée 24h sans nouvelles, la base a repris contact avec l'équipe!%$rIls sont sortis du cratère sains et saufs et ont pu y découvrir de grandes quantités de%$rcuivre (%$1) qu'ils ramènent à la base. Avant de se remettre sur le chemin du retour,%$rles membres de l'expédition ont pu observer de loin la chute d'une météorite dans le cratère.
+OppInteractions.OnSite.1.b3.2 : 8h après être entré dans le bassin, des capteurs sismiques sur toute la planète ont%$renregistré un séisme de magnitude 9,7 sur l'échelle de Richter au cœur de la zone.%$rLes images satellites confirment l'impact d'une immense sidérite au cœur du bassin.%$r%$rLes membres de l'équipe sont tous déclarés comme morts.
 
 OppInteractions.OnSite.2 : L'équipe est arrivée à destination!%$rEn explorant, elle a rapidement remarqué un immense gisement de cuivre trônant au milieu de la vallée.%$rSon exploitation complète pourrait rapporter de grandes quantités de cuivre à la base, mais cela%$rdétruirait entièrement l'écosystème aux alentours. Il est également possible de n'en exploiter%$rqu'une partie, ce qui pourrait préserver la vallée.%$r%$rQue faire?
 OppInteractions.OnSite.2.b1 : Extraire le cuivre en totalité
@@ -238,6 +240,14 @@ OppInteractions.Interruption.2.b1.1 : L'équipe a repris la route pour contourne
 OppInteractions.Interruption.2.b2 : Traverser
 OppInteractions.Interruption.2.b2.1 : En passant sur un surplomb très étroit, un membre de l'expédition a perdu l'équilibre et a fait une%$rchute de plusieurs centaines de mètres, le tuant sur le coup. Les autres membres de l'équipe sont%$rsains et saufs et ont repris la route.
 OppInteractions.Interruption.2.b2.2 : L'équipe a traversé la zone en ligne droite, et est saine est sauve. Elle continue à avancer.
+
+OppInteractions.Interruption.3 : En traversant une vallée escarpée, l'expédition s'est retrouvée face au cadavre d'une créature locale.%$rCertains charognards commencent à trainer autour, mais il est possible de%$rrécupérer des prélèvements utiles sur la créature.%$r%$rQue faire?
+OppInteractions.Interruption.3.b1 : Passer son chemin
+OppInteractions.Interruption.3.b1.1 : L'équipe a repris la route, laissant la créature derrière elle.
+OppInteractions.Interruption.3.b2 : Observer de loin
+OppInteractions.Interruption.3.b2.1 : Alors qu'une petite bestione s'approchait du cadavre pour lui picorer l'oreille, la créature s'est%$rsoudainement révillée et l'a attrapée avant de l'avaler d'un coup. Cette créature fait donc le mort pour%$rattirer des charognards pour les attraper sans consommer beaucoup d'énergie.
+OppInteractions.Interruption.3.b3 : Faire des prélèvements
+OppInteractions.Interruption.3.b3.1 : Alors qu'un scientifique s'approchait du cadavre pour faire des prélèvements, la créature s'est%$rsoudainement révillée et l'a attrapée avant de l'avaler d'un coup avant de pousser un terible rugissement%$ret de poursuivre les autres. En raison de la taille massive de la créature, les survivants%$ront réussi à la distancer, mais ils doivent maintenant%$rpoursuivre leur route sans leur collègue mort.
 
 //Market
 Market.Title : GalacticMarket

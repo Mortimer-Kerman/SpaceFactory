@@ -21,6 +21,7 @@ import Localization
 import TextureManager
 import PlanetGenerator
 import OpportunitiesInteractions
+import AudioManager
 
 #Menu actuellement ouvert
 openedMap = None
@@ -184,7 +185,7 @@ def OpenMap():
             RefreshMenu()
     
     #Boucle de mise à jour du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick(),AudioManager.Tick()))
 
 def RefreshMenu():
     """
@@ -325,7 +326,7 @@ def OpenExpeditionLauncher():
     SetTravelTime(False)
     
     #Boucle du menu
-    menu.mainloop(UiManager.screen, DisplayBackground)
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()))
 
 def CloseMap():
     """
@@ -886,7 +887,7 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
         bottomBar.pack(menu.add.button(Localization.GetLoc(option[0]),result,font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
     
     #Boucle du menu
-    menu.mainloop(UiManager.screen, DisplayBackground)
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()))
 
 
 

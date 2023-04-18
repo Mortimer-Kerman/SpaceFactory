@@ -17,6 +17,7 @@ import UiManager
 import Localization
 import SaveManager
 import PlanetGenerator
+import AudioManager
 
 
 class OpportunityInteraction:
@@ -301,7 +302,7 @@ class InteractionResult:
         menu.add.button(Localization.GetLoc('Game.Ok'), menu.disable, font_size=20)
         
         #Boucle du menu
-        menu.mainloop(UiManager.screen, DisplayBackground)
+        menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()))
 
 onSiteInteractions=[
     OpportunityInteraction("OppInteractions.OnSite.1", "interactionBackgrounds/impactCrater",
@@ -311,12 +312,19 @@ onSiteInteractions=[
                                       InteractionResult.ReturnToBase(o)),
                             None),
                            ("OppInteractions.OnSite.1.b2",
-                            lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b2.1","interactionBackgrounds/walkingDesert"),
+                            lambda o:(InteractionResult.DoWithChance(o,0.6,
+                                lambda o:(InteractionResult.AddResourceToInv(o, "Copper", (20,50),"rAmount"),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b2.1","interactionBackgrounds/walkingDesert")),
+                                lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b2.2","interactionBackgrounds/walkingDesert"))),
                                       InteractionResult.ReturnToBase(o)),
                             (3,5)),
                            ("OppInteractions.OnSite.1.b3",
-                            lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b3.1","interactionBackgrounds/meteor"),
-                                      InteractionResult.EndExpedition(o,False)),
+                            lambda o: InteractionResult.DoWithChance(o,0.6,
+                                lambda o:(InteractionResult.AddResourceToInv(o, "Copper", (70,130),"rAmount"),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b3.1","interactionBackgrounds/meteor"),
+                                          InteractionResult.ReturnToBase(o)),
+                                lambda o:(InteractionResult.EndExpedition(o,False),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b3.2","interactionBackgrounds/meteor"))),
                             24),
                            ),
     OpportunityInteraction("OppInteractions.OnSite.2", "interactionBackgrounds/greenValley",
@@ -361,6 +369,20 @@ interruptionInteractions=[
                                 lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.2.b2.2","interactionBackgrounds/walkingDesert")),
                                       InteractionResult.ResumeTravel(o)))
                            ),
+    OpportunityInteraction("OppInteractions.Interruption.3", "interactionBackgrounds/blockedWay",
+                           {Tags.LIVINGPLANET:True},
+                           ("OppInteractions.Interruption.3.b1",
+                            lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.3.b1.1","interactionBackgrounds/walkingDesert"),
+                                      InteractionResult.ResumeTravel(o))),
+                           ("OppInteractions.Interruption.3.b2",
+                            lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.3.b2.1","interactionBackgrounds/walkingDesert"),
+                                      InteractionResult.ResumeTravel(o))),
+                           ("OppInteractions.Interruption.3.b3",
+                            lambda o:(InteractionResult.AddMembers(o, -1),
+                                      InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.3.b3.1","interactionBackgrounds/runningJungle"),
+                                      InteractionResult.ResumeTravel(o)))
+                           ),
+    
 ]
 
 
