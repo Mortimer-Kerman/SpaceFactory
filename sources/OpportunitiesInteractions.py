@@ -74,29 +74,33 @@ class OpportunityInteraction:
         
         applies = True
         """
-        if Tags.ONROVER in oppDescCodes:
-            if oppDescCodes[Tags.ONROVER] != opportunity.IsOnRover():
+        if Tags.ONROVER in self.tags:
+            if self.tags[Tags.ONROVER] != opportunity.IsOnRover():
                 applies = False
         
-        if Tags.DEADPLANET in oppDescCodes:
-                if oppDescCodes[Tags.DEADPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead):
+        if Tags.DEADPLANET in self.tags:
+                if self.tags[Tags.DEADPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead):
                     applies = False
         
-        if Tags.DESERTICPLANET in oppDescCodes:
-                if oppDescCodes[Tags.DESERTICPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Desertic):
+        if Tags.DESERTICPLANET in self.tags:
+                if self.tags[Tags.DESERTICPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Desertic):
                     applies = False
         
-        if Tags.LIVINGPLANET in oppDescCodes:
-                if oppDescCodes[Tags.LIVINGPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike):
+        if Tags.LIVINGPLANET in self.tags:
+                if self.tags[Tags.LIVINGPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike):
                     applies = False
         
-        if Tags.MINMEMBERS in oppDescCodes:
-            if oppDescCodes[Tags.MINMEMBERS] > opportunity.GetMembersAmount():
+        if Tags.MINMEMBERS in self.tags:
+            if self.tags[Tags.MINMEMBERS] > opportunity.GetMembersAmount():
                 applies = False
         
-        if Tags.MAXMEMBERS in oppDescCodes:
-                if oppDescCodes[Tags.MAXMEMBERS] < opportunity.GetMembersAmount():
+        if Tags.MAXMEMBERS in self.tags:
+                if self.tags[Tags.MAXMEMBERS] < opportunity.GetMembersAmount():
                     applies = False
+        
+        if Tags.LOCATIONTYPE in self.tags:
+            if oppDescCodes["place"] not in self.tags[Tags.LOCATIONTYPE]:
+                applies = False
         """
         return applies
     
@@ -123,6 +127,8 @@ class Tags:
     MINMEMBERS=4#int
     #Nombre maximal inclus de membres de l'expédition
     MAXMEMBERS=5#int
+    #IDs du lieu visé par l'expédition
+    LOCATIONTYPE=6#liste d'ints
 
 
 class InteractionResult:
@@ -306,7 +312,7 @@ class InteractionResult:
 
 onSiteInteractions=[
     OpportunityInteraction("OppInteractions.OnSite.1", "interactionBackgrounds/impactCrater",
-                           {},
+                           {Tags.LOCATIONTYPE:[4,7]},
                            ("OppInteractions.OnSite.1.b1",
                             lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b1.1","interactionBackgrounds/walkingDesert"),
                                       InteractionResult.ReturnToBase(o)),
