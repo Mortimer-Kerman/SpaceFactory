@@ -19,6 +19,7 @@ import OpportunitiesManager
 import Localization as L
 import FunctionUtils
 import AudioManager
+import SettingsManager
 
 SaveFileVersion="f0.16"
 
@@ -68,7 +69,11 @@ def TickClock():
     """
     Met à jour l'horloge du jeu
     """
-    clock.tick(60)
+    fps = SettingsManager.GetSetting("maxFps")
+    if fps < 201:
+        clock.tick(fps)
+    else:
+        clock.tick()
 
 saveName = None#nom de la sauvegarde
 mainData = None#va bientôt contenir la classe Data principale

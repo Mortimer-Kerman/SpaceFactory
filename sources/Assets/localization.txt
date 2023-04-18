@@ -65,6 +65,8 @@ Settings.GameVolume : Volume du jeu
 Settings.NiceBiomeBorders : Bordures de biomes : 
 Settings.NiceBiomeBorders.True : Détaillées
 Settings.NiceBiomeBorders.False : Non
+Settings.MaxFps : FPS max
+Settings.MaxFps.Unlimited : Illimité
 Settings.Keys.Title : Touches
 Settings.Keys.up : Haut
 Settings.Keys.down : Bas

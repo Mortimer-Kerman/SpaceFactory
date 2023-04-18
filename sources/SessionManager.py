@@ -169,12 +169,12 @@ def Play(saveName:str,**kwargs):
 def DisplayObjects(runtime:int):
     """Affiche les objets de manière dynamique"""
     
-    for m in GameItems.current:#pour chaque minerais dans GameItems.current
-        GameItems.Minerais.PlaceFromCurrent(m)#placement du minerais
+    for m in GameItems.current:#pour chaque minerai dans GameItems.current
+        GameItems.Minerais.PlaceFromCurrent(m)#placement du minerai
         
     for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
         if runtime==0:#si le runtime vaut 0
-            item.Give()#transmition de l'inventaire à l'item adjacent
+            item.Give()#transmission de l'inventaire à l'item adjacent
         item.Display(runtime)#Afficher l'item
     
     GameItems.ExecuteRender()#Executer le rendu dynamique des items
@@ -323,7 +323,7 @@ def HandleMouseClicks(button,drone):
             return False
         
         if UiManager.showMenu.get("question",False):#si le mode question est actif
-            a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())#On détecte si un Minerai avec la position de la souris existe
+            a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())#On détecte si un minerai avec la position de la souris existe
             if a:#si un minerai existe
                 GameItems.getDescription(a)#Affichage de la description
             return False
@@ -359,7 +359,7 @@ def HandleMouseClicks(button,drone):
             if clickedItem.name in ["Sorter","Storage","Market"]:clickedItem.edit(UiManager.interactItem(clickedItem))#si le nom de l'item est dans la liste, lancer l'interaction
             return False
         
-        a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())#On récupère le type de minerais
+        a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())#On récupère le type de minerai
         if a:
             #dessin du laser
             AudioManager.PlaySound("Laser")#jouer le son de laser

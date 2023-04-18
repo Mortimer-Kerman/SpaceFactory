@@ -193,7 +193,6 @@ def forme3(x,y,w,wr,h,o,color=(47,48,51)):
 chunkTex=FunctionUtils.NumpyDict()#la texture des chunks (stockées dans un NumpyDict, car plus rapide)
 chunkLimits=FunctionUtils.NumpyDict()#la texture de la limite des chunks
 unRefreshed=False
-textureFond=None
 def UpdateBackground():
     """
     Mise à jour du fond
