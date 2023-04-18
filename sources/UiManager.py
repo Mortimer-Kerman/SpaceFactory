@@ -43,7 +43,7 @@ def Init():
     """
     global screen,width,height#on prends les variables comme globales
     
-    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)#on définit l'élément pygame.display (la fenêtre sera en plein écran)
+    screen = pygame.display.set_mode((800, 800), pygame.FULLSCREEN, pygame.HWSURFACE)#on définit l'élément pygame.display (la fenêtre sera en plein écran)
     
     width, height = pygame.display.Info().current_w, pygame.display.Info().current_h#on prend la plus grande taille possible
 
@@ -193,6 +193,7 @@ def forme3(x,y,w,wr,h,o,color=(47,48,51)):
 chunkTex=FunctionUtils.NumpyDict()#la texture des chunks (stockées dans un NumpyDict, car plus rapide)
 chunkLimits=FunctionUtils.NumpyDict()#la texture de la limite des chunks
 unRefreshed=False
+textureFond=None
 def UpdateBackground():
     """
     Mise à jour du fond
@@ -205,8 +206,10 @@ def UpdateBackground():
     zoom = SaveManager.GetZoom()*10#récupération du zoom
     cam = SaveManager.GetCamPos()#récupération de la position de la caméra
     env = SaveManager.GetEnvironmentType()
-    for posX in range(-1,(width//zoom)+1):#pour posX dans -1,(width//zoom)+1 
-            for posY in range(-1,(height//zoom)+1):#pour posY dans -1,(height//zoom)+1
+    width_zoom = width // zoom
+    height_zoom = height // zoom
+    for posX in np.arange(-1,width_zoom+1):#pour posX dans -1,(width//zoom)+1 
+            for posY in np.arange(-1,height_zoom+1):#pour posY dans -1,(height//zoom)+1
                 
                 Xpos = posX*zoom+((cam[0]+(width/2))%zoom)#coordonnées selon zoom
                 Ypos = posY*zoom+((cam[1]+(height/2))%zoom)#coordonnées selon zoom
@@ -221,18 +224,15 @@ def UpdateBackground():
                     
                     tex = "rock"#texture par défaut
                     if env == PlanetGenerator.PlanetTypes.Dead:#s'il s'agit d'une planète morte
-                        tex = "sand"#la texture sera du sable
-                        if val > 0.5:#sauf si la valeur du bruit fractal est supérieure à 0.5
-                            tex = "rock"#le sol du chunk devient donc de la roche
+                        if val<=0.5:#si le bruit est inférieur ou égal a 0.5
+                            tex = "sand"#la texture sera du sable
                     else:#s'il ne s'agit pas d'une planète morte
                         if env == PlanetGenerator.PlanetTypes.Desertic:#s'il s'agit d'une planète désertique
-                            tex = "rock"#la texture par défaut
                             if val < 0.7:#sauf si la valeur du bruit fractal est inférieure à 0.7
                                 tex = "sand"#la texture devient du sable
                             if val < 0.34:#si la valeur du bruit fractal est inférieure à 0.34
                                 tex = "water"#le chunk devient de l'eau
                         else:#s'il s'agit d'un planète vivante
-                            tex = "rock"#texture par défaut
                             if val < 0.7:#sauf si la valeur du bruit fractal est inférieure à 0.7
                                 tex = "grass"#le chunk devient de l'herbe
                             if val < 0.4:#si la valeur du bruit fractal est inférieure à 0.4
@@ -281,9 +281,7 @@ def UpdateBackground():
                             
                                 
                         screen.blit(TextureManager.GetTexture("ground/" + limitTex, zoom), (Xpos, Ypos))#placement du fond
-                
-                #print("3. "+str(time.monotonic()))
-    
+                    
     unRefreshed = needsRefresh
     
 def ForceBackgroundRefresh():

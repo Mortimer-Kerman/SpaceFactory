@@ -68,7 +68,7 @@ def TickClock():
     """
     Met à jour l'horloge du jeu
     """
-    clock.tick()
+    clock.tick(60)
 
 saveName = None#nom de la sauvegarde
 mainData = None#va bientôt contenir la classe Data principale

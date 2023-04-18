@@ -45,6 +45,7 @@ class Ennemis:
         #on ajoute des nombres aléatoire aux coordonnées
         a[0]+=random.randint(-100, 100)
         a[1]+=random.randint(-100, 100)
+        print(a)
         EnnemisList.append(Ennemis(a))#Ajout de l'ennemi dans la liste EnnemiList
     def __str__(self):
         return "Ennemis(%s)"%self.pos#affiche les coordonnées de l'ennemi
@@ -105,4 +106,4 @@ class Events:
             self.nextEvent = self.nextEvent + random.randint(99,999)#prochain événement
             self.isEventHappening = True
             Ennemis.spawn()#apparition d'un ennemi*
-            UiManager.Popup("Un ennemi viens d’apparaître")
+            UiManager.Popup("Un ennemi a été détecté dans votre zone")

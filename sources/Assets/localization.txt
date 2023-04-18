@@ -213,7 +213,7 @@ Opportunities.Title.7 : Données orbitales
 //Interactions avec les expéditions
 OppInteractions.OnSite.1 : L'équipe de reconnaissance est arrivée à hauteur du bassin d'impact!%$rCependant, une gigantesque masse ferreuse au centre du bassin provoque un champ magnétique qui brouille%$rtous les signaux radio. Au moment où l'équipe entrera dans la zone, elle perdra toute connexion avec la%$rbase. Si elle s'aventure longtemps dans la zone, elle ne pourra donc pas être prévenue en cas de%$rdanger, mais pourra peut-être découvrir plus de choses. Elle peut également rentrer et revenir plus tard.%$r%$rQue faire ?
 OppInteractions.OnSite.1.b1 : Rebrousser chemin
-OppInteractions.OnSite.1.b1.1 : L'expédition a fait demi tour et rentre à la base. Vous pourrez revenir plus tard.
+OppInteractions.OnSite.1.b1.1 : L'expédition a fait demi-tour et rentre à la base. Vous pourrez revenir plus tard.
 OppInteractions.OnSite.1.b2 : Explorer la zone moins de 5h
 OppInteractions.OnSite.1.b2.1 : Après quelques heures d'exploration, pour ne pas se mettre en danger,%$rl'expédition est forçée de quitter la zone du cratère. Cependant, elle a pu découvrir%$rquelques gisements de cuivre (%$1) qu'elle rapporte à la base.
 OppInteractions.OnSite.1.b2.2 : Après quelques heures d'exploration, pour ne pas se mettre en danger,%$rl'expédition est forçée de quitter la zone du cratère. Cependant, elle n'a rien découvert%$rpendant son exploration et doit rentrer bredouille.
@@ -227,7 +227,7 @@ OppInteractions.OnSite.2.b1.1 : L'équipe a exploité le filon en totalité, au 
 OppInteractions.OnSite.2.b2 : N'exploiter qu'une partie du filon
 OppInteractions.OnSite.2.b2.1 : L'équipe a pu extraire de petites quantités de cuivre (%$1), et en a également profité pour faire%$rdes prélèvement sur la flore locale. Elle rentre à la base avec des données prometteuses.
 
-OppInteractions.Interruption.1 : L'expédition est prise dans une tempête de sable!%$rLa visibilité est nulle, la progression est au point mort et le châssis du rover commence à protester.%$rL'équipe de reconaissance peut attendre la fin de la tempête dans le rover, mais il ne sera peut-être%$rplus en état de fonctionnement, et ils peuvent se retrouver bloqués par le sable accumulé autour.%$rIls peuvent également continuer à pied et abandonner le rover, mais leur progression sera ralentie.%$r%$rQue faire?
+OppInteractions.Interruption.1 : L'expédition est prise dans une tempête de sable!%$rLa visibilité est nulle, la progression est au point mort et le châssis du rover commence à protester.%$rL'équipe de reconnaissance peut attendre la fin de la tempête dans le rover, mais il ne sera peut-être%$rplus en état de fonctionnement, et ils peuvent se retrouver bloqués par le sable accumulé autour.%$rIls peuvent également continuer à pied et abandonner le rover, mais leur progression sera ralentie.%$r%$rQue faire?
 OppInteractions.Interruption.1.b1 : Abandonner le rover
 OppInteractions.Interruption.1.b1.1 : L'expédition a abandonné le rover aux éléments et continue à avancer vers la destination.
 OppInteractions.Interruption.1.b2 : Attendre la fin de la tempête

@@ -11,6 +11,7 @@ import pygame_menu
 import numpy as np
 #importation des bibliothèques système
 import random
+import threading
 #importation des autres fichiers
 import TextureManager
 import SaveManager
@@ -90,6 +91,8 @@ def Play(saveName:str,**kwargs):
     EventManager.EnnemisList.clear()#On supprime tous les ennemis
     
     AudioManager.BeginGameAmbience()
+
+    pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP, pygame.MOUSEWHEEL, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION,AudioManager.MUSIC_ENDED, AudioManager.AMBIENCE_ENDED,AudioManager.SOUND_ENDED])#réduit le nombre d'évent
     
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
@@ -168,11 +171,11 @@ def DisplayObjects(runtime:int):
     """Affiche les objets de manière dynamique"""
     
     for m in GameItems.current:#pour chaque minerais dans GameItems.current
-        GameItems.Minerais.PlaceFromCurrent(m)#placement du minerais
+        threading.Thread(target=lambda:GameItems.Minerais.PlaceFromCurrent(m)).start()#placement du minerais
 
     for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
         if runtime==0:#si le runtime vaut 0
-            item.Give()#transmition de l'inventaire à l'item adjacent
+            threading.Thread(target=item.Give).start()#transmission de l'inventaire à l'item adjacent
         item.Display(runtime)#Afficher l'item
     
     GameItems.ExecuteRender()#Executer le rendu dynamique des items
