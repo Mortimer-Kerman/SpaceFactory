@@ -38,11 +38,15 @@ def Init():
     
     PlayRandomMusic()#Lancement de la musique
     
-    pygame.mixer.Channel(0).set_endevent(AMBIENCE_ENDED)
+    audioChannels.append(pygame.mixer.Channel(0))#Création du canal audio 0, réservé au son d'ambiance
+    
+    audioChannels[0].set_endevent(AMBIENCE_ENDED)#Ajout de l'évenement de fin
+    
+    for i in range(pygame.mixer.get_num_channels()-1):#Pour i allant de 0 au nombre de canaux possibles...
+        audioChannels.append(pygame.mixer.Channel(i+1))#On ajoute un nouveau canal à la liste
+        audioChannels[i+1].set_endevent(SOUND_ENDED+i)#On lui ajoute un évenement de fin
 
-    for i in range(pygame.mixer.get_num_channels()-1):
-        pygame.mixer.Channel(i+1).set_endevent(SOUND_ENDED+i)
-
+audioChannels = []#Liste des canaux audio
 
 def LoadAllSounds():
     """
@@ -105,7 +109,7 @@ def PlaySound(soundName,pos=None):
         return
     
     #On récupère le canal en question
-    channel = pygame.mixer.Channel(channelID)
+    channel = audioChannels[channelID]
     
     #On récupère le volume de la musique entre 0 et 100
     gameVolume = SettingsManager.GetSetting("gameVolume")/100
@@ -166,7 +170,7 @@ def BeginGameAmbience():
     if not SaveManager.SaveLoaded():
         return
     sound = loadedSounds["ambience/ambiance2.mp3"]
-    pygame.mixer.Channel(0).play(sound)
+    audioChannels[0].play(sound)
 
 def PlayRandomMusic():
     """

@@ -499,7 +499,7 @@ def EditSave(saveName:str):
         try:subprocess.Popen('explorer "' + os.path.abspath("./Saves/" + saveName) + '"')#ouverture d'un sous-processus via le lancement du logiciel Explorateur de Fichier Windows
         except:
             try:os.system('xdg-open "./Saves/' + saveName + '"')#xdg-open est la commande UNIX pour ouvrir le logiciel utilisé par défaut (ici, pour ouvrir un répertoire)
-            except:print("Une erreur est survenue : impossible d'ouvrir le gestionnaire de fichier")
+            except:print("Une erreur est survenue : impossible d'ouvrir le gestionnaire de fichiers")
     
     line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.OpenFile'), OpenSaveFile), align=pygame_menu.locals.ALIGN_LEFT)#Bouton de modification du fichier
     line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Duplicate'), duplicate), align=pygame_menu.locals.ALIGN_RIGHT)#Bouton de duplication
