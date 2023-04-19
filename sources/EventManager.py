@@ -29,12 +29,12 @@ class Ennemis:
         nearest_pos = [0,0]
         min_dist = float('inf')#float('inf) renvoie une valeur très très très très très très très très très très grande
         
-        for pos in SaveManager.mainData.items.keys():#pour chaque clé du dictionnaire d'item de la sauvegarde
+        for pos , item in dict(SaveManager.mainData.items).items():#pour chaque clé du dictionnaire d'item de la sauvegarde
             pos=FunctionUtils.strToList(pos)#on convertit la position en liste (stockée en tant que str) (renvoie une liste de str)
             pos[0]=float(pos[0])#on convertit en flottant
             pos[1]=float(pos[1])#on convertit en flottant
             dist = FunctionUtils.Distance(pos, self.pos)#calcul de la distance entre la position actuelle et la position de l'item
-            if dist < min_dist:#si la distance est plus petite que la distance minimale précédente
+            if dist < min_dist and item.metadata.get("pv",100):#si la distance est plus petite que la distance minimale précédente
                 min_dist = dist#on change la distance minimale
                 nearest_pos = pos#on change la position la plus proche
         self.go=list(nearest_pos)#on stocke la destination dans une variable
@@ -51,7 +51,7 @@ class Ennemis:
         return "Ennemis(%s)"%self.pos#affiche les coordonnées de l'ennemi
     def ia(self,runtime):
         """Le cerveau même de notre ennemi, sa conscience de son environnement, et son envie de vivre, son envie de tuer, son envie de détruire"""
-        if runtime<=49:#si le runtime est inférieur ou égal à 49
+        if runtime<=48:#si le runtime est inférieur ou égal à 49
             return#quitter la fonction
         pos=self.pos#on stocke la position
         v=[None,None]#V nous servira comme d'un vecteur
@@ -65,16 +65,20 @@ class Ennemis:
             nearest_pos = [self.pos[0]+random.randint(-100,100),self.pos[1]+random.randint(-100,100)]#on choisit une nouvelle position aléatoirement
             min_dist = float('inf')
 
-            for pos in SaveManager.mainData.items.keys():#pour chaque clé dans la sauvegarde
+            for pos, item in dict(SaveManager.mainData.items).items():#pour chaque clé dans la sauvegarde
                 pos=FunctionUtils.strToList(pos)#on transforme la chaîne de caractère en liste
                 pos[0]=float(pos[0])#on transforme la position x en flottant
                 pos[1]=float(pos[1])#on transforme la position y en flottant
                 dist = FunctionUtils.Distance(pos, self.pos)#on calcule la distance
-                if dist < min_dist and pos!=self.go:#si la distance est plus petite que la plus petite distance
+                if dist < min_dist and pos!=self.go and item.metadata.get("pv",100):#si la distance est plus petite que la plus petite distance
                     min_dist = dist#on stocke la distance
                     nearest_pos = pos#on stocke la position
             self.go=list(nearest_pos)#on change la position de destination
             return
+        if SaveManager.IsItemHere(pos):
+            a=SaveManager.GetItemAtPos(pos).metadata
+            if a.get("pv",100):
+                a["pv"]=a.get("pv",100)-50
         self.pos=pos
     def show(self,c):
         """
@@ -99,11 +103,12 @@ class Events:
         self.isEventHappening = False
         self.lastEvent=0
         self.runtime=0
-        self.nextEvent = self.lastEvent + random.randint(99,999)#prochain événement
+        self.nextEvent = self.lastEvent + random.randint(5,500)#prochain événement
+        print(self.nextEvent)
     def LaunchEvent(self):
         self.runtime+=1
         if self.nextEvent<self.runtime and not self.isEventHappening:#si aucun événement est lancé et que le runtime est supérieur au nextEvent
-            self.nextEvent = self.nextEvent + random.randint(99,999)#prochain événement
+            self.nextEvent = self.nextEvent + random.randint(20,500)#prochain événement
             self.isEventHappening = True
             Ennemis.spawn()#apparition d'un ennemi*
             UiManager.Popup("Un ennemi a été détecté dans votre zone")

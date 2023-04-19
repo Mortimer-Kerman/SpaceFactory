@@ -101,18 +101,16 @@ class Item:
         
         AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))#afficher
         
-        #UiManager.place_text(str(self.metadata.get("inv",None)),self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1],20,(255,0,0))
-        
+        if not self.metadata.get("pv",100):
+            AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture("Broken", zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))#afficher
+            return
         if self.name == "Drill" and runtime == 0:
             AudioManager.PlaySound("Drill",self.pos)
         
         if self.name in ["ConveyorBelt","Sorter"]:
             col=allTransportableItems
             a=col.get(self.metadata.get("inv",None),False) if self.name=="ConveyorBelt" else col.get(self.metadata.get("sorter_choice",None),(255,0,0))
-            #b={"tapis Nord":([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Sud":([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),"tapis Ouest":([-1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2]),"tapis Est":([1,0],[1/4,1/2,1/4,0,1/4,1/2,3/4,1/2])}
-            #b=[([0,-1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([1,0],[0,1/4,0,-1/4,1/4,1/2,3/4,1/2]),([0,1],[1/4,1/2,3/4,1/2,1/4,1/2,1/4,0]),([-1,0],[3/4,1/2,3/4,1,1/4,1/2,3/4,1/2])]
-            #b,ca=b[self.rotation]# if runtime<40 else (0,0)
-            
+              
             if a:
                 renderOffset = (0,0)
                 if Anim and self.name=="ConveyorBelt":
@@ -189,7 +187,9 @@ class Item:
         return item
     
     def Give(self):
-        if self.metadata.get("g",False):
+        if not self.metadata.get("pv",100):
+            return
+        if self.metadata.get("g",0):
             return
         if self.name=="Drill" and self.metadata.get("inv",None) is None:
             if self.metadata.get("ores", None) is None:
@@ -227,6 +227,8 @@ class Item:
                     item.Obtain(self.metadata.get("inv",None),self)
                     
     def Obtain(self,inv,giver):
+        if not self.metadata.get("pv",100):
+            return
         self.metadata["g"]=1
         if self.name in ["Junction"]+list(craft.keys()) and list(self.metadata.get("last",[]))==list(giver.pos):
             self.metadata["last"]=[]

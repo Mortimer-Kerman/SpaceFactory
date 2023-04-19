@@ -352,10 +352,16 @@ def HandleMouseClicks(button,drone):
                 if i.pv<=0:
                     del EventManager.EnnemisList[c]
                     AudioManager.PlaySound("Explosion")#jouer le son d'explosion
+                return False
 
         if SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):#si un item est présent à la position de la souris
             clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
-            #UiManager.LightPopup(clickedItem.name+"\n"+str(clickedItem.giveto)+"\n"+str(clickedItem.metadata)+"\n"+str(GameItems.Minerais.Type(*UiManager.GetMouseWorldPos()))+str(GameItems.Minerais.Type(*clickedItem.pos)))
+            if clickedItem.metadata.get("pv",100)!=100:
+                laser=lambda:pygame.draw.polygon(UiManager.screen, (0, 255, 0), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
+                clickedItem.metadata["pv"]+=25
+                UiManager.LightPopup("Restoration des points de vie de l'appareil : pv "+str(clickedItem.metadata["pv"])+"/100")
+                AudioManager.PlaySound("Healing")
+                return False
             if clickedItem.name in ["Sorter","Storage","Market"]:clickedItem.edit(UiManager.interactItem(clickedItem))#si le nom de l'item est dans la liste, lancer l'interaction
             return False
         
