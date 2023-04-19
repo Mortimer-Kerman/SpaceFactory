@@ -105,7 +105,6 @@ class Events:
         self.lastEvent=0
         self.runtime=0
         self.nextEvent = self.lastEvent + random.randint(5,500)#prochain événement
-        print(self.nextEvent)
     def LaunchEvent(self):
         self.runtime+=1
         if self.nextEvent<self.runtime and not self.isEventHappening:#si aucun événement est lancé et que le runtime est supérieur au nextEvent

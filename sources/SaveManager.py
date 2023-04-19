@@ -285,7 +285,7 @@ def IsItemSelected()->bool:
     """
     Dit si un item est séléctionné
     """
-    return GetSelectedItem() != None
+    return not GetSelectedItem() is None
 
 def IsItemHere(pos)->bool:
     """

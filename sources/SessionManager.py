@@ -259,7 +259,7 @@ def HandleMouseClicks(button,drone):
                 if Pause():#On fait pause
                     return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
             elif UiManager.UIelements.get("opportunities_icon",False):
-                #Si le bouton du menu d'opportunitées est choisi, on ouvre le menu d'opportunités
+                #Si le bouton du menu d’opportunités est choisi, on ouvre le menu d'opportunités
                 OpportunitiesManager.OpenMap()
             elif UiManager.UIelements.get("help_icon",False):
                 #Si le bouton du menu d'aide est choisi, on ouvre le menu d'aide
@@ -351,6 +351,7 @@ def HandleMouseClicks(button,drone):
                 i.pv-=10
                 if i.pv<=0:
                     del EventManager.EnnemisList[c]
+                    del UiManager.UIelements["ennemi"+str(c)]
                     AudioManager.PlaySound("Explosion")#jouer le son d'explosion
                 return False
 
