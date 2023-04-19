@@ -495,8 +495,13 @@ def EditSave(saveName:str):
         os.rename("./Saves/" + saveName, "./Saves/" + newName)
         menu.disable()#On ferme le menu
         OpenSavesList()#On rafraichit la liste des sauvegardes
+    def OpenSaveFile():
+        try:subprocess.Popen('explorer "' + os.path.abspath("./Saves/" + saveName) + '"')
+        except:
+            try:os.system('xdg-open "./Saves/' + saveName + '"')
+            except:print("Une erreur est survenue : impossible d'ouvrir le gestionnaire de fichier")
     
-    line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.OpenFile'), lambda:subprocess.Popen('explorer "' + os.path.abspath("./Saves/" + saveName) + '"')), align=pygame_menu.locals.ALIGN_LEFT)#Bouton de duplication
+    line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.OpenFile'), OpenSaveFile), align=pygame_menu.locals.ALIGN_LEFT)#Bouton de duplication
     line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Duplicate'), duplicate), align=pygame_menu.locals.ALIGN_RIGHT)#Bouton de duplication
     
     line2.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Save'), save), align=pygame_menu.locals.ALIGN_LEFT)#Bouton d'enregistrement
