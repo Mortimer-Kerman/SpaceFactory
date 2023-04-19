@@ -510,7 +510,7 @@ def interactItem(item):
                 pygame.draw.rect(screen,  (47,48,51), r[0])#affichage du rect
                 screen.blit(TextureManager.GetTexture(r[1]["n"], 78, True),(r[0].x,r[0].y))#affichage de l'item
 
-                place_text(str(r[1]["n"]),r[0].x,r[0].y,20)#affichage du nom de l'item
+                place_text(str(Localization.GetLoc("Items."+r[1]["n"])),r[0].x,r[0].y,20)#affichage du nom de l'item
                 place_text(str(r[1]["m"]),r[0].x,r[0].y+20,20)#affichage du nombre d'items
             place_text("[Echap] pour quitter", 0, 0, 40, (255,255,255))#affichage d'une instruction d'aide
             pygame.display.update()#mise à jour de l'écran
