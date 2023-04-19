@@ -30,7 +30,7 @@ def Init():
     """
     LoadAllSounds()#On charge tous les sons
     
-    pygame.mixer.set_num_channels(16)#Nombre de canaux sonores: 16
+    pygame.mixer.set_num_channels(256)#Nombre de canaux sonores: 16
     
     pygame.mixer.music.set_endevent(MUSIC_ENDED)#si la musique s'arrête, lancer événement MUSIC_ENDED
     
