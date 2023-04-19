@@ -83,12 +83,6 @@ def Load(name:str)->bool:
     """
     Sert au chargement des sauvegardes
     """
-    global force
-    force = False
-    def ForceLoad():
-        global force
-        force = True
-    
     global mainData
     CreateSave(name)#Création de la sauvegarde
     if SaveExists(name):#si la sauvegarde existe
@@ -97,13 +91,11 @@ def Load(name:str)->bool:
             mainData.__dict__ = json.load(f)#charger les Datas
         try:
             if mainData.saveVersion!=SaveFileVersion:
-                UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),ForceLoad,None)
-                if not force:
+                if not UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),None,None):
                     print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
                     return False
         except:
-            UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),ForceLoad,None)
-            if not force:
+            if not UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),None,None):
                 print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
                 return False
         for item in mainData.items.values():
