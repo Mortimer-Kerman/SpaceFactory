@@ -630,7 +630,7 @@ def DisplayBackground():
     MenuBackground.draw(screen)
     AudioManager.Tick()
 
-def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground):
+def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground)->bool:
     """Menu de prévention pour s'assurer de l'action utilisateur"""
     
     WarnMenu = pygame_menu.Menu(title, 800, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
@@ -640,9 +640,16 @@ def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackgrou
     bottomBar = WarnMenu.add.frame_h(800,50)
     bottomBar.relax(True)
     
-    confirmButton = WarnMenu.add.button(Localization.GetLoc('Game.Confirm'), WarnMenu.disable)
+    global confirmed
+    confirmed = False
+    def setConfirmed():
+        WarnMenu.disable()
+        global confirmed
+        confirmed = True
+    
+    confirmButton = WarnMenu.add.button(Localization.GetLoc('Game.Confirm'), setConfirmed)
     if confirm != None:
-        confirmButton.set_onreturn(lambda:(WarnMenu.disable(),confirm()))
+        confirmButton.set_onreturn(lambda:(setConfirmed(),confirm()))
     bottomBar.pack(confirmButton, align=pygame_menu.locals.ALIGN_LEFT)
     
     cancelButton = WarnMenu.add.button(Localization.GetLoc('Game.Cancel'), WarnMenu.disable)
@@ -651,6 +658,8 @@ def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackgrou
     bottomBar.pack(cancelButton, align=pygame_menu.locals.ALIGN_RIGHT)
     
     WarnMenu.mainloop(screen, background)
+    
+    return confirmed
 
 def TakeScreenshot():
     """Prendre une capture d'écran"""

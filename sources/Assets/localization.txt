@@ -48,6 +48,12 @@ Saves.NewSave.Name : Nom:
 Saves.NewSave.Seed : Graine: 
 Saves.NewSave.Create : Créer
 Saves.NewSave.AlreadyExists : Ce nom existe déjà !
+Saves.Edit : Modifier la sauvegarde
+Saves.Edit.AlreadyExists : Ce nom de sauvegarde existe déjà!%$rSi vous confirmez, cette sauvegarde s'appelera:%$r%$1
+Saves.Edit.OpenFile : Ouvrir le fichier
+Saves.Edit.Duplicate : Dupliquer
+Saves.Edit.Save : Enregistrer
+Saves.Edit.Cancel : Annuler
 
 //Edition de la sauvegarde actuelle
 SaveManager.AddToInv.error : Vous n'avez pas assez de place dans votre inventaire

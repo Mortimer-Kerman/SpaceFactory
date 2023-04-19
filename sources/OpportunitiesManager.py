@@ -159,8 +159,7 @@ def OpenMap():
             #Si on peut y placer une ligne on la place
             if i < len(lines):
                 label[i].set_title(lines[i])
-            #Sinon, on vide la ligne
-            else:
+            else:#Sinon, on vide la ligne
                 label[i].set_title('')
     
     #Si il y a au moins une opportunité dans la liste, on ouvre la première opportunité de la liste

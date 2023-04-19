@@ -308,3 +308,29 @@ def FractalCraterNoise(posX:float, posY:float, offset:tuple, DistanceToC:float)-
         offset = (offset[0] + offX, offset[1] + offY)
     return NoiseTools.FractalCraterNoise(posX, posY, offset)
 
+def RandomSaveName()->str:   
+
+    length = random.randint(4,10)
+    consonants = [ "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "l", "n", "p", "q", "r", "s", "sh", "zh", "t", "v", "w", "x" ]
+    vowels = [ "a", "e", "i", "o", "u", "ae", "y" ]
+    Name = ""
+    b = 0
+    while b < length:
+    
+        Name += random.choice(consonants)
+        b += 1
+        if b == length:
+            break
+        Name += random.choice(vowels)
+        b += 1
+    
+    
+    suffixes = [ "I", "II", "III", "IV", "V", "Prime", "Alpha", "Beta", "Delta", "Zeta", "Omega", "Sigma", "Minoris", "Majoris" ]
+    
+    if random.choice((True,False)):
+        Name += " " + random.choice(suffixes)
+    
+    Name = Name[0].upper() + Name[1:]
+    
+    return Name
+

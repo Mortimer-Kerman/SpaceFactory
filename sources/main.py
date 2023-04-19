@@ -9,8 +9,9 @@ import pygame
 import pygame_menu
 
 import os
+import subprocess
 import random
-from shutil import rmtree
+from shutil import rmtree, copytree
 from math import cos
 import json
 
@@ -48,7 +49,6 @@ class Menus:
     MainMenu = None
     SavesList = None
     SaveCreation = None
-
 
 def OpenMainMenu():
     """
@@ -258,10 +258,12 @@ def OpenSavesList():
     def ShowLoading():
         Menus.SavesList.add.label("Chargement")
     bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Game.Play'),lambda: (ShowLoading(),TryLoadSave(selectedMap))), align=pygame_menu.locals.ALIGN_CENTER)#Bouton de lancement de sauvegarde
-    bottomFrame.pack(Menus.SavesList.add.frame_v(50,50),align=pygame_menu.locals.ALIGN_CENTER)#Espace vide entre les deux boutons
+    bottomFrame.pack(Menus.SavesList.add.frame_v(35,50),align=pygame_menu.locals.ALIGN_CENTER)#Espace vide entre les deux boutons
     bottomFrame.pack(Menus.SavesList.add.button(Localization.GetLoc('Saves.Delete'),#Bouton de supression de sauvegarde avec demande de confirmation
         lambda:UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Saves.Delete.Warn',selectedMap),lambda:(rmtree("Saves/" + selectedMap),OpenSavesList()),None)),
         align=pygame_menu.locals.ALIGN_CENTER)
+    bottomFrame.pack(Menus.SavesList.add.frame_v(35,50),align=pygame_menu.locals.ALIGN_CENTER)#Espace vide entre les deux boutons
+    bottomFrame.pack(Menus.SavesList.add.button("Modifier",lambda:EditSave(selectedMap)), align=pygame_menu.locals.ALIGN_CENTER)#Bouton de modification
     
     Menus.SavesList.mainloop(UiManager.screen, lambda:(UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))#Boucle principale du Menu
 
@@ -287,7 +289,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     menuSections.pack(creationTools, align=pygame_menu.locals.ALIGN_LEFT)
     
     #Zone de texte permettant de choisir le nom de la sauvegarde
-    saveNameInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Name'), default=RandomSaveName(),maxchar=30)
+    saveNameInput=Menus.SaveCreation.add.text_input(Localization.GetLoc('Saves.NewSave.Name'), default=PlanetGenerator.RandomSaveName(),maxchar=30)
     creationTools.pack(saveNameInput, align=pygame_menu.locals.ALIGN_LEFT)
     
     #Zone de texte permettant de choisir la graine de la sauvegarde
@@ -303,14 +305,14 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     def setMode(x:int):
         chosenSettings[1] = x
     
-    
+    #Sélecteur de difficulté
     DifficultySlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Difficulty'), 1, list(SaveManager.difficultiesDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
                       onchange=lambda x: setDiff(x),
                       value_format=lambda x: Localization.GetLoc(SaveManager.difficultiesDict[x]))
     creationTools.pack(DifficultySlider, align=pygame_menu.locals.ALIGN_LEFT)
     
-    
+    #Sélecteur d'environnement
     EnvironmentSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Environment'), 0, list(SaveManager.environmentsDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
                       onchange=lambda x: (SetLabelText(Localization.GetLoc(SaveManager.environmentsDict[x] + '.desc')), SetCorrectPlanetMap(x,GetSeedFromInput())),
@@ -318,60 +320,78 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
                       value_format=lambda x: Localization.GetLoc(SaveManager.environmentsDict[x]))
     creationTools.pack(EnvironmentSlider, align=pygame_menu.locals.ALIGN_LEFT)
     
-    
+    #Sélecteur de mode de jeu
     GameModeSlider = Menus.SaveCreation.add.range_slider(Localization.GetLoc('Saves.Gamemode'), 2 if defaultTuto else 0, list(SaveManager.gameModesDict.keys()),
                       slider_text_value_enabled=False, width=300, align=pygame_menu.locals.ALIGN_LEFT,
                       onchange=lambda x: setMode(x),
                       value_format=lambda x: Localization.GetLoc(SaveManager.gameModesDict[x]))
     creationTools.pack(GameModeSlider, align=pygame_menu.locals.ALIGN_LEFT)
     
+    #Affichage de l'image de la planète
     thumbDisplayer = Menus.SaveCreation.add.surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
+    menuSections.pack(thumbDisplayer)
     
+    #Précédent environnement séléctionné
     global PrevEnvironment
     PrevEnvironment = 0
+    #Fonction temporaire permettant de modifier la texture de la planète en fonction de l'environment et de la graine
     def SetCorrectPlanetMap(x:int,seed=None,forceGenerate=False):
         global PrevEnvironment
+        #Si le précédent environment sélectionné est celui sélectionné actuellement et que la génération n'est pas forcée, on annule l'exécution
         if x == PrevEnvironment and not forceGenerate:
             return
         PrevEnvironment = x
         
         global conditions
-        
+        #Géneration de conditions aléatoires pour générer la texture
         conditions = PlanetGenerator.PlanetaryConditions(seed=seed)
+        
+        #Si le type d'environement est 0 (aléatoire)...
         if x == 0:
-            
+            #On crée une texture parfaitement aléatoire
             SetSurface(PlanetGenerator.Generate(conditions,seed))
+            #On met la texture de planète inconnue dans l'affichage
             thumbDisplayer.set_surface(pygame.transform.scale(TextureManager.GetTexture("missingThumb"),(150,150)))
+            #On empêche le reste de l'exécution
             return
         
+        #Tant que les conditions obtenues aléatoirement ne sont pas celles séléctionnées, on les régénère
         while conditions.type != x:
             conditions = PlanetGenerator.PlanetaryConditions()
         
+        #On crée une texture de planète avec ces conditions
         SetSurface(PlanetGenerator.Generate(conditions,seed))
     
+    #Fonction temporaire pour afficher une texture de planète et la stocker dans le gestionnaire de sauvegardes
     def SetSurface(surface):
         SaveManager.planetTex = surface
         thumbDisplayer.set_surface(pygame.transform.scale(SaveManager.planetTex,(150,150)))
     
+    #On génère une première texture aléatoire
     SetCorrectPlanetMap(0,forceGenerate=True)
     
-    menuSections.pack(thumbDisplayer)
-    
+    #Liste des zones de texte pour afficher la description de l'environment
     DescLabel = Menus.SaveCreation.add.label('\n\n', font_size=15)
     def SetLabelText(text:str):
         lines = text.split('\n',2)
+        #Pour chaque ligne de la description...
         for i in range(3):
+            #Si on peut y placer une ligne on la place
             if i < len(lines):
                 DescLabel[i].set_title(lines[i])
-            else:
+            else:#Sinon, on vide la ligne
                 DescLabel[i].set_title('')
+    
+    #On met la description d'une planète aléatoire
     SetLabelText(Localization.GetLoc('Saves.Environment.Random.desc'))
     
     Menus.SaveCreation.add.vertical_margin(20)
     
+    #Bouton de création de sauvegarde
     global CreateSaveButton
     CreateSaveButton = Menus.SaveCreation.add.button(Localization.GetLoc('Saves.NewSave.Create'), lambda : (SetCorrectPlanetMap(EnvironmentSlider.get_value(),GetSeedFromInput(),forceGenerate=True),TryCreateSave(saveNameInput)))
     
+    #Boucle du menu
     Menus.SaveCreation.mainloop(UiManager.screen, UiManager.DisplayBackground)
     
 def TryCreateSave(saveNameInput):
@@ -414,32 +434,76 @@ def GetSeedFromInput():
     
     return seed
 
-def RandomSaveName()->str:   
-
-    length = random.randint(4,10)
-    consonants = [ "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "l", "n", "p", "q", "r", "s", "sh", "zh", "t", "v", "w", "x" ]
-    vowels = [ "a", "e", "i", "o", "u", "ae", "y" ]
-    Name = ""
-    b = 0
-    while b < length:
+def EditSave(saveName:str):
+    """
+    Ouvre un menu pour modifier une sauvegarde
+    """
+    menu = pygame_menu.Menu(Localization.GetLoc('Saves.Edit'), 500, 450, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
-        Name += random.choice(consonants)
-        b += 1
-        if b == length:
-            break
-        Name += random.choice(vowels)
-        b += 1
+    #On tente de récupérer l'icône de la sauvegarde pour l'afficher
+    planetTex = TextureManager.GetTexture("missingThumb")
+    texPath = "./Saves/" + saveName + "/planet.png"
+    if os.path.isfile(texPath):
+        planetTex = pygame.image.load(texPath)
+    menu.add.surface(pygame.transform.scale(planetTex,(150,150)))
     
+    menu.add.vertical_margin(15)
     
-    suffixes = [ "I", "II", "III", "IV", "V", "Prime", "Alpha", "Beta", "Delta", "Zeta", "Omega", "Sigma", "Minoris", "Majoris" ]
+    #Nom de la sauvegarde
+    saveNameInput=menu.add.text_input(Localization.GetLoc('Saves.NewSave.Name'), default=saveName,maxchar=30)
     
-    if random.choice((True,False)):
-        Name += " " + random.choice(suffixes)
+    menu.add.vertical_margin(50)
     
-    Name = Name[0].upper() + Name[1:]
+    #Création des cadres contenant les boutons au bas de l'image
+    line1 = menu.add.frame_h(480, 50, padding=0)
+    line1.relax()
+    line2 = menu.add.frame_h(480, 50, padding=0)
+    line2.relax()
     
-    return Name
-
+    #Fonction temporaire pour dupliquer une sauvegarde et fermer le menu
+    def duplicate():
+        copytree("./Saves/" + saveName, "./Saves/" + getFreeName(saveName))
+        menu.disable()
+        OpenSavesList()
+    
+    #Fonction temporaire renvoyant un nom de sauvegarde libre à partir d'un nom en entrée
+    def getFreeName(saveName:str):
+        i = 1
+        while os.path.exists("./Saves/" + saveName + "-" + str(i)):
+            i += 1
+        return saveName + "-" + str(i)
+    
+    #Fonction temporaire permettant de sauvegarder le changement de nom d'une sauvegarde
+    def save():
+        #On récupère le nouveau nom
+        newName = saveNameInput.get_value()
+        
+        #Si ce nouveau nom est identique au précédent, inutile de continuer l'exécution, on ferme juste le menu
+        if newName == saveName:
+            menu.disable()
+            return
+        
+        #Si ce nom existe déjà...
+        if SaveManager.SaveExists(newName):
+            #On récupère un nom alternatif
+            newName = getFreeName(newName)
+            #On propose ce nom à la place à l'utilisateur, si il refuse on annule l'exécution
+            if not UiManager.WarnUser(Localization.GetLoc('Game.Warning'),Localization.GetLoc('Saves.Edit.AlreadyExists', newName), None, None):
+                return
+        
+        #On renomme le dossier de la sauvegarde
+        os.rename("./Saves/" + saveName, "./Saves/" + newName)
+        menu.disable()#On ferme le menu
+        OpenSavesList()#On rafraichit la liste des sauvegardes
+    
+    line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.OpenFile'), lambda:subprocess.Popen('explorer "' + os.path.abspath("./Saves/" + saveName) + '"')), align=pygame_menu.locals.ALIGN_LEFT)#Bouton de duplication
+    line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Duplicate'), duplicate), align=pygame_menu.locals.ALIGN_RIGHT)#Bouton de duplication
+    
+    line2.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Save'), save), align=pygame_menu.locals.ALIGN_LEFT)#Bouton d'enregistrement
+    line2.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Cancel'), menu.disable), align=pygame_menu.locals.ALIGN_RIGHT)#Bouton d'annulation
+    
+    #Boucle du menu
+    menu.mainloop(UiManager.screen, UiManager.DisplayBackground)
 
 def OpenCredits():
     
