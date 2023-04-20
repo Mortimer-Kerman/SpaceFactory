@@ -570,6 +570,11 @@ class Popup:
     Des popups
     """
     def __init__(self,text,command=None,d=0):
+        """
+        Text : texte de la popup
+        command : la commande à lancer en cas de clic
+        d : Forcer le display (si 0, la popup agit de manière classique, si 1, la popup ne peut être fermée que par self.close)
+        """
         self.text=addNewlines(text,29)
         self.time=int(pygame.time.get_ticks())
         self.command=command
@@ -584,16 +589,18 @@ class Popup:
         if int(pygame.time.get_ticks())>(self.time+10000) and self.command is None and not self.d:
                self.close(i)
         else:
-            UIelements["popup_"+str(i)]=pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,50+205*i,500,200)).collidepoint(pygame.mouse.get_pos())
+            a=pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,50+205*i,500,200))
+            UIelements["popup_"+str(i)]=a.collidepoint(pygame.mouse.get_pos()) if not self.d else False#on détecte les collisions uniquement si le mode d n'est pas activé
             place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.GetFont("nasalization"),n=30)
-            if self.command is None:
-                UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
-                place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
-            else:
-                UIelements["popup_launch_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,100,25)).collidepoint(pygame.mouse.get_pos())
-                place_text("Lancer",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
-                UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding+150,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
-                place_text("Non",width-self.sliding+150,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
+            if not self.d:
+                if self.command is None:
+                    UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
+                    place_text("Ok",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
+                else:
+                    UIelements["popup_launch_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,100,25)).collidepoint(pygame.mouse.get_pos())
+                    place_text("Lancer",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
+                    UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding+150,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
+                    place_text("Non",width-self.sliding+150,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
     def close(self,i):
         UIPopup.remove(self)
         UIelements["popup_"+str(i)]=False
