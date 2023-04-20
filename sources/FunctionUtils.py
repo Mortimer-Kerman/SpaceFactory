@@ -166,6 +166,8 @@ def strToList(str:str):
     """
     return str.replace("[","").replace("]", "").split(",")
 
+signe = lambda x: 1 if x >= 0 else -1#fonction renvoyant +1 ou -1 selon le signe d'un nombre
+
 class NumpyDict:
     """
     La clé doit être un entier, ou un str, les tuples peuvent causer problème

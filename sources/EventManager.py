@@ -13,8 +13,6 @@ import AudioManager
 #importation de copysign du module système math
 from math import copysign
 
-signe = lambda x: 1 if x >= 0 else -1#fonction renvoyant +1 ou -1 selon le signe d'un nombre
-
 EnnemisList=[]#Liste des ennemis
 
 class Ennemis:
@@ -60,9 +58,9 @@ class Ennemis:
         v[0]=self.go[0]-self.pos[0]#on insère le x du vecteur
         v[1]=self.go[1]-self.pos[1]#on insère le y du vecteur
         if v[0]!=0:#si l'on est pas arrivé à la cible en x
-            pos[0]+=signe(v[0])#on ajoute +1 ou -1 à la position x
+            pos[0]+=FunctionUtils.signe(v[0])#on ajoute +1 ou -1 à la position x
         elif v[1]!=0:#si l'on est pas arrivé à la cible y
-            pos[1]+=signe(v[1])#on ajoute +1 ou -1 à la position y
+            pos[1]+=FunctionUtils.signe(v[1])#on ajoute +1 ou -1 à la position y
         else:
             nearest_pos = [self.pos[0]+random.randint(-100,100),self.pos[1]+random.randint(-100,100)]#on choisit une nouvelle position aléatoirement
             min_dist = float('inf')

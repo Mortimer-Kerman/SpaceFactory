@@ -13,6 +13,7 @@ import random
 import Localization as L
 import HelpMenu
 import AudioManager
+import FunctionUtils
 
 import numpy as np
 
@@ -55,7 +56,7 @@ class Item:
         self.metadata=metadata
         self.metadata["sorter_choice"]="Gold"
         self.metadata["biginv"]=self.metadata.get("biginv",[])
-        giveTo={"Drill":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"Storage":[1,1,1,1],"Junction":[1,1,1,1]}#[up down left right]
+        giveTo={"Drill":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"Storage":[1,1,1,1],"Junction":[1,1,1,1],"Bridge":[1,1,1,1]}#[up down left right]
 
         self.rotation=SaveManager.GetRotation()
         if name in ["ConveyorBelt","Sorter"]:
@@ -149,7 +150,7 @@ class Item:
     def GetItemToGive(self):
         g=self.giveto
         item=None
-        if self.name!="Sorter":
+        if not self.name in ["Sorter","Bridge"]:
                 if g[0]:
                     item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
                     if item is not None:
@@ -184,6 +185,15 @@ class Item:
                 item=SaveManager.GetItemAtPos((self.pos[0]+1,self.pos[1]))#on récupère l'item de droite
                 if item is not None:
                     if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
+        elif self.name=="Bridge":
+            a=list(self.metadata.get("last",[0,0]))
+            print(self.metadata.get("last",[0,0]))
+            a[0]=FunctionUtils.signe(self.pos[0]-a[0]) if self.pos[0]-a[0]!=0 else 0
+            a[1]=FunctionUtils.signe(self.pos[1]-a[1]) if self.pos[1]-a[1]!=0 else 0
+            print("a",a)
+            item=SaveManager.GetItemAtPos((self.pos[0]+a[0],self.pos[1]+a[1]))#on récupère l'item du
+            if item is not None:
+                if item.metadata.get("inv",None) is not None:item=None
         return item
     
     def Give(self):
@@ -230,7 +240,7 @@ class Item:
         if not self.metadata.get("pv",100):
             return
         self.metadata["g"]=1
-        if self.name in ["Junction"]+list(craft.keys()) and list(self.metadata.get("last",[]))==list(giver.pos):
+        if self.name in ["Junction","Bridge"]+list(craft.keys()) and list(self.metadata.get("last",[]))==list(giver.pos):
             self.metadata["last"]=[]
         else:
             self.metadata["last"]=list(giver.pos)
