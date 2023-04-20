@@ -187,10 +187,8 @@ class Item:
                     if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
         elif self.name=="Bridge":
             a=list(self.metadata.get("last",[0,0]))
-            print(self.metadata.get("last",[0,0]))
             a[0]=FunctionUtils.signe(self.pos[0]-a[0]) if self.pos[0]-a[0]!=0 else 0
             a[1]=FunctionUtils.signe(self.pos[1]-a[1]) if self.pos[1]-a[1]!=0 else 0
-            print("a",a)
             item=SaveManager.GetItemAtPos((self.pos[0]+a[0],self.pos[1]+a[1]))#on récupère l'item du
             if item is not None:
                 if item.metadata.get("inv",None) is not None:item=None
