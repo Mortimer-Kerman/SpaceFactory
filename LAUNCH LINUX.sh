@@ -1,3 +1,4 @@
+pip install -r r.txt
 cd sources
 if python main.py; then
     echo "Lancement du jeu - python"

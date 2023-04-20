@@ -26,7 +26,7 @@ allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,1
 
 Anim=1
 
-TeleportPoint=[]
+TeleportPoint={}
 
 craft={
     #id_block:{"c":(item 1, item 2),"r":résultat}
@@ -81,6 +81,7 @@ class Item:
                 self.giveto[3]*=2
         if self.name=="Teleporter":
             self.metadata["display_name"]="Point "+PlanetGenerator.RandomSaveName()
+            TeleportPoint[self.pos]=self.metadata["display_name"]
     
     def ReadDictRepresentation(DictRepresentation:dict):
         """
