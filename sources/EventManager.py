@@ -26,7 +26,8 @@ class Ennemis:
         self.rotation=random.randint(0, 3)
         
         #On donne un objectif à l'ennemi
-        nearest_pos = [0,0]
+        nearest_pos = list(UiManager.GetMouseWorldPos())
+        nearest_pos = [nearest_pos[0]+random.randint(-20,20),nearest_pos[1]+random.randint(-20,20)]
         min_dist = float('inf')#float('inf) renvoie une valeur très très très très très très très très très très grande
         
         for pos , item in dict(SaveManager.mainData.items).items():#pour chaque clé du dictionnaire d'item de la sauvegarde
