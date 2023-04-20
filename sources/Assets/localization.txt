@@ -112,11 +112,12 @@ Items.Furnace : Four
 Items.Market : Market
 Items.MolecularAssembler : Assembleur moléculaire
 Items.CoalCentral : Centrale à charbon
-Items.Coal : charbon
-Items.Copper : cuivre
-Items.Gold : or
-Items.Iron : fer
-Items.M1 : m1
+Items.Coal : Charbon
+Items.Copper : Cuivre
+Items.MeltedCopper : Cuivre fondu
+Items.Gold : Or
+Items.Iron : Fer
+Items.M1 : M1
 Items.NanoM1 : nanoM1
 Items.NanoFabricator : Fabricateur Nano
 
