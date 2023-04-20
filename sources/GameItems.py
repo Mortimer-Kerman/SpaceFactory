@@ -29,7 +29,8 @@ craft={
     #id_block:{"c":(item 1, item 2),"r":résultat}
     "Furnace":{"c":("Copper","Coal"),"r":"MeltedCopper"},
     "MolecularAssembler":{"c":("M1","Gold"),"r":"M2"},
-    "NanoFabricator":{"c":("M1","MeltedCopper"),"r":"NanoM1"}
+    "NanoFabricator":{"c":("M1","MeltedCopper"),"r":"NanoM1"},
+
 }
 
 RenderQueues = {}
@@ -281,6 +282,7 @@ class Item:
 
 
 current = []  # liste des minerais affichés
+extrasMinerais = {}# dictionnaire des minerais autres que ceux attribués
 
 class Minerais:
     """
@@ -296,17 +298,6 @@ class Minerais:
         for x in range(int(pos1[0]),int(pos2[0])+1):
             for y in range(int(pos1[1]),int(pos2[1])+1):
                 Minerais.Place(x, y)
-        """
-        cam = SaveManager.GetCamPos()
-        cam = [cam[0], cam[1]]
-        zoom = SaveManager.GetZoom()
-        cam[0] += UiManager.width / 2
-        cam[1] += UiManager.height / 2
-        for x in np.arange((0 - cam[0]) // zoom, (UiManager.width + cam[0]) // zoom).astype(int):
-            for y in np.arange((0 - cam[1]) // zoom, (UiManager.height + cam[1]) // zoom).astype(int):
-                
-        """
-        
 
     def SpawnBorder(wideBorder:bool=False):
         """
@@ -379,7 +370,8 @@ class Minerais:
         y=int(y)
         random.seed(x*y*se+x+y+se+x)#Calcul d'une graine pour l'aléatoire en fonction de la position et de la graine de la sauvegarde
         r=3#plus r est grand, moins les minerais apparaîtront
-        
+        if (x,y) in extrasMinerais.keys():
+            return extrasMinerais[(x,y)]
         if not SaveManager.IsPosWet((x,y)):
             if random.randint(0,60*r)==40:
                 return "Coal"
@@ -398,12 +390,21 @@ class Minerais:
         Efface tous les minerais
         """
         current.clear()
+    def ForceSpawn(pos,type):
+        """
+        Permet de forcer l'apparition d'un minerai avec un type donné
+        """
+        global extrasMinerais
+        extrasMinerais[tuple(pos)]=type
+        Minerais.Place(*pos)
 
 doc={
     "Drill":{"c":{"Copper":50}},
      "ConveyorBelt":{"c":{"Copper":10}},
      "Storage":{"c":{"Copper":100}},
      "Junction":{"c":{"Copper":20}},
+     "Bridge":{"c":{"Copper":30,"Gold":20}},
+     "Furnace":{"c":{"Copper":30,"Gold":80}},
      "Sorter":{"c":{"Copper":20,"Gold":10}},
      "Market":{"c":{"M1":50,"Copper":50,"Gold":10}},
      "delete":{},
