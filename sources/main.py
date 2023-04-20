@@ -547,7 +547,7 @@ def Intro()->bool:
                 return False
             #si la touche echap, entrer ou espace est pressée...
             if event.type == pygame.KEYDOWN and event.key in [pygame.K_ESCAPE,pygame.K_RETURN,pygame.K_SPACE]:
-                #on renvoie vrai, ce qui interromp l'animation
+                #on renvoie vrai, ce qui interrompt l'animation
                 return True
         
         #calcul de la visibilité en fonction du temps d'exécution

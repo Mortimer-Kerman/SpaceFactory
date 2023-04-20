@@ -548,6 +548,8 @@ def interactItem(item):
     
     if item.name=="Market":#en cas d'interaction avec un market
         MarketManager.showMenu()#on affiche le menu du market
+    if item.name=="Teleporter":#en cas d'interaction avec un teleporteur
+        pass
 
     SessionManager.PauseMenuBackground = None#on vide le fond du menu
     return b.get_value() if b is not None else None#renvoie la valeur de b si B n'est pas None sinon, renvoie None

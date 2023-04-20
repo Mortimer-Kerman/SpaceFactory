@@ -14,6 +14,7 @@ import Localization as L
 import HelpMenu
 import AudioManager
 import FunctionUtils
+import PlanetGenerator
 
 import numpy as np
 
@@ -24,6 +25,8 @@ menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Fur
 allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"NanoM1":(50,10,110)}
 
 Anim=1
+
+TeleportPoint=[]
 
 craft={
     #id_block:{"c":(item 1, item 2),"r":résultat}
@@ -76,6 +79,8 @@ class Item:
                 self.giveto[1]=1
                 self.giveto[2]*=2
                 self.giveto[3]*=2
+        if self.name=="Teleporter":
+            self.metadata["display_name"]="Point "+PlanetGenerator.RandomSaveName()
     
     def ReadDictRepresentation(DictRepresentation:dict):
         """
@@ -407,13 +412,11 @@ doc={
      "Furnace":{"c":{"Copper":30,"Gold":80}},
      "Sorter":{"c":{"Copper":20,"Gold":10}},
      "Market":{"c":{"M1":50,"Copper":50,"Gold":10}},
-     "delete":{},
      "Coal":{"g":1},
      "Copper":{"g":2},
      "Gold":{"g":5},
      "M1":{"g":10},
-     #objets du shop
-     "Teleporter":{"c":{"coins":100},"s":1}
+     "MeltedCopper":{"g":8}
      }
 def getDescription(type):
     HelpMenu.Open(type)

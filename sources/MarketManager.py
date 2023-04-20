@@ -11,7 +11,7 @@ import Localization as L
 import FunctionUtils
 
 # Définition d'un dictionnaire d'articles de marché et initialisation des variables currentItem et LabelCoins à None
-marketItem = {"MolecularAssembler": 50000, "CoalCentral": 8000, "Siberiu": 7585785, "Titlu": 785785785, "Monika": 57}
+marketItem = {"MolecularAssembler": 50000, "CoalCentral": 8000, "Teleporter": 99999, "Monika": 57}
 currentItem = None
 LabelCoins = None
 
