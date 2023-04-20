@@ -77,7 +77,7 @@ class Ennemis:
             return
         if SaveManager.IsItemHere(pos):
             a=SaveManager.GetItemAtPos(pos).metadata
-            if a.get("pv",100):
+            if a.get("pv",100)>0:
                 a["pv"]=a.get("pv",100)-50
         self.pos=pos
     def show(self,c):
