@@ -569,17 +569,19 @@ class Popup:
     """
     Des popups
     """
-    def __init__(self,text,command=None,d=0):
+    def __init__(self,text,command=None,d=0,p=0):
         """
         Text : texte de la popup
         command : la commande à lancer en cas de clic
         d : Forcer le display (si 0, la popup agit de manière classique, si 1, la popup ne peut être fermée que par self.close)
+        p : progression de la barre de progression de la popup
         """
         self.text=addNewlines(text,29)
         self.time=int(pygame.time.get_ticks())
         self.command=command
         self.sliding=0
         self.d=d
+        self.prog=p
         UIPopup.append(self)
     def show(self,i):
         self.sliding+= SaveManager.clock.get_time()
@@ -592,6 +594,8 @@ class Popup:
             a=pygame.draw.rect(screen, (58, 48, 46), pygame.Rect(width-self.sliding,50+205*i,500,200))
             UIelements["popup_"+str(i)]=a.collidepoint(pygame.mouse.get_pos()) if not self.d else False#on détecte les collisions uniquement si le mode d n'est pas activé
             place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.GetFont("nasalization"),n=30)
+            if self.prog!=0:
+                pygame.draw.rect(screen, (255,255,255), pygame.Rect(width-self.sliding,50+200*i,500*self.prog,3))
             if not self.d:
                 if self.command is None:
                     UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
@@ -611,6 +615,10 @@ class Popup:
 
     def launch(self):
         self.command()
+    def setProg(self,p):
+        self.prog=p
+    def getProg(self):
+        return self.prog
 
 class LightPopup:
     """
