@@ -120,6 +120,8 @@ Items.Iron : Fer
 Items.M1 : M1
 Items.NanoM1 : nanoM1
 Items.NanoFabricator : Fabricateur Nano
+Items.Synthetron : Synthetron
+Items.SyntheticGold : Or Synthetique
 
 //Description des items
 Items.d.Drill : La foreuse est une machine servant à extraire des minerais automatiquement
@@ -136,7 +138,9 @@ Items.d.Bridge : Permet de croiser deux tapis sans mélanger leur production
 Items.d.MolecularAssembler : L'Assembleur moléculaire est une machine qui modifie la composition moléculaire du M1 via de l'or
 Items.d.Furnace : Le four permet de faire fondre du cuivre, en brûlant du charbon
 Items.d.NanoFabricator : Le Fabricateur Nano permet de créer du nanoM1, en ajoutant du cuivre fondu à du M1.
+Items.d.SyntheticGold : L'Or Synthétique est un conducteur électrique, très utilisé pour la micro-électronique
 Items.d.NanoM1 : Le nanoM1 est une forme transformée du minerai M1
+Items.d.Synthetron : Une machine permetant de synthétiser de l'Or Synthetique via du cuivre et de l'or
 Items.d.error : Une erreur est survenue : Item introuvable/non documenté
 
 //Opportunités

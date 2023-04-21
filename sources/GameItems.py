@@ -20,7 +20,7 @@ import numpy as np
 
 import pygame
 
-menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market"]#éléments du menu de sélection
+menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","NanoFabricator","Synthetron"]#éléments du menu de sélection
 
 allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"NanoM1":(50,10,110)}
 
@@ -33,6 +33,7 @@ craft={
     "Furnace":{"c":("Copper","Coal"),"r":"MeltedCopper"},
     "MolecularAssembler":{"c":("M1","Gold"),"r":"M2"},
     "NanoFabricator":{"c":("M1","MeltedCopper"),"r":"NanoM1"},
+    "Synthetron":{"c":("Copper","Gold"),"r":"SyntheticGold"}
 
 }
 
