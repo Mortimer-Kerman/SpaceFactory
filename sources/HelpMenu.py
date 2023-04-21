@@ -103,7 +103,7 @@ def Init():
             i=GameItems.findCraft(item)
             crafts = GameItems.craft[i]
         
-            row = [str(i)+" : "]
+            row = [Localization.GetLoc('Items.'+i)+" : "]
             for c in crafts["c"]:
                 row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + c)))
                 row.append(" + ")
