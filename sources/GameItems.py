@@ -423,6 +423,7 @@ doc={
      "Sorter":{"c":{"Copper":20,"Gold":10}},
      "Market":{"c":{"M1":50,"Copper":50,"Gold":10}},
      "CopperWall":{"c":{"MeltedCopper":50,"Copper":40}},
+     "Turret":{"c":{"Copper":50,"Gold":50}},
      "Coal":{"g":1},
      "Copper":{"g":2},
      "Gold":{"g":5},
