@@ -152,6 +152,7 @@ Items.YellowBlock : Bloc jaune
 Items.GreenBlock : Bloc vert
 Items.BlackBlock : Bloc noir
 Items.WhiteBlock : Bloc blanc
+Items.M2 : M2
 
 //Description des items
 Items.d.Drill : La foreuse est une machine servant à extraire des minerais automatiquement
@@ -184,6 +185,7 @@ Items.d.YellowBlock : un block de décoration jaune, trouvable au market
 Items.d.GreenBlock : un block de décoration vert, trouvable au market
 Items.d.BlackBlock : un block de décoration noir, trouvable au market
 Items.d.WhiteBlock : un block de décoration blanc, trouvable au market
+Items.d.M2 : Un assemblage de M1 et d'Or
 
 
 //Opportunités
