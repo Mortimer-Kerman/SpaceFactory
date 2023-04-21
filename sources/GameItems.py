@@ -41,6 +41,14 @@ craft={
     "GravityManipulator": {"c":("M2","PlasmaGold"),"r":"GravitonCore"}
 
 }
+craftResults=[]
+for i in craft.values():
+    craftResults.append(i["r"])
+def findCraft(item):
+    for key, value in craft.items():
+        if item == value["r"]:
+            return key
+    return None
 
 Laser={}
 
