@@ -15,6 +15,7 @@ import GameItems
 import MarketManager
 import TextureManager
 import SaveManager
+import AudioManager
 
 
 menu = None
@@ -174,6 +175,7 @@ def Open(tab:str=None):
     
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
+        AudioManager.Tick()
     
     menu.enable()
     
