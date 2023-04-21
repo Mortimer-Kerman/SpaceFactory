@@ -27,21 +27,7 @@ import AnimationsManager
 import EventManager
 import HelpMenu
 
-showTuto=9**9
-def Tuto(t=1):
-    """
-    Fonction d'affichage du tutoriel
-    """
-    global showTuto
-    #si showTuto est dans [] on supprime toutes les popups
-    if showTuto in [1,2,3,4,5,6,7,8]:
-        for i,popup in enumerate(UiManager.UIPopup):#pour i, popup dans enumerate(UiManager.UIPopup)
-            popup.close(i)#fermeture de la popup
-    showTuto=showTuto+1 if t else t#si t (1=True) alors showTuto=1, sinon on incrémente showTuto de 1
-    #a stocke le texte pour la première étape du tutoriel (affichage des touches de déplacements)
-    a=L.GetLoc("Session.Tuto."+str(showTuto),pygame.key.name(SettingsManager.GetKeybind("up")),pygame.key.name(SettingsManager.GetKeybind("down")),pygame.key.name(SettingsManager.GetKeybind("left")),pygame.key.name(SettingsManager.GetKeybind("right")))
-    #Affichage de la popup
-    UiManager.Popup(a,d=1 if showTuto<len(a)-1 else 0)
+
 
 
 laser=lambda:None
@@ -77,15 +63,16 @@ def Play(saveName:str,**kwargs):
     UiManager.UpdateBackground()#Première mise à jour du fond
     
     runtime=0#la variable runtime sert comme variable pour les animations
+    
+    if SaveManager.IsTutorial():#si mode tutoriel
+        Tutorial.Init()
+    
     GameItems.Minerais.SpawnAllScreen()#Spawn des minerais
     
-    
-    if SaveManager.mainData.gamemode == 2:#si mode tutoriel
-        Tuto(0)#afficher le tutoriel
     for i in SaveManager.mainData.items.keys():
         if SaveManager.mainData.items[i].name=="Teleporter":
             GameItems.TeleportPoint.append(SaveManager.mainData.items[i].pos)
-
+    
     drone=AnimationsManager.Drone()#Création du drone
 
     EventM=EventManager.Events()#Création du gestionnaire d'événements
@@ -111,7 +98,9 @@ def Play(saveName:str,**kwargs):
         drone.show()#affichage du drone
         
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
-
+        
+        Tutorial.Tick()
+        
         pygame.display.update()#Mise à jour de l'affichage Pygame
         
         AudioManager.Tick()#Met à jour le gestionnaire de sons
@@ -142,9 +131,8 @@ def Play(saveName:str,**kwargs):
                     
                     TextureManager.RefreshZoom()#On mets à jour le zoom
                     GameItems.Minerais.SpawnBorder(True)#On spawn les minerais aux bordures
-
-                if showTuto==1:#si showTuto==1
-                    Tuto()#afficher le tuto
+                    
+                    Tutorial.IncreaseStep(1)
             
             #action de clic sur une touche
             if event.type == pygame.KEYDOWN:
@@ -205,6 +193,7 @@ def HandleLongKeyInputs():
         #On ajoute le déplacement de la souris au déplacement de la caméra
         camOffset[0] += mouseDisplacement[0]
         camOffset[1] += mouseDisplacement[1]
+        Tutorial.IncreaseStep(0)
     
     SaveManager.TranslateCam(camOffset)#On applique les changements de caméra
     
@@ -212,8 +201,6 @@ def HandleLongKeyInputs():
     ShiftPressed = keys[pygame.K_LSHIFT]
     
     if camOffset != [0,0]:#si un déplacement a eu lieu
-        if showTuto==0:#si le joueur a bougé lors du tuto phase 0
-            Tuto()#on affiche le tuto
         if SaveManager.GetZoom()<30:#en cas de dézoom trop grand
             
             zoom = SaveManager.GetZoom()+1#on zoom
@@ -243,6 +230,7 @@ def HandleShortKeyInputs(key):
     if key == SettingsManager.GetKeybind("opportunities"):#si la clé pressée est associée à opportunities
         OpportunitiesManager.OpenMap()#ouvrir les opportunités
     if key == pygame.K_t:#si la clé pressée est t
+        Tutorial.IncreaseStep(17)
         TaskManager.showMenu()#afficher le menu de taches
     if key == pygame.K_ESCAPE:#si la clé pressée est ESCAPE
         if Pause():#On fait pause
@@ -256,6 +244,7 @@ def HandleMouseClicks(button,drone):
         if UiManager.IsClickOnUI():#si c'est un clic sur UI
             if UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                 UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
+                Tutorial.IncreaseStep(4)
             elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
                 UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
             elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
@@ -278,6 +267,8 @@ def HandleMouseClicks(button,drone):
                         elif UiManager.showMenu.get("question",False):#si question est actif
                             GameItems.getDescription(i)#Affichage de la description
                         else:
+                            if i == "Drill":
+                                Tutorial.IncreaseStep(5)
                             SaveManager.SetSelectedItem(i)#On change l'item sélectionné
                             UiManager.LightPopup("Clic gauche pour placer, maj gauche + clic gauche pour placer plusieurs, clic droit pour annuler")
                 if UiManager.UIelements.get("selectElements_delete",False):#si delete est cliqué
@@ -332,16 +323,13 @@ def HandleMouseClicks(button,drone):
             return False
         
         if SaveManager.IsItemSelected():#si un item est sélectionné
-            b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
-            if b and SaveManager.GetSelectedItem() in MarketManager.marketItem.keys():#si l'item est au market
-                SaveManager.GetFromInv(SaveManager.GetSelectedItem())#on le retire de l'inventaire
-                SaveManager.SetSelectedItem(None)
-            if b and ((showTuto==3 and SaveManager.GetSelectedItem()=="Drill")#si le mode tuto 3 est actif et item = drill
-                   or (showTuto==4 and "ConveyorBelt" in SaveManager.GetSelectedItem())#ou si tuto=4 item = ConveyorBelt
-                   or (showTuto==5 and SaveManager.GetSelectedItem()=="Storage")):#ou si tuto=5 item = storage
-                Tuto()#afficher le tuto
-            if not ShiftPressed:#si shift n'est pas pressé
-                SaveManager.SetSelectedItem(None)#On désactive le mode sélection
+            if not SaveManager.IsTutorial() or Tutorial.NoticeItemPlacedAtPos(UiManager.GetMouseWorldPos(),SaveManager.GetSelectedItem()):
+                b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
+                if b and SaveManager.GetSelectedItem() in MarketManager.marketItem.keys():#si l'item est au market
+                    SaveManager.GetFromInv(SaveManager.GetSelectedItem())#on le retire de l'inventaire
+                    SaveManager.SetSelectedItem(None)
+                if not ShiftPressed:#si shift n'est pas pressé
+                    SaveManager.SetSelectedItem(None)#On désactive le mode sélection
     
     if button == 3: # 3 == right button
         #désactive tous les modes
@@ -359,6 +347,7 @@ def HandleMouseClicks(button,drone):
                     del EventManager.EnnemisList[c]
                     del UiManager.UIelements["ennemi"+str(c)]
                     AudioManager.PlaySound("Explosion")#jouer le son d'explosion
+                    Tutorial.IncreaseStep(13)
                 return False
 
         if SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):#si un item est présent à la position de la souris
@@ -366,10 +355,13 @@ def HandleMouseClicks(button,drone):
             if clickedItem.metadata.get("pv",100)!=100:
                 laser=lambda:pygame.draw.polygon(UiManager.screen, (0, 255, 0), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
                 clickedItem.metadata["pv"]+=25
-                UiManager.LightPopup("Restoration des points de vie de l'appareil : pv "+str(clickedItem.metadata["pv"])+"/100")
+                UiManager.LightPopup("Restauration des points de vie de l'appareil : pv "+str(clickedItem.metadata["pv"])+"/100")
                 AudioManager.PlaySound("Healing")
                 return False
-            if clickedItem.name in ["Sorter","Storage","Market","Teleporter"]:clickedItem.edit(UiManager.interactItem(clickedItem))#si le nom de l'item est dans la liste, lancer l'interaction
+            if clickedItem.name in ["Sorter","Storage","Market","Teleporter"]:
+                if clickedItem.name == "Market":
+                    Tutorial.IncreaseStep(16)
+                clickedItem.edit(UiManager.interactItem(clickedItem))#si le nom de l'item est dans la liste, lancer l'interaction
             return False
         
         a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())#On récupère le type de minerai
@@ -379,8 +371,8 @@ def HandleMouseClicks(button,drone):
             laser=lambda:pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
             SaveManager.AddToInv(d=a)#Ajout à l'inventaire
             UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")#Affiche la LightPopup lié au minage
-            if showTuto==2:#si tuto=2
-                    Tuto()#afficher le tuto
+            if a == "Copper":
+                Tutorial.IncreaseStep(3)
         
 
     
@@ -427,4 +419,211 @@ def Pause():
     
     PauseMenuBackground = None
     return quitGame
+
+class Tutorial:
+    """
+    Fonctions liées au tutoriel
+    """
     
+    step = [0,0]
+    popup = None
+    def Init():
+        Tutorial.step = SaveManager.mainData.__dict__.get("TutorialStep",[0,0])
+        GameItems.Minerais.ForceSpawn((0, 0), "Copper")
+        GameItems.Minerais.ForceSpawn((10, -1), "Coal")
+        Tutorial.popup = UiManager.Popup(L.GetLoc("Tuto." + str(Tutorial.GetGlobalStep())),d=1)
+        #if mType and [0, 0, mType] in current:
+            
+    
+    def SaveStep():
+        SaveManager.mainData.TutorialStep = Tutorial.step
+    
+    def GetItemsToPlace():
+        globalStep = Tutorial.GetGlobalStep()
+        texList = []
+        posList = []
+        if globalStep == 6:
+            texList = [("Drill", 0)]
+            posList = [(0, 0)]
+        if globalStep == 7:
+            texList = [("ConveyorBelt", 0),("ConveyorBelt", 0),("ConveyorBelt", 0),("ConveyorBelt", 0)]
+            posList = [(0,-4),(0,-3),(0,-2),(0,-1)]
+        if globalStep == 8:
+            texList = [("ConveyorBelt", 3),("ConveyorBelt", 3),("ConveyorBelt", 3),("ConveyorBelt", 3)]
+            posList = [(0,-5),(1,-5),(2,-5),(3,-5)]
+        if globalStep == 9:
+            texList = [("Storage", 0)]
+            posList = [(4,-5)]
+        if globalStep == 10:
+            texList = [("ConveyorBelt", 3),("ConveyorBelt", 3),("Furnace", 0)]
+            posList = [(5,-5),(6,-5),(7,-5)]
+        if globalStep == 11:
+            texList = [("ConveyorBelt", 1),("ConveyorBelt", 1),("ConveyorBelt", 1),("ConveyorBelt", 0),("ConveyorBelt", 0),("ConveyorBelt", 0),("Drill", 0)]
+            posList = [(8,-5),(9,-5),(10,-5),(10,-4),(10,-3),(10,-2),(10,-1)]
+        if globalStep == 12:
+            texList = [("Storage", 0),("ConveyorBelt", 0),("ConveyorBelt", 0)]
+            posList = [(7,-8),(7,-7),(7,-6)]
+        if globalStep == 16:
+            texList = [("Market", 0)]
+            posList = [(11,-7)]
+        return (texList,(posList))
+    
+    def Tick():
+        globalStep = Tutorial.GetGlobalStep()
+        if globalStep in [2,14,15,19,20]:
+            Tutorial.IncreaseStep(globalStep)
+        
+        if globalStep in [4,5,18]:
+            s = pygame.Surface((UiManager.width,UiManager.height),pygame.SRCALPHA, 32).convert_alpha()
+            if globalStep == 4:
+                pygame.draw.polygon(s,(255,255,0,100),((UiManager.width-500, UiManager.height),(2*UiManager.width-501, UiManager.height),(2*UiManager.width-501, UiManager.height-30),(UiManager.width-175,UiManager.height-30),(UiManager.width-195, UiManager.height-50),(UiManager.width-500, UiManager.height-50)))
+            if globalStep == 5:
+                pygame.draw.polygon(s,(255,255,0,100),[(UiManager.width-500,UiManager.height-500),(UiManager.width-400,UiManager.height-500),(UiManager.width-400,UiManager.height-400),(UiManager.width-500,UiManager.height-400)])
+            if globalStep == 18:
+                pygame.draw.polygon(s,(255,255,0,100),[(100,0),(150,0),(150,50),(100,50)])
+            UiManager.screen.blit(s, (0,0))
+        
+        texList, posList = Tutorial.GetItemsToPlace()
+        
+        zoom = SaveManager.GetZoom()
+        for i in range(len(posList)):
+            texData = texList[i]
+            tex = TextureManager.GetTexture(texData[0], zoom).copy()
+            tex.set_alpha(150)
+            GameItems.AddToRender(0,lambda pos=posList[i],texture=tex,rot=texData[1]:UiManager.screen.blit(pygame.transform.rotate(texture,90*rot), UiManager.WorldPosToScreenPos(pos)))
+    
+    def NoticeItemPlacedAtPos(pos:tuple,item:str)->bool:
+        texList, posList = Tutorial.GetItemsToPlace()
+        
+        globalStep = Tutorial.GetGlobalStep()
+        
+        if globalStep == 21:
+            return True
+        
+        if pos not in posList:
+            return False
+        
+        if texList[posList.index(pos)] == (item, SaveManager.GetRotation()):
+            Tutorial.IncreaseStep(globalStep)
+            return True
+        
+        return False
+    
+    def IncreaseStep(currentStep:int):
+        
+        if not SaveManager.IsTutorial():
+            return
+        
+        if currentStep != Tutorial.GetGlobalStep():
+            return
+        
+        maxProg = Tutorial.GetStepMaxProg()
+        
+        if currentStep in [0,1,2,14,15,19,20]:
+            Tutorial.IncreaseIntermediateStep(SaveManager.clock.get_time())
+            if Tutorial.GetIntermediateStep() > maxProg:
+                Tutorial.NextGlobalStep()
+            return
+        
+        Tutorial.IncreaseIntermediateStep()
+        if Tutorial.GetIntermediateStep() == maxProg:
+            Tutorial.NextGlobalStep()
+
+    def NextGlobalStep():
+        Tutorial.step[0] += 1
+        Tutorial.step[1] = 0
+        
+        globalStep = Tutorial.GetGlobalStep()
+        
+        if globalStep == 21:
+            Tutorial.popup.close()
+        else:
+            Tutorial.popup.setText(L.GetLoc("Tuto." + str(globalStep)))
+            Tutorial.popup.setProg(0)
+        
+        resources = {}
+        
+        if globalStep == 4:
+            resources["Copper"] = 40
+        if globalStep == 7:
+            resources["Copper"] = 40
+        if globalStep == 8:
+            resources["Copper"] = 40
+        if globalStep == 9:
+            resources["Copper"] = 100
+        if globalStep == 10:
+            resources["Copper"] = 50
+            resources["Gold"] = 80
+        if globalStep == 11:
+            resources["Copper"] = 110
+        if globalStep == 12:
+            resources["Copper"] = 120
+        if globalStep == 13:
+            EventManager.Ennemis.spawn()
+        if globalStep == 16:
+            resources["M1"] = 50
+            resources["Copper"] = 50
+            resources["Gold"] = 10
+        
+        for rName in resources.keys():
+            for i in range(resources[rName]):
+                SaveManager.AddToInv(rName)
+    
+    def GetGlobalStep():
+        return Tutorial.step[0]
+    
+    def IncreaseIntermediateStep(value:float=1):
+        Tutorial.step[1] += value
+        Tutorial.popup.setProg(Tutorial.step[1]/Tutorial.GetStepMaxProg())
+    
+    def GetStepMaxProg()->int:
+        globalStep = Tutorial.GetGlobalStep()
+        if globalStep in [0,1,2,14,15,19,20]:
+            return 1000 if globalStep == 1 else 5000
+        if globalStep in [4,5,6,9,13,16,17,18]:
+            return 1
+        if globalStep in [10,12]:
+            return 3
+        if globalStep in [7,8]:
+            return 4
+        if globalStep == 11:
+            return 7
+        if globalStep == 3:
+            return 10
+        return 1
+        
+    
+    def GetIntermediateStep():
+        return Tutorial.step[1]
+
+
+"""
+c = "ConveyorBelt"
+s = "Storage"
+d = "Drill"
+f = "Furnace"
+
+texList = [
+                                                     (s, 0),
+                                                     (c, 0),
+                                                     (c, 0),
+    (c, 3),(c, 3),(c, 3),(c, 3),(s, 0),(c, 3),(c, 3),(f, 0),(c, 1),(c, 1),(c, 1),
+    (c, 0),                                                               (c, 0),
+    (c, 0),                                                               (c, 0),
+    (c, 0),                                                               (c, 0),
+    (c, 0),                                                               (d, 0),
+    (d, 0),
+    ]
+
+posList = [
+                                                     (7,-8),
+                                                     (7,-7),
+                                                     (7,-6),
+    (0,-5),(1,-5),(2,-5),(3,-5),(4,-5),(5,-5),(6,-5),(7,-5),(8,-5),(9,-5),(10,-5),
+    (0,-4),                                                               (10,-4),
+    (0,-3),                                                               (10,-3),
+    (0,-2),                                                               (10,-2),
+    (0,-1),                                                               (10,-1),
+    (0, 0),
+    ]
+"""

@@ -22,6 +22,7 @@ import TextureManager
 import PlanetGenerator
 import OpportunitiesInteractions
 import AudioManager
+import SessionManager
 
 #Menu actuellement ouvert
 openedMap = None
@@ -31,6 +32,8 @@ def OpenMap():
     Ouvre le menu d'opportunités
     """
     global openedMap
+    
+    SessionManager.Tutorial.IncreaseStep(18)
     
     #On récupère l'écran affiché et on l'assombrit
     screenFilter = pygame.Surface((UiManager.width,UiManager.height))

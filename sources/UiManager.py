@@ -614,7 +614,11 @@ class Popup:
                     place_text("Lancer",width-self.sliding,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
                     UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding+150,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
                     place_text("Non",width-self.sliding+150,225+205*i,26,(255,255,255),TextureManager.GetFont("aquire"))
-    def close(self,i):
+    def close(self,i:int=None):
+        
+        if i == None:
+            i = UIPopup.index(self)
+        
         UIPopup.remove(self)
         UIelements["popup_"+str(i)]=False
         UIelements["popup_area"]=False
@@ -628,6 +632,12 @@ class Popup:
         self.prog=p
     def getProg(self):
         return self.prog
+    
+    def setText(self,text):
+        """
+        Permet de redéfinir le texte du popup
+        """
+        self.text=addNewlines(text,29)
 
 class LightPopup:
     """

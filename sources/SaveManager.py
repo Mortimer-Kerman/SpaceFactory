@@ -267,6 +267,28 @@ def GetEnvironmentType()->int:
     """
     return mainData.planetaryConditions.type
 
+def GetGamemode()->int:
+    """
+    Renvoie le mode de jeu.
+    0 pour carrière
+    1 pour bac à sable
+    2 pour tutoriel
+    """
+    return mainData.gamemode
+
+def IsSandBox()->bool:
+    """
+    Dit si la sauvegarde actuelle est un bac à sable.
+    
+    """
+    return GetGamemode() == 1
+
+def IsTutorial()->bool:
+    """
+    Dit si la sauvegarde actuelle est un tutoriel.
+    """
+    return GetGamemode() == 2
+
 selectedItem=None
 
 def SetSelectedItem(item):
