@@ -101,7 +101,8 @@ def Play(saveName:str,**kwargs):
         for l in GameItems.Laser.values():
             l()#affichage des lasers machines
         
-        UiManager.DisplayUi()#Afficher l'Interface Utilisateur
+        if showUi:
+            UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
         Tutorial.Tick()
         
@@ -222,13 +223,18 @@ def HandleLongKeyInputs():
             GameItems.Minerais.SpawnBorder(True)#on spawn les minerais aux bordures
         else:
             GameItems.Minerais.SpawnBorder()#on spawn les minerais aux bordures
-            
+
+showUi = True    
+
 def HandleShortKeyInputs(key):
     """Traitement des pressions de touches rapides"""
     if key == SettingsManager.GetKeybind("rotate"):#si la clé pressée est associée à rotate
         SaveManager.UpdateRotation()#mise à jour de la rotation
     if key == pygame.K_F2:#si la clé pressé est F2
         UiManager.TakeScreenshot()#prendre une capture d'écran
+    if key == pygame.K_F1:
+        global showUi
+        showUi = not showUi
     if key == SettingsManager.GetKeybind("inv"):#si la clé pressée est associée à inv
         UiManager.showMenu["inv"]=1-UiManager.showMenu["inv"]#Afficher/cacher l'inventaire
     if key == SettingsManager.GetKeybind("opportunities"):#si la clé pressée est associée à opportunities
