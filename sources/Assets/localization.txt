@@ -136,7 +136,12 @@ Items.M1 : M1
 Items.NanoM1 : nanoM1
 Items.NanoFabricator : Fabricateur Nano
 Items.Synthetron : Synthetron
-Items.SyntheticGold : Or Synthetique
+Items.SyntheticGold : Or Synthétique
+Items.QuantumFurnace : Four Quantique
+Items.CopperM1 : CuivreM1
+Items.PlasmaForge : Forge à Plasma
+Items.GravityManipulator : Manipulateur de gravité
+Items.PlasmaGold : PlasmaGold
 
 //Description des items
 Items.d.Drill : La foreuse est une machine servant à extraire des minerais automatiquement
@@ -155,8 +160,12 @@ Items.d.Furnace : Le four permet de faire fondre du cuivre, en brûlant du charb
 Items.d.NanoFabricator : Le Fabricateur Nano permet de créer du nanoM1, en ajoutant du cuivre fondu à du M1.
 Items.d.SyntheticGold : L'Or Synthétique est un conducteur électrique, très utilisé pour la micro-électronique
 Items.d.NanoM1 : Le nanoM1 est une forme transformée du minerai M1
-Items.d.Synthetron : Une machine permetant de synthétiser de l'Or Synthetique via du cuivre et de l'or
+Items.d.Synthetron : Une machine permettant de synthétiser de l'Or Synthétique via du cuivre et de l'or
 Items.d.error : Une erreur est survenue : Item introuvable/non documenté
+Items.d.QuantumFurnace : Personne ne sait comment fonctionne cette machine, l'on sait juste qu'elle donne du CuivreM1 en échange de Cuivre et de NanoM1
+Items.d.CopperM1 : Est ce du cuivre ou du M1, impossible de le savoir, ce minerai dispose de propriétés étonnantes
+Items.d.PlasmaForge : La Forge à Plasma peut être fabriquée à l'aide du M2 et d'Or Synthétique, et elle produit du PlasmaGold.
+Items.d.PlasmaGold : Un minerai, dont la valeur est assez élevée, possède des propriétés supraconductrices très fortes
 
 //Opportunités
 Opportunities.Title : Opportunités

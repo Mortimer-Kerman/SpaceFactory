@@ -33,7 +33,10 @@ craft={
     "Furnace":{"c":("Copper","Coal"),"r":"MeltedCopper"},
     "MolecularAssembler":{"c":("M1","Gold"),"r":"M2"},
     "NanoFabricator":{"c":("M1","MeltedCopper"),"r":"NanoM1"},
-    "Synthetron":{"c":("Copper","Gold"),"r":"SyntheticGold"}
+    "Synthetron":{"c":("Copper","Gold"),"r":"SyntheticGold"},
+    "QuantumFurnace": {"c":("Copper","NanoM1"),"r":"CopperM1"},
+    "PlasmaForge": {"c":("M2","SyntheticGold"),"r":"PlasmaGold"},
+    "GravityManipulator": {"c":("M2","PlasmaGold"),"r":"GravitonCore"}
 
 }
 
