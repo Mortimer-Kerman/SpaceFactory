@@ -186,6 +186,7 @@ Items.d.GreenBlock : un block de décoration vert, trouvable au market
 Items.d.BlackBlock : un block de décoration noir, trouvable au market
 Items.d.WhiteBlock : un block de décoration blanc, trouvable au market
 Items.d.M2 : Un assemblage de M1 et d'Or
+Items.d.Market : Le market vous permet d'acheter divers éléments, comme des éléments de décoration, ou une Forge à Plasma
 
 
 //Opportunités
