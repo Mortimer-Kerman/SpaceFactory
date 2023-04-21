@@ -69,7 +69,7 @@ def Init():
     table = menu.add.table(font_size=15, border_width=0)
     detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
 
-    icon=menu.add.surface(TextureManager.GetTexture("no",100,True))
+    icon=menu.add.surface(TextureManager.GetTexture("no",0.1))
     detailsFrame.pack(icon, align=pygame_menu.locals.ALIGN_CENTER)
     
     def OpenMenu(item):
