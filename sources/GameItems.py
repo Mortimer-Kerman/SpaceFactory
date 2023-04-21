@@ -24,7 +24,7 @@ import pygame
 
 menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","CopperWall","Turret","NanoFabricator","Synthetron"]#éléments du menu de sélection
 
-allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"NanoM1":(50,10,110)}
+allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"NanoM1":(50,10,110),"PlasmaGold":(220,170,44),"SyntheticGold":(230,130,50)}
 
 Anim=1
 
@@ -441,12 +441,14 @@ doc={
      "Sorter":{"c":{"Copper":20,"Gold":10}},
      "Market":{"c":{"M1":50,"Copper":50,"Gold":10}},
      "CopperWall":{"c":{"MeltedCopper":50,"Copper":40}},
-     "Turret":{"c":{"Copper":50,"Gold":50}},
+     "Turret":{"c":{"Copper":50,"Gold":50,"M1":20}},
+     "NanoFabricator":{"c":{"Gold":20,"MeltedCopper":50}},
      "Coal":{"g":1},
      "Copper":{"g":2},
      "Gold":{"g":5},
      "M1":{"g":10},
-     "MeltedCopper":{"g":8}
+     "MeltedCopper":{"g":8},
+     "PlasmaGold":{"g":50}
      }
 def getDescription(type):
     HelpMenu.Open(type)
