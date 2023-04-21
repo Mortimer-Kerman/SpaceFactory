@@ -363,7 +363,7 @@ def HandleMouseClicks(button,drone):
                 UiManager.LightPopup("Restoration des points de vie de l'appareil : pv "+str(clickedItem.metadata["pv"])+"/100")
                 AudioManager.PlaySound("Healing")
                 return False
-            if clickedItem.name in ["Sorter","Storage","Market"]:clickedItem.edit(UiManager.interactItem(clickedItem))#si le nom de l'item est dans la liste, lancer l'interaction
+            if clickedItem.name in ["Sorter","Storage","Market","Teleporter"]:clickedItem.edit(UiManager.interactItem(clickedItem))#si le nom de l'item est dans la liste, lancer l'interaction
             return False
         
         a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())#On récupère le type de minerai

@@ -451,7 +451,14 @@ def interactItem(item):
         b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélecteur pour permettre de choisir l'élément trié
         
         interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)#on lance le menu
+    if item.name=="Teleporter":
+        a=[[i] for i in list(GameItems.TeleportPoint.keys())]#On récupère la liste des éléments transportables
         
+        chosenElement = [self.pos]#on affiche l'item choisit
+        
+        b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélecteur pour permettre de choisir l'élément trié
+        
+        interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)#on lance le menu
     if item.name in ["Storage"]:#si l'item peut interagir avec l'inventaire
         
         in_menu=1#booléen si l'on est dans le menu

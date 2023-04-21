@@ -256,6 +256,7 @@ class Item:
     
     def edit(self,a):
         if self.name == "Sorter":self.metadata["sorter_choice"]=a[0][0]
+        if self.name == "Teleporteur":SaveManager.SetCamPos(a[0][0])
     
     def IsInInv(self,a,p=0):
         for i,e in enumerate(self.metadata["biginv"]):
