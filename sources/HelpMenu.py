@@ -12,6 +12,7 @@ import UiManager
 import Localization
 import FunctionUtils
 import GameItems
+import MarketManager
 import SaveManager
 
 
@@ -27,7 +28,7 @@ def Init():
     """
     Le panneau d'aide étant lent à charger, il est préférable de le créer en amont.
     """
-    tabsList = list(set(GameItems.menuElements + list(GameItems.craft.keys()) + list(GameItems.allTransportableItems.keys()))) + ["delete"]
+    tabsList = list(set(GameItems.menuElements + list(GameItems.craft.keys()) + list(GameItems.allTransportableItems.keys()) + list(MarketManager.marketItem.keys()))) + ["delete"]
     
     global menu
     menu = pygame_menu.Menu(Localization.GetLoc("Aide"), 800, 600, enabled=False, theme=pygame_menu.themes.THEME_DARK, onclose=pygame_menu.events.BACK)#le thème du menu
