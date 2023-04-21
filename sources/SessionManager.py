@@ -82,7 +82,10 @@ def Play(saveName:str,**kwargs):
     
     if SaveManager.mainData.gamemode == 2:#si mode tutoriel
         Tuto(0)#afficher le tutoriel
-    
+    for i in SaveManager.mainData.items.keys():
+        if SaveManager.mainData.items[i].name=="Teleporter":
+            GameItems.TeleportPoint.append(SaveManager.mainData.items[i].pos)
+
     drone=AnimationsManager.Drone()#Création du drone
 
     EventM=EventManager.Events()#Création du gestionnaire d'événements
@@ -330,6 +333,9 @@ def HandleMouseClicks(button,drone):
         
         if SaveManager.IsItemSelected():#si un item est sélectionné
             b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
+            if b and SaveManager.GetSelectedItem() in MarketManager.marketItem.keys():#si l'item est au market
+                SaveManager.GetFromInv(SaveManager.GetSelectedItem())#on le retire de l'inventaire
+                SaveManager.SetSelectedItem(None)
             if b and ((showTuto==3 and SaveManager.GetSelectedItem()=="Drill")#si le mode tuto 3 est actif et item = drill
                    or (showTuto==4 and "ConveyorBelt" in SaveManager.GetSelectedItem())#ou si tuto=4 item = ConveyorBelt
                    or (showTuto==5 and SaveManager.GetSelectedItem()=="Storage")):#ou si tuto=5 item = storage

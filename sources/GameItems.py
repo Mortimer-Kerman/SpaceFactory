@@ -26,7 +26,7 @@ allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,1
 
 Anim=1
 
-TeleportPoint={}
+TeleportPoint=[]
 
 craft={
     #id_block:{"c":(item 1, item 2),"r":résultat}
@@ -80,8 +80,7 @@ class Item:
                 self.giveto[2]*=2
                 self.giveto[3]*=2
         if self.name=="Teleporter":
-            self.metadata["display_name"]="Point "+PlanetGenerator.RandomSaveName()
-            TeleportPoint[self.pos]=self.metadata["display_name"]
+            TeleportPoint.append(self.pos)
     
     def ReadDictRepresentation(DictRepresentation:dict):
         """
@@ -256,7 +255,9 @@ class Item:
     
     def edit(self,a):
         if self.name == "Sorter":self.metadata["sorter_choice"]=a[0][0]
-        if self.name == "Teleporteur":SaveManager.SetCamPos(a[0][0])
+        if self.name == "Teleporter":
+            pos=TeleportPoint[a[1]]
+            SaveManager.SetCamPos(pos)
     
     def IsInInv(self,a,p=0):
         for i,e in enumerate(self.metadata["biginv"]):

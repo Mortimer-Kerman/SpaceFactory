@@ -444,7 +444,7 @@ def interactItem(item):
     b=None
     if item.name=="Sorter":#Si l'objet à éditer est un trieur...
         
-        a=[[i] for i in list(GameItems.allTransportableItems.keys())]#On récupère la liste des éléments transportables
+        a=[[str(i)] for i in list(GameItems.allTransportableItems.keys())]#On récupère la liste des éléments transportables
         
         chosenElement = [item.metadata["sorter_choice"]]#on affiche l'item choisit
         
@@ -452,9 +452,9 @@ def interactItem(item):
         
         interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)#on lance le menu
     if item.name=="Teleporter":
-        a=[[i] for i in list(GameItems.TeleportPoint.keys())]#On récupère la liste des éléments transportables
+        a=[[str(tuple(i))] for i in list(GameItems.TeleportPoint)]#On récupère la liste des éléments transportables
         
-        chosenElement = [self.pos]#on affiche l'item choisit
+        chosenElement = [str(tuple(item.pos))]#on affiche l'item choisit
         
         b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélecteur pour permettre de choisir l'élément trié
         

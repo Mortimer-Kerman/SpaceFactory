@@ -54,6 +54,7 @@ class Data:
         self.difficulty=1
         self.opportunities=[]
         
+        
     def toJson(self):
         """
         renvoye toutes les Datas en JSON

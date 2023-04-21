@@ -164,7 +164,7 @@ def strToList(str:str):
     """
     Convertit un string en liste de caractère
     """
-    return str.replace("[","").replace("]", "").split(",")
+    return str.replace("[","").replace("(","").replace("]", "").replace(")","").split(",")
 
 signe = lambda x: 1 if x >= 0 else -1#fonction renvoyant +1 ou -1 selon le signe d'un nombre
 
