@@ -96,6 +96,9 @@ def Play(saveName:str,**kwargs):
         laser()#affichage du laser
 
         drone.show()#affichage du drone
+
+        for l in GameItems.Laser.values():
+            l()#affichage des lasers machines
         
         UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         

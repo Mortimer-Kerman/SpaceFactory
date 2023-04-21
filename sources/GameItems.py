@@ -15,12 +15,14 @@ import HelpMenu
 import AudioManager
 import FunctionUtils
 import PlanetGenerator
+import EventManager
+import SessionManager
 
 import numpy as np
 
 import pygame
 
-menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","CopperWall","NanoFabricator","Synthetron"]#éléments du menu de sélection
+menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","CopperWall","Turret","NanoFabricator","Synthetron"]#éléments du menu de sélection
 
 allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"NanoM1":(50,10,110)}
 
@@ -39,6 +41,8 @@ craft={
     "GravityManipulator": {"c":("M2","PlasmaGold"),"r":"GravitonCore"}
 
 }
+
+Laser={}
 
 RenderQueues = {}
 def AddToRender(order:int,action):
@@ -208,16 +212,30 @@ class Item:
         return item
     
     def Give(self):
+        global Laser
         if not self.metadata.get("pv",100):
             return
         if self.metadata.get("g",0):
             return
+        if self.name=="Turret" and self.IsInInv("Gold")!="NotIn":
+            for c,a in enumerate(EventManager.EnnemisList):
+                if self.pos[0]-10<a.pos[0]<self.pos[0]+10 and self.pos[1]+10>a.pos[1]>self.pos[1]-10:
+                    Laser[str(self.pos)]=lambda:pygame.draw.polygon(UiManager.screen, (255, 0, 0), (UiManager.WorldPosToScreenPos(self.pos),UiManager.WorldPosToScreenPos(a.pos),(UiManager.WorldPosToScreenPos(a.pos)[0]-20,UiManager.WorldPosToScreenPos(a.pos)[1]-20)))
+                    AudioManager.PlaySound("laser",self.pos)
+                    a.pv-=5
+                    self.GetFromInv("Gold")
+                    if a.pv<=0:
+                        del EventManager.EnnemisList[c]
+                        del UiManager.UIelements["ennemi"+str(c)]
+                        AudioManager.PlaySound("Explosion",self.pos)#jouer le son d'explosion
+                else:
+                    Laser[str(self.pos)]=lambda:None
         if self.name=="Drill" and self.metadata.get("inv",None) is None:
             if self.metadata.get("ores", None) is None:
                 self.metadata["ores"]=Minerais.Type(self.pos[0],self.pos[1])
                 if self.metadata["ores"] is False:self.metadata["ores"]=None
             self.metadata["inv"]=self.metadata["ores"]
-        if self.name in ["Storage"]+list(craft.keys()):
+        if self.name in ["Storage","Turret"]+list(craft.keys()):
             self.metadata["biginv"]=self.metadata.get("biginv",[])
             if self.AddToInv(self.metadata.get("inv",None)):
                 self.metadata["inv"]=None
