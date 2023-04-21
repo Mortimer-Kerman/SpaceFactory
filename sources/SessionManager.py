@@ -332,7 +332,8 @@ def HandleMouseClicks(button,drone):
                 b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
                 if b and SaveManager.GetSelectedItem() in MarketManager.marketItem.keys():#si l'item est au market
                     SaveManager.GetFromInv(SaveManager.GetSelectedItem())#on le retire de l'inventaire
-                    SaveManager.SetSelectedItem(None)
+                    if SaveManager.IsInInv(SaveManager.GetSelectedItem())=="NotIn":
+                        SaveManager.SetSelectedItem(None)
                 if not ShiftPressed:#si shift n'est pas pressé
                     SaveManager.SetSelectedItem(None)#On désactive le mode sélection
     
