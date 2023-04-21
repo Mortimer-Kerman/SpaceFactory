@@ -150,6 +150,8 @@ Items.RedBlock : Bloc rouge
 Items.BlueBlock : Bloc bleu
 Items.YellowBlock : Bloc jaune
 Items.GreenBlock : Bloc vert
+Items.BlackBlock : Bloc noir
+Items.WhiteBlock : Bloc blanc
 
 //Description des items
 Items.d.Drill : La foreuse est une machine servant à extraire des minerais automatiquement
@@ -180,6 +182,8 @@ Items.d.RedBlock : un bloc de décoration rouge
 Items.d.BlueBlock : un block de décoration bleu
 Items.d.YellowBlock : un block de décoration jaune
 Items.d.GreenBlock : un block de décoration vert
+Items.d.BlackBlock : un block de décoration noir
+Items.d.WhiteBlock : un block de décoration blanc
 
 
 //Opportunités
