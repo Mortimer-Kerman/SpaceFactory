@@ -470,7 +470,9 @@ class Tutorial:
         Renvoie la liste des textures et des position des objets à placer pendant cette étape du tutoriel
         """
         globalStep = Tutorial.GetGlobalStep()
+        #Liste des textures (tuple avec le nom de la texture et la rotation)
         texList = []
+        #Liste des positions (tuple x et y, l'indice doit correspondre à la texture correspondante dans texList)
         posList = []
         if globalStep == 7:
             texList = [("Drill", 0)]
@@ -502,27 +504,38 @@ class Tutorial:
         """
         Affiche les effets visuels du tutoriel
         """
+        #Étape globale du tutoriel
         globalStep = Tutorial.GetGlobalStep()
+        
+        #Ces étapes doivent rester affichées un certain nombre de secondes, il faut donc constamment les mettre à jour
         if globalStep in [2,16,17,21,22,4,11]:
             Tutorial.IncreaseStep(globalStep)
         
         if globalStep in [5,6,20]:
             s = pygame.Surface((UiManager.width,UiManager.height),pygame.SRCALPHA, 32).convert_alpha()
             if globalStep == 5:
+                #Surlignage du menu de construction
                 pygame.draw.polygon(s,(255,255,0,100),((UiManager.width-500, UiManager.height),(2*UiManager.width-501, UiManager.height),(2*UiManager.width-501, UiManager.height-30),(UiManager.width-175,UiManager.height-30),(UiManager.width-195, UiManager.height-50),(UiManager.width-500, UiManager.height-50)))
             if globalStep == 6:
+                #Surlignage du bouton pour séléctionner la foreuse
                 pygame.draw.polygon(s,(255,255,0,100),[(UiManager.width-500,UiManager.height-500),(UiManager.width-400,UiManager.height-500),(UiManager.width-400,UiManager.height-400),(UiManager.width-500,UiManager.height-400)])
             if globalStep == 20:
+                #Surlignage du bouton d'opportunités
                 pygame.draw.polygon(s,(255,255,0,100),[(100,0),(150,0),(150,50),(100,50)])
             UiManager.screen.blit(s, (0,0))
         
+        #On récupère les listes stockant les items à afficher en transparence
         texList, posList = Tutorial.GetItemsToPlace()
         
         zoom = SaveManager.GetZoom()
+        
+        #Pour chaque élément de la liste des textures...
         for i in range(len(posList)):
             texData = texList[i]
+            #On récupère une copie transparente de la texture à afficher
             tex = TextureManager.GetTexture(texData[0], zoom).copy()
             tex.set_alpha(150)
+            #On affiche la texture avec la position et la rotation souhaitées
             GameItems.AddToRender(0,lambda pos=posList[i],texture=tex,rot=texData[1]:UiManager.screen.blit(pygame.transform.rotate(texture,90*rot), UiManager.WorldPosToScreenPos(pos)))
     
     def NoticeItemPlacedAtPos(pos:tuple,item:str)->bool:
@@ -533,13 +546,17 @@ class Tutorial:
         
         globalStep = Tutorial.GetGlobalStep()
         
+        #Si l'étape globale est l'étape 23 (tuto fini), on valide le placement
         if globalStep == 23:
             return True
         
+        #Si cette position n'est pas dans la liste des positions, on interdit le placement
         if pos not in posList:
             return False
         
+        #Si l'item à placer correspond...
         if texList[posList.index(pos)] == (item, SaveManager.GetRotation()):
+            #On met à jour le tuto et on autorise le placement
             Tutorial.IncreaseStep(globalStep)
             return True
         
@@ -549,24 +566,33 @@ class Tutorial:
         """
         Met à jour le tutoriel en fonction de l'étape en entrée
         """
+        #Si la partie n'est pas en mode tutoriel, inutile d'exécuter
         if not SaveManager.IsTutorial():
             return
         
+        #Si l'étape actuelle ne correspond pa à l'étape indiquée, ce n'est pas au tour de cet appel de la fonction d'effectuer des changements
         if currentStep != Tutorial.GetGlobalStep():
             return
         
+        #progression maximale de l'étape en cours
         maxProg = Tutorial.GetStepMaxProg()
         
+        #Si l'étape est une des étapes de cette liste, c'est une étape qui s'affiche pendant un temps donné
         if currentStep in [0,1,2,16,17,21,22,4,11]:
+            #On incrémente donc l'étape intermédiaire en fonction du temps passé depuis la dernière boucle du heu
             Tutorial.IncreaseIntermediateStep(SaveManager.clock.get_time())
+            #Si l'étape intermédiaire a dépassé la progression maximale, on passe a l'étape suivante
             if Tutorial.GetIntermediateStep() > maxProg:
                 Tutorial.NextGlobalStep()
             return
         
+        #On incrémente de 1 l'étape intermédiaire
         Tutorial.IncreaseIntermediateStep()
+        #Si l'étape intermédiaire est arrivée à l'étape maximale, on passe à l'étape suivante
         if Tutorial.GetIntermediateStep() == maxProg:
             Tutorial.NextGlobalStep()
         
+        #On sauvegarde l'étape en cours
         Tutorial.SaveStep()
 
     def NextGlobalStep():
