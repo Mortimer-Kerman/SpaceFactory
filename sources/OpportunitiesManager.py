@@ -33,7 +33,7 @@ def OpenMap():
     """
     global openedMap
     
-    SessionManager.Tutorial.IncreaseStep(18)
+    SessionManager.Tutorial.IncreaseStep(20)
     
     #On récupère l'écran affiché et on l'assombrit
     screenFilter = pygame.Surface((UiManager.width,UiManager.height))

@@ -233,7 +233,7 @@ def HandleShortKeyInputs(key):
     if key == SettingsManager.GetKeybind("opportunities"):#si la clé pressée est associée à opportunities
         OpportunitiesManager.OpenMap()#ouvrir les opportunités
     if key == pygame.K_t:#si la clé pressée est t
-        Tutorial.IncreaseStep(17)
+        Tutorial.IncreaseStep(19)
         TaskManager.showMenu()#afficher le menu de taches
     if key == pygame.K_ESCAPE:#si la clé pressée est ESCAPE
         if Pause():#On fait pause
@@ -247,7 +247,7 @@ def HandleMouseClicks(button,drone):
         if UiManager.IsClickOnUI():#si c'est un clic sur UI
             if UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
                 UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
-                Tutorial.IncreaseStep(4)
+                Tutorial.IncreaseStep(5)
             elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
                 UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
             elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
@@ -271,7 +271,7 @@ def HandleMouseClicks(button,drone):
                             GameItems.getDescription(i)#Affichage de la description
                         else:
                             if i == "Drill":
-                                Tutorial.IncreaseStep(5)
+                                Tutorial.IncreaseStep(6)
                             SaveManager.SetSelectedItem(i)#On change l'item sélectionné
                             UiManager.LightPopup("Clic gauche pour placer, maj gauche + clic gauche pour placer plusieurs, clic droit pour annuler")
                 if UiManager.UIelements.get("selectElements_delete",False):#si delete est cliqué
@@ -350,7 +350,7 @@ def HandleMouseClicks(button,drone):
                     del EventManager.EnnemisList[c]
                     del UiManager.UIelements["ennemi"+str(c)]
                     AudioManager.PlaySound("Explosion")#jouer le son d'explosion
-                    Tutorial.IncreaseStep(13)
+                    Tutorial.IncreaseStep(15)
                 return False
 
         if SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):#si un item est présent à la position de la souris
@@ -363,7 +363,7 @@ def HandleMouseClicks(button,drone):
                 return False
             if clickedItem.name in ["Sorter","Storage","Market","Teleporter"]:
                 if clickedItem.name == "Market":
-                    Tutorial.IncreaseStep(16)
+                    Tutorial.IncreaseStep(18)
                 clickedItem.edit(UiManager.interactItem(clickedItem))#si le nom de l'item est dans la liste, lancer l'interaction
             return False
         
@@ -427,62 +427,82 @@ class Tutorial:
     """
     Fonctions liées au tutoriel
     """
-    
+    #Étape du tutoriel. Le premier membre est l'étape générale (construire des tapis roulants par exemple), et le second est l'étape intermédaire (7 tapis construits sur 10 par exemple)
     step = [0,0]
+    #Popup servant à afficher le tutoriel
     popup = None
+    
     def Init():
+        """
+        Initialise le tutoriel
+        """
+        #On tente de récupérer l'étape du tutoriel dans les données de la sauvegarde
         Tutorial.step = SaveManager.mainData.__dict__.get("TutorialStep",[0,0])
+        #On force l'apparition d'un minerai de cuivre et d'un minerai de charbon qui seront utilisés dans le tutoriel
         GameItems.Minerais.ForceSpawn((0, 0), "Copper")
         GameItems.Minerais.ForceSpawn((10, -1), "Coal")
-        Tutorial.popup = UiManager.Popup(L.GetLoc("Tuto." + str(Tutorial.GetGlobalStep())),d=1)
-        #if mType and [0, 0, mType] in current:
-            
+        
+        #Si le tutoriel n'est pas à l'étape 23 (tutoriel fini)...
+        if Tutorial.GetGlobalStep() != 23:
+            #On crée un popup avec le texte de l'étape en cours
+            Tutorial.popup = UiManager.Popup(L.GetLoc("Tuto." + str(Tutorial.GetGlobalStep()),*Tutorial.GetLocKeys()),d=1)
+            #On règle la barre davancement
+            Tutorial.popup.setProg(Tutorial.GetIntermediateStep()/Tutorial.GetStepMaxProg())
     
     def SaveStep():
+        """
+        Sauvegarde l'étape du tutoriel en dur dans les données de la sauvegarde
+        """
         SaveManager.mainData.TutorialStep = Tutorial.step
     
-    def GetItemsToPlace():
+    def GetItemsToPlace()->tuple:
+        """
+        Renvoie la liste des textures et des position des objets à placer pendant cette étape du tutoriel
+        """
         globalStep = Tutorial.GetGlobalStep()
         texList = []
         posList = []
-        if globalStep == 6:
+        if globalStep == 7:
             texList = [("Drill", 0)]
             posList = [(0, 0)]
-        if globalStep == 7:
+        if globalStep == 8:
             texList = [("ConveyorBelt", 0),("ConveyorBelt", 0),("ConveyorBelt", 0),("ConveyorBelt", 0)]
             posList = [(0,-4),(0,-3),(0,-2),(0,-1)]
-        if globalStep == 8:
+        if globalStep == 9:
             texList = [("ConveyorBelt", 3),("ConveyorBelt", 3),("ConveyorBelt", 3),("ConveyorBelt", 3)]
             posList = [(0,-5),(1,-5),(2,-5),(3,-5)]
-        if globalStep == 9:
+        if globalStep == 10:
             texList = [("Storage", 0)]
             posList = [(4,-5)]
-        if globalStep == 10:
+        if globalStep == 12:
             texList = [("ConveyorBelt", 3),("ConveyorBelt", 3),("Furnace", 0)]
             posList = [(5,-5),(6,-5),(7,-5)]
-        if globalStep == 11:
+        if globalStep == 13:
             texList = [("ConveyorBelt", 1),("ConveyorBelt", 1),("ConveyorBelt", 1),("ConveyorBelt", 0),("ConveyorBelt", 0),("ConveyorBelt", 0),("Drill", 0)]
             posList = [(8,-5),(9,-5),(10,-5),(10,-4),(10,-3),(10,-2),(10,-1)]
-        if globalStep == 12:
+        if globalStep == 14:
             texList = [("Storage", 0),("ConveyorBelt", 0),("ConveyorBelt", 0)]
             posList = [(7,-8),(7,-7),(7,-6)]
-        if globalStep == 16:
+        if globalStep == 18:
             texList = [("Market", 0)]
             posList = [(11,-7)]
-        return (texList,(posList))
+        return (texList,posList)
     
     def Tick():
+        """
+        Affiche les effets visuels du tutoriel
+        """
         globalStep = Tutorial.GetGlobalStep()
-        if globalStep in [2,14,15,19,20]:
+        if globalStep in [2,16,17,21,22,4,11]:
             Tutorial.IncreaseStep(globalStep)
         
-        if globalStep in [4,5,18]:
+        if globalStep in [5,6,20]:
             s = pygame.Surface((UiManager.width,UiManager.height),pygame.SRCALPHA, 32).convert_alpha()
-            if globalStep == 4:
-                pygame.draw.polygon(s,(255,255,0,100),((UiManager.width-500, UiManager.height),(2*UiManager.width-501, UiManager.height),(2*UiManager.width-501, UiManager.height-30),(UiManager.width-175,UiManager.height-30),(UiManager.width-195, UiManager.height-50),(UiManager.width-500, UiManager.height-50)))
             if globalStep == 5:
+                pygame.draw.polygon(s,(255,255,0,100),((UiManager.width-500, UiManager.height),(2*UiManager.width-501, UiManager.height),(2*UiManager.width-501, UiManager.height-30),(UiManager.width-175,UiManager.height-30),(UiManager.width-195, UiManager.height-50),(UiManager.width-500, UiManager.height-50)))
+            if globalStep == 6:
                 pygame.draw.polygon(s,(255,255,0,100),[(UiManager.width-500,UiManager.height-500),(UiManager.width-400,UiManager.height-500),(UiManager.width-400,UiManager.height-400),(UiManager.width-500,UiManager.height-400)])
-            if globalStep == 18:
+            if globalStep == 20:
                 pygame.draw.polygon(s,(255,255,0,100),[(100,0),(150,0),(150,50),(100,50)])
             UiManager.screen.blit(s, (0,0))
         
@@ -496,11 +516,14 @@ class Tutorial:
             GameItems.AddToRender(0,lambda pos=posList[i],texture=tex,rot=texData[1]:UiManager.screen.blit(pygame.transform.rotate(texture,90*rot), UiManager.WorldPosToScreenPos(pos)))
     
     def NoticeItemPlacedAtPos(pos:tuple,item:str)->bool:
+        """
+        Fait avancer le tutoriel en fonction de l'item placé par le joueur et de sa position, et dit si il faut le placer ou pas
+        """
         texList, posList = Tutorial.GetItemsToPlace()
         
         globalStep = Tutorial.GetGlobalStep()
         
-        if globalStep == 21:
+        if globalStep == 23:
             return True
         
         if pos not in posList:
@@ -513,7 +536,9 @@ class Tutorial:
         return False
     
     def IncreaseStep(currentStep:int):
-        
+        """
+        Met à jour le tutoriel en fonction de l'étape en entrée
+        """
         if not SaveManager.IsTutorial():
             return
         
@@ -522,7 +547,7 @@ class Tutorial:
         
         maxProg = Tutorial.GetStepMaxProg()
         
-        if currentStep in [0,1,2,14,15,19,20]:
+        if currentStep in [0,1,2,16,17,21,22,4,11]:
             Tutorial.IncreaseIntermediateStep(SaveManager.clock.get_time())
             if Tutorial.GetIntermediateStep() > maxProg:
                 Tutorial.NextGlobalStep()
@@ -531,39 +556,44 @@ class Tutorial:
         Tutorial.IncreaseIntermediateStep()
         if Tutorial.GetIntermediateStep() == maxProg:
             Tutorial.NextGlobalStep()
+        
+        Tutorial.SaveStep()
 
     def NextGlobalStep():
+        """
+        Passe le tutoriel à l'étape suivante
+        """
         Tutorial.step[0] += 1
         Tutorial.step[1] = 0
         
         globalStep = Tutorial.GetGlobalStep()
         
-        if globalStep == 21:
+        if globalStep == 23:
             Tutorial.popup.close()
         else:
-            Tutorial.popup.setText(L.GetLoc("Tuto." + str(globalStep)))
+            Tutorial.popup.setText(L.GetLoc("Tuto." + str(globalStep),*Tutorial.GetLocKeys()))
             Tutorial.popup.setProg(0)
         
         resources = {}
         
-        if globalStep == 4:
-            resources["Copper"] = 40
-        if globalStep == 7:
+        if globalStep == 5:
             resources["Copper"] = 40
         if globalStep == 8:
             resources["Copper"] = 40
         if globalStep == 9:
-            resources["Copper"] = 100
+            resources["Copper"] = 40
         if globalStep == 10:
+            resources["Copper"] = 100
+        if globalStep == 12:
             resources["Copper"] = 50
             resources["Gold"] = 80
-        if globalStep == 11:
-            resources["Copper"] = 110
-        if globalStep == 12:
-            resources["Copper"] = 120
         if globalStep == 13:
+            resources["Copper"] = 110
+        if globalStep == 14:
+            resources["Copper"] = 120
+        if globalStep == 15:
             EventManager.Ennemis.spawn()
-        if globalStep == 16:
+        if globalStep == 18:
             resources["M1"] = 50
             resources["Copper"] = 50
             resources["Gold"] = 10
@@ -572,31 +602,61 @@ class Tutorial:
             for i in range(resources[rName]):
                 SaveManager.AddToInv(rName)
     
-    def GetGlobalStep():
+    def GetGlobalStep()->int:
+        """
+        Renvoie l'étape globale du tutoriel
+        """
         return Tutorial.step[0]
     
     def IncreaseIntermediateStep(value:float=1):
+        """
+        Augmente l'étape intermédaire du tutoriel
+        """
         Tutorial.step[1] += value
-        Tutorial.popup.setProg(Tutorial.step[1]/Tutorial.GetStepMaxProg())
+        Tutorial.popup.setProg(Tutorial.GetIntermediateStep()/Tutorial.GetStepMaxProg())
     
     def GetStepMaxProg()->int:
+        """
+        Renvoie le maximum de l'étape intermédiaire du tutoriel en fonction de l'étape globale
+        """
         globalStep = Tutorial.GetGlobalStep()
-        if globalStep in [0,1,2,14,15,19,20]:
+        if globalStep in [0,1,2,16,17,21,22,4,11]:
             return 1000 if globalStep == 1 else 5000
-        if globalStep in [4,5,6,9,13,16,17,18]:
+        if globalStep in [5,6,7,10,15,19,20]:
             return 1
-        if globalStep in [10,12]:
+        if globalStep == 18:
+            return 2
+        if globalStep in [12,14]:
             return 3
-        if globalStep in [7,8]:
+        if globalStep in [8,9]:
             return 4
-        if globalStep == 11:
+        if globalStep == 13:
             return 7
         if globalStep == 3:
             return 10
         return 1
         
+    def GetLocKeys()->list:
+        """
+        Renvoie les éléments additionels des clés de traduction des popups de tutoriel
+        """
+        globalStep = Tutorial.GetGlobalStep()
+        if globalStep == 2:
+            return [pygame.key.name(SettingsManager.GetKeybind(key)) for key in ("up","down","left","right")]
+        if globalStep == 4:
+            return [pygame.key.name(SettingsManager.GetKeybind("inv"))]
+        if globalStep == 9:
+            return [pygame.key.name(SettingsManager.GetKeybind("rotate"))]
+        if globalStep == 19:
+            return ["T"]
+        if globalStep == 20:
+            return [pygame.key.name(SettingsManager.GetKeybind("opportunities"))]
+        return []
     
-    def GetIntermediateStep():
+    def GetIntermediateStep()->float:
+        """
+        Renvoie l'étape intermédiaire du tutoriel
+        """
         return Tutorial.step[1]
 
 

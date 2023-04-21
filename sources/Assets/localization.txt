@@ -98,23 +98,25 @@ Tuto.0 : Maintenez le clic droit enfoncé et déplacez la souris pour faire boug
 Tuto.1 : Utilisez la molette de votre souris pour zoomer et dézoomer.
 Tuto.2 : Vous pouvez également déplacer la caméra en utilisant les touches %$1, %$2, %$3 et %$4.
 Tuto.3 : Pour survivre, vous aurez besoin de ressources. Faites un clic gauche sur un minerai de cuivre jusqu'à ce que vous en ayez assez.
-Tuto.4 : Bien! Cependant, si un si petit drone pouvait s'occuper seul de l'exploitation minière entère de cette région, ça se saurait. Il faudra donc automatiser notre production. Ouvrez le menu de construction.
-Tuto.5 : Sélectionnez maintenant la foreuse.
-Tuto.6 : Maintenant, faites un clic droit sur le minerai de cuivre pour la placer.
-Tuto.7 : Notre foreuse fonctionne! Cependant, ce qu'elle récolte n'est pas récupérable directement. Pour le récupérer, construisez un chemin de tapis roulants. Vous pouvez maintenir Maj quand vous construisez un objet pour en placer plusieurs.
-Tuto.8 : Appuyez sur R pour tourner les tapis roulants que vous plaçez dans la bonne direction.
-Tuto.9 : Le chemin doit être suffisamment long. Maintenant, placez un stockage au bout de votre chemin de tapis roulants pour acueillir le minerai brut.
-Tuto.10 : Merveilleux! Cependant, ce cuivre sera inutile sous cette forme. Placez d'autres tapis roulants et un four au bout.
-Tuto.11 : Ce four permettra de faire fondre votre cuivre. Cependant, il n'est pas alimenté. Construisez un chemin depuis un gisement de charbon pour lui apporter l'énergie nécessaire.
-Tuto.12 : Maintenant, placez un chemin pour faire sortir ce cuivre fondu.
-Tuto.13 : Oh oh! Un robot a été détécté à proximité ! Ces machines sont envoyées par des puissances adverses pour mettre à mal notre production. Cherchez le et cliquez dessus jusqu'à ce qu'il rende l'âme.
-Tuto.14 : Superbe! Cependant, en atteignant vos infrastructures, ces robots peuvent les mettre hors d'usage. Vous devez alors cliquer dessus pour les remettre en marche.
-Tuto.15 : Pour vous protéger de ce genre d'incidents, vous devrez construire à l'avenir des tourelles qui tireront automatiquement sur ces robots.
-Tuto.16 : Pour l'instant, vous devez faire du profit. Construisez un market et cliquez dessus pour voir ce qu'il a à offrir!
-Tuto.17 : Ce n'est pas avec un simple tutoriel que vous pourrez avancer à travers votre partie. Appuyez sur %$1 pour ouvrir le menu de missions.
-Tuto.18 : Vous n'aurez pas besoin de rester concentré sur cette usine éternellement! Appuyez sur le bouton d'opportunités ou sur %$1 pour ouvrir le menu d'opportunités.
-Tuto.19 : Vous connaissez maintenant tout ce qu'il faut savoir! Vous pouvez à présent vous occuper de votre usine pour l'améliorer, la protéger et la faire prospérer! Bonne chance!
-Tuto.20 : Si il vous reste des questions sur certains éléments du jeu, le bouton de question dans le menu de construction peut vous permettre d'obtenir des infos sur un élément.
+Tuto.4 : Le minerai que vous récoltez arrive dans votre inventaire, qui peut s'ouvrir en haut à droite de l'écran ou avec la touche %$1.
+Tuto.5 : Bien! Cependant, si un si petit drone pouvait s'occuper seul de l'exploitation minière entère de cette région, ça se saurait. Il faudra donc automatiser notre production. Ouvrez le menu de construction.
+Tuto.6 : Sélectionnez maintenant la foreuse.
+Tuto.7 : Maintenant, faites un clic droit sur le minerai de cuivre pour la placer.
+Tuto.8 : Notre foreuse fonctionne! Cependant, ce qu'elle récolte n'est pas récupérable directement. Pour le récupérer, construisez un chemin de tapis roulants. Vous pouvez maintenir Maj quand vous construisez un objet pour en placer plusieurs.
+Tuto.9 : Appuyez sur %$1 pour tourner les tapis roulants que vous placez dans la bonne direction.
+Tuto.10 : Le chemin doit être suffisamment long. Maintenant, placez un stockage au bout de votre chemin de tapis roulants pour acueillir le minerai brut.
+Tuto.11 : Merveilleux! Vous pouvez maintenant faire un clic gauche sur le stockage pour y accéder et faire glisser le contenu entre votre inventaire et le stockage.
+Tuto.12 : Cependant, ce cuivre sera inutile sous cette forme. Placez d'autres tapis roulants et un four au bout pour pouvoir faire fondre le cuivre.
+Tuto.13 : Ce four permettra de faire fondre votre cuivre. Cependant, il n'est pas alimenté. Construisez un chemin depuis un gisement de charbon pour lui apporter l'énergie nécessaire.
+Tuto.14 : Maintenant, placez un chemin pour faire sortir ce cuivre fondu.
+Tuto.15 : Oh oh! Un robot a été détécté à proximité ! Ces machines sont envoyées par des puissances adverses pour mettre à mal notre production. Cherchez le et cliquez dessus jusqu'à ce qu'il rende l'âme.
+Tuto.16 : Superbe! Cependant, en atteignant vos infrastructures, ces robots peuvent les mettre hors d'usage. Vous devez alors cliquer dessus pour les remettre en marche.
+Tuto.17 : Pour vous protéger de ce genre d'incidents, vous devrez construire à l'avenir des tourelles qui tireront automatiquement sur ces robots.
+Tuto.18 : Pour l'instant, vous devez faire du profit. Construisez un market et cliquez dessus pour voir ce qu'il a à offrir!
+Tuto.19 : Ce n'est pas avec un simple tutoriel que vous pourrez avancer à travers votre partie. Appuyez sur %$1 pour ouvrir le menu de missions.
+Tuto.20 : Vous n'aurez pas besoin de rester concentré sur cette usine éternellement! Appuyez sur le bouton d'opportunités ou sur %$1 pour ouvrir le menu d'opportunités.
+Tuto.21 : Vous connaissez maintenant tout ce qu'il faut savoir! Vous pouvez à présent vous occuper de votre usine pour l'améliorer, la protéger et la faire prospérer! Bonne chance!
+Tuto.22 : Si il vous reste des questions sur certains éléments du jeu, le bouton de question dans le menu de construction peut vous permettre d'obtenir des infos sur un élément.
 
 //Items du jeu
 Items.Drill : Foreuse
