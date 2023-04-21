@@ -20,7 +20,7 @@ import numpy as np
 
 import pygame
 
-menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","NanoFabricator","Synthetron"]#éléments du menu de sélection
+menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","CopperWall","NanoFabricator","Synthetron"]#éléments du menu de sélection
 
 allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"NanoM1":(50,10,110)}
 
@@ -85,6 +85,8 @@ class Item:
                 self.giveto[3]*=2
         if self.name=="Teleporter":
             TeleportPoint.append(self.pos)
+        if self.name == "CopperWall":
+            self.metadata["pv"]=500
     
     def ReadDictRepresentation(DictRepresentation:dict):
         """
@@ -420,6 +422,7 @@ doc={
      "Furnace":{"c":{"Copper":30,"Gold":80}},
      "Sorter":{"c":{"Copper":20,"Gold":10}},
      "Market":{"c":{"M1":50,"Copper":50,"Gold":10}},
+     "CopperWall":{"c":{"MeltedCopper":50,"Copper":40}},
      "Coal":{"g":1},
      "Copper":{"g":2},
      "Gold":{"g":5},
