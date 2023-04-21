@@ -143,6 +143,7 @@ Items.PlasmaForge : Forge à Plasma
 Items.GravityManipulator : Manipulateur de gravité
 Items.PlasmaGold : PlasmaGold
 Items.CopperWall : Mur de Cuivre
+Items.Turret : Tourelle
 
 //Description des items
 Items.d.Drill : La foreuse est une machine servant à extraire des minerais automatiquement
@@ -168,6 +169,7 @@ Items.d.CopperM1 : Est ce du cuivre ou du M1, impossible de le savoir, ce minera
 Items.d.PlasmaForge : La Forge à Plasma peut être fabriquée à l'aide du M2 et d'Or Synthétique, et elle produit du PlasmaGold.
 Items.d.PlasmaGold : Un minerai, dont la valeur est assez élevée, possède des propriétés supraconductrices très fortes
 Items.d.CopperWall : Le mur de Cuivre est une protection qui peut retenir pendant plusieurs secondes des ennemis
+Items.d.Turret : Des lasers, automatiques (utilise de l'Or comme munition)
 
 //Opportunités
 Opportunities.Title : Opportunités
