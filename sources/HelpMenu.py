@@ -13,6 +13,7 @@ import Localization
 import FunctionUtils
 import GameItems
 import MarketManager
+import TextureManager
 import SaveManager
 
 
@@ -67,6 +68,9 @@ def Init():
     
     table = menu.add.table(font_size=15, border_width=0)
     detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
+
+    icon=menu.add.surface(TextureManager.GetTexture("no",100,True))
+    detailsFrame.pack(icon, align=pygame_menu.locals.ALIGN_CENTER)
     
     def OpenMenu(item):
         title.set_title(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + item)))
@@ -112,15 +116,19 @@ def Init():
             row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + crafts["r"])))
             
             table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
-        
+
         h = 0
         for w in detailsFrame.get_widgets(unpack_subframes=False):
             h += w.get_height()
         
+        icon.set_surface(TextureManager.GetTexture(item,100,True))
+
         detailsFrame.unpack(table)
         table.set_float(float_status=False)
         detailsFrame.unpack(title)
         title.set_float(float_status=False)
+        detailsFrame.unpack(icon)
+        icon.set_float(float_status=False)
         for label in desc:
             detailsFrame.unpack(label)
             label.set_float(float_status=False)
@@ -128,6 +136,7 @@ def Init():
         detailsFrame.pack(title, align=pygame_menu.locals.ALIGN_CENTER)
         detailsFrame.pack(desc)
         detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
+        detailsFrame.pack(icon, align=pygame_menu.locals.ALIGN_CENTER)
         
     def SetDescText(text:str):
         
