@@ -37,6 +37,7 @@ def Play(saveName:str,**kwargs):
     Fonction principale de la Session
     """
     global laser
+    GameItems.Laser={}
     UiManager.Loading()#Chargement de l'UI
     if not SaveManager.Load(saveName):#Chargement de la sauvegarde
         return False
@@ -313,6 +314,7 @@ def HandleMouseClicks(button,drone):
                     GameItems.getDescription(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)#Description de l'item
             elif UiManager.showMenu["delete"]:#si le mode delete est actif
                 SaveManager.DeleteItem(UiManager.GetMouseWorldPos())#Suppression de l'item
+                GameItems.Laser[str(UiManager.GetMouseWorldPos())]=lambda:None
                 if not ShiftPressed:#si shift n'est pas pressé
                     UiManager.showMenu["delete"]=0#On désactive le mode delete
             elif SaveManager.IsItemSelected():#si item sélectionné
