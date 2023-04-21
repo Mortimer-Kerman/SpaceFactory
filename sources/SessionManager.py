@@ -158,7 +158,8 @@ def Play(saveName:str,**kwargs):
             if SaveManager.SaveLoaded():#on vérifie si la sauvegarde est chargée
                 OpportunitiesManager.Tick()#on fait passer le temps des Opportunités
                 drone.update()#on mets à jour le drone
-                EventM.LaunchEvent()#Lancer un événement
+                if not SaveManager.IsTutorial() or Tutorial.GetGlobalStep() == 23:
+                    EventM.LaunchEvent()#Lancer un événement
     return True
     
         
