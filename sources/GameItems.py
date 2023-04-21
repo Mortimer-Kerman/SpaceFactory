@@ -198,7 +198,7 @@ class Item:
                 if item is not None:
                     if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
         elif self.name=="Bridge":
-            if len(self.metadata.get("last"))==2:
+            if len(self.metadata.get("last",self.pos))==2:
                 a=list(self.metadata.get("last",self.pos))
                 a[0]=FunctionUtils.signe(self.pos[0]-a[0]) if self.pos[0]-a[0]!=0 else 0
                 a[1]=FunctionUtils.signe(self.pos[1]-a[1]) if self.pos[1]-a[1]!=0 else 0
