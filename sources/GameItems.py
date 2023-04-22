@@ -458,16 +458,6 @@ doc={
      "MeltedCopper":{"g":8},
      "PlasmaGold":{"g":50}
      }
-def getDescription(type):
-    HelpMenu.Open(type)
-    """
-    loc = L.GetLoc("Items.d." + type)
-    
-    if loc == "Items.d." + type:
-        loc = L.GetLoc("Items.d.error")
-    
-    UiManager.Popup(loc)
-    """
 
 def getPrice(type):
     #UiManager.Popup(str(list(doc.get(type,{}).get("c",{}).items())))

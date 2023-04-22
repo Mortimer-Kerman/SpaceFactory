@@ -276,7 +276,7 @@ def HandleMouseClicks(button,drone):
                             SaveManager.SetSelectedItem(None)#On réinitialise la selection
                             UiManager.LightPopup("Mode destruction désactivé")#affichage via une light popup
                         elif UiManager.showMenu.get("question",False):#si question est actif
-                            GameItems.getDescription(i)#Affichage de la description
+                            HelpMenu.Open(i)#Affichage de la description
                         else:
                             if i == "Drill":
                                 Tutorial.IncreaseStep(6)
@@ -284,7 +284,7 @@ def HandleMouseClicks(button,drone):
                             UiManager.LightPopup("Clic gauche pour placer, maj gauche + clic gauche pour placer plusieurs, clic droit pour annuler")
                 if UiManager.UIelements.get("selectElements_delete",False):#si delete est cliqué
                     if UiManager.showMenu.get("question",False):#si “question” est actif
-                        GameItems.getDescription("delete")#Description de delete
+                        HelpMenu.Open("delete")#Description de delete
                     else:
                         UiManager.showMenu["delete"]=1-UiManager.showMenu["delete"]#désactiver/activer le menu “delete”
                         UiManager.LightPopup("Mode destruction "+ "activé" if UiManager.showMenu["delete"] else "Mode destruction désactivé")#Affiche une LightPopup
@@ -303,7 +303,7 @@ def HandleMouseClicks(button,drone):
                 for i,e in enumerate(SaveManager.mainData.inv):#on énumère l'inventaire
                     if UiManager.UIelements.get("invElements_"+str(i),False):#si la souris est sur l'élément de l'inventaire
                         if UiManager.showMenu.get("question",False):#si question est actif
-                            GameItems.getDescription(i)#Description de l'élément
+                            HelpMenu.Open(i)#Description de l'élément
                         elif e["n"] in MarketManager.marketItem.keys():#si c'est un item du market
                             SaveManager.SetSelectedItem(e["n"])#placer l'item
                             UiManager.LightPopup("Clic gauche pour placer, maj gauche + clic gauche pour placer plusieurs, clic droit pour annuler")#Affichage de LightPopup
@@ -318,7 +318,7 @@ def HandleMouseClicks(button,drone):
         
         if SaveManager.IsItemHere(UiManager.GetMouseWorldPos()):#si la position de la souris est dans un item
             if UiManager.showMenu.get("question",False):#si le mode question est activé
-                    GameItems.getDescription(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)#Description de l'item
+                    HelpMenu.Open(SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos()).name)#Description de l'item
             elif UiManager.showMenu["delete"]:#si le mode delete est actif
                 SaveManager.DeleteItem(UiManager.GetMouseWorldPos())#Suppression de l'item
                 GameItems.Laser[str(UiManager.GetMouseWorldPos())]=lambda:None
@@ -331,7 +331,7 @@ def HandleMouseClicks(button,drone):
         if UiManager.showMenu.get("question",False):#si le mode question est actif
             a=GameItems.Minerais.Type(*UiManager.GetMouseWorldPos())#On détecte si un minerai avec la position de la souris existe
             if a:#si un minerai existe
-                GameItems.getDescription(a)#Affichage de la description
+                HelpMenu.Open(a)#Affichage de la description
             return False
         
         if SaveManager.IsItemSelected():#si un item est sélectionné
