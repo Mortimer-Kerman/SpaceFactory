@@ -160,6 +160,14 @@ def ManageEncapsulatedButtons():
         
     lastMousePressSequence = pressSequence
 
+def ToDict(o):
+    """
+    Transforme un objet en dictionnaire en prenant en compte l'existence d'une fonction pour remplacer __dict__
+    """
+    if callable(o.__dict__):
+        return o.__dict__()
+    return o.__dict__
+
 def strToList(str:str):
     """
     Convertit un string en liste de caractère
