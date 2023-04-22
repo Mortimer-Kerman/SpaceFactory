@@ -301,8 +301,10 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     global chosenSettings
     chosenSettings = [1, 2 if defaultTuto else 0]
     def setDiff(x:int):
+        SetLabelText(Localization.GetLoc(SaveManager.difficultiesDict[x] + '.desc'))
         chosenSettings[0] = x
     def setMode(x:int):
+        SetLabelText(Localization.GetLoc(SaveManager.gameModesDict[x] + '.desc'))
         chosenSettings[1] = x
     
     #Sélecteur de difficulté
@@ -395,21 +397,27 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     Menus.SaveCreation.mainloop(UiManager.screen, UiManager.DisplayBackground)
     
 def TryCreateSave(saveNameInput):
-    
+    """
+    Tente de créer et charger une sauvegarde à partir de l'input de nom de sauvegarde du menu.
+    """
+    #On récupère le nom donné à la sauvegarde
     saveName = str(saveNameInput.get_value())
     
+    #Si la sauvegarde existe déjà...
     if SaveManager.SaveExists(saveName):
         global CreateSaveButton
+        #On indique dans le bouton de création de la sauvegarde que ce nom est déjà utilisé et on annule l'exécution
         CreateSaveButton.set_title(Localization.GetLoc('Saves.NewSave.AlreadyExists')).set_background_color((218, 85, 82), inflate=(0, 0))
         return
     
+    #On ferme le menu de création de sauvegardes et la liste des sauvegardes aussi, si elle existe
     Menus.SaveCreation.disable()
     if Menus.SavesList != None:
         Menus.SavesList.disable()
     
     global conditions
     global chosenSettings
-    
+    #On lance la sauvegarde avec les différentes valeurs données en entrée
     SessionManager.Play(saveName,seed=GetSeedFromInput(),planetaryConditions=conditions,difficulty=chosenSettings[0],gamemode=chosenSettings[1])
     
 def TryLoadSave(saveName:str):

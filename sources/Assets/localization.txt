@@ -28,8 +28,11 @@ Saves.LastSession : Dernière session:
 Saves.UnknownInfo : ???
 Saves.Difficulty : Difficulté
 Saves.Difficulty.Easy : Facile
+Saves.Difficulty.Easy.desc : Pour une première partie rapide.%$rTaux d'apparition des ennemis réduit, moins d'obstacles%$rsur la carte et moins de risques dans les décisions des expéditions.
 Saves.Difficulty.Normal : Normal
+Saves.Difficulty.Normal.desc : Expérience de jeu par défaut.%$rTaux d'apparition des ennemis normal, quelques obstacles%$rsur la carte et risques non négligeables dans les décisions des expéditions.
 Saves.Difficulty.Hard : Difficile
+Saves.Difficulty.Hard.desc : Pour ceux qui veulent du défi.%$rTaux d'apparition des ennemis augmenté, grande quantité%$rd'obstacles sur la carte et grands risques dans les décisions des expéditions.
 Saves.Environment : Environment
 Saves.Environment.Random : Aléatoire
 Saves.Environment.Random.desc : Commencez sur une planète inconnue.%$rDe quoi sera fait le monde qui vous attend? A vous de le découvrir !
@@ -41,8 +44,11 @@ Saves.Environment.Lifefull : Vivant
 Saves.Environment.Lifefull.desc : Nous ne sommes peut-être pas seuls dans l'univers.%$rCe monde, lui, reste la preuve irréfutable que la vie est possible ailleurs.%$rQu'en ferez-vous?
 Saves.Gamemode : Mode de jeu
 Saves.Gamemode.Career : Carrière
+Saves.Gamemode.Career.desc : Exploitez des ressources, confrontez vous au danger et développez%$rvotre usine et votre production pour vous enrichir.
 Saves.Gamemode.Sandbox : Bac à sable
+Saves.Gamemode.Sandbox.desc : Expérimentez, bâtissez les infrastructures les plus farfeulues%$ret les usines les plus extravagantes sans limites de ressources!
 Saves.Gamemode.Tutorial : Tutoriel
+Saves.Gamemode.Tutorial.desc : Apprenez à prendre en main les mécaniques basiques du jeu pour%$rpouvoir bâtir votre usine!
 Saves.NewSave : Nouvelle sauvegarde
 Saves.NewSave.Name : Nom: 
 Saves.NewSave.Seed : Graine: 
