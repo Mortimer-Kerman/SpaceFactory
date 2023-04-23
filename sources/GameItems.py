@@ -388,6 +388,8 @@ class Minerais:
         if a:
             if [x, y, a] not in current:
                 current.append([x, y, a])
+            if a == "Obstacle":
+                a = "Obstacles/Rock"
             UiManager.screen.blit(TextureManager.GetTexture(a, zoom), (x * zoom + cam[0], y * zoom + cam[1]))
 
 
@@ -401,6 +403,8 @@ class Minerais:
         cam[0] += UiManager.width / 2
         cam[1] += UiManager.height / 2
         (x,y,a)=a
+        if a == "Obstacle":
+            a = "Obstacles/Rock"
         UiManager.screen.blit(TextureManager.GetTexture(a, zoom), (x*zoom+cam[0], y*zoom+cam[1]))
     def Type(x,y):
         """
@@ -422,10 +426,11 @@ class Minerais:
                 return "Gold"
             elif random.randint(0,120*r)==50:
                 return "M1"
-            
+            elif random.randint(0,50*r)==50:
+                if not (x,y) in SaveManager.mainData.clearedObstacles:
+                    return "Obstacle"
         return False
-        
-        
+    
     def Clear():
         """
         Efface tous les minerais

@@ -335,6 +335,9 @@ def HandleMouseClicks(button,drone):
             return False
         
         if SaveManager.IsItemSelected():#si un item est sélectionné
+            if SaveManager.ObstacleAtPos(UiManager.GetMouseWorldPos()):
+                UiManager.LightPopup(L.GetLoc("Session.AlreadyItemHere"))#affichage de LightPopup
+                return False
             if not SaveManager.IsTutorial() or Tutorial.NoticeItemPlacedAtPos(UiManager.GetMouseWorldPos(),SaveManager.GetSelectedItem()):
                 b=SaveManager.PlaceItem(GameItems.Item(SaveManager.GetSelectedItem(), UiManager.GetMouseWorldPos(),{}))#Placer item
                 if b and SaveManager.GetSelectedItem() in MarketManager.marketItem.keys():#si l'item est au market
@@ -382,10 +385,13 @@ def HandleMouseClicks(button,drone):
             #dessin du laser
             AudioManager.PlaySound("Laser")#jouer le son de laser
             laser=lambda:pygame.draw.polygon(UiManager.screen, (255, 255, 190), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
-            SaveManager.AddToInv(d=a)#Ajout à l'inventaire
-            UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")#Affiche la LightPopup lié au minage
-            if a == "Copper":
-                Tutorial.IncreaseStep(3)
+            if a != "Obstacle":
+                SaveManager.AddToInv(d=a)#Ajout à l'inventaire
+                UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")#Affiche la LightPopup lié au minage
+                if a == "Copper":
+                    Tutorial.IncreaseStep(3)
+            else:
+                SaveManager.ClearObstacle(UiManager.GetMouseWorldPos())
         
 
     

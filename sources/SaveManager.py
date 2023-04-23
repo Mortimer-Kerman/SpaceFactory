@@ -21,7 +21,7 @@ import FunctionUtils
 import AudioManager
 import SettingsManager
 
-SaveFileVersion="f0.16"
+SaveFileVersion="f0.17"
 
 difficultiesDict = {0: 'Saves.Difficulty.Easy',
                     1: 'Saves.Difficulty.Normal',
@@ -53,6 +53,7 @@ class Data:
         self.gamemode=0
         self.difficulty=1
         self.opportunities=[]
+        self.clearedObstacles=[]
         
         
     def toJson(self):
@@ -330,6 +331,24 @@ def IsPosWet(pos:tuple)->bool:
     Dit si une position est dans un point d'eau ou proche de celui-ci
     """
     return GetTextureAtPos(pos) == "water"
+
+def ObstacleAtPos(pos:tuple)->bool:
+    """
+    Dit si une position est occupée par un obstacle
+    """
+    return not pos in mainData.clearedObstacles and GameItems.Minerais.Type(pos[0], pos[1]) == "Obstacle"
+
+def ClearObstacle(pos:tuple):
+    """
+    Élimine un obstacle de la carte
+    """
+    mainData.clearedObstacles.append(pos)
+    
+    d = [pos[0],pos[1],"Obstacle"]
+    
+    if d in GameItems.current:
+        GameItems.current.remove(d)
+        
 
 rotation = 0
 
