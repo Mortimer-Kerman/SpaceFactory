@@ -389,7 +389,7 @@ class Minerais:
             if [x, y, a] not in current:
                 current.append([x, y, a])
             if a == "Obstacle":
-                a = "Obstacles/Rock"
+                a = "Obstacles/" + ("Bush" if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike else "Rock") 
             UiManager.screen.blit(TextureManager.GetTexture(a, zoom), (x * zoom + cam[0], y * zoom + cam[1]))
 
 
@@ -404,7 +404,7 @@ class Minerais:
         cam[1] += UiManager.height / 2
         (x,y,a)=a
         if a == "Obstacle":
-            a = "Obstacles/Rock"
+            a = "Obstacles/" + ("Bush" if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike else "Rock") 
         UiManager.screen.blit(TextureManager.GetTexture(a, zoom), (x*zoom+cam[0], y*zoom+cam[1]))
     def Type(x,y):
         """

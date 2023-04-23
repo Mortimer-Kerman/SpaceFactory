@@ -212,7 +212,7 @@ class Events:
         self.isEventHappening = False
         self.runtime=0
         self.lastEvent = 0
-        self.nextEvent = 5#random.randint(200,1000)#prochain événement
+        self.nextEvent = random.randint(200,1000)#prochain événement
         self.CurrentEvent = None
     
     def LaunchEvent(self):
@@ -226,7 +226,7 @@ class Events:
         
         if self.nextEvent<self.runtime:#si le runtime est supérieur au nextEvent
             
-            self.SetTimeBeforeNextEvent(1)#random.randint(200,1000))#prochain événement
+            self.SetTimeBeforeNextEvent(random.randint(200,1000))#prochain événement
             
             if self.isEventHappening:#si un évenement est en cours
                 self.isEventHappening = False
