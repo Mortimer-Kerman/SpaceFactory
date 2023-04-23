@@ -88,7 +88,7 @@ def Tick():
 #Liste des canaux utilisés
 usedChannels = [0]
 
-def PlaySound(soundName,pos=None):
+def PlaySound(soundName,pos=None,volume=1):
     """
     Joue un son. Si une position dans le monde est donnée, le son sera spatialisé.
     """
@@ -132,6 +132,9 @@ def PlaySound(soundName,pos=None):
         #On calcule le volume dans les oreilles gauche et droite: 1 divisé par la distance au carré (car le son diminue avec le carré de la distance) puis multiplé par le volume du jeu
         left = FunctionUtils.clamp01(1/(FunctionUtils.Distance(leftEarPos, sourcePos)**2)*gameVolume)
         right = FunctionUtils.clamp01(1/(FunctionUtils.Distance(rightEarPos, sourcePos)**2)*gameVolume)
+        
+        left = FunctionUtils.clamp01(left*volume)
+        right = FunctionUtils.clamp01(right*volume)
         
         #Si le son dans les deux oreilles est très faible, il est inutile de jouer ce son
         if left < 0.05 and right < 0.05:

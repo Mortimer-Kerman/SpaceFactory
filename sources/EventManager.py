@@ -108,7 +108,7 @@ class EventTemplate:
     def End():
         pass
     def GetEventDuration()->int:
-        return 100#:random.randint(20,500)
+        return random.randint(100,500)
 
 class EnnemyAttack(EventTemplate):
     def Init():
@@ -150,12 +150,55 @@ class SolarStorm(EventTemplate):
         UiManager.Popup("Fin de la tempête!")
 
 class MeteorStorm(EventTemplate):
+    
+    tex = None
+    meteorsList = []
+    
     def Init():
         UiManager.Popup("Une pluie de météorites est en approche!")
+        MeteorStorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/meteorStorm"),(UiManager.width,UiManager.height))
+        MeteorStorm.meteorsList = []
+        
     def Update(eventStrength:float,runtime:int):
-        tex = TextureManager.GetColorFilter((128,128,0), UiManager.width).copy()
-        tex.set_alpha(100 * eventStrength)
+        tex = MeteorStorm.tex.copy()
+        tex.set_alpha(100 * (cos(pygame.time.get_ticks()/500)/4+1.25) * eventStrength)
         UiManager.screen.blit(tex, (0, 0))#afficher
+        
+        zoom = SaveManager.GetZoom()
+        timeDelta = SaveManager.clock.get_time()/10000
+        
+        crashedMeteors = []
+        
+        for meteor in MeteorStorm.meteorsList:
+            meteor[1] += timeDelta
+            
+            pos = meteor[0]
+            offset = FunctionUtils.lerp(-100, 0, meteor[1])
+            
+            UiManager.screen.blit(TextureManager.GetTexture("CrashArea",zoom*2),UiManager.WorldPosToScreenPos(pos))
+            
+            UiManager.screen.blit(TextureManager.GetTexture("Meteor",zoom*2), UiManager.WorldPosToScreenPos((pos[0] + offset, pos[1] + (offset*2))))#afficher
+            
+            if meteor[1] > 1:
+                crashedMeteors.append(meteor)
+        
+        for meteor in crashedMeteors:
+            MeteorStorm.meteorsList.remove(meteor)
+            
+            pos = meteor[0]
+            
+            AudioManager.PlaySound("MeteorCrash",pos,20)
+            
+            for x in range(-3,3):
+                for y in range(-3,3):
+                    item = SaveManager.GetItemAtPos((pos[0] + x,pos[1] + y))
+                    if item != None:
+                        item.metadata["pv"] = 0
+        
+    
+    def FixedUpdate():
+        if random.randint(0, 10) == 10:
+            MeteorStorm.meteorsList.append([UiManager.ScreenPosToWorldPos([random.randint(-UiManager.width, 2*UiManager.width) for i in range(2)]),0])
     
     def End():
         UiManager.Popup("Fin de la pluie de météorites!")
@@ -169,7 +212,7 @@ class Events:
         self.isEventHappening = False
         self.runtime=0
         self.lastEvent = 0
-        self.nextEvent = 5#random.randint(5,500)#prochain événement
+        self.nextEvent = 5#random.randint(200,1000)#prochain événement
         self.CurrentEvent = None
     
     def LaunchEvent(self):
@@ -183,33 +226,34 @@ class Events:
         
         if self.nextEvent<self.runtime:#si le runtime est supérieur au nextEvent
             
-            self.SetTimeBeforeNextEvent(10)#random.randint(20,500))#prochain événement
+            self.SetTimeBeforeNextEvent(1)#random.randint(200,1000))#prochain événement
             
             if self.isEventHappening:#si un évenement est en cours
-                self.isEventHappening = False#On met fon à l'évenement
-                self.CurrentEvent.End()
+                self.isEventHappening = False
+                self.CurrentEvent.End()#On met fin à l'évenement
                 self.CurrentEvent = None
                 
             elif random.randint(0,3) <= SaveManager.GetDifficultyLevel():#Sinon, avec une chance sur 3 en facile, deux sur trois en normal et 100% du temps en difficile...
                     
                     self.isEventHappening = True#On marque le lancement d'un évenement
                     
-                    possibleEvents = [EnnemyAttack]
-                    
+                    #Liste des évenements possibles
+                    possibleEvents = [MeteorStorm]
+                    """ 
+                    #Si on est sur une planète désertique...
                     if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Desertic:
-                        possibleEvents.append(Sandstorm)
-                    
+                        possibleEvents.append(Sandstorm)#On rajoute l'évenement tempête de sable
+                    #Si on est sur une planète morte...
                     elif SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead:
-                        possibleEvents.append(SolarStorm)
-                    """  
+                        possibleEvents.append(SolarStorm)#On rajoute l'évenement tempête solaire
                         if SaveManager.GetDifficultyLevel() == 3:
                             possibleEvents.append(MeteorStorm)
                     """
-                    self.CurrentEvent = random.choice(possibleEvents)
+                    self.CurrentEvent = random.choice(possibleEvents)#On choisit un évenement aléatoire
                     
-                    self.CurrentEvent.Init()
+                    self.CurrentEvent.Init()#On lance l'évenement
                     
-                    self.SetTimeBeforeNextEvent(self.CurrentEvent.GetEventDuration())
+                    self.SetTimeBeforeNextEvent(self.CurrentEvent.GetEventDuration())#On règle la durée de l'évenement
     
     def SetTimeBeforeNextEvent(self,duration:int):
         """
