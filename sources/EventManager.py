@@ -10,8 +10,10 @@ import SaveManager
 import TextureManager
 import FunctionUtils
 import AudioManager
+import PlanetGenerator
+import GameItems
 #importation de copysign du module système math
-from math import copysign
+from math import cos
 
 EnnemisList=[]#Liste des ennemis
 
@@ -95,19 +97,139 @@ class Ennemis:
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
         UiManager.UIelements["ennemi"+str(c)]=UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])).collidepoint(pygame.mouse.get_pos())#afficher
+
+class EventTemplate:
+    def Init():
+        pass
+    def Update(eventStrength:float,runtime:int):
+        pass
+    def FixedUpdate():
+        pass
+    def End():
+        pass
+    def GetEventDuration()->int:
+        return 100#:random.randint(20,500)
+
+class EnnemyAttack(EventTemplate):
+    def Init():
+        Ennemis.spawn()#apparition d'un ennemi
+        UiManager.Popup("Un ennemi a été détecté dans votre zone")
+
+class Sandstorm(EventTemplate):
+    
+    tex = None
+    
+    def Init():
+        UiManager.Popup("Une tempête de sable est en approche!")
+        Sandstorm.tex = pygame.transform.scale(TextureManager.GetTexture("ground/sand"),(UiManager.width,UiManager.height))
+    
+    def Update(eventStrength:float,runtime:int):
+        ticksSinceInit = (pygame.time.get_ticks()%2000)/2000
+        tex = Sandstorm.tex.copy()
+        tex.set_alpha(128 * eventStrength)
+        for i in range(-1,1):
+            UiManager.screen.blit(tex, (UiManager.width*(ticksSinceInit+i), 0))#afficher
+    
+    def End():
+        UiManager.Popup("Fin de la tempête!")
+
+class SolarStorm(EventTemplate):
+    
+    tex = None
+    
+    def Init():
+        UiManager.Popup("Une tempête solaire a été détectée!")
+        SolarStorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/radiationEffect"),(UiManager.width,UiManager.height))
+        
+    def Update(eventStrength:float,runtime:int):
+        tex = SolarStorm.tex.copy()
+        tex.set_alpha(150 * FunctionUtils.clamp01(cos(pygame.time.get_ticks()/500)/2+1.3) * eventStrength)
+        UiManager.screen.blit(tex, (0, 0))#afficher
+        
+    def End():
+        UiManager.Popup("Fin de la tempête!")
+
+class MeteorStorm(EventTemplate):
+    def Init():
+        UiManager.Popup("Une pluie de météorites est en approche!")
+    def Update(eventStrength:float,runtime:int):
+        tex = TextureManager.GetColorFilter((128,128,0), UiManager.width).copy()
+        tex.set_alpha(100 * eventStrength)
+        UiManager.screen.blit(tex, (0, 0))#afficher
+    
+    def End():
+        UiManager.Popup("Fin de la pluie de météorites!")
+
+
 class Events:
     """
     Classe servant à provoquer la destruction, à provoquer le chaos, à provoquer la chute du joueur
     """
     def __init__(self):
         self.isEventHappening = False
-        self.lastEvent=0
         self.runtime=0
-        self.nextEvent = self.lastEvent + random.randint(5,500)#prochain événement
+        self.lastEvent = 0
+        self.nextEvent = 5#random.randint(5,500)#prochain événement
+        self.CurrentEvent = None
+    
     def LaunchEvent(self):
+        """
+        Se lance deux fois par seconde pour savoir si un évenement a pris fin et si il faut en lancer un nouveau
+        """
         self.runtime+=1
-        if self.nextEvent<self.runtime and not self.isEventHappening:#si aucun événement est lancé et que le runtime est supérieur au nextEvent
-            self.nextEvent = self.nextEvent + random.randint(20,500)#prochain événement
-            self.isEventHappening = True
-            Ennemis.spawn()#apparition d'un ennemi*
-            UiManager.Popup("Un ennemi a été détecté dans votre zone")
+        
+        if self.CurrentEvent != None:
+            self.CurrentEvent.FixedUpdate()
+        
+        if self.nextEvent<self.runtime:#si le runtime est supérieur au nextEvent
+            
+            self.SetTimeBeforeNextEvent(10)#random.randint(20,500))#prochain événement
+            
+            if self.isEventHappening:#si un évenement est en cours
+                self.isEventHappening = False#On met fon à l'évenement
+                self.CurrentEvent.End()
+                self.CurrentEvent = None
+                
+            elif random.randint(0,3) <= SaveManager.GetDifficultyLevel():#Sinon, avec une chance sur 3 en facile, deux sur trois en normal et 100% du temps en difficile...
+                    
+                    self.isEventHappening = True#On marque le lancement d'un évenement
+                    
+                    possibleEvents = [EnnemyAttack]
+                    
+                    if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Desertic:
+                        possibleEvents.append(Sandstorm)
+                    
+                    elif SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead:
+                        possibleEvents.append(SolarStorm)
+                    """  
+                        if SaveManager.GetDifficultyLevel() == 3:
+                            possibleEvents.append(MeteorStorm)
+                    """
+                    self.CurrentEvent = random.choice(possibleEvents)
+                    
+                    self.CurrentEvent.Init()
+                    
+                    self.SetTimeBeforeNextEvent(self.CurrentEvent.GetEventDuration())
+    
+    def SetTimeBeforeNextEvent(self,duration:int):
+        """
+        Règle le temps avant le prochain évenement, ou la durée restante à l'évenement en cours
+        """
+        self.lastEvent = self.nextEvent
+        self.nextEvent = self.runtime + duration
+
+    def UpdateCurrentEvent(self,runtime:int):
+        """
+        Lance la fonction de mise à jour de l'évenement actuel
+        """        
+        if self.CurrentEvent != None:
+            
+            timeBeforeEnd = FunctionUtils.clamp01((self.nextEvent - (self.runtime + (runtime / 50)))/2)
+            timeSinceBegin = FunctionUtils.clamp01((self.runtime + (runtime / 50) - self.lastEvent)/2)
+            
+            if timeBeforeEnd == 1:
+                time = timeSinceBegin
+            else:
+                time = timeBeforeEnd
+            
+            self.CurrentEvent.Update(time,runtime)

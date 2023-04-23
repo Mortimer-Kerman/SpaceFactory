@@ -93,13 +93,15 @@ def Play(saveName:str,**kwargs):
         for c,i in enumerate(EventManager.EnnemisList):#pour chaque ennemi dans EnnemisList
             i.ia(runtime)#calcul de la trajectoire et mouvement
             i.show(c)#affichage de l'ennemi
-
+        
         laser()#affichage du laser
 
         drone.show()#affichage du drone
-
+        
         for l in GameItems.Laser.values():
             l()#affichage des lasers machines
+        
+        EventM.UpdateCurrentEvent(int(runtime))
         
         if showUi:
             UiManager.DisplayUi()#Afficher l'Interface Utilisateur
@@ -152,7 +154,7 @@ def Play(saveName:str,**kwargs):
                         laser = lambda : None#pas de laser
         
         SaveManager.TickClock()#on mets à jour l'horloge des FPS
-        runtime+=SaveManager.clock.get_time() / 8#on augmente le runtime
+        runtime+=SaveManager.clock.get_time() / 10#on augmente le runtime
         if runtime > 50:#si le runtime est supérieur à 50
             runtime = 0#on reset le runtime
             if SaveManager.SaveLoaded():#on vérifie si la sauvegarde est chargée

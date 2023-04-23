@@ -287,6 +287,15 @@ def IsTutorial()->bool:
     """
     return GetGamemode() == 2
 
+def GetDifficultyLevel()->int:
+    """
+    Renvoie le niveau de difficulté:
+        0 = facile
+        1 = normal
+        2 = difficile
+    """
+    return mainData.difficulty
+
 selectedItem=None
 
 def SetSelectedItem(item):
