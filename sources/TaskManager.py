@@ -7,11 +7,15 @@ import GameItems
 import SaveManager
 import Localization as L
 import FunctionUtils
+import SessionManager
 
 currentItem=None
 task={"Remplir entièrement un stockage de M1":4000}
 
 def showMenu():
+    
+    SessionManager.Tutorial.IncreaseStep(19)
+    
     screenFilter = pygame.Surface((UiManager.width,UiManager.height)) # Création d'une surface pour le filtre d'écran
     screenFilter.set_alpha(50) # Réglage de la valeur alpha de la surface de filtre d'écran
     background = pygame.display.get_surface().copy() # Création d'une copie de la surface d'affichage pour l'arrière-plan

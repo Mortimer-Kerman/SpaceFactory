@@ -87,6 +87,7 @@ Settings.Keys.right : Droite
 Settings.Keys.rotate : Tourner
 Settings.Keys.inv : Inventaire
 Settings.Keys.opportunities : Opportunités
+Settings.Keys.tasks : Tâches
 Settings.EditKey : Changer la touche
 Settings.EditKey.Current : Touche actuelle: %$1
 Settings.Reset : Réinitialiser les paramètres
@@ -119,7 +120,7 @@ Tuto.15 : Oh oh! Un robot a été détécté à proximité ! Ces machines sont e
 Tuto.16 : Superbe! Cependant, en atteignant vos infrastructures, ces robots peuvent les mettre hors d'usage. Vous devez alors cliquer dessus pour les remettre en marche.
 Tuto.17 : Pour vous protéger de ce genre d'incidents, vous devrez construire à l'avenir des tourelles qui tireront automatiquement sur ces robots.
 Tuto.18 : Pour l'instant, vous devez faire du profit. Construisez un market et cliquez dessus pour voir ce qu'il a à offrir!
-Tuto.19 : Ce n'est pas avec un simple tutoriel que vous pourrez avancer à travers votre partie. Appuyez sur %$1 pour ouvrir le menu de missions.
+Tuto.19 : Ce n'est pas avec un simple tutoriel que vous pourrez avancer à travers votre partie. Appuyez sur le bouton de tâches ou sur %$1 pour ouvrir le menu de tâches.
 Tuto.20 : Vous n'aurez pas besoin de rester concentré sur cette usine éternellement! Appuyez sur le bouton d'opportunités ou sur %$1 pour ouvrir le menu d'opportunités.
 Tuto.21 : Vous connaissez maintenant tout ce qu'il faut savoir! Vous pouvez à présent vous occuper de votre usine pour l'améliorer, la protéger et la faire prospérer! Bonne chance!
 Tuto.22 : Si il vous reste des questions sur certains éléments du jeu, le bouton de question dans le menu de construction peut vous permettre d'obtenir des infos sur un élément.

@@ -169,6 +169,8 @@ class MeteorStorm(EventTemplate):
         
         crashedMeteors = []
         
+        frame = "0" if runtime%10 < 5 else "1"
+        
         for meteor in MeteorStorm.meteorsList:
             meteor[1] += timeDelta
             
@@ -177,7 +179,7 @@ class MeteorStorm(EventTemplate):
             
             UiManager.screen.blit(TextureManager.GetTexture("CrashArea",zoom*2),UiManager.WorldPosToScreenPos(pos))
             
-            UiManager.screen.blit(TextureManager.GetTexture("Meteor",zoom*2), UiManager.WorldPosToScreenPos((pos[0] + offset, pos[1] + (offset*2))))#afficher
+            UiManager.screen.blit(TextureManager.GetTexture("Meteor/" + frame,zoom*2), UiManager.WorldPosToScreenPos((pos[0] + offset, pos[1] + (offset*2))))#afficher
             
             if meteor[1] > 1:
                 crashedMeteors.append(meteor)
@@ -197,7 +199,7 @@ class MeteorStorm(EventTemplate):
         
     
     def FixedUpdate():
-        if random.randint(0, 10) == 10:
+        #if random.randint(0, 10) == 10:
             MeteorStorm.meteorsList.append([UiManager.ScreenPosToWorldPos([random.randint(-UiManager.width, 2*UiManager.width) for i in range(2)]),0])
     
     def End():
@@ -212,7 +214,7 @@ class Events:
         self.isEventHappening = False
         self.runtime=0
         self.lastEvent = 0
-        self.nextEvent = random.randint(200,1000)#prochain événement
+        self.nextEvent = 5#random.randint(200,1000)#prochain événement
         self.CurrentEvent = None
     
     def LaunchEvent(self):
@@ -226,7 +228,7 @@ class Events:
         
         if self.nextEvent<self.runtime:#si le runtime est supérieur au nextEvent
             
-            self.SetTimeBeforeNextEvent(random.randint(200,1000))#prochain événement
+            self.SetTimeBeforeNextEvent(1)#random.randint(200,1000))#prochain événement
             
             if self.isEventHappening:#si un évenement est en cours
                 self.isEventHappening = False

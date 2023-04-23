@@ -242,8 +242,7 @@ def HandleShortKeyInputs(key):
         UiManager.showMenu["inv"]=1-UiManager.showMenu["inv"]#Afficher/cacher l'inventaire
     if key == SettingsManager.GetKeybind("opportunities"):#si la clé pressée est associée à opportunities
         OpportunitiesManager.OpenMap()#ouvrir les opportunités
-    if key == pygame.K_t:#si la clé pressée est t
-        Tutorial.IncreaseStep(19)
+    if key == SettingsManager.GetKeybind("tasks"):#si la clé pressée est t
         TaskManager.showMenu()#afficher le menu de taches
     if key == pygame.K_ESCAPE:#si la clé pressée est ESCAPE
         if Pause():#On fait pause
@@ -266,6 +265,9 @@ def HandleMouseClicks(button,drone):
             elif UiManager.UIelements.get("opportunities_icon",False):
                 #Si le bouton du menu d’opportunités est choisi, on ouvre le menu d'opportunités
                 OpportunitiesManager.OpenMap()
+            elif UiManager.UIelements.get("taskmenu_icon",False):
+                #Si le bouton du menu de tâches est choisi, on ouvre le menu de taches
+                TaskManager.showMenu()
             elif UiManager.UIelements.get("help_icon",False):
                 #Si le bouton du menu d'aide est choisi, on ouvre le menu d'aide
                 HelpMenu.Open()
@@ -519,7 +521,7 @@ class Tutorial:
         if globalStep in [2,16,17,21,22,4,11]:
             Tutorial.IncreaseStep(globalStep)
         
-        if globalStep in [5,6,20]:
+        if globalStep in [5,6,19,20]:
             s = pygame.Surface((UiManager.width,UiManager.height),pygame.SRCALPHA, 32).convert_alpha()
             if globalStep == 5:
                 #Surlignage du menu de construction
@@ -528,8 +530,11 @@ class Tutorial:
                 #Surlignage du bouton pour séléctionner la foreuse
                 pygame.draw.polygon(s,(255,255,0,100),[(UiManager.width-500,UiManager.height-500),(UiManager.width-400,UiManager.height-500),(UiManager.width-400,UiManager.height-400),(UiManager.width-500,UiManager.height-400)])
             if globalStep == 20:
-                #Surlignage du bouton d'opportunités
+                #Surlignage du bouton de tâches
                 pygame.draw.polygon(s,(255,255,0,100),[(100,0),(150,0),(150,50),(100,50)])
+            if globalStep == 20:
+                #Surlignage du bouton d'opportunités
+                pygame.draw.polygon(s,(255,255,0,100),[(150,0),(200,0),(200,50),(150,50)])
             UiManager.screen.blit(s, (0,0))
         
         #On récupère les listes stockant les items à afficher en transparence
@@ -692,7 +697,7 @@ class Tutorial:
         if globalStep == 9:
             return [pygame.key.name(SettingsManager.GetKeybind("rotate"))]
         if globalStep == 19:
-            return ["T"]
+            return [pygame.key.name(SettingsManager.GetKeybind("tasks"))]
         if globalStep == 20:
             return [pygame.key.name(SettingsManager.GetKeybind("opportunities"))]
         return []

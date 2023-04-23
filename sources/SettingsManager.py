@@ -30,7 +30,8 @@ def DefaultSettingsInstance():
             "right": pygame.K_d,
             "rotate": pygame.K_r,
             "inv": pygame.K_i,
-            "opportunities" : pygame.K_m
+            "opportunities" : pygame.K_m,
+            "tasks" : pygame.K_t
         }
     }
 
