@@ -15,7 +15,7 @@ missingTexture = None#Si la texture n'existe pas
 
 loadedTextures = {"no":missingTexture}
 menuTextures = {}
-def GetTexture(textureName:str,scale:float=1,is_menu:bool=False)->pygame.Surface:
+def GetTexture(textureName:str,scale:float=1,is_menu:bool=False,verticalScale:float=None)->pygame.Surface:
     """
     Permet d'obtenir la texture
     """
@@ -32,7 +32,9 @@ def GetTexture(textureName:str,scale:float=1,is_menu:bool=False)->pygame.Surface
         elif textureName in menuTextures and is_menu:
             tex=menuTextures[textureName]
         else:
-            tex = pygame.transform.scale(tex,(scale,scale))#redimensionner l'image
+            if verticalScale == None:
+                verticalScale = scale
+            tex = pygame.transform.scale(tex,(scale,verticalScale))#redimensionner l'image
             if is_menu:
                 menuTextures[textureName] = tex
             else:

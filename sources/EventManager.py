@@ -154,11 +154,13 @@ class MeteorStorm(EventTemplate):
     
     tex = None
     meteorsList = []
+    explosionsList = []
     
     def Init():
         UiManager.Popup("Une pluie de météorites est en approche!")
         MeteorStorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/meteorStorm"),(UiManager.width,UiManager.height))
         MeteorStorm.meteorsList = []
+        MeteorStorm.explosionsList = []
         
     def Update(eventStrength:float,runtime:int):
         tex = MeteorStorm.tex.copy()
@@ -168,19 +170,21 @@ class MeteorStorm(EventTemplate):
         zoom = SaveManager.GetZoom()
         timeDelta = SaveManager.clock.get_time()/10000
         
+        MeteorStorm.displayExplosions(runtime,timeDelta)
+        
         crashedMeteors = []
         
-        frame = "0" if runtime%10 < 5 else "1"
+        frame = str((runtime%50)//10)
         
         for meteor in MeteorStorm.meteorsList:
             meteor[1] += timeDelta
             
             pos = meteor[0]
-            offset = FunctionUtils.lerp(-100, 0, meteor[1])
+            offset = FunctionUtils.lerp(-100, 0, meteor[1]) - 4
             
             UiManager.screen.blit(TextureManager.GetTexture("CrashArea",zoom*2),UiManager.WorldPosToScreenPos(pos))
             
-            UiManager.screen.blit(TextureManager.GetTexture("Meteor/" + frame,zoom*2), UiManager.WorldPosToScreenPos((pos[0] + offset, pos[1] + (offset*2))))#afficher
+            UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture("Meteor/" + frame,zoom*4,verticalScale=zoom*8),25), UiManager.WorldPosToScreenPos((pos[0] + offset, pos[1] + (offset*2) + 1)))#afficher
             
             if meteor[1] > 1:
                 crashedMeteors.append(meteor)
@@ -192,12 +196,35 @@ class MeteorStorm(EventTemplate):
             
             AudioManager.PlaySound("MeteorCrash",pos,20)
             
+            MeteorStorm.explosionsList.append([(pos[0] - 4,pos[1] - 7),0])
+            
             for x in range(-3,3):
                 for y in range(-3,3):
                     item = SaveManager.GetItemAtPos((pos[0] + x,pos[1] + y))
                     if item != None:
                         item.metadata["pv"] = 0
         
+    
+    def displayExplosions(runtime:int,timeDelta:float):
+        
+        zoom = SaveManager.GetZoom()
+        
+        endedExplosions = []
+        
+        for explosion in MeteorStorm.explosionsList:
+            explosion[1] += timeDelta * 10
+            
+            pos = explosion[0]
+            
+            frame = str(int(explosion[1] * 9))
+            
+            UiManager.screen.blit(TextureManager.GetTexture("Meteor/Crash/" + frame,zoom*8),UiManager.WorldPosToScreenPos(pos))
+            
+            if explosion[1] > 1:
+                endedExplosions.append(explosion)
+        
+        for explosion in endedExplosions:
+            MeteorStorm.explosionsList.remove(explosion)
     
     def FixedUpdate():
         #if random.randint(0, 10) == 10:
