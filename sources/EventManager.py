@@ -100,15 +100,33 @@ class Ennemis:
         UiManager.UIelements["ennemi"+str(c)]=UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])).collidepoint(pygame.mouse.get_pos())#afficher
 
 class EventTemplate:
+    """
+    Classe de base pour les différents évenements
+    """
     def Init():
+        """
+        Fonction s'exécutant au début de l'évenement
+        """
         pass
     def Update(eventStrength:float,runtime:int):
+        """
+        Fonction s'exécutant à chaque frame, utile pour l'affichage
+        """
         pass
     def FixedUpdate():
+        """
+        Fonction s'exécutant deux fois par seconde, utile pour des sous évenements
+        """
         pass
     def End():
+        """
+        Fonction s'exécutant à la fin de l'évenement
+        """
         pass
     def GetEventDuration()->int:
+        """
+        Fonction renvoyant la durée de l'évenement
+        """
         return random.randint(100,500)
 
 class EnnemyAttack(EventTemplate):
@@ -118,116 +136,160 @@ class EnnemyAttack(EventTemplate):
 
 class Sandstorm(EventTemplate):
     
-    tex = None
+    tex = None#Texture pour l'effet visuel
     
     def Init():
         UiManager.Popup("Une tempête de sable est en approche!")
+        #Récupération d'une texture pour l'effet visuel
         Sandstorm.tex = pygame.transform.scale(TextureManager.GetTexture("ground/sand"),(UiManager.width,UiManager.height))
     
     def Update(eventStrength:float,runtime:int):
-        ticksSinceInit = (pygame.time.get_ticks()%2000)/2000
-        tex = Sandstorm.tex.copy()
-        tex.set_alpha(128 * eventStrength)
-        for i in range(-1,1):
-            UiManager.screen.blit(tex, (UiManager.width*(ticksSinceInit+i), 0))#afficher
+        #On calcule un décalage à partir du nombre de ticks depuis l'initialisation
+        offset = (pygame.time.get_ticks()%2000)/2000
+        tex = Sandstorm.tex.copy()#On récupère une copie de la texture d'effet visuel
+        tex.set_alpha(128 * eventStrength)#On la rend transparente
+        for i in range(-1,1):#On place deux de ces textures, qui se déplacent horizontalement
+            UiManager.screen.blit(tex, (UiManager.width*(offset+i), 0))#afficher
     
     def End():
         UiManager.Popup("Fin de la tempête!")
 
 class SolarStorm(EventTemplate):
     
-    tex = None
+    tex = None#Texture pour l'effet visuel
     
     def Init():
         UiManager.Popup("Une tempête solaire a été détectée!")
+        #Récupération d'une texture pour l'effet visuel
         SolarStorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/radiationEffect"),(UiManager.width,UiManager.height))
         
     def Update(eventStrength:float,runtime:int):
-        tex = SolarStorm.tex.copy()
-        tex.set_alpha(150 * FunctionUtils.clamp01(cos(pygame.time.get_ticks()/500)/2+1.3) * eventStrength)
+        tex = SolarStorm.tex.copy()#On récupère une copie de la texture d'effet visuel
+        tex.set_alpha(150 * FunctionUtils.clamp01(cos(pygame.time.get_ticks()/500)/2+1.3) * eventStrength)#On la rend transparente avec une variation au cours du temps
         UiManager.screen.blit(tex, (0, 0))#afficher
         
     def End():
         UiManager.Popup("Fin de la tempête!")
 
+class Storm(EventTemplate):
+    
+    tex = None#Texture pour l'effet visuel
+    
+    def Init():
+        UiManager.Popup("Une tempête est en approche!")
+        #Récupération d'une texture pour l'effet visuel
+        Sandstorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/rain"),(UiManager.width,UiManager.height))
+    
+    def Update(eventStrength:float,runtime:int):
+        #On calcule un décalage à partir du nombre de ticks depuis l'initialisation
+        xOffset = (pygame.time.get_ticks()%2500)/2500
+        yOffset = (pygame.time.get_ticks()%1000)/1000
+        tex = Sandstorm.tex.copy()#On récupère une copie de la texture d'effet visuel
+        tex.set_alpha(200 * eventStrength)#On la rend transparente
+        #Dans un cadre de 2*2...
+        for x in range(-1,1):
+            for y in range(-1,1):
+                UiManager.screen.blit(tex, (UiManager.width*(xOffset+x)+x, UiManager.height*(yOffset+y)+y))#afficher
+    
+    def End():
+        UiManager.Popup("Fin de la tempête!")
+
 class MeteorStorm(EventTemplate):
     
-    tex = None
-    meteorsList = []
-    explosionsList = []
+    tex = None#Texture pour l'effet visuel
+    meteorsList = []#Liste des météores qui tombent actuellement
+    explosionsList = []#Liste des explosions ayant cours actuellement
     
     def Init():
         UiManager.Popup("Une pluie de météorites est en approche!")
+        #Récupération d'une texture pour l'effet visuel
         MeteorStorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/meteorStorm"),(UiManager.width,UiManager.height))
         MeteorStorm.meteorsList = []
+        #On vide les deux listes
         MeteorStorm.explosionsList = []
         
     def Update(eventStrength:float,runtime:int):
-        tex = MeteorStorm.tex.copy()
-        tex.set_alpha(100 * (cos(pygame.time.get_ticks()/500)/4+1.25) * eventStrength)
+        tex = MeteorStorm.tex.copy()#On récupère une copie de la texture d'effet visuel
+        tex.set_alpha(100 * (cos(pygame.time.get_ticks()/500)/4+1.25) * eventStrength)#On la rend transparente avec une variation au cours du temps
         UiManager.screen.blit(tex, (0, 0))#afficher
         
-        zoom = SaveManager.GetZoom()
-        timeDelta = SaveManager.clock.get_time()/10000
+        zoom = SaveManager.GetZoom()#zoom
+        timeDelta = SaveManager.clock.get_time()/10000#temps depuis la dernière frame en dizaines de secondes
         
-        MeteorStorm.displayExplosions(runtime,timeDelta)
+        MeteorStorm.displayExplosions(runtime,timeDelta)#On affiche les explosions
         
-        crashedMeteors = []
+        crashedMeteors = []#Liste des météores écrasés qu'il faudra supprimer
         
-        frame = str((runtime%50)//10)
+        frame = str((runtime%50)//10)#On calcule le numéro de la frame des météores affichée
         
+        #Pour chaque météore de la liste...
         for meteor in MeteorStorm.meteorsList:
-            meteor[1] += timeDelta
+            meteor[1] += timeDelta#On augmente l'âge du météore
             
-            pos = meteor[0]
-            offset = FunctionUtils.lerp(-100, 0, meteor[1]) - 4
+            pos = meteor[0]#Position d'arrivée du météore
+            offset = FunctionUtils.lerp(-100, 0, meteor[1]) - 4#On calcule un décalage en fonction de la position d'arrivée et de l'âge
             
-            UiManager.screen.blit(TextureManager.GetTexture("CrashArea",zoom*2),UiManager.WorldPosToScreenPos(pos))
+            #Si le météore est à la moitié de son âge...
+            if meteor[1] > 0.5:
+                #On affiche une texture au point d'arrivée du météore pour prévenir l'utilisateur
+                UiManager.screen.blit(TextureManager.GetTexture("CrashArea",zoom*2),UiManager.WorldPosToScreenPos(pos))
             
+            #On affiche la texture du météore avec le décalage approprié
             UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture("Meteor/" + frame,zoom*4,verticalScale=zoom*8),25), UiManager.WorldPosToScreenPos((pos[0] + offset, pos[1] + (offset*2) + 1)))#afficher
             
+            #Si l'âge du météore dépasse 1, on indique son crash
             if meteor[1] > 1:
                 crashedMeteors.append(meteor)
         
+        #Pour chaque météore écrasé...
         for meteor in crashedMeteors:
-            MeteorStorm.meteorsList.remove(meteor)
+            MeteorStorm.meteorsList.remove(meteor)#On le retire de la liste des météores
             
-            pos = meteor[0]
+            pos = meteor[0]#Position d'arrivée du météore
             
-            AudioManager.PlaySound("MeteorCrash",pos,20)
+            AudioManager.PlaySound("MeteorCrash",pos,20)#On joue un son d'explosioj à cette positiion
             
-            MeteorStorm.explosionsList.append([(pos[0] - 4,pos[1] - 7),0])
+            MeteorStorm.explosionsList.append([(pos[0] - 4,pos[1] - 7),0])#On ajoute un effet d'explosion à cet endroit
             
+            #Dans un carré de 5 de côté centré sur le point d'impact...
             for x in range(-3,3):
                 for y in range(-3,3):
+                    #On récupère l'item à cette position
                     item = SaveManager.GetItemAtPos((pos[0] + x,pos[1] + y))
-                    if item != None:
+                    if item != None:#Si il existe, on met sa vie à 0 pour le détruire
                         item.metadata["pv"] = 0
         
     
     def displayExplosions(runtime:int,timeDelta:float):
+        """
+        Fonction pour afficher les explosions
+        """
+        zoom = SaveManager.GetZoom()#zoom
         
-        zoom = SaveManager.GetZoom()
+        endedExplosions = []#Liste des explosions achevées
         
-        endedExplosions = []
-        
+        #Pour chaque explosion de la liste...
         for explosion in MeteorStorm.explosionsList:
+            #On augmente son âge
             explosion[1] += timeDelta * 10
             
-            pos = explosion[0]
+            pos = explosion[0]#Position de l'explosion
             
-            frame = str(int(explosion[1] * 9))
+            frame = str(int(explosion[1] * 9))#On calcule le numéro de la frame de l'explosion affichée
             
+            #On affiche la texture de l'explosion
             UiManager.screen.blit(TextureManager.GetTexture("Meteor/Crash/" + frame,zoom*8),UiManager.WorldPosToScreenPos(pos))
             
+            #Si l'âge de l'explosion est supérieur à 1, on inidique qu'elle est terminée
             if explosion[1] > 1:
                 endedExplosions.append(explosion)
         
+        #On supprime de la liste des explosions chaque explosion terminée
         for explosion in endedExplosions:
             MeteorStorm.explosionsList.remove(explosion)
     
     def FixedUpdate():
-        #if random.randint(0, 10) == 10:
+        if random.randint(0, 10) == 10:
             MeteorStorm.meteorsList.append([UiManager.ScreenPosToWorldPos([random.randint(-UiManager.width, 2*UiManager.width) for i in range(2)]),0])
     
     def End():
@@ -239,10 +301,9 @@ class Events:
     Classe servant à provoquer la destruction, à provoquer le chaos, à provoquer la chute du joueur
     """
     def __init__(self):
-        self.isEventHappening = False
         self.runtime=0
         self.lastEvent = 0
-        self.nextEvent = 5#random.randint(200,1000)#prochain événement
+        self.nextEvent = random.randint(200,1000)#prochain événement
         self.CurrentEvent = None
     
     def LaunchEvent(self):
@@ -256,29 +317,30 @@ class Events:
         
         if self.nextEvent<self.runtime:#si le runtime est supérieur au nextEvent
             
-            self.SetTimeBeforeNextEvent(1)#random.randint(200,1000))#prochain événement
+            self.SetTimeBeforeNextEvent(random.randint(200,1000))#prochain événement
             
-            if self.isEventHappening:#si un évenement est en cours
-                self.isEventHappening = False
+            if self.CurrentEvent != None:#si un évenement est en cours
                 self.CurrentEvent.End()#On met fin à l'évenement
                 self.CurrentEvent = None
                 
             elif random.randint(0,3) <= SaveManager.GetDifficultyLevel():#Sinon, avec une chance sur 3 en facile, deux sur trois en normal et 100% du temps en difficile...
                     
-                    self.isEventHappening = True#On marque le lancement d'un évenement
-                    
                     #Liste des évenements possibles
-                    possibleEvents = [MeteorStorm]
-                    """ 
+                    possibleEvents = [EnnemyAttack]
+                    
                     #Si on est sur une planète désertique...
                     if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Desertic:
                         possibleEvents.append(Sandstorm)#On rajoute l'évenement tempête de sable
                     #Si on est sur une planète morte...
-                    elif SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead:
+                    if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead:
                         possibleEvents.append(SolarStorm)#On rajoute l'évenement tempête solaire
-                        if SaveManager.GetDifficultyLevel() == 3:
-                            possibleEvents.append(MeteorStorm)
-                    """
+                    #Si on est sur une planète vivante...
+                    if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike:
+                        possibleEvents.append(SolarStorm)#On rajoute l'évenement tempête
+                    #Si cette sauvegarde est difficile...
+                    if SaveManager.GetDifficultyLevel() == 3:
+                        possibleEvents.append(MeteorStorm)#On rajoute l'évenement pluie de météores
+                    
                     self.CurrentEvent = random.choice(possibleEvents)#On choisit un évenement aléatoire
                     
                     self.CurrentEvent.Init()#On lance l'évenement
@@ -295,15 +357,18 @@ class Events:
     def UpdateCurrentEvent(self,runtime:int):
         """
         Lance la fonction de mise à jour de l'évenement actuel
-        """        
+        """
+        #Si un évenement est lancé...
         if self.CurrentEvent != None:
-            
+            #On calcule une valeur de temps avant la fin de l'évenement et une valeur après le début pour permettre aux évenements de faire une transition douce de leurs effets
             timeBeforeEnd = FunctionUtils.clamp01((self.nextEvent - (self.runtime + (runtime / 50)))/2)
             timeSinceBegin = FunctionUtils.clamp01((self.runtime + (runtime / 50) - self.lastEvent)/2)
             
+            #On prend la valeur appropriée pour le temps
             if timeBeforeEnd == 1:
                 time = timeSinceBegin
             else:
                 time = timeBeforeEnd
             
+            #On met à jour l'évenement actuel
             self.CurrentEvent.Update(time,runtime)
