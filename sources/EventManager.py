@@ -19,9 +19,9 @@ EnnemisList=[]#Liste des ennemis
 
 class Ennemis:
     """Classe ennemis, les ennemis sont une forme évoluée de problème pour le joueur"""
-    def __init__(self,co):
+    def __init__(self,co,type="Ennemy"):
         self.pos=co
-        self.name="Ennemy"
+        self.name=type
         self.pv=100
         self.rotation=random.randint(0, 3)
         
@@ -42,13 +42,14 @@ class Ennemis:
     def spawn(a=None):
         """Fonction d'apparition d'un ennemi"""
         global EnnemisList
+        type=random.choice(("Ennemy","Ennemy","Ennemy2"))
         for i in range(random.randint(1,5)):
             a=list(UiManager.GetMouseWorldPos())#on récupère la position de la souris dans le monde
             #on ajoute des nombres aléatoire aux coordonnées
             a[0]+=random.randint(-100, 100)
             a[1]+=random.randint(-100, 100)
             print(a)
-            EnnemisList.append(Ennemis(a))#Ajout de l'ennemi dans la liste EnnemiList
+            EnnemisList.append(Ennemis(a,type))#Ajout de l'ennemi dans la liste EnnemiList
     def __str__(self):
         return "Ennemis(%s)"%self.pos#affiche les coordonnées de l'ennemi
     def ia(self,runtime):
