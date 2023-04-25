@@ -20,7 +20,9 @@ tasksDatabase=[
          "reward":lambda lv: 4000,
          "stat":"MaxStoredM1",
          "target":lambda lv: 25*99,
-         "absolute":True
+         "absolute":True,
+         "minLv" : 20,
+         "getOnce" : True
     },
     {
          "title":"Task.2",
@@ -34,11 +36,29 @@ tasksDatabase=[
          "stat":"EventsOccured",
          "target":lambda lv: 5 + 2 * lv,
     },
+    {
+         "title":"Task.4",
+         "reward":lambda lv: 50 + 5 * lv,
+         "stat":"EnnemiesDestroyed",
+         "target":lambda lv: 10 + 5 * lv,
+    },
+    {
+         "title":"Task.5",
+         "reward":lambda lv: 10 + lv,
+         "stat":"MachinesFullyRepaired",
+         "target":lambda lv: 10 + 10 * lv,
+    },
 ]
 
+#Pour chaque tâche de la base de données...
 for task in tasksDatabase:
+    #On ajoute les différents paramètres optionnels si ils ne sont pas présents
     if not "absolute" in tasksDatabase:
         task["absolute"] = False
+    if not "minLv" in tasksDatabase:
+        task["minLv"] = 0
+    if not "getOnce" in tasksDatabase:
+        task["getOnce"] = False
 
 def showMenu():
     
@@ -180,12 +200,38 @@ def CreateTask(minimalLevel:int=0):
     """
     Crée une tâche avec un id aléatoire, une difficulté basée sur un niveau minimal fourni et une progression nulle
     """
+    #Niveau aléatoire incrémenté à partir du niveau minimal en fonction de la difficulté de la sauvegarde
+    taskLv = minimalLevel + [random.randint(0, 1),random.randint(0, 2),random.randint(1, 3)][SaveManager.GetDifficultyLevel()]
+    
     #ID aléatoire d'une tâche
     taskId = random.randint(0, len(tasksDatabase)-1)
+    
     #Description de la tâche associée
-    task = tasksDatabase[taskId]
-    #On renvoie la tâche avec l'ID choisi, un id compris entre le niveau minimal et le niveau minimal plus 2, la valeur de base de la statistique associée au moment de la création en fonction de est-ce que la variation doit être absolue, et marquée comme ni accomplie ni réclamée
-    return {"id":taskId,"lv":minimalLevel + random.randint(0, 2),"baseVal": 0 if task["absolute"] else Stats.GetStat(task["stat"]),"done":False,"claimed":False}
+    taskDesc = tasksDatabase[taskId]
+    
+    #Tant que l'ID de la tâche est dans la liste des tâches inchoisissables ou que le niveau minimal de la tâche dépasse le niveau choisi...
+    while taskId in SaveManager.mainData.nonChoosableTasks or taskDesc["minLv"] > taskLv:
+        #Nouvel ID aléatoire d'une tâche
+        taskId = random.randint(0, len(tasksDatabase)-1)
+        #Nouvelle description de la tâche associée
+        taskDesc = tasksDatabase[taskId]
+    
+    #Si cette tâche ne peut être choisie qu'une fois, on l'ajoute à la liste des tâches inchoisissables
+    if taskDesc["getOnce"]:
+        SaveManager.mainData.nonChoosableTasks.append(taskId)
+    
+    #Valeur de base de la statistique associée au moment de la création en fonction de est-ce que la variation doit être absolue
+    baseVal = 0 if taskDesc["absolute"] else Stats.GetStat(taskDesc["stat"])
+    
+    #On crée la tâche avec les parmètres choisis
+    task = {"id":taskId,"lv":taskLv,"baseVal":baseVal,"done":False,"claimed":False}
+    
+    #Si la valeur cible de cette tâche a été dépassée par la statistique associée...
+    if taskDesc["target"](taskLv) - task["baseVal"] < Stats.GetStat(taskDesc["stat"]):
+            task["done"] = True#On marque la tâche comme déjà accomplie
+    
+    #On renvoie la tâche
+    return task
 
 def Tick():
     """

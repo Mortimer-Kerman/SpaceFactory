@@ -22,7 +22,7 @@ import AudioManager
 import SettingsManager
 import Stats
 
-SaveFileVersion="f0.18"
+SaveFileVersion="f0.19"
 
 difficultiesDict = {0: 'Saves.Difficulty.Easy',
                     1: 'Saves.Difficulty.Normal',
@@ -56,6 +56,7 @@ class Data:
         self.opportunities=[]
         self.clearedObstacles=[]
         self.tasks=[]
+        self.nonChoosableTasks=[]
         
     def toJson(self):
         """

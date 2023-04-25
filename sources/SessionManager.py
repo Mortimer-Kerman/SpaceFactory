@@ -365,6 +365,7 @@ def HandleMouseClicks(button,drone):
                     del EventManager.EnnemisList[c]
                     del UiManager.UIelements["ennemi"+str(c)]
                     AudioManager.PlaySound("Explosion")#jouer le son d'explosion
+                    Stats.IncreaseStat("EnnemiesDestroyed")#On incrémente la statistique d'ennemis détruits
                     Tutorial.IncreaseStep(15)
                 return False
 
@@ -375,6 +376,10 @@ def HandleMouseClicks(button,drone):
                 clickedItem.metadata["pv"]+=25
                 UiManager.LightPopup("Restauration des points de vie de l'appareil : pv "+str(clickedItem.metadata["pv"])+"/100")
                 AudioManager.PlaySound("Healing")
+                #Si la santé de l'objet égale ou dépasse 100...
+                if clickedItem.metadata["pv"] >= 100:
+                    #On incrémente la statistique de machines réparées
+                    Stats.IncreaseStat("MachinesFullyRepaired")
                 return False
             if clickedItem.name in ["Sorter","Storage","Market","Teleporter"]:
                 if clickedItem.name == "Market":
