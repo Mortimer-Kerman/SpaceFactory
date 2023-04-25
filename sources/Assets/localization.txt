@@ -326,6 +326,9 @@ Market.Buy : Acheter
 
 //TaskManager
 TaskMenu.Title : Menu de tâches
+Task.1 : Remplir entièrement un stockage de M1
+Task.2 : Envoyer %$1 expéditions
+Task.3 : Survivre a %$1 évenements
 
 //Menu d'aide
 HelpMenu.title : Menu d'aide

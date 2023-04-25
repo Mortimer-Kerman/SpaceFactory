@@ -83,6 +83,25 @@ def OpenMap():
         oppFrame.relax(True)
         listFrame.pack(oppFrame)
         
+        """
+        Thomas:
+        Je tiens à noter un fait.
+        Dans ce cas, la graine sert d'ID pour le cadre. Or on ne peut pas utiliser deux fois le même ID dans un menu.
+        Donc techniquement, si un joueur se retrouve avec deux fois le même ID, le jeu va lamentablement planter.
+        Or les graines sont comprises entre -9^9 et + 9^9.
+        
+        DONC:
+        
+        Les probabilités qu'un joueur plante dans ce cas est la probabilité qu'il tire deux fois la même valeur dans un
+        intervalle de 9^9*2 nombres, soit 774840978.
+        Autrement dit, les probabilités qu'il tire deux fois la même graine avec cinq lancers est de 1-(774840977/774840978)^4,
+        soit 5.16234966*10^-9.
+        
+        Ca veut donc dire que d'après la loi binomiale, même en faisant deux millions de tirages, les probabilités que ça arrive sont de un pourcent.
+        
+        Si un utilisateur tombe sur ce bug et vient s'en plaindre, soit ce jeu a cartonné, soit il avait plus de chances de gagner à l'euromillion.
+        """
+        
         #Création d'un bouton contenant le titre de l'opportunité
         b = menu.add.button(FunctionUtils.ReduceStr(opportunity.GetTitle(), 30), lambda opp=opportunity:OpenOpportunity(opp),font_size=int(columnW/18),font_color=(255,255,255))
         
@@ -93,7 +112,7 @@ def OpenMap():
         oppFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
         
         #Ajout de texte contenant le temps de voyage de l'opportunité
-        subtext = menu.add.label("Temps de voyage: " + Opportunity.FormatTravelTime(opportunity.GetWalkDistance()), font_name=TextureManager.GetFont("nasalization",int(columnW/27)),font_color=(255,255,255))
+        subtext = menu.add.label("Temps de voyage: " + Opportunity.FormatTravelTime(opportunity.GetWalkDistance()), font_name=TextureManager.GetFont("nasalization",int(columnW/27)), font_color=(255,255,255))
         oppFrame.pack(subtext)
         
         #On rajoute un petit espace vide sous le cadre
@@ -169,6 +188,8 @@ def OpenMap():
     #runtime permet de mesurer l'espacement entre deux mises à jour du menu
     global runtime
     runtime = 0
+    
+    Stats.IncreaseStat("ExpeditionsSent")
     
     #Fonction temporaire permettant de faire des mises à jour du menu
     def MenuTick():

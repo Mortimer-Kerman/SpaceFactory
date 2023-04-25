@@ -218,6 +218,9 @@ def Init():
         detailsFrame.pack(desc)
         detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
         detailsFrame.pack(icon, align=pygame_menu.locals.ALIGN_CENTER)
+        
+        #On force le rafraîchissement du menu
+        menu.force_surface_update()
     
     #Fonction temporaire permettant de régler le texte de la description
     def SetDescText(text:str):

@@ -12,21 +12,7 @@ import json
 
 import SaveManager
 
-def StatsTemplate()->dict:
-    """
-    Renvoie un dictionnaire de statistiques par défaut
-    """
-    return {
-        "ExpeditionsSent":0,
-        "MinedM1":0,
-        "MinedCopper":0,
-        "DestroyedEnnemies":0,
-        "EventsOccured":0,
-        "ObjectsDestroyed":0,
-        "ObjectsPlaced":0
-    }
-
-current = StatsTemplate()
+current = {}
 
 def Load():
     """
@@ -36,12 +22,15 @@ def Load():
     if not SaveManager.SaveLoaded():
         return
     
+    global current
+    
     path = "./Saves/" + SaveManager.saveName + "/stats.json"
     
     if os.path.isfile(path):
         with open(path, "r") as f:
-            global current
             current = json.load(f)
+    else:
+        current = {}
 
 def Save():
     """
@@ -59,7 +48,7 @@ STATS_CHANGED = pygame.USEREVENT + 1
 
 def IncreaseStat(statName:str,increment:float=1):
     """
-    Modifie une statistique
+    Incrémente une statistique
     """
     #Si cette statistique n'existe pas dans la liste des statistiques, on l'initialise à 0
     if not statName in current:
@@ -70,3 +59,24 @@ def IncreaseStat(statName:str,increment:float=1):
     
     #On incrémente la statistique
     current[statName] += increment
+
+def SetStat(statName:str,value:float):
+    """
+    Modifie une statistique
+    """
+    #Si cette statistique n'existe pas dans la liste des statistiques, on l'initialise à 0
+    if not statName in current:
+        current[statName] = 0
+    #On incrémente la statistique de la différence entre la valeur actuelle et la valeur à atteindre
+    IncreaseStat(statName,value-current[statName])
+
+def GetStat(statName:str):
+    """
+    Renvoie une statistique
+    """
+    #Si cette statistique n'existe pas dans la liste des statistiques, on l'initialise à 0
+    if not statName in current:
+        current[statName] = 0
+    #On renvoie la statistique
+    return current[statName]
+
