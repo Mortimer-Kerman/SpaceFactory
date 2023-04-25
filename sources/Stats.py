@@ -18,7 +18,7 @@ def Load():
     """
     Chargement des statistiques
     """
-    
+    #Si aucune sauvegarde n'est chargée, on annule
     if not SaveManager.SaveLoaded():
         return
     
@@ -26,20 +26,24 @@ def Load():
     
     path = "./Saves/" + SaveManager.saveName + "/stats.json"
     
+    #Si le fichier de statistiques existe...
     if os.path.isfile(path):
+        #On charge le fichier de statistiques
         with open(path, "r") as f:
             current = json.load(f)
     else:
+        #Sinon, un dictionnaire de statistiques vide
         current = {}
 
 def Save():
     """
     Sauvegarde des statistiques
     """
-    
+    #Si aucune sauvegarde n'est chargée, on annule
     if not SaveManager.SaveLoaded():
         return
     
+    #On sauvegarde les statistiques dans un fichier json dans la sauvegarde
     with open("./Saves/" + SaveManager.saveName + "/stats.json", "w") as f:
         f.write(json.dumps(current, default=str, indent = 4))
 
@@ -79,4 +83,3 @@ def GetStat(statName:str):
         current[statName] = 0
     #On renvoie la statistique
     return current[statName]
-
