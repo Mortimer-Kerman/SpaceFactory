@@ -11,12 +11,9 @@ import pygame_menu
 import random
 from datetime import datetime, timedelta
 
-import SettingsManager
 import SaveManager
 import UiManager
 import FunctionUtils
-import NoiseTools
-import numpy
 import Localization
 import TextureManager
 import PlanetGenerator
@@ -148,7 +145,6 @@ def OpenMap():
             #Si le caractère est un espace, on le note comme dernier espace rencontré
             if text[i] == " ":
                 lastSpace = i
-            
             #Si la ligne constituée jusqu'à présent (longueur du texte moins l'index de la dernière coupure) dépasse la longueur d'une ligne...
             if i - cuts[-1] > lineLength:
                 #On rajoute une coupure au niveau du dernier espace pour ne pas couper les mots

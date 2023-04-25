@@ -324,4 +324,7 @@ Market.Buy : Acheter
 //Une expédition commerciale vers l'infini et au-delà
 
 //TaskManager
-TaskManager.Title : Gestionnaire de taches
+TaskMenu.Title : Menu de tâches
+
+//Menu d'aide
+HelpMenu.title = Menu d'aide

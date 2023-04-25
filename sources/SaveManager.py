@@ -21,7 +21,7 @@ import FunctionUtils
 import AudioManager
 import SettingsManager
 
-SaveFileVersion="f0.17"
+SaveFileVersion="f0.18"
 
 difficultiesDict = {0: 'Saves.Difficulty.Easy',
                     1: 'Saves.Difficulty.Normal',
@@ -54,7 +54,7 @@ class Data:
         self.difficulty=1
         self.opportunities=[]
         self.clearedObstacles=[]
-        
+        self.tasks=[]
         
     def toJson(self):
         """
@@ -93,10 +93,12 @@ def Load(name:str)->bool:
                 if not UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),None,None):
                     print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
                     return False
+                mainData.saveVersion = SaveFileVersion
         except:
             if not UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),None,None):
                 print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
                 return False
+            mainData.saveVersion = SaveFileVersion
         for item in mainData.items.values():
             a=GameItems.Item.ReadDictRepresentation(item)
             mainData.items[str(list(a.pos))]=a

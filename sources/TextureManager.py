@@ -20,7 +20,7 @@ def GetTexture(textureName:str,scale:float=1,is_menu:bool=False,verticalScale:fl
     Permet d'obtenir la texture
     """
     textureName += ".png"
-    if not textureName in loadedTextures.keys():#si la texture n'est pas chargée
+    if not TextureExists(textureName):#si la texture n'est pas chargée
         try:#tenter
             loadedTextures[textureName] = pygame.image.load(texturesPath + textureName + ".png").convert_alpha()#chargement image
         except:#en cas d'erreur
@@ -41,6 +41,14 @@ def GetTexture(textureName:str,scale:float=1,is_menu:bool=False,verticalScale:fl
                 zoomedTextures[textureName] = tex
                 
     return tex
+
+def TextureExists(textureName:str):
+    """
+    Dit si une texture existe ou a été chargée
+    """
+    if not textureName.endswith(".png"):
+        textureName += ".png"
+    return textureName in loadedTextures.keys()
 
 def LoadAllTextures():
     """
