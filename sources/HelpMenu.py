@@ -81,6 +81,7 @@ def Init():
     detailsFrame.pack(desc)
     
     #Tableau qui peut contenir les différents crafts d'un objet
+    global table
     table = menu.add.table(font_size=15, border_width=0)
     detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
     
@@ -94,18 +95,12 @@ def Init():
         #Affichage du titre
         title.set_title(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + item)))
         
-        #Les tableaux de pygame_menu ne contiennent pas de fonction pour supprimer toutes les lignes facilement
-        rowsLeft = True
-        #Tant qu'il reste des lignes...
-        while rowsLeft:
-            #Oon essaie de récupérer la ligne en haut du tableau puis de la supprimer du tableau et du menu
-            try:
-                currentRow = table.get_cell(1,1).get_frame()
-                table.remove_row(currentRow)
-                menu.remove_widget(currentRow)
-            #En cas d'erreur, il ne reste plus de lignes dans le tableau
-            except AssertionError:
-                rowsLeft = False
+        #Les tableaux de pygame_menu ne contiennent pas de fonction pour supprimer toutes les lignes facilement, il faut donc le supprimer et le recréer
+        global table
+        detailsFrame.unpack(table)
+        menu.remove_widget(table)
+        table = menu.add.table(font_size=15, border_width=0)
+        detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
         
         #Si l'item a une description, on l'affiche, sinon on vide la zone de description
         descText = Localization.GetLoc('Items.d.' + item)
@@ -141,27 +136,21 @@ def Init():
 
         if item in GameItems.craftResults:
             
-            #On récupère l'item avec lequel on peut crafter cet item
-            i=GameItems.findCraft(item)
+            #On récupère l'item et le craft avec lequel on peut crafter cet item
+            i,craft=GameItems.findCraft(item)
             
-            #On récupère les crafts de l'item
-            crafts = GameItems.craft[i]
+            #On crée une ligne contenant déjà le nm de l'item utilisé pour le craft
+            row = [Localization.GetLoc('Items.'+i)+" : "]
             
-            #Pour chacun des crafts...
-            for craft in crafts:
-                
-                #On crée une ligne contenant déjà le nm de l'item utilisé pour le craft
-                row = [Localization.GetLoc('Items.'+i)+" : "]
-                
-                #A partir de ce point, c'est la même chose qu'entre la ligne 126 et 137
-                for c in craft["c"]:
-                    row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + c)))
-                    row.append(" + ")
-                
-                row[-1] = " = "
-                row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + craft["r"])))
-                
-                table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
+            #A partir de ce point, c'est la même chose qu'entre la ligne 126 et 137
+            for c in craft["c"]:
+                row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + c)))
+                row.append(" + ")
+            
+            row[-1] = " = "
+            row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + craft["r"])))
+            
+            table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
         
         #Si la texture de cet item existe...
         if TextureManager.TextureExists(item):
