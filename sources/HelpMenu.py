@@ -121,7 +121,7 @@ def Init():
             crafts = GameItems.craft[item]
             
             #Pour chacun des crafts...
-            for craft in list(crafts):
+            for craft in crafts:
                 
                 #On crée une ligne
                 row = []
