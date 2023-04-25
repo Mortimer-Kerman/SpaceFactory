@@ -57,7 +57,7 @@ def Save():
 #Évenement lorsqu'une statistique est modifiée
 STATS_CHANGED = pygame.USEREVENT + 1
 
-def SetStat(statName:str,increment:float):
+def IncreaseStat(statName:str,increment:float=1):
     """
     Modifie une statistique
     """

@@ -5,7 +5,7 @@ import pygame
 import pygame_menu
 import UiManager
 import TextureManager
-import GameItems
+import SessionManager
 import SaveManager
 import Localization as L
 import FunctionUtils
@@ -115,7 +115,7 @@ def showMenu():
     
     detailsFrame.pack(btn,align=pygame_menu.locals.ALIGN_CENTER)
 
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),SessionManager.TickModules()))
 
 def Buy():
     # Vérifie que l'utilisateur a sélectionné un item à acheter

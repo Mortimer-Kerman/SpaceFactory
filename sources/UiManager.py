@@ -661,9 +661,9 @@ class LightPopup:
 MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
 
 def DisplayBackground():
-    """Affichage du fond, et mise à jour du son"""
+    """Affichage du fond, et mise à jour des modules"""
     MenuBackground.draw(screen)
-    AudioManager.Tick()
+    SessionManager.TickModules()
 
 def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground)->bool:
     """Menu de prévention pour s'assurer de l'action utilisateur"""

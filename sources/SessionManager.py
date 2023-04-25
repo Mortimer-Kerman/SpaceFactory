@@ -106,11 +106,9 @@ def Play(saveName:str,**kwargs):
         if showUi:
             UiManager.DisplayUi()#Afficher l'Interface Utilisateur
         
-        Tutorial.Tick()
+        Tutorial.Tick()#Met à jour le tutoriel
         
         pygame.display.update()#Mise à jour de l'affichage Pygame
-        
-        AudioManager.Tick()#Met à jour le gestionnaire de sons
         
         HandleLongKeyInputs()#gestion des longs clics
         
@@ -152,11 +150,9 @@ def Play(saveName:str,**kwargs):
             if event.type == pygame.MOUSEBUTTONUP:#si le bouton de la souris est relaché
                     if event.button == 3:#s'il s'agit du bouton droit
                         laser = lambda : None#pas de laser
-            
-            if event.type == Stats.STATS_CHANGED:
-                print(event.changeData)
-            
-        SaveManager.TickClock()#on mets à jour l'horloge des FPS
+        
+        TickModules()#Met à jour les modules de fonctionnement
+        
         runtime+=SaveManager.clock.get_time() / 10#on augmente le runtime
         if runtime > 50:#si le runtime est supérieur à 50
             runtime = 0#on reset le runtime
@@ -166,8 +162,7 @@ def Play(saveName:str,**kwargs):
                 if not SaveManager.IsTutorial() or Tutorial.GetGlobalStep() == 23:
                     EventM.LaunchEvent()#Lancer un événement
     return True
-    
-        
+
 def DisplayObjects(runtime:int):
     """Affiche les objets de manière dynamique"""
     
@@ -397,6 +392,7 @@ def HandleMouseClicks(button,drone):
                 UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")#Affiche la LightPopup lié au minage
                 if a == "Copper":
                     Tutorial.IncreaseStep(3)
+                    Stats.IncreaseStat("MinedCopper")
             else:
                 SaveManager.ClearObstacle(UiManager.GetMouseWorldPos())
         
@@ -408,8 +404,7 @@ PauseMenuBackground = None#variable stockant le fond du menu de pause
         
 def DisplayPauseMenuBackground():
     """Affiche le fond du menu de pause"""
-    SaveManager.TickClock()#actualisation de l'horloge interne
-    AudioManager.Tick()#Actualisation du son
+    TickModules()#Actualisation de différents modules
     if PauseMenuBackground != None:#si le fond du menu de pause est différent de None
         UiManager.screen.blit(PauseMenuBackground,(0,0))#afficher le fond
         
@@ -442,9 +437,16 @@ def Pause():
     
     pauseMenu.mainloop(UiManager.screen,DisplayPauseMenuBackground)#affiche le menu
     
-    
     PauseMenuBackground = None
     return quitGame
+
+def TickModules():
+    """
+    Exécute les fonctions de tick des différents modules
+    """
+    SaveManager.TickClock()#Actualisation de l'horloge interne
+    AudioManager.Tick()#Actualisation du son
+    TaskManager.Tick()#Actualisation des tâches
 
 class Tutorial:
     """

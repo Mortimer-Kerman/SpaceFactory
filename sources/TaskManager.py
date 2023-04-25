@@ -11,6 +11,7 @@ import SaveManager
 import Localization as L
 import FunctionUtils
 import SessionManager
+import Stats
 
 
 tasksDatabase=[
@@ -79,3 +80,15 @@ def CreateTask(minimalLevel:int=0):
     Crée une tâche avec un id aléatoire, une difficulté basée sur un niveau minimal fourni et une progression nulle
     """
     return {"id":random.randint(0, len(tasksDatabase)-1),"lv":random.randint(minimalLevel, minimalLevel+2),"progress":0}
+
+def Tick():
+    
+    for event in pygame.event.get(eventtype=Stats.STATS_CHANGED):
+        
+        data = event.changeData
+        
+        print(data)
+
+
+
+

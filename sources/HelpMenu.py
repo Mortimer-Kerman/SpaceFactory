@@ -14,7 +14,7 @@ import FunctionUtils
 import GameItems
 import MarketManager
 import TextureManager
-import SaveManager
+import SessionManager
 import AudioManager
 
 #Onglets qui ne sont pas générés automatiquement
@@ -265,7 +265,6 @@ def Open(tab:str=None):
     #Fonction temporaire pour afficher le fond du menu
     def DisplayBackground():
         UiManager.screen.blit(background,(0,0))
-        AudioManager.Tick()
     
     #On active le menu
     menu.enable()
@@ -280,7 +279,7 @@ def Open(tab:str=None):
         button.apply()
     
     #Boucle du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),SaveManager.TickClock()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),SessionManager.TickModules()))
 
 def GetTabTitle(tab):
     if type(tab) == str:

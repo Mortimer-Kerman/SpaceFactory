@@ -141,7 +141,7 @@ def OpenSettings(background):
             LoadSettings()
             SettingsMenu.disable()
             return
-        UiManager.WarnUser(Localization.GetLoc('Game.Warning'), Localization.GetLoc('Settings.NotSaved'), lambda:(LoadSettings(), SettingsMenu.disable()), None)
+        UiManager.WarnUser(Localization.GetLoc('Game.Warning'), Localization.GetLoc('Settings.NotSaved'), lambda:(LoadSettings(), SettingsMenu.disable()), None, background)
         
         
     topBar = SettingsMenu.add.frame_h(780,50)

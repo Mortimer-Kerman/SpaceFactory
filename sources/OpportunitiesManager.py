@@ -20,6 +20,7 @@ import PlanetGenerator
 import OpportunitiesInteractions
 import AudioManager
 import SessionManager
+import Stats
 
 #Menu actuellement ouvert
 openedMap = None
@@ -172,8 +173,6 @@ def OpenMap():
     #Fonction temporaire permettant de faire des mises à jour du menu
     def MenuTick():
         global runtime
-        #On met à jour l'horloge
-        SaveManager.TickClock()
         #On incrémente runtime du temps passé depuis la dernière mise à jour divisé par 8
         runtime+=SaveManager.clock.get_time() / 8
         #Si une mise à jour du menu est nécessaire ou que la dernière mise à jour a eu lieu depuis trop longtemps...
@@ -183,7 +182,7 @@ def OpenMap():
             RefreshMenu()
     
     #Boucle de mise à jour du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick(),AudioManager.Tick()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick(),SessionManager.TickModules()))
 
 def RefreshMenu():
     """
