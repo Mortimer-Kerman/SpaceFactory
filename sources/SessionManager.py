@@ -26,7 +26,7 @@ import TaskManager
 import AnimationsManager
 import EventManager
 import HelpMenu
-
+import Stats
 
 
 
@@ -82,7 +82,7 @@ def Play(saveName:str,**kwargs):
     
     AudioManager.BeginGameAmbience()
 
-    pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP, pygame.MOUSEWHEEL, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION,AudioManager.MUSIC_ENDED, AudioManager.AMBIENCE_ENDED,AudioManager.SOUND_ENDED])#réduit le nombre d'évent
+    pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP, pygame.MOUSEWHEEL, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION, Stats.STATS_CHANGED] + AudioManager.GetAllSoundsEvents())#réduit le nombre d'évent
     
     while SaveManager.SaveLoaded():#tant que la sauvegarde est chargée
         
@@ -152,7 +152,10 @@ def Play(saveName:str,**kwargs):
             if event.type == pygame.MOUSEBUTTONUP:#si le bouton de la souris est relaché
                     if event.button == 3:#s'il s'agit du bouton droit
                         laser = lambda : None#pas de laser
-        
+            
+            if event.type == Stats.STATS_CHANGED:
+                print(event.changeData)
+            
         SaveManager.TickClock()#on mets à jour l'horloge des FPS
         runtime+=SaveManager.clock.get_time() / 10#on augmente le runtime
         if runtime > 50:#si le runtime est supérieur à 50

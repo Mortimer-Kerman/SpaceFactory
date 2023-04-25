@@ -20,6 +20,7 @@ import Localization as L
 import FunctionUtils
 import AudioManager
 import SettingsManager
+import Stats
 
 SaveFileVersion="f0.18"
 
@@ -122,6 +123,8 @@ def Load(name:str)->bool:
     if type(mainData.items) == dict:
         mainData.items = FunctionUtils.NumpyDict(mainData.items)
     
+    Stats.Load()
+    
     print("File loaded!")
     return True
 
@@ -145,6 +148,8 @@ def Save():
             "gameMode":mainData.gamemode
         }
         f.write(json.dumps(metaData, default=str, indent = 4))
+    
+    Stats.Save()
     
     print("File saved!")
 

@@ -15,14 +15,21 @@ import UiManager
 import FunctionUtils
 import SaveManager
 
-MUSIC_ENDED = pygame.USEREVENT#MUSIC_ENDED est un événement
-AMBIENCE_ENDED = pygame.USEREVENT + 1
-SOUND_ENDED = pygame.USEREVENT + 2
+#Évenements lié au son
+MUSIC_ENDED = pygame.USEREVENT + 2
+AMBIENCE_ENDED = pygame.USEREVENT + 3
+SOUND_ENDED = pygame.USEREVENT + 4
 
 lastRandomMusic = None#Variable stockant la dernière musique aléatoire jouée
 
 
 loadedSounds = {}
+
+def GetAllSoundsEvents():
+    """
+    Renvoie une liste avec tous les évenements de son
+    """
+    return [MUSIC_ENDED,AMBIENCE_ENDED] + [SOUND_ENDED + i for i in range(pygame.mixer.get_num_channels()-1)]
 
 def Init():
     """
