@@ -17,6 +17,30 @@ import TextureManager
 import SaveManager
 import AudioManager
 
+#Onglets qui ne sont pas générés automatiquement
+MenuTabs = [
+    {
+        "id" : "Sandstorm",
+        "title" : "HelpMenu.Sandstorm",
+        "desc" : "HelpMenu.Sandstorm.Desc",
+        "thumb" : "helpMenu/Sandstorm",
+        "thumbSize" : (370,176)
+    },
+    {
+        "id" : "SolarStorm",
+        "title" : "HelpMenu.SolarStorm",
+        "desc" : "HelpMenu.SolarStorm.Desc",
+        "thumb" : None
+    },
+    {
+        "id" : "MeteorRain",
+        "title" : "HelpMenu.MeteorRain",
+        "desc" : "HelpMenu.MeteorRain.Desc",
+        "thumb" : "helpMenu/MeteorRain",
+        "thumbSize" : (370,230)
+    },
+]
+
 #Instance de menu à ouvrir
 menu = None
 
@@ -30,8 +54,11 @@ def Init():
     """
     Le panneau d'aide étant lent à charger, il est préférable de le créer en amont.
     """
-    #On récupère la liste des onglets à afficher
-    tabsList = list(set(GameItems.menuElements + list(GameItems.craft.keys()) + list(GameItems.allTransportableItems.keys()) + list(MarketManager.marketItem.keys()))) + ["delete"]
+    #On récupère la liste des onglets à afficher: Les onglets spécifiés plus haut et des onglets générés automatiquement
+    tabsList = MenuTabs + list(set(GameItems.menuElements + list(GameItems.craft.keys()) + list(GameItems.allTransportableItems.keys()) + list(MarketManager.marketItem.keys()))) + ["delete"]
+    
+    #On trie la liste en fonction du titre traduit
+    tabsList = sorted(tabsList,key=lambda tab:GetTabTitle(tab).lower())
     
     #Création du menu
     global menu
@@ -51,7 +78,10 @@ def Init():
     listFrame.pack(menu.add.vertical_margin(5))
     
     #Pour onglet de la list des onglets...
-    for c in tabsList:
+    for tab in tabsList:
+        
+        if type(tab) == str:
+            tab = TabStrToTabDict(tab)
         
         #Création d'un cadre qui est placé dans la liste des onglets
         helpFrame = menu.add.frame_v(380, 50, background_color=(50, 50, 50), padding=0)
@@ -59,7 +89,7 @@ def Init():
         listFrame.pack(helpFrame)
         
         #Création d'un bouton contenant le titre de l'onglet
-        b = menu.add.button(FunctionUtils.ReduceStr(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + c)), 23),lambda item=c:OpenMenu(item),button_id=c)
+        b = menu.add.button(FunctionUtils.ReduceStr(FunctionUtils.FirstLetterUpper(Localization.GetLoc(tab["title"])), 23),lambda tabToOpen=tab:OpenMenu(tabToOpen),button_id=tab["id"])
         
         #On le lie au cadre pour que tout le bouton devienne cliquable
         FunctionUtils.EncapsulateButtonInFrame(b, helpFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
@@ -90,10 +120,13 @@ def Init():
     detailsFrame.pack(icon, align=pygame_menu.locals.ALIGN_CENTER)
     
     #Fonction temporaire permettant d'ouvrir un onglet et d'afficher sa description
-    def OpenMenu(item):
+    def OpenMenu(tab):
+        
+        if type(tab) == str:
+            tab = TabStrToTabDict(tab)
         
         #Affichage du titre
-        title.set_title(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + item)))
+        title.set_title(FunctionUtils.FirstLetterUpper(Localization.GetLoc(tab["title"])))
         
         #Les tableaux de pygame_menu ne contiennent pas de fonction pour supprimer toutes les lignes facilement, il faut donc le supprimer et le recréer
         global table
@@ -102,18 +135,18 @@ def Init():
         table = menu.add.table(font_size=15, border_width=0)
         detailsFrame.pack(table, align=pygame_menu.locals.ALIGN_CENTER)
         
-        #Si l'item a une description, on l'affiche, sinon on vide la zone de description
-        descText = Localization.GetLoc('Items.d.' + item)
-        if descText != 'Items.d.' + item:
+        #Si l'onglet a une description, on l'affiche, sinon on vide la zone de description
+        descText = Localization.GetLoc(tab["desc"])
+        if descText != tab["desc"]:
             SetDescText(descText)
         else:
             SetDescText("")
         
-        #Si l'item peut être utilisé pour faire des crafts...
-        if item in GameItems.craft:
+        #Si l'item dont traite l'onglet peut être utilisé pour faire des crafts...
+        if tab["id"] in GameItems.craft:
             
             #On récupère les crafts de l'item
-            crafts = GameItems.craft[item]
+            crafts = GameItems.craft[tab["id"]]
             
             #Pour chacun des crafts...
             for craft in crafts:
@@ -133,11 +166,12 @@ def Init():
                 
                 #On ajoute la ligne au tableau
                 table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
-
-        if item in GameItems.craftResults:
+        
+        #Si l'item dont traite l'onglet est le résultat d'un craft...
+        if tab["id"] in GameItems.craftResults:
             
             #On récupère l'item et le craft avec lequel on peut crafter cet item
-            i,craft=GameItems.findCraft(item)
+            i,craft=GameItems.findCraft(tab["id"])
             
             #On crée une ligne contenant déjà le nm de l'item utilisé pour le craft
             row = [Localization.GetLoc('Items.'+i)+" : "]
@@ -152,10 +186,10 @@ def Init():
             
             table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
         
-        #Si la texture de cet item existe...
-        if TextureManager.TextureExists(item):
+        #Si la miniature de cet onglet existe...
+        if TextureManager.TextureExists(tab["thumb"]):
             #On l'affiche
-            icon.set_surface(TextureManager.GetTexture(item,100,True))
+            icon.set_surface(TextureManager.GetTexture(tab["thumb"],tab["thumbSize"][0],True,tab["thumbSize"][1]))
         else:
             #Sinon, on affiche la texture d'objet manquant, suffisament petite pour être invisible
             icon.set_surface(TextureManager.GetTexture("no",0.1,True))
@@ -247,3 +281,20 @@ def Open(tab:str=None):
     
     #Boucle du menu
     menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),SaveManager.TickClock()))
+
+def GetTabTitle(tab):
+    if type(tab) == str:
+        return Localization.GetLoc('Items.' + tab)
+    return Localization.GetLoc(tab["title"])
+
+def TabStrToTabDict(tab:str)->dict:
+    """
+    Crée un dictionnaire d'onglet à partir du code str d'un onglet généré automatiquement
+    """
+    return {
+        "id" : tab,
+        "title" : "Items." + tab,
+        "desc" : "Items.d." + tab,
+        "thumb" : tab,
+        "thumbSize" : (100,100)
+    }

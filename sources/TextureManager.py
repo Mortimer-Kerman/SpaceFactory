@@ -46,6 +46,8 @@ def TextureExists(textureName:str):
     """
     Dit si une texture existe ou a été chargée
     """
+    if type(textureName) != str:
+        return False
     if not textureName.endswith(".png"):
         textureName += ".png"
     return textureName in loadedTextures.keys()

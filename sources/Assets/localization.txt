@@ -160,6 +160,7 @@ Items.GreenBlock : Bloc vert
 Items.BlackBlock : Bloc noir
 Items.WhiteBlock : Bloc blanc
 Items.M2 : M2
+Items.delete : détruire
 
 //Description des items
 Items.d.Drill : La foreuse est une machine servant à extraire des minerais automatiquement
@@ -327,4 +328,10 @@ Market.Buy : Acheter
 TaskMenu.Title : Menu de tâches
 
 //Menu d'aide
-HelpMenu.title = Menu d'aide
+HelpMenu.title : Menu d'aide
+HelpMenu.Sandstorm : Tempête de sable
+HelpMenu.Sandstorm.Desc : Les tempêtes de sable peuvent arriver de temps en temps dans les mondes désertiques. Elles réduisent fortement la visibilité et peuvent, à la longue, endommager certaines machines fragiles.
+HelpMenu.SolarStorm : Tempête solaire
+HelpMenu.SolarStorm.Desc : Les tempêtes solaires peuvent arriver de temps en temps sur les planètes mortes. Elles inondent le monde de radiations, pouvant endommager les mécanismes sensibles.
+HelpMenu.MeteorRain : Pluie de météores
+HelpMenu.MeteorRain.Desc : Les pluies de météores peuvent arriver de temps en temps dans les sauvegardes difficiles. Les météores chutant sur des installations peuvent leur causer de gros dégâts.
