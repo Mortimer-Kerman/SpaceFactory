@@ -24,7 +24,7 @@ import pygame
 
 menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","CopperWall","Turret","NanoFabricator","Synthetron"]#éléments du menu de sélection
 
-allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"NanoM1":(50,10,110),"PlasmaGold":(220,170,44),"SyntheticGold":(230,130,50)}
+allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"MeltedGold":(210,160,50),"NanoM1":(50,10,110),"PlasmaGold":(220,170,44),"SyntheticGold":(230,130,50)}
 
 Anim=1
 
@@ -33,6 +33,7 @@ TeleportPoint=[]
 craft={
     #id_block:{"c":(item 1, item 2),"r":résultat}
     "Furnace":{"c":("Copper","Coal"),"r":"MeltedCopper"},
+    "Furnace.1":{"c":("Gold","Coal"),"r":"MeltedGold"},
     "MolecularAssembler":{"c":("M1","Gold"),"r":"M2"},
     "NanoFabricator":{"c":("M1","MeltedCopper"),"r":"NanoM1"},
     "Synthetron":{"c":("Copper","Gold"),"r":"SyntheticGold"},
@@ -255,6 +256,13 @@ class Item:
             if all(self.IsInInv(i)!="NotIn" for i in c["c"]):
                 if all(self.GetFromInv(i) for i in c["c"]):
                     self.metadata["inv"]=c["r"]
+            else:
+                try:
+                    c=craft[self.name+".1"]
+                    if all(self.IsInInv(i)!="NotIn" for i in c["c"]):
+                        if all(self.GetFromInv(i) for i in c["c"]):
+                            self.metadata["inv"]=c["r"]
+                except:pass
         
         item=self.GetItemToGive()
         if item is not None:
