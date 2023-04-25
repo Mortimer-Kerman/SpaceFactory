@@ -44,7 +44,6 @@ craft={
 craftResults=[]
 for j in craft.values():
     for i in list(j):
-        print(i)
         craftResults.append(i["r"])
 def findCraft(item):
     """
