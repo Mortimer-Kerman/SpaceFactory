@@ -3,16 +3,15 @@
 #importation des bibliothèques externes
 import random
 import pygame
-import numpy as np
-#importation des fichier local
+#importation des fichiers locaux
 import UiManager
 import SaveManager
 import TextureManager
 import FunctionUtils
 import AudioManager
 import PlanetGenerator
-import GameItems
-#importation de copysign du module système math
+import Stats
+#importation de la fonction cosinus du module système math
 from math import cos
 
 EnnemisList=[]#Liste des ennemis
@@ -115,7 +114,7 @@ class EventTemplate:
         pass
     def FixedUpdate():
         """
-        Fonction s'exécutant deux fois par seconde, utile pour des sous évenements
+        Fonction s'exécutant deux fois par seconde, utile pour des sous évenements ou pouvant nécessiter un pas fixe
         """
         pass
     def End():
@@ -258,7 +257,6 @@ class MeteorStorm(EventTemplate):
                     item = SaveManager.GetItemAtPos((pos[0] + x,pos[1] + y))
                     if item != None:#Si il existe, on met sa vie à 0 pour le détruire
                         item.metadata["pv"] = 0
-        
     
     def displayExplosions(runtime:int,timeDelta:float):
         """
@@ -310,8 +308,9 @@ class Events:
         """
         Se lance deux fois par seconde pour savoir si un évenement a pris fin et si il faut en lancer un nouveau
         """
-        self.runtime+=1
+        self.runtime+=1#Incrémentation de runtime
         
+        #Si un évenement a lieu, on exécute la boucle de mise à jour à pas fixe
         if self.CurrentEvent != None:
             self.CurrentEvent.FixedUpdate()
         
@@ -322,6 +321,8 @@ class Events:
             if self.CurrentEvent != None:#si un évenement est en cours
                 self.CurrentEvent.End()#On met fin à l'évenement
                 self.CurrentEvent = None
+                #On incrémente la statistique d'évenements ayant eu lieu
+                Stats.IncreaseStat("EventsOccured")
                 
             elif random.randint(0,3) <= SaveManager.GetDifficultyLevel():#Sinon, avec une chance sur 3 en facile, deux sur trois en normal et 100% du temps en difficile...
                     

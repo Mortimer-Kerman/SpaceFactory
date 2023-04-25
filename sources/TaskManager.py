@@ -24,15 +24,15 @@ tasksDatabase=[
     },
     {
          "title":"Task.2",
-         "reward":lambda lv: 500,
+         "reward":lambda lv: 500 + 10 * lv,
          "stat":"ExpeditionsSent",
-         "target":lambda lv: 5 * lv + 10,
+         "target":lambda lv: 10 + 5 * lv,
     },
     {
          "title":"Task.3",
-         "reward":lambda lv: 1000,
+         "reward":lambda lv: 1000 + 50 * lv,
          "stat":"EventsOccured",
-         "target":lambda lv: 2 * lv + 5,
+         "target":lambda lv: 5 + 2 * lv,
     },
 ]
 

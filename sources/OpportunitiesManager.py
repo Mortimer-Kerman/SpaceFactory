@@ -189,8 +189,6 @@ def OpenMap():
     global runtime
     runtime = 0
     
-    Stats.IncreaseStat("ExpeditionsSent")
-    
     #Fonction temporaire permettant de faire des mises à jour du menu
     def MenuTick():
         global runtime
@@ -679,6 +677,8 @@ class Opportunity:
         self.team["onRover"] = onRover
         self.SetState(Opportunity.State.GOING)
         self.SetActivityDuration(self.GetTravelDuration())
+        #On incrémente la statistique d'expéditions envoyées
+        Stats.IncreaseStat("ExpeditionsSent")
 
     def GetNextInterruption(self)->float:
         """

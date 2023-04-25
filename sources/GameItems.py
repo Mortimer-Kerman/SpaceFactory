@@ -10,15 +10,11 @@ import UiManager
 import MarketManager
 import TextureManager
 import random
-import Localization as L
-import HelpMenu
 import AudioManager
 import FunctionUtils
 import PlanetGenerator
 import EventManager
-import SessionManager
-
-import numpy as np
+import Stats
 
 import pygame
 
@@ -316,6 +312,18 @@ class Item:
             return False
         else:
             self.metadata["biginv"]+=[{"n":d,"m":1}]
+            
+            m1Amount = 0#Quanité de m1 dans l'inventaire
+            #Pour chaque slot du grand inventaire...
+            for slot in self.metadata["biginv"]:
+                #Si le slot contient du m1, on incrémente la quantité de m1 dans l'inventaire de la quantité de m1 dans le slot
+                if slot["n"] == "M1":
+                    m1Amount += slot["m"]
+            #Si la quantité de m1 accumulée dépasse la statistique de quantité maximale de m1 stockée...
+            if m1Amount > Stats.GetStat("MaxStoredM1"):
+                #On modifie la statistique
+                Stats.SetStat("MaxStoredM1", m1Amount)
+            
             return True
     def GetFromInv(self,d):
         a=self.IsInInv(d,1)
