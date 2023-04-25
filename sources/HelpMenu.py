@@ -91,7 +91,6 @@ def Init():
         else:
             SetDescText("")
         
-        item=item.split(".")[0]
         if item in GameItems.craft:
             crafts = GameItems.craft[item]
         
@@ -104,21 +103,6 @@ def Init():
             row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + crafts["r"])))
             
             table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
-
-            try:
-                if item+".1" in GameItems.craft:
-                    crafts = GameItems.craft[item+".1"]
-        
-                row = []
-                for c in crafts["c"]:
-                    row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + c)))
-                    row.append(" + ")
-            
-                row[-1] = " = "
-                row.append(FunctionUtils.FirstLetterUpper(Localization.GetLoc('Items.' + crafts["r"])))
-            
-                table.add_row(row,cell_align=pygame_menu.locals.ALIGN_CENTER,cell_border_width=0)
-            except:pass
 
         if item in GameItems.craftResults:
             i=GameItems.findCraft(item)

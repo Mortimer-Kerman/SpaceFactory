@@ -32,21 +32,21 @@ TeleportPoint=[]
 
 craft={
     #id_block:{"c":(item 1, item 2),"r":résultat}
-    "Furnace":{"c":("Copper","Coal"),"r":"MeltedCopper"},
-    "Furnace.1":{"c":("Gold","Coal"),"r":"MeltedGold"},
-    "MolecularAssembler":{"c":("M1","Gold"),"r":"M2"},
-    "NanoFabricator":{"c":("M1","MeltedCopper"),"r":"NanoM1"},
-    "Synthetron":{"c":("Copper","Gold"),"r":"SyntheticGold"},
-    "QuantumFurnace": {"c":("Copper","NanoM1"),"r":"CopperM1"},
-    "PlasmaForge": {"c":("M2","SyntheticGold"),"r":"PlasmaGold"},
-    "GravityManipulator": {"c":("M2","PlasmaGold"),"r":"GravitonCore"}
+    "Furnace":({"c":("Copper","Coal"),"r":"MeltedCopper"},{"c":("Gold","Coal"),"r":"MeltedGold"}),
+    "MolecularAssembler":({"c":("M1","Gold"),"r":"M2"}),
+    "NanoFabricator":({"c":("M1","MeltedCopper"),"r":"NanoM1"}),
+    "Synthetron":({"c":("Copper","Gold"),"r":"SyntheticGold"}),
+    "QuantumFurnace": ({"c":("Copper","NanoM1"),"r":"CopperM1"}),
+    "PlasmaForge": ({"c":("M2","SyntheticGold"),"r":"PlasmaGold"}),
+    "GravityManipulator": ({"c":("M2","PlasmaGold"),"r":"GravitonCore"})
 
 }
 craftResults=[]
-for i in craft.values():
+for i in (j for j in craft.values()):
     craftResults.append(i["r"])
 def findCraft(item):
     for key, value in craft.items():
+        for j in value:
         if item == value["r"]:
             return key
     return None
