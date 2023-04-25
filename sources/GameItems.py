@@ -42,13 +42,18 @@ craft={
 
 }
 craftResults=[]
-for i in (j for j in craft.values()):
-    craftResults.append(i["r"])
+for j in craft.values():
+    for i in list(j):
+        print(i)
+        craftResults.append(i["r"])
 def findCraft(item):
+    """
+    Renvoie la clé et le craft d'un item
+    """
     for key, value in craft.items():
-        for j in value:
-        if item == j["r"]:
-            return key,j
+        for j in list(value):
+            if item == j["r"]:
+                return key,j
     return None
 
 Laser={}
@@ -253,16 +258,11 @@ class Item:
             self.metadata["inv"]=None
         if self.name in list(craft.keys()):
             c=craft[self.name]
-            if all(self.IsInInv(i)!="NotIn" for i in c["c"]):
-                if all(self.GetFromInv(i) for i in c["c"]):
-                    self.metadata["inv"]=c["r"]
-            else:
-                try:
-                    c=craft[self.name+".1"]
-                    if all(self.IsInInv(i)!="NotIn" for i in c["c"]):
-                        if all(self.GetFromInv(i) for i in c["c"]):
-                            self.metadata["inv"]=c["r"]
-                except:pass
+            for a in c:
+                if all(self.IsInInv(i)!="NotIn" for i in a["c"]):
+                    if all(self.GetFromInv(i) for i in a["c"]):
+                        self.metadata["inv"]=a["r"]
+                        break
         
         item=self.GetItemToGive()
         if item is not None:
