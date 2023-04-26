@@ -248,6 +248,6 @@ def Tick():
                 #On récupère la description de la tâche associée
                 taskDesc = tasksDatabase[task["id"]]
                 #Si la statistique associée à cette tâche est celle qui a été modifiée et que la valeur cible de cette tâche a été dépassée par la statistique...
-                if taskDesc["stat"] == data["stat"] and taskDesc["target"](task["lv"]) - task["baseVal"] < data["newVal"]:
+                if taskDesc["stat"] == data["stat"] and taskDesc["target"](task["lv"]) - task["baseVal"] <= data["newVal"]:
                         task["done"] = True#On marque la tâche comme accomplie
                         UiManager.Popup("Tâche accomplie!")

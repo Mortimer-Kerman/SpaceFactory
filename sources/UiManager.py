@@ -59,10 +59,23 @@ def DisplayUi():
     """
     forme(0,0,width,100,50,200)#forme affichée en haut de l'écran
     
-    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
-    UIelements["taskmenu_icon"]=screen.blit(TextureManager.GetTexture("taskmenu_icon", 50, is_menu=True), (100, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
-    UIelements["opportunities_icon"]=screen.blit(TextureManager.GetTexture("opportunities_icon", 50, is_menu=True), (150, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
-    UIelements["help_icon"]=screen.blit(TextureManager.GetTexture("help_icon", 50, is_menu=True), (200, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    blackHighlight = TextureManager.GetColorFilter((0,0,0), 50).copy()
+    blackHighlight.set_alpha(50)
+    
+    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("ui/menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    UIelements["taskmenu_icon"]=screen.blit(TextureManager.GetTexture("ui/taskmenu_icon", 50, is_menu=True), (100, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    UIelements["opportunities_icon"]=screen.blit(TextureManager.GetTexture("ui/opportunities_icon", 50, is_menu=True), (150, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    UIelements["help_icon"]=screen.blit(TextureManager.GetTexture("ui/help_icon", 50, is_menu=True), (200, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    
+    if UIelements["taskmenu_icon"]:
+        screen.blit(blackHighlight, (100, 0))
+    if UIelements["opportunities_icon"]:
+        screen.blit(blackHighlight, (150, 0))
+    if UIelements["help_icon"]:
+        screen.blit(blackHighlight, (200, 0))
+    
+    #screen.blit(TextureManager.GetTexture("ui/settlers_icon", 50, is_menu=True), (250, 0))
+    #screen.blit(TextureManager.GetTexture("ui/rovers_icon", 50, is_menu=True), (300, 0))
     
     forme2(0,height,width,100,50,200)#forme2 affichée en bas de l'écran
     
