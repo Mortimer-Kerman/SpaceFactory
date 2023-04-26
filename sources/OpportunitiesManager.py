@@ -742,6 +742,12 @@ class Opportunity:
         self.SetState(Opportunity.State.PROPOSED)
         self.SetActivityDuration(0)
         self.returning = False
+        
+        SaveManager.mainData.rovers += self.team["members"]
+        
+        if self.team["onRover"]:
+            SaveManager.mainData.rovers += 1
+        
         self.team["members"] = 5
         self.team["onRover"] = False
         

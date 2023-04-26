@@ -22,7 +22,7 @@ import AudioManager
 import SettingsManager
 import Stats
 
-SaveFileVersion="f0.19"
+SaveFileVersion="f0.20"
 
 difficultiesDict = {0: 'Saves.Difficulty.Easy',
                     1: 'Saves.Difficulty.Normal',
@@ -57,6 +57,8 @@ class Data:
         self.clearedObstacles=[]
         self.tasks=[]
         self.nonChoosableTasks=[]
+        self.settlers=0
+        self.rovers=0
         
     def toJson(self):
         """
@@ -86,44 +88,71 @@ def Load(name:str)->bool:
     """
     global mainData
     CreateSave(name)#Création de la sauvegarde
-    if SaveExists(name):#si la sauvegarde existe
+    if SaveExists(name):#si la sauvegarde existe déjà...
         path = "./Saves/" + saveName + "/"
         with open(path + "save.spf", "r") as f:
-            mainData.__dict__ = json.load(f)#charger les Datas
+            #On charge le dictionnaire depuis le fichier en le fusionnant avec le dictionnaire déjà présent en écrasant les clés présentes dans les deux par les clés chargées
+            mainData.__dict__ = {**mainData.__dict__, **json.load(f)}
         try:
+            #Si la version de la sauvegarde n'est pas celle de la version actuelle...
             if mainData.saveVersion!=SaveFileVersion:
+                #On demande à l'utilisateur une confirmation pour charger
                 if not UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),None,None):
                     print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
+                    #Si il refuse, on met fin au chargement
                     return False
+                #Si il confirme, on met à jour le code de version de la sauvegarde
                 mainData.saveVersion = SaveFileVersion
+        #En cas d'erreur...
         except:
+            #On demande à l'utilisateur une confirmation pour charger
             if not UiManager.WarnUser(L.GetLoc('Game.Warning'), L.GetLoc('Saves.IncompatibilityMessage'),None,None):
                 print("\n#"*5+"format de sauvegarde incompatible, merci d'utiliser la version "+SaveFileVersion+5*"\n#")
+                #Si il refuse, on met fin au chargement
                 return False
+            #Si il confirme, on met à jour le code de version de la sauvegarde
             mainData.saveVersion = SaveFileVersion
+        
+        #Pour chaque item chargé, on le convertit en item de jeu à partir de sa valeur chargée, un dictionnaire
         for item in mainData.items.values():
             a=GameItems.Item.ReadDictRepresentation(item)
+            #Et on le replace dans la liste
             mainData.items[str(list(a.pos))]=a
+        
+        #On met la texture actuelle de la planète à None
         global planetTex
         planetTex = None
+        #On tente de la charger depuis la sauvegarde
         if os.path.isfile(path + "planet.png"):
             planetTex = pygame.image.load(path + "planet.png")
+        
+        #Si les conditions planétaires chargées sont un dictionnaire...
+        if type(mainData.planetaryConditions) == dict:
+            #Création d'un objet de conditions planétaires en tant que modèle pour ne pas inclure d'aléatoire
+            conditions = PlanetGenerator.PlanetaryConditions(template=True)
+            #On vient y charger les conditions planétaires chargées depuis le fichier
+            conditions.__dict__ = mainData.planetaryConditions
+            #On vient les remettre dans la sauvegarde
+            mainData.planetaryConditions = conditions
+        
+        #Pour chaque dictionnaire représentant une opportunité chargée...
+        for i in range(len(mainData.opportunities)):
+            #On crée une opportunité
+            opportunity = OpportunitiesManager.Opportunity()
+            #On vient y stocker l'opportunité chargée
+            opportunity.__dict__ = mainData.opportunities[i]
+            #On la replace dansle dictionnaire d'opportunit"s
+            mainData.opportunities[i] = opportunity
+        
+        #Si le dictionnaire des items n'est pas un dictionnaire numpy, on le convertit
+        if type(mainData.items) == dict:
+            mainData.items = FunctionUtils.NumpyDict(mainData.items)
+        
+    #On initialise la position de la caméra
     global LastCamPos
-    LastCamPos = mainData.camPos.copy()
+    LastCamPos = mainData.camPos.copy()   
     
-    if type(mainData.planetaryConditions) == dict:
-        conditions = PlanetGenerator.PlanetaryConditions(template=True)
-        conditions.__dict__ = mainData.planetaryConditions
-        mainData.planetaryConditions = conditions
-    
-    for i in range(len(mainData.opportunities)):
-        opportunity = OpportunitiesManager.Opportunity()
-        opportunity.__dict__ = mainData.opportunities[i]
-        mainData.opportunities[i] = opportunity
-    
-    if type(mainData.items) == dict:
-        mainData.items = FunctionUtils.NumpyDict(mainData.items)
-    
+    #Chargement des statistiques
     Stats.Load()
     
     print("File loaded!")
@@ -141,6 +170,7 @@ def Save():
     if planetTex != None:
         pygame.image.save(planetTex, path + "planet.png")
     
+    #On vient sauvegarder les métadonnées sous format json dans un fichier dédié
     with open(path + "meta.json", "w") as f:
         metaData = {
             "lastPlayed":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -150,6 +180,7 @@ def Save():
         }
         f.write(json.dumps(metaData, default=str, indent = 4))
     
+    #Sauvegarde des statistiques
     Stats.Save()
     
     print("File saved!")
@@ -169,7 +200,9 @@ def Unload():
     """
     global saveName
     global mainData
+    #On sauvegarde
     Save()
+    #On réinitialise et remet à zéro les différentes variables du jeu
     saveName = None
     mainData = None
     TextureManager.RefreshZoom()
@@ -186,6 +219,7 @@ def SaveExists(name:str):
     Vérifie si la sauvegarde existe
     """
     path = "./Saves/" + name + "/"
+    #On vérifie si le dossier de sauvegarde et le fichier save.spf qu'il contient existent
     return os.path.exists(path) and os.path.isfile(path + "save.spf")
 
 def SaveLoaded()->bool:
@@ -209,7 +243,7 @@ def SetCamPos(pos:list):
     mainData.camPos[0] = round(pos[0])
     mainData.camPos[1] = round(pos[1])
     
-def GetCamPos():
+def GetCamPos()->list:
     """
     Renvoie la position de la caméra
     """
@@ -222,7 +256,7 @@ def GetLastCamPos():
     global LastCamPos
     return LastCamPos
 
-def GetZoom():
+def GetZoom()->int:
     """
     Renvoie le zoom
     """
@@ -258,6 +292,9 @@ def PlaceItem(item):
         return True
 
 def DeleteItem(pos):
+    """
+    Supprime un item si il en existe un à cette position
+    """
     if IsItemHere(pos):
         del mainData.items[str(list(pos))]
 
@@ -359,13 +396,15 @@ def ClearObstacle(pos:tuple):
     """
     Élimine un obstacle de la carte
     """
+    #On ajoute la position de l'obstacle éliminé à la liste des obstacles éliminés
     mainData.clearedObstacles.append(pos)
     
+    #On reconstitue l'info sur l'obstacle
     d = [pos[0],pos[1],"Obstacle"]
     
+    #Si elle existe dans la liste des minerais et obstacles affichés, on l'y retire
     if d in GameItems.current:
         GameItems.current.remove(d)
-        
 
 rotation = 0
 
