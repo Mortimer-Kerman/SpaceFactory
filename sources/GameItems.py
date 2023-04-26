@@ -20,14 +20,18 @@ import pygame
 
 menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","CopperWall","Turret","NanoFabricator","Synthetron"]#éléments du menu de sélection
 
+#représentation des items sur un tapis roulant
 allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"MeltedGold":(210,160,50),"NanoM1":(50,10,110),"PlasmaGold":(220,170,44),"SyntheticGold":(230,130,50)}
 
+#Affichage des animations de tapis
 Anim=1
 
+#Fonction expérimentale de téléportation
 TeleportPoint=[]
 
+#Dictionnaire contenant toutes les recettes de crafts
 craft={
-    #id_block:{"c":(item 1, item 2),"r":résultat}
+    #id_block:[{"c":(item 1, item 2),"r":résultat}]
     "Furnace":[{"c":("Copper","Coal"),"r":"MeltedCopper"},{"c":("Gold","Coal"),"r":"MeltedGold"}],
     "MolecularAssembler":[{"c":("M1","Gold"),"r":"M2"}],
     "NanoFabricator":[{"c":("M1","MeltedCopper"),"r":"NanoM1"}],
@@ -37,9 +41,11 @@ craft={
     "GravityManipulator": [{"c":("M2","PlasmaGold"),"r":"GravitonCore"}]
 
 }
+#Liste des résultats de crafts
 craftResults=[]
-for j in craft.values():
-    for i in list(j):
+for j in craft.values():#pour chaque valeur de craft
+    for i in list(j):#pour chaque craft de la liste de craft de l'item
+        #on ajoute dans la liste le résultat du craft
         craftResults.append(i["r"])
 def findCraft(item):
     """
@@ -51,8 +57,9 @@ def findCraft(item):
                 return key,j
     return None
 
-Laser={}
+Laser={}#dictionnaire stockant tout les lasers affichés par les tourelles
 
+#Affichage dynamique du rendu
 RenderQueues = {}
 def AddToRender(order:int,action):
     if not order in RenderQueues:
@@ -135,8 +142,11 @@ class Item:
         
         if self.name in ["ConveyorBelt","Sorter"]:
             col=allTransportableItems
-            a=col.get(self.metadata.get("inv",None),False) if self.name=="ConveyorBelt" else col.get(self.metadata.get("sorter_choice",None),(255,0,0))
-              
+            
+            if self.metadata.get("inv",None) is not None:
+                a=col.get(self.metadata.get("inv",(255,255,255)),False)
+            if self.name=="Sorter":
+                a=col.get(self.metadata.get("sorter_choice",None),(255,255,255))
             if a:
                 renderOffset = (0,0)
                 if Anim and self.name=="ConveyorBelt":
