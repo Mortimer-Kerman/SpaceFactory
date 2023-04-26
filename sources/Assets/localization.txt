@@ -158,6 +158,8 @@ Items.GreenBlock : Bloc vert
 Items.BlackBlock : Bloc noir
 Items.WhiteBlock : Bloc blanc
 Items.M2 : M2
+Items.Settler : Colon
+Items.Rover : Rover
 Items.delete : détruire
 
 //Description des items
@@ -193,7 +195,8 @@ Items.d.BlackBlock : un block de décoration noir, trouvable au market
 Items.d.WhiteBlock : un block de décoration blanc, trouvable au market
 Items.d.M2 : Un assemblage de M1 et d'Or
 Items.d.Market : Le market vous permet d'acheter divers éléments, comme des éléments de décoration, ou une Forge à Plasma
-
+Items.d.Settler : Les colons sont ici pour peupler ce monde. Ils seront l'avenir de l'humanité sur cette planète, et sont les plus aptes à explorer l'inconnu.
+Items.d.Rover : Un rover peut transporter des colons plus vite, plus loin, avec plus de sécurité. Utilisez les pour vos missions longue distance.
 
 //Opportunités
 Opportunities.Title : Opportunités

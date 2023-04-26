@@ -11,7 +11,7 @@ import Localization as L
 import FunctionUtils
 
 # Définition d'un dictionnaire d'articles de marché et initialisation des variables currentItem et LabelCoins à None
-marketItem = {"MolecularAssembler": 50000, "CoalCentral": 8000, "PlasmaForge": 5745,"RedBlock":100,"GreenBlock":100,"BlueBlock":100,"YellowBlock":100,"BlackBlock":100,"WhiteBlock":100}
+marketItem = {"MolecularAssembler": 50000, "CoalCentral": 8000, "PlasmaForge": 5745,"RedBlock":100,"GreenBlock":100,"BlueBlock":100,"YellowBlock":100,"BlackBlock":100,"WhiteBlock":100,"Settler":1000,"Rover":5000}
 currentItem = None
 LabelCoins = None
 
@@ -38,12 +38,12 @@ def showMenu():
         title.set_title(L.GetLoc("Items."+a))
         SetLabelText(L.GetLoc("Items.d."+a)) # Définition des textes de la fenêtre
 
-    h = int((UiManager.height//2)-105)
+    h = int((UiManager.height//2)-110)
     w = int(UiManager.height)
     
     columnW = w//2
     
-    menu = pygame_menu.Menu(L.GetLoc("Market.Title"), w, h+105, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)#le thème du menu
+    menu = pygame_menu.Menu(L.GetLoc("Market.Title"), w, h+110, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)#le thème du menu
     f=menu.add.frame_h(w, 50, max_width=w, max_height=50, padding=0)
     f.relax(True)
     f.pack(menu.add.button(L.GetLoc('Game.Back'), menu.disable, align=pygame_menu.locals.ALIGN_LEFT),align=pygame_menu.locals.ALIGN_LEFT)
@@ -58,20 +58,19 @@ def showMenu():
     listFrame.relax(True)
     frame.pack(listFrame, align=pygame_menu.locals.ALIGN_LEFT)
     
-    for i in marketItem.keys():
-        oppFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=(50, 50, 50), padding=0,frame_id=str(i))
-        oppFrame.relax(True)
-        listFrame.pack(oppFrame)
+    for i in sorted(marketItem.keys(),key=lambda tab: L.GetLoc("Items." + tab).lower()):
+        itemFrame = menu.add.frame_v(columnW, int(columnW * (5/18)), background_color=(50, 50, 50), padding=0,frame_id=str(i))
+        itemFrame.relax(True)
+        listFrame.pack(itemFrame)
         
         b = menu.add.button(FunctionUtils.ReduceStr(L.GetLoc("Items."+i), 30), lambda i=i:setCurrent(i))
         
-        FunctionUtils.EncapsulateButtonInFrame(b, oppFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
+        FunctionUtils.EncapsulateButtonInFrame(b, itemFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
         
-        oppFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
+        itemFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
 
         subtext = menu.add.label("Prix: " + str(marketItem[i]),font_name=TextureManager.GetFont("nasalization",int(columnW/27)),font_color=(255,255,255))
-        #subtext.set_font(TextureManager.GetFont("nasalization"), 20, (255,255,255), (255,255,255), (255,255,255), (255,255,255), (50,50,50))
-        oppFrame.pack(subtext)
+        itemFrame.pack(subtext)
         
         listFrame.pack(menu.add.vertical_margin(5))
 
@@ -124,7 +123,14 @@ def Buy():
         if marketItem[currentItem] <= SaveManager.mainData.coins:
             # Réduit la quantité de "coins" du joueur et ajoute l'item à son inventaire
             SaveManager.mainData.coins -= marketItem[currentItem]
-            SaveManager.AddToInv(currentItem)
+            
+            if currentItem == "Settler":#Si un colon a été acheté, on le rajoute au montant de colons
+                SaveManager.mainData.settlers += 1
+            elif currentItem == "Rover":#Sinon, si c'est un rover, on le rajoute au montant de rovers
+                SaveManager.mainData.rovers += 1
+            else:#Sinon, on ajoute l'item à l'inventaire
+                SaveManager.AddToInv(currentItem)
+            
             # Met à jour le label affichant la quantité de "coins" du joueur
             LabelCoins.set_title(str(SaveManager.mainData.coins))
         else:

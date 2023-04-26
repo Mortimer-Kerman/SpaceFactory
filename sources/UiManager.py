@@ -64,12 +64,11 @@ def DisplayUi():
     UIelements["opportunities_icon"]=screen.blit(TextureManager.GetTexture("ui/opportunities_icon", 50, is_menu=True), (150, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     UIelements["help_icon"]=screen.blit(TextureManager.GetTexture("ui/help_icon", 50, is_menu=True), (200, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     
-    if UIelements["menu_icon"]:
-        blackHighlight = TextureManager.GetColorFilter((0,0,0), 200).copy()
-        blackHighlight.set_alpha(50)
-        screen.blit(blackHighlight, (0, 0))
-    blackHighlight = TextureManager.GetColorFilter((0,0,0), 50).copy()
+    blackHighlight = TextureManager.GetColorFilter((0,0,0), 1).copy()
     blackHighlight.set_alpha(50)
+    if UIelements["menu_icon"]:
+        screen.blit(blackHighlight, (0, 0))
+    blackHighlight = pygame.transform.scale(blackHighlight,(50,50))
     if UIelements["taskmenu_icon"]:
         screen.blit(blackHighlight, (100, 0))
     if UIelements["taskmenu_icon"]:
@@ -79,8 +78,10 @@ def DisplayUi():
     if UIelements["help_icon"]:
         screen.blit(blackHighlight, (200, 0))
     
-    #screen.blit(TextureManager.GetTexture("ui/settlers_icon", 50, is_menu=True), (250, 0))
-    #screen.blit(TextureManager.GetTexture("ui/rovers_icon", 50, is_menu=True), (300, 0))
+    screen.blit(TextureManager.GetTexture("ui/settlers_icon", 25, is_menu=True), (325, 0))
+    place_text(str(SaveManager.mainData.settlers), 360, 0, 30,font=TextureManager.GetFont("aquire",30))
+    screen.blit(TextureManager.GetTexture("ui/rovers_icon", 25, is_menu=True), (425, 0))
+    place_text(str(SaveManager.mainData.rovers), 460, 0, 30,font=TextureManager.GetFont("aquire",30))
     
     forme2(0,height,width,100,50,200)#forme2 affichée en bas de l'écran
     
