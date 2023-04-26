@@ -59,14 +59,19 @@ def DisplayUi():
     """
     forme(0,0,width,100,50,200)#forme affichée en haut de l'écran
     
-    blackHighlight = TextureManager.GetColorFilter((0,0,0), 50).copy()
-    blackHighlight.set_alpha(50)
-    
     UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("ui/menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     UIelements["taskmenu_icon"]=screen.blit(TextureManager.GetTexture("ui/taskmenu_icon", 50, is_menu=True), (100, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     UIelements["opportunities_icon"]=screen.blit(TextureManager.GetTexture("ui/opportunities_icon", 50, is_menu=True), (150, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     UIelements["help_icon"]=screen.blit(TextureManager.GetTexture("ui/help_icon", 50, is_menu=True), (200, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
     
+    if UIelements["menu_icon"]:
+        blackHighlight = TextureManager.GetColorFilter((0,0,0), 200).copy()
+        blackHighlight.set_alpha(50)
+        screen.blit(blackHighlight, (0, 0))
+    blackHighlight = TextureManager.GetColorFilter((0,0,0), 50).copy()
+    blackHighlight.set_alpha(50)
+    if UIelements["taskmenu_icon"]:
+        screen.blit(blackHighlight, (100, 0))
     if UIelements["taskmenu_icon"]:
         screen.blit(blackHighlight, (100, 0))
     if UIelements["opportunities_icon"]:

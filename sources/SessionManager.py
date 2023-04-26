@@ -112,6 +112,10 @@ def Play(saveName:str,**kwargs):
         
         HandleLongKeyInputs()#gestion des longs clics
         
+        AudioManager.Tick()#Actualisation du son
+        
+        TaskManager.Tick()#Actualisation des tâches
+        
         for event in pygame.event.get():#pour chaque événements
             #en cas de fermeture du jeu (sert à ne pas provoquer de bug)
             if event.type == pygame.QUIT:#en cas de Alt+F4 ou de fermeture via la croix de la fenêtre
@@ -151,7 +155,7 @@ def Play(saveName:str,**kwargs):
                     if event.button == 3:#s'il s'agit du bouton droit
                         laser = lambda : None#pas de laser
         
-        TickModules()#Met à jour les modules de fonctionnement
+        SaveManager.TickClock()#Actualisation de l'horloge interne
         
         runtime+=SaveManager.clock.get_time() / 10#on augmente le runtime
         if runtime > 50:#si le runtime est supérieur à 50
