@@ -304,6 +304,16 @@ class Item:
         return "NotIn"
 
     def AddToInv(self,d):
+        m1Amount = 0#Quantité de m1 dans l'inventaire
+        #Pour chaque slot du grand inventaire...
+        for slot in self.metadata["biginv"]:
+            #Si le slot contient du m1, on incrémente la quantité de m1 dans l'inventaire de la quantité de m1 dans le slot
+            if slot["n"] == "M1":
+                m1Amount += slot["m"]
+                #Si la quantité de m1 accumulée dépasse la statistique de quantité maximale de m1 stockée...
+        if m1Amount > Stats.GetStat("MaxStoredM1"):
+            #On modifie la statistique
+            Stats.SetStat("MaxStoredM1", m1Amount)
         a=self.IsInInv(d)
         if a!="NotIn":
             self.metadata["biginv"][a]["m"]+=1
@@ -311,19 +321,7 @@ class Item:
         if len(self.metadata["biginv"])>=25:
             return False
         else:
-            self.metadata["biginv"]+=[{"n":d,"m":1}]
-            
-            m1Amount = 0#Quanité de m1 dans l'inventaire
-            #Pour chaque slot du grand inventaire...
-            for slot in self.metadata["biginv"]:
-                #Si le slot contient du m1, on incrémente la quantité de m1 dans l'inventaire de la quantité de m1 dans le slot
-                if slot["n"] == "M1":
-                    m1Amount += slot["m"]
-            #Si la quantité de m1 accumulée dépasse la statistique de quantité maximale de m1 stockée...
-            if m1Amount > Stats.GetStat("MaxStoredM1"):
-                #On modifie la statistique
-                Stats.SetStat("MaxStoredM1", m1Amount)
-            
+            self.metadata["biginv"]+=[{"n":d,"m":1}]            
             return True
     def GetFromInv(self,d):
         a=self.IsInInv(d,1)
