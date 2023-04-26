@@ -112,7 +112,7 @@ def OpenMap():
         oppFrame.pack(menu.add.vertical_margin(int(columnW * (5/54))))
         
         #Ajout de texte contenant le temps de voyage de l'opportunité
-        subtext = menu.add.label("Temps de voyage: " + Opportunity.FormatTravelTime(opportunity.GetWalkDistance()), font_name=TextureManager.GetFont("nasalization",int(columnW/27)), font_color=(255,255,255))
+        subtext = menu.add.label(Localization.GetLoc('Opportunities.TravelTime', Opportunity.FormatTravelTime(opportunity.GetWalkDistance())), font_name=TextureManager.GetFont("nasalization",int(columnW/27)), font_color=(255,255,255))
         oppFrame.pack(subtext)
         
         #On rajoute un petit espace vide sous le cadre

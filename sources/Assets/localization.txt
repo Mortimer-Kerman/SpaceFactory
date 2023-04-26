@@ -328,6 +328,7 @@ OppInteractions.Interruption.3.b3.1 : Alors qu'un scientifique s'approchait du c
 Market.Title : GalacticMarket
 Market.Motto : Pour des achats intergalactiques!
 Market.Buy : Acheter
+Market.Price : Prix: %$1
 //Une expédition commerciale vers l'infini et au-delà
 
 //TaskManager
