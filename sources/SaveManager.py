@@ -272,7 +272,8 @@ def PlaceItem(item):
     """
     Ajoute un item aux items en retirant le coût en minerais
     """
-    if mainData.gamemode!=1:
+    #Si le joueur n'est pas en mode bac à sable...
+    if not IsSandBox():
         tempInv=[]
         for i in mainData.inv:
             tempInv.append(dict(i))
@@ -287,6 +288,7 @@ def PlaceItem(item):
         mainData.inv=tempInv
         UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
         return False
+    #Si le joueur est en mode bac à sable, on place l'item sans se poser de questions
     else:
         mainData.items[str(list(item.pos))]=item
         return True

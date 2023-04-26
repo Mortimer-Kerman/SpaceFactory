@@ -96,39 +96,52 @@ def StretchSurfaceToSurface(target:pygame.Surface,source:pygame.Surface):
     source = pygame.transform.scale(source, target.get_size())
     target.blit(source, (0,0))
 
+#Variables nécessaires pour le fonctionnement des boutons encapsulés
 selectedFrame = None
 mouseOverFB = False
 hoveredFB = None
 mouseOverButton = False
 lastMousePressSequence = (0,0,0)
+
 def EncapsulateButtonInFrame(button:pygame_menu.widgets.Button,frame:pygame_menu.widgets.Frame,onSelect=None, buttonAlign=pygame_menu.locals.ALIGN_CENTER):
     """
     Encapsule un bouton dans un cadre et permet de faire agir le cadre comme si il était un bouton
     """
-    
+    #Fonction temporaire permettant de noter si la souris se situe au dessus d'un bouton encapsulé
     def setMouseOver(btn, mouseOver:bool):
         global mouseOverFB, hoveredFB
+        #On indique que la souris survole un bouton
         mouseOverFB = mouseOver
+        #Si elle survole un bouton, on indique quel bouton est survolé
         if mouseOver:
             hoveredFB = btn
     
+    #On retire l'effet de sélection du bouton
     button.set_selection_effect(None)
     
+    #Si une fonction de sélection spéciale a été spécifiée, on la met sur le bouton sinon on utilise la fonction de sélection par défaut
     if onSelect != None:
         button.set_onselect(onSelect)
     else:
         button.set_onselect(lambda:setSelectedFrame(frame))
     
+    #On met le bouton dans le cadre avec l'alignement spécifié et on ajoute la fonction de survol aux évenements de survol du cadre
     frame.pack(button,align=buttonAlign)
     frame.set_onmouseover(lambda:setMouseOver(button,True))
     frame.set_onmouseleave(lambda:setMouseOver(button,False))
     
 def setSelectedFrame(f=None):
+    """
+    Fonction s'exécutant par défaut lors du survol d'un bouton encapsulé. A copier en cas de besoins spécifiques.
+    """
     global selectedFrame
+    #Si un cadre est sélectionné, on efface son effet de sélection
     if selectedFrame != None:
         selectedFrame.set_border(0, None)
+    #Si un nouveau cadre est fourni, on lui met un effet de sélection
     if f != None:
         f.set_border(1,(255,255,255))
+    #Le cadre en entrée devient le nouveau cadre sélectionné
     selectedFrame = f
     
 def ManageEncapsulatedButtons():
@@ -137,27 +150,37 @@ def ManageEncapsulatedButtons():
     """
     global mouseOverFB, hoveredFB, lastMousePressSequence, mouseOverButton
     
+    #On récupère la séquence des boutons de souris pressés ou non
     pressSequence = pygame.mouse.get_pressed()
     
+    #Si un cadre de bouton encapsulé est survolé...
     if hoveredFB != None:
+        #Position de la souris
         mPos = pygame.mouse.get_pos()
+        #On regarde si la souris est au dessus du bouton contenu
         mouseOverButton = hoveredFB.get_rect(to_real_position=True).collidepoint(mPos[0], mPos[1])
     
+    #SI la souris est sur le cadre...
     if mouseOverFB:
-        
+        #Variables pour détecter le début d'un appui ou d'un relâchement d'un bouton de souris
         NewPress = False
         NewRelease = False
+        #Pour chaque bouton de la souris...
         for i in range(3):
+            #Si un clic est remarqué dans la séquence actuelle mais pas dans la séquence précédente, il a un nouveau clic
             if pressSequence[i] and not lastMousePressSequence[i]:
                 NewPress = True
+            #Si un clic est remarqué dans la séquence précédente mais pas dans la séquence actuelle, il a un nouveau relâchement
             if lastMousePressSequence[i] and not pressSequence[i]:
                 NewRelease = True
-        
+        #Si il y a un nouveau clic, on sélectionne le bouton
         if NewPress:
             hoveredFB.select(update_menu=True)
+        #Si il y a un nouveau relâchement et que la souris n'est pas sur le bouton du cadre, on enclenche le bouton
         if NewRelease and not mouseOverButton:
             hoveredFB.apply()
-        
+    
+    #La séquence précédente devient la séquence actuelle
     lastMousePressSequence = pressSequence
 
 def ToDict(o):
@@ -178,6 +201,7 @@ signe = lambda x: 1 if x >= 0 else -1#fonction renvoyant +1 ou -1 selon le signe
 
 class NumpyDict:
     """
+    Dictionnaire basé sur des listes numpy pour accélérer l'utilisation
     La clé doit être un entier, ou un str, les tuples peuvent causer problème
     """
     def __init__(self,sourceDict={}):

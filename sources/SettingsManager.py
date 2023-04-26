@@ -12,6 +12,7 @@ import pygame_menu
 import UiManager
 import Localization
 
+#Variable indiquant si des paramètres ont été changés
 SettingsChanged = False
 
 def DefaultSettingsInstance():
@@ -36,6 +37,7 @@ def DefaultSettingsInstance():
         }
     }
 
+#Instance par défaut des paramètres
 __mainSettings = DefaultSettingsInstance()
 
 def GetSetting(name:str):
@@ -80,13 +82,14 @@ def LoadSettings():
     """
     global __mainSettings
     
-    try:
+    try:#On tente de charger les paramètres du jeu depuis le fichier de paramètres, puis on s'assure de leur validité et on les applique
         with open("Settings.json", "r") as f:
             __mainSettings = json.load(f)
         EnsureSettingsValidity()
         ApplySettings()
-    except:
+    except:#En cas d'erreur, on les réinitialise
         ResetSettings()
+    #On marque que les paramètres n'ont pas changé
     global SettingsChanged
     SettingsChanged = False
 
@@ -94,10 +97,13 @@ def SaveSettings():
     """
     Sauvegarde les paramètres dans le disque dur et les applique au jeu
     """
+    #On sauvegarde les paramètres sur le disque dur
     with open("Settings.json", "w") as f:
         f.write(json.dumps(__mainSettings, default=lambda o: o.__dict__, indent = 4))
+    #On marque que les paramètres n'ont pas changé
     global SettingsChanged
     SettingsChanged = False
+    #On applique les paramètres
     ApplySettings()
 
 def ResetSettings():
@@ -112,12 +118,17 @@ def EnsureSettingsValidity():
     """
     Exécuter cette fonction lors du chargement des paramètres permet d'assurer la validité des paramètres en ajoutant les entrées manquantes
     """
+    #Instance par défaut
     defaultInstance = DefaultSettingsInstance()
+    #Pour chaque option de l'instance par défaut...
     for option in defaultInstance:
+        #Si cette option n'est pas dans les paramètres, on l'y rajoute
         if not option in __mainSettings:
             __mainSettings[option] = defaultInstance[option]
     
+    #Pour chaque paramètre de touche de l'instance par défaut...
     for keyBind in defaultInstance["keybinds"]:
+        #Si cette touche n'est pas dans les paramètres, on l'y rajoute
         if not keyBind in __mainSettings["keybinds"]:
             __mainSettings["keybinds"][keyBind] = defaultInstance["keybinds"][keyBind]
     
@@ -125,6 +136,7 @@ def ApplySettings():
     """
     Applique les paramètres au jeu
     """
+    #On r-gle le volume des canaux de musique et de son d'ambiance
     pygame.mixer.music.set_volume(GetSetting("musicVolume")/100)
     pygame.mixer.Channel(0).set_volume(GetSetting("gameVolume")/150)
 
@@ -132,6 +144,9 @@ SettingsMenu = None
 
 
 def OpenSettings(background):
+    """
+    Ouvre le menu des paramètres avec le fond actuel
+    """
     global SettingsMenu
     if SettingsMenu != None:
         SettingsMenu.disable()

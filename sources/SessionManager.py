@@ -8,7 +8,6 @@ Created on Sun Feb 26 21:43:27 2023
 #importations des bibliothèques
 import pygame
 import pygame_menu
-import numpy as np
 #importation des bibliothèques système
 import random
 #importation des autres fichiers
@@ -509,6 +508,12 @@ class Tutorial:
             Tutorial.popup = UiManager.Popup(L.GetLoc("Tuto." + str(Tutorial.GetGlobalStep()),*Tutorial.GetLocKeys()),d=1)
             #On règle la barre davancement
             Tutorial.popup.setProg(Tutorial.GetIntermediateStep()/Tutorial.GetStepMaxProg())
+            #On s'assure qu'il n'y ait aucun obstacle sur les emplacement sur lesquels le joueur devra placer des objets
+            SaveManager.mainData.clearedObstacles = [(7,-8),(7,-7),(11,-7),(7,-6),(0,-5),
+                                                     (1,-5),(2,-5),(3,-5),(4,-5),(5,-5),
+                                                     (6,-5),(7,-5),(8,-5),(9,-5),(10,-5),
+                                                     (0,-4),(10,-4),(0,-3),(10,-3),(0,-2),
+                                                     (10,-2),(0,-1),(10,-1),(0, 0)]
     
     def SaveStep():
         """
@@ -608,8 +613,11 @@ class Tutorial:
         if pos not in posList:
             return False
         
-        #Si l'item à placer correspond...
-        if texList[posList.index(pos)] == (item, SaveManager.GetRotation()):
+        #Données sur le placement: Un tuple avec en 0 le type d'item et en 1 la rotation
+        placementData = texList[posList.index(pos)]
+        
+        #Si l'item à placer correspond et que, si c'est un tapis roulant la rotation correspond également...
+        if placementData[0] == item and (item != "ConveyorBelt" or placementData[1] == SaveManager.GetRotation()):
             #On met à jour le tuto et on autorise le placement
             Tutorial.IncreaseStep(globalStep)
             return True
@@ -750,16 +758,18 @@ class Tutorial:
         """
         return Tutorial.step[1]
 
-
 """
+Petite aide visuelle pour aider la création du tutoriel
+
 c = "ConveyorBelt"
 s = "Storage"
 d = "Drill"
 f = "Furnace"
+m = "Market"
 
 texList = [
                                                      (s, 0),
-                                                     (c, 0),
+                                                     (c, 0),                     (m, 0),
                                                      (c, 0),
     (c, 3),(c, 3),(c, 3),(c, 3),(s, 0),(c, 3),(c, 3),(f, 0),(c, 1),(c, 1),(c, 1),
     (c, 0),                                                               (c, 0),
@@ -771,7 +781,7 @@ texList = [
 
 posList = [
                                                      (7,-8),
-                                                     (7,-7),
+                                                     (7,-7),                      (11,-7),
                                                      (7,-6),
     (0,-5),(1,-5),(2,-5),(3,-5),(4,-5),(5,-5),(6,-5),(7,-5),(8,-5),(9,-5),(10,-5),
     (0,-4),                                                               (10,-4),
