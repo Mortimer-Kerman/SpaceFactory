@@ -80,8 +80,7 @@ class Ennemis:
             return
         if SaveManager.IsItemHere(pos):
             a=SaveManager.GetItemAtPos(pos).metadata
-            if a.get("pv",100)>0:
-                a["pv"]=a.get("pv",100)-50
+            a["pv"]=max(a.get("pv",100)-50,0)
         self.pos=pos
     def show(self,c):
         """
@@ -302,7 +301,7 @@ class Events:
     def __init__(self):
         self.runtime=0
         self.lastEvent = 0
-        self.nextEvent = random.randint(200,1000)#prochain événement
+        self.nextEvent = 0#random.randint(200,1000)#prochain événement
         self.CurrentEvent = None
     
     def LaunchEvent(self):
@@ -317,7 +316,7 @@ class Events:
         
         if self.nextEvent<self.runtime:#si le runtime est supérieur au nextEvent
             
-            self.SetTimeBeforeNextEvent(random.randint(200,1000))#prochain événement
+            self.SetTimeBeforeNextEvent(1)#random.randint(200,1000))#prochain événement
             
             if self.CurrentEvent != None:#si un évenement est en cours
                 self.CurrentEvent.End()#On met fin à l'évenement
@@ -338,7 +337,7 @@ class Events:
                         possibleEvents.append(SolarStorm)#On rajoute l'évenement tempête solaire
                     #Si on est sur une planète vivante...
                     if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike:
-                        possibleEvents.append(SolarStorm)#On rajoute l'évenement tempête
+                        possibleEvents.append(Storm)#On rajoute l'évenement tempête
                     #Si cette sauvegarde est difficile...
                     if SaveManager.GetDifficultyLevel() == 3:
                         possibleEvents.append(MeteorStorm)#On rajoute l'évenement pluie de météores

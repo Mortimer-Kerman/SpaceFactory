@@ -33,6 +33,13 @@ MenuTabs = [
         "thumb" : None
     },
     {
+        "id" : "Storm",
+        "title" : "HelpMenu.Storm",
+        "desc" : "HelpMenu.Storm.Desc",
+        "thumb" : "helpMenu/Storm",
+        "thumbSize" : (370,199)
+    },
+    {
         "id" : "MeteorRain",
         "title" : "HelpMenu.MeteorRain",
         "desc" : "HelpMenu.MeteorRain.Desc",

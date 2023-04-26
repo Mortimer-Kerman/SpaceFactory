@@ -347,9 +347,11 @@ Task.5 : Réparer %$1 machines
 //Menu d'aide
 HelpMenu.title : Menu d'aide
 HelpMenu.Sandstorm : Tempête de sable
-HelpMenu.Sandstorm.Desc : Les tempêtes de sable peuvent arriver de temps en temps dans les mondes désertiques. Elles réduisent fortement la visibilité et peuvent, à la longue, endommager certaines machines fragiles.
+HelpMenu.Sandstorm.Desc : Les tempêtes de sable peuvent arriver de temps en temps dans les mondes désertiques. Elles réduisent fortement la visibilité et enrayent le fonctionnement des tapis roulants.
 HelpMenu.SolarStorm : Tempête solaire
-HelpMenu.SolarStorm.Desc : Les tempêtes solaires peuvent arriver de temps en temps sur les planètes mortes. Elles inondent le monde de radiations, pouvant endommager les mécanismes sensibles.
+HelpMenu.SolarStorm.Desc : Les tempêtes solaires peuvent arriver de temps en temps sur les planètes mortes. Elles inondent le monde de radiations, et peuvent endommager les machines à la longue.
+HelpMenu.Storm : Tempête
+HelpMenu.Storm.Desc : Les tempêtes peuvent arriver de temps en temps sur les planètes vivantes. Elles réduisent fortement la visibilité et empêchent le fonctionnement des fours.
 HelpMenu.MeteorRain : Pluie de météores
 HelpMenu.MeteorRain.Desc : Les pluies de météores peuvent arriver de temps en temps dans les sauvegardes difficiles. Les météores chutant sur des installations peuvent leur causer de gros dégâts.
 

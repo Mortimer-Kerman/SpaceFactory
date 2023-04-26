@@ -109,9 +109,9 @@ class Item:
         item.__dict__ = DictRepresentation
         return item
     
-    def Display(self,runtime):
+    def Update(self,runtime):
         """
-        Affichage de l'item
+        Mise à jour de l'item
         """
         self.metadata["g"]=0
         

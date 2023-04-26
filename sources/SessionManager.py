@@ -88,7 +88,7 @@ def Play(saveName:str,**kwargs):
         
         UiManager.UpdateBackground()#mise à jour du fond
         
-        DisplayObjects(int(runtime))#Afficher l'objet de manière dynamique
+        UpdateObjects(int(runtime),EventM.CurrentEvent)#Afficher l'objet de manière dynamique
 
         for c,i in enumerate(EventManager.EnnemisList):#pour chaque ennemi dans EnnemisList
             i.ia(runtime)#calcul de la trajectoire et mouvement
@@ -167,16 +167,27 @@ def Play(saveName:str,**kwargs):
                     EventM.LaunchEvent()#Lancer un événement
     return True
 
-def DisplayObjects(runtime:int):
-    """Affiche les objets de manière dynamique"""
+def UpdateObjects(runtime:int,currentEvent):
+    """Met à jour les objets de manière dynamique"""
     
     for m in GameItems.current:#pour chaque minerai dans GameItems.current
         GameItems.Minerais.PlaceFromCurrent(m)#placement du minerai
-        
+    
     for item in SaveManager.GetItems():#pour chaque item dans SaveManager.GetItems()
+        
+        #Si l'item est un four en pleine tempête ou un tapis roulant en pleine tempête de sable...
+        if ((currentEvent == EventManager.Sandstorm and item.name == "ConveyorBelt") 
+            or (currentEvent == EventManager.Storm and item.name == "Furnace")):
+            runtime = 1#On met le runtime à 1 pour bloquer la transmission d'items et les animations
+        
         if runtime==0:#si le runtime vaut 0
             item.Give()#transmission de l'inventaire à l'item adjacent
-        item.Display(runtime)#Afficher l'item
+            
+            #Si on est en pleine tempête solaire, avec une chance sur 5, on retire un pv à l'objet
+            if currentEvent == EventManager.SolarStorm and random.randint(0, 5) == 0:
+                item.metadata["pv"] = item.metadata.get("pv",100) - 1
+        
+        item.Update(runtime)#Afficher l'item
     
     GameItems.ExecuteRender()#Executer le rendu dynamique des items
     
@@ -393,7 +404,7 @@ def HandleMouseClicks(button,drone):
             clickedItem = SaveManager.GetItemAtPos(UiManager.GetMouseWorldPos())
             if clickedItem.metadata.get("pv",100)!=100:
                 laser=lambda:pygame.draw.polygon(UiManager.screen, (0, 255, 0), (drone.pos,pygame.mouse.get_pos(),(pygame.mouse.get_pos()[0]-20,pygame.mouse.get_pos()[1]-20)))
-                clickedItem.metadata["pv"]+=25
+                clickedItem.metadata["pv"] = min(clickedItem.metadata.get("pv", 100) + 25, 100)
                 UiManager.LightPopup("Restauration des points de vie de l'appareil : pv "+str(clickedItem.metadata["pv"])+"/100")
                 AudioManager.PlaySound("Healing")
                 #Si la santé de l'objet égale ou dépasse 100...
