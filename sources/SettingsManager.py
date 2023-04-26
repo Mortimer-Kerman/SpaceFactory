@@ -147,7 +147,7 @@ def OpenSettings(background):
     topBar = SettingsMenu.add.frame_h(780,50)
     topBar.relax(True)
     topBar.pack(SettingsMenu.add.button(Localization.GetLoc('Game.Back'), TryLeave), align=pygame_menu.locals.ALIGN_LEFT)
-    topBar.pack(SettingsMenu.add.button(Localization.GetLoc('Settings.Save'),  lambda : (SaveSettings(),TryLeave())), align=pygame_menu.locals.ALIGN_RIGHT)
+    topBar.pack(SettingsMenu.add.button(Localization.GetLoc('Game.Save'),  lambda : (SaveSettings(),TryLeave())), align=pygame_menu.locals.ALIGN_RIGHT)
     
     SettingsMenu.add.vertical_margin(20)
     

@@ -127,6 +127,9 @@ def OpenMap():
         #Réglage de l'opportunité ouverte
         global currentOpportunity
         currentOpportunity = opportunity
+        #On s'assure que le bouton puisse changer son titre immédiatement
+        global freezeButtonTitleTime
+        freezeButtonTitleTime = 0
         #Rafraichissement du menu
         RefreshMenu()
     
@@ -295,6 +298,9 @@ def ManageExpeditionAccordingly():
         currentOpportunity.Dissolve()
         RefreshMenu()
 
+#Variable indiquant jusqu'à quand le titre du bouton ne doit pas changer
+freezeButtonTitleTime = 0
+
 def OpenExpeditionLauncher():
     """
     Fonction ouvrant le lanceur d'expéditions
@@ -304,7 +310,14 @@ def OpenExpeditionLauncher():
     #Si aucune opportunité n'est séléctionnée, on annule
     if currentOpportunity == None:
         return
-    
+    #Si il y a un colon ou moins sur la base...
+    if SaveManager.mainData.settlers <= 1:
+        #On met dans le bouton qu'il n'y a pas assez de colons
+        openedMap.get_widget('oppButton', recursive=True).set_title(Localization.GetLoc('Opportunities.TwoSettlersMin'))
+        #On empêche le texte du bouton de changer pour les 5 prochaines secondes (5000 millisecondes)
+        global freezeButtonTitleTime
+        freezeButtonTitleTime = pygame.time.get_ticks() + 5000
+        return
     #On récupère l'écran actuel et on l'assombrit pour faire le fond du menu
     screenFilter = pygame.Surface((UiManager.width,UiManager.height))
     screenFilter.set_alpha(50)
@@ -320,26 +333,67 @@ def OpenExpeditionLauncher():
     
     menu.add.vertical_margin(50)
     
-    #Slider permettant de choisir le nombre de membres de l'expédition
-    memberSlider = menu.add.range_slider(Localization.GetLoc('Opportunities.MembersAmount'), 5, (2, 10), 1, value_format=lambda x: str(int(x)), align=pygame_menu.locals.ALIGN_LEFT)
+    #Fonction temporaire s'assurant que la configuration de l'expédition est conforme au nombre de colons à la base et au stock de rovers. Peut lancer l'expédition si le paramètre optionnel est sur True.
+    def EnsureValidity(startExpeditionIfOk:bool=False):
+        
+        #Variable contrôlant si l'expédition peut être lancée
+        expeditionOk = True
+        
+        #Nombre de membres choisis
+        membersAmount = int(memberSlider.get_value())
+        #Est-ce que l'expédition est en rover
+        onRover = roverToggle.get_value()
+        
+        #Si il y a plus de membres choisis que de colons à la base...
+        if membersAmount > SaveManager.mainData.settlers:
+            #On en informe le joueur
+            warnLabel.set_title(Localization.GetLoc('Opportunities.NotEnoughSettlers',SaveManager.mainData.settlers))
+            #L'expédition ne peut pas être lancée
+            expeditionOk = False
+        #Si un rover est demandé mais qu'il n'y en a pas à la base...
+        elif onRover and SaveManager.mainData.rovers <= 0:
+            #On en informe le joueur
+            warnLabel.set_title(Localization.GetLoc('Opportunities.NoRover'))
+            #L'expédition ne peut pas être lancée
+            expeditionOk = False
+        
+        #On recaclule et on affiche le temps de trajet en fonction de est-ce que l'expédition est en rover ou pas
+        travelTimeLabel.set_title(Localization.GetLoc('Opportunities.TravelTime', Opportunity.FormatTravelTime(currentOpportunity.GetDriveDistance() if onRover else currentOpportunity.GetWalkDistance())))
+        
+        #Si l'expédition peut être lancée...
+        if expeditionOk:
+            #On vide la zone d'avertissement
+            warnLabel.set_title("")
+            #Si l'expédition doit démarrer si tout va bien...
+            if startExpeditionIfOk:
+                #On lance l'expédition
+                currentOpportunity.Begin(membersAmount,onRover)
+                #On désactive le menu de lancement
+                menu.disable()
+                #On rafraichit le menu d'opportunités
+                RefreshMenu()
     
-    #Fonction temporaire permettant de recacluler et afficher le temps de trajet en fonction de est-ce que l'expédition est en rover ou pas
-    def SetTravelTime(Rover:bool):
-        travelTimeLabel.set_title(Localization.GetLoc('Opportunities.TravelTime', Opportunity.FormatTravelTime(currentOpportunity.GetDriveDistance() if Rover else currentOpportunity.GetWalkDistance())))
+    #Slider permettant de choisir le nombre de membres de l'expédition
+    memberSlider = menu.add.range_slider(Localization.GetLoc('Opportunities.MembersAmount'), 5, (2, 10), 1, value_format=lambda x: str(int(x)), align=pygame_menu.locals.ALIGN_LEFT, onchange=lambda x: EnsureValidity())
     
     #Bouton permettant de choisir le moyen de transport entre le transport à pied et le transport en rover
-    roverToggle = menu.add.toggle_switch(Localization.GetLoc('Opportunities.TransportMean'), state_text=tuple(Localization.GetLoc('Opportunities.TransportMean.' + m) for m in ('OnFoot','Rover')), state_color=((100, 100, 100), (100, 100, 100)), onchange=SetTravelTime)
+    roverToggle = menu.add.toggle_switch(Localization.GetLoc('Opportunities.TransportMean'), state_text=tuple(Localization.GetLoc('Opportunities.TransportMean.' + m) for m in ('OnFoot','Rover')), state_color=((100, 100, 100), (100, 100, 100)), onchange=lambda x: EnsureValidity())
     
     #Zone de texte qui affichera le temps de trajet
     travelTimeLabel = menu.add.label("")
     
-    menu.add.vertical_margin(50)
+    menu.add.vertical_margin(10)
+    
+    #Zone de texte qui se remplit si il y a un problème de configuration de l'expédition
+    warnLabel = menu.add.label("")
+    
+    menu.add.vertical_margin(10)
     
     #Bouton permettant de lancer l'expédition
-    menu.add.button(Localization.GetLoc('Opportunities.StartExpedition'),lambda:(currentOpportunity.Begin(memberSlider.get_value(),roverToggle.get_value()),menu.disable(),RefreshMenu()))
+    menu.add.button(Localization.GetLoc('Opportunities.StartExpedition'),lambda:EnsureValidity(True))
     
-    #On définit une première fois le temps de trajet par le temps à pied
-    SetTravelTime(False)
+    #On rafraichit une première fois le panneau
+    EnsureValidity()
     
     #Boucle du menu
     menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()))
@@ -358,27 +412,33 @@ def UpdateOppButtonTitle():
     """
     Permet de mettre à jour le titre du bouton d'interaction avec les opportunités en fonction du contexte
     """
-    #Si un menu d'opportunités est ouvert...
-    if openedMap != None:
-        #Par défaut, le texte permettant de lancer une expédition
-        title = 'Opportunities.StartAnExpedition'
-        #Si l'expédition est en route...
-        if currentOpportunity.state == Opportunity.State.GOING:
-            if currentOpportunity.IsReturning():#Si elle rentre à la base, on l'indique
-                title = 'Opportunities.ReturningToBase'
-            else:#Sinon, on propose de la rappeler
-                title = 'Opportunities.Recall'
-        elif currentOpportunity.state == Opportunity.State.WAITING:
-            #Si l'expédition attend, on propose de savoir pourquoi
-            title = 'Opportunities.ReadReport'
-        elif currentOpportunity.state == Opportunity.State.WORKING:
-            #Si elle travaille, on l'indique
-            title = 'Opportunities.Working'
-        elif currentOpportunity.state == Opportunity.State.RETURNED:
-            #Si elle est rentrée, on propose de dissoudre l'expédition
-            title = 'Opportunities.Dissolve'
-        #On applique le nouveau texte traduit au bouton d'interaction avec les opportunités
-        openedMap.get_widget('oppButton', recursive=True).set_title(Localization.GetLoc(title))
+    #Si aucun menu d'opportunités n'est ouvert, on annule
+    if openedMap == None:
+        return
+    
+    #Si il reste encore du temps avant que le titre du bouton puisse changer, on annule
+    if pygame.time.get_ticks() < freezeButtonTitleTime:
+        return
+    
+    #Par défaut, le texte permettant de lancer une expédition
+    title = 'Opportunities.StartAnExpedition'
+    #Si l'expédition est en route...
+    if currentOpportunity.state == Opportunity.State.GOING:
+        if currentOpportunity.IsReturning():#Si elle rentre à la base, on l'indique
+            title = 'Opportunities.ReturningToBase'
+        else:#Sinon, on propose de la rappeler
+            title = 'Opportunities.Recall'
+    elif currentOpportunity.state == Opportunity.State.WAITING:
+        #Si l'expédition attend, on propose de savoir pourquoi
+        title = 'Opportunities.ReadReport'
+    elif currentOpportunity.state == Opportunity.State.WORKING:
+        #Si elle travaille, on l'indique
+        title = 'Opportunities.Working'
+    elif currentOpportunity.state == Opportunity.State.RETURNED:
+        #Si elle est rentrée, on propose de dissoudre l'expédition
+        title = 'Opportunities.Dissolve'
+    #On applique le nouveau texte traduit au bouton d'interaction avec les opportunités
+    openedMap.get_widget('oppButton', recursive=True).set_title(Localization.GetLoc(title))
 
 def Tick()->bool:
     """
@@ -434,7 +494,7 @@ def Tick()->bool:
                     else:#Sinon, elle est arrivé à destination, on la met donc en attente et on met à jour la date de la dernière interuption
                         opportunity.SetState(Opportunity.State.WAITING)
                         opportunity.lastInterruption = opportunity.GetTravelDuration()
-                    
+                
                 #Sinon, si l'expédition travaille...
                 elif opportunity.state == Opportunity.State.WORKING:
                     #Variable temporaire stockant la dernière interruption
@@ -672,6 +732,14 @@ class Opportunity:
         """
         Lance l'opportunité
         """
+        
+        #On retire les membres envoyés de la base
+        SaveManager.mainData.settlers -= teamMembers
+        
+        #Si un rover est utilisé, on le retire de la base
+        if onRover:
+            SaveManager.mainData.rovers -= 1
+        
         #On règle les caractéristiques de l'équipe d'après celles données en entrée, on règle l'état sur celui de trajet et on règle le temps de trajet sur la durée estimée
         self.team["members"] = teamMembers
         self.team["onRover"] = onRover
@@ -679,7 +747,7 @@ class Opportunity:
         self.SetActivityDuration(self.GetTravelDuration())
         #On incrémente la statistique d'expéditions envoyées
         Stats.IncreaseStat("ExpeditionsSent")
-
+    
     def GetNextInterruption(self)->float:
         """
         Renvoie à quel moment la prochaine interruption aura lieu
@@ -743,8 +811,10 @@ class Opportunity:
         self.SetActivityDuration(0)
         self.returning = False
         
-        SaveManager.mainData.rovers += self.team["members"]
+        #On retransfère les membres à la base
+        SaveManager.mainData.settlers += self.team["members"]
         
+        #Si un rover était utilisé, on le renvoie à la base
         if self.team["onRover"]:
             SaveManager.mainData.rovers += 1
         

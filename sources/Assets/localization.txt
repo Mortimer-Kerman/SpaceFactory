@@ -16,6 +16,7 @@ Game.Credits : Crédits
 Game.Warning : Attention
 Game.Confirm : Confirmer
 Game.Cancel : Annuler
+Game.Save : Enregistrer
 Game.Loading : Chargement...
 Game.Ok : Ok
 
@@ -58,8 +59,6 @@ Saves.Edit : Modifier la sauvegarde
 Saves.Edit.AlreadyExists : Ce nom de sauvegarde existe déjà!%$rSi vous confirmez, cette sauvegarde s'appelera:%$r%$1
 Saves.Edit.OpenFile : Ouvrir le fichier
 Saves.Edit.Duplicate : Dupliquer
-Saves.Edit.Save : Enregistrer
-Saves.Edit.Cancel : Annuler
 
 //Edition de la sauvegarde actuelle
 SaveManager.AddToInv.error : Vous n'avez pas assez de place dans votre inventaire
@@ -71,7 +70,6 @@ UiManager.cost : coût
 //Menu des options
 Settings.Title : Options
 Settings.NotSaved : Certains paramètres ne sont pas sauvegardés.%$rVoulez-vous quand même quitter?%$r
-Settings.Save : Enregistrer
 Settings.MusicVolume : Volume de la musique
 Settings.GameVolume : Volume du jeu
 Settings.NiceBiomeBorders : Bordures de biomes : 
@@ -219,6 +217,9 @@ Opportunities.MembersAmount : Nombre de membres:
 Opportunities.WorkingTime : Temps de travail: %$1
 Opportunities.ExpeditionWaiting : L'expédition attend vos ordres...
 Opportunities.ExpeditionBack : L'expédition est rentrée!
+Opportunities.TwoSettlersMin : Il faut deux colons minimum
+Opportunities.NotEnoughSettlers : Vous n'avez que %$1 colons à envoyer!
+Opportunities.NoRover : Vous n'avez pas de rover à votre base!
 
 //Éléments de texte des opportunités
 Opportunities.People.Singular0 : Un groupe de chercheurs 
@@ -280,6 +281,8 @@ Opportunities.Title.6 : Découverte fortuite
 Opportunities.Title.7 : Données orbitales
 
 //Interactions avec les expéditions
+OppInteractions.EveryoneDied : Il semblerait que tous les membres de l'expédition aient péri.%$rNous n'avons plus de communication avec eux, et il est impossible de leur envoyer du secours.%$r%$rNous nous souviendrons longtemps de leur sacrifice pour faire avancer l'exploration de ce monde.
+
 OppInteractions.OnSite.1 : L'équipe de reconnaissance est arrivée à hauteur du bassin d'impact!%$rCependant, une gigantesque masse ferreuse au centre du bassin provoque un champ magnétique qui brouille%$rtous les signaux radio. Au moment où l'équipe entrera dans la zone, elle perdra toute connexion avec la%$rbase. Si elle s'aventure longtemps dans la zone, elle ne pourra donc pas être prévenue en cas de%$rdanger, mais pourra peut-être découvrir plus de choses. Elle peut également rentrer et revenir plus tard.%$r%$rQue faire ?
 OppInteractions.OnSite.1.b1 : Rebrousser chemin
 OppInteractions.OnSite.1.b1.1 : L'expédition a fait demi-tour et rentre à la base. Vous pourrez revenir plus tard.

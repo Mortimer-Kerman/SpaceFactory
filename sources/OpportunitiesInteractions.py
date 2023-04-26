@@ -222,6 +222,15 @@ class InteractionResult:
         """
         Permet de reprendre le trajet après une interruption.
         """
+        #Si il n'y a plus aucun membre en vie de l'expédition...
+        if opportunity.team["members"] <= 0:
+            #On met fin à l'expédition
+            InteractionResult.EndExpedition(opportunity,False)
+            #On prévient le joueur que tout le monde est mort avec une miniature appropriée
+            InteractionResult.OpenResultPanel(opportunity,"OppInteractions.EveryoneDied","interactionBackgrounds/everyoneDied" + ("Jungle" if SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike else "Desert"))
+            #On stoppe l'exécution du code
+            return
+        
         #On récupère la date de la dernière interruption qui est concrètement maintenant
         lastInterruption = opportunity.lastInterruption
         #On met l'expédition en route

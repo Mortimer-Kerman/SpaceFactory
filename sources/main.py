@@ -512,8 +512,8 @@ def EditSave(saveName:str):
     line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.OpenFile'), OpenSaveFile), align=pygame_menu.locals.ALIGN_LEFT)#Bouton de modification du fichier
     line1.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Duplicate'), duplicate), align=pygame_menu.locals.ALIGN_RIGHT)#Bouton de duplication
     
-    line2.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Save'), save), align=pygame_menu.locals.ALIGN_LEFT)#Bouton d'enregistrement
-    line2.pack(menu.add.button(Localization.GetLoc('Saves.Edit.Cancel'), menu.disable), align=pygame_menu.locals.ALIGN_RIGHT)#Bouton d'annulation
+    line2.pack(menu.add.button(Localization.GetLoc('Game.Save'), save), align=pygame_menu.locals.ALIGN_LEFT)#Bouton d'enregistrement
+    line2.pack(menu.add.button(Localization.GetLoc('Game.Cancel'), menu.disable), align=pygame_menu.locals.ALIGN_RIGHT)#Bouton d'annulation
     
     #Boucle du menu
     menu.mainloop(UiManager.screen, UiManager.DisplayBackground)
