@@ -354,6 +354,8 @@ HelpMenu.Storm : Tempête
 HelpMenu.Storm.Desc : Les tempêtes peuvent arriver de temps en temps sur les planètes vivantes. Elles réduisent fortement la visibilité et empêchent le fonctionnement des fours.
 HelpMenu.MeteorRain : Pluie de météores
 HelpMenu.MeteorRain.Desc : Les pluies de météores peuvent arriver de temps en temps dans les sauvegardes difficiles. Les météores chutant sur des installations peuvent leur causer de gros dégâts.
+HelpMenu.Obstacles : Obstacles
+HelpMenu.Obstacles.Desc : Les obstacles parsèment les mondes et empêchent la construction d'installations. Pour déblayer, il faut utiliser le laser du drone.
 
 //Évenements
 Events.EnnemyNear : Un ennemi a été détecté dans votre zone

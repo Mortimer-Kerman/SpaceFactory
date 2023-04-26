@@ -46,6 +46,27 @@ MenuTabs = [
         "thumb" : "helpMenu/MeteorRain",
         "thumbSize" : (370,230)
     },
+    {
+        "id" : "Obstacles",
+        "title" : "HelpMenu.Obstacles",
+        "desc" : "HelpMenu.Obstacles.Desc",
+        "thumb" : "helpMenu/Obstacles",
+        "thumbSize" : (370,186)
+    },
+    {
+        "id" : "Settler",
+        "title" : "Items.Settler",
+        "desc" : "Items.d.Settler",
+        "thumb" : "interactionBackgrounds/walkingDesert",
+        "thumbSize" : (370,183)
+    },
+    {
+        "id" : "Rover",
+        "title" : "Items.Rover",
+        "desc" : "Items.d.Rover",
+        "thumb" : "interactionBackgrounds/roverJungle",
+        "thumbSize" : (370,183)
+    },
 ]
 
 #Instance de menu à ouvrir
@@ -87,22 +108,26 @@ def Init():
     #Pour onglet de la list des onglets...
     for tab in tabsList:
         
+        #Si l'onglet est au format texte, on le transforme en onglet au format dictionnaire
         if type(tab) == str:
             tab = TabStrToTabDict(tab)
         
-        #Création d'un cadre qui est placé dans la liste des onglets
-        helpFrame = menu.add.frame_v(380, 50, background_color=(50, 50, 50), padding=0)
-        helpFrame.relax(True)
-        listFrame.pack(helpFrame)
+        #Si aucun onglet avec cet identifiant n'a encore été créé...
+        if menu.get_widget(tab["id"], recursive=True) == None:
         
-        #Création d'un bouton contenant le titre de l'onglet
-        b = menu.add.button(FunctionUtils.ReduceStr(FunctionUtils.FirstLetterUpper(Localization.GetLoc(tab["title"])), 23),lambda tabToOpen=tab:OpenMenu(tabToOpen),button_id=tab["id"])
-        
-        #On le lie au cadre pour que tout le bouton devienne cliquable
-        FunctionUtils.EncapsulateButtonInFrame(b, helpFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
-        
-        #On rajoute un petit espace vide sous le cadre
-        listFrame.pack(menu.add.vertical_margin(5))
+            #Création d'un cadre qui est placé dans la liste des onglets
+            helpFrame = menu.add.frame_v(380, 50, background_color=(50, 50, 50), padding=0)
+            helpFrame.relax(True)
+            listFrame.pack(helpFrame)
+            
+            #Création d'un bouton contenant le titre de l'onglet
+            b = menu.add.button(FunctionUtils.ReduceStr(FunctionUtils.FirstLetterUpper(Localization.GetLoc(tab["title"])), 23),lambda tabToOpen=tab:OpenMenu(tabToOpen),button_id=tab["id"])
+            
+            #On le lie au cadre pour que tout le bouton devienne cliquable
+            FunctionUtils.EncapsulateButtonInFrame(b, helpFrame, buttonAlign=pygame_menu.locals.ALIGN_LEFT)
+            
+            #On rajoute un petit espace vide sous le cadre
+            listFrame.pack(menu.add.vertical_margin(5))
     
     #Zone qui contiendra la description d'un onglet
     detailsFrame = menu.add.frame_v(380, 541, max_height=540, padding=0)
