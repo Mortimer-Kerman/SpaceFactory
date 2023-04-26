@@ -77,13 +77,14 @@ Settings.NiceBiomeBorders.True : Détaillées
 Settings.NiceBiomeBorders.False : Non
 Settings.MaxFps : FPS max
 Settings.MaxFps.Unlimited : Illimité
-Settings.Keys.Title : Touches
+Settings.Keys.Title : Configuration des touches
 Settings.Keys.up : Haut
 Settings.Keys.down : Bas
 Settings.Keys.left : Gauche
 Settings.Keys.right : Droite
 Settings.Keys.rotate : Tourner
 Settings.Keys.inv : Inventaire
+Settings.Keys.buildMenu : Menu de construction
 Settings.Keys.opportunities : Opportunités
 Settings.Keys.tasks : Tâches
 Settings.EditKey : Changer la touche
@@ -97,6 +98,9 @@ Session.Question : Clique sur un élément pour voir apparaître sa description.
 Session.Craft : Clique sur un élément pour voir sa composition. Reclique sur le bouton pour quitter ce mode
 Session.Pause : Pause
 Session.Continue : Reprendre
+Session.Inv : Inventaire
+Session.BuildMenu : Construction
+Session.HowToRotate : Pressez %$1 pour tourner une pièce
 
 //Tutoriel
 Tuto.0 : Maintenez le clic droit enfoncé et déplacez la souris pour faire bouger la caméra.
@@ -329,6 +333,7 @@ Market.Title : GalacticMarket
 Market.Motto : Pour des achats intergalactiques!
 Market.Buy : Acheter
 Market.Price : Prix: %$1
+Market.NotEnoughMoney : Vous n'avez pas assez d'argent!
 //Une expédition commerciale vers l'infini et au-delà
 
 //TaskManager
@@ -347,3 +352,12 @@ HelpMenu.SolarStorm : Tempête solaire
 HelpMenu.SolarStorm.Desc : Les tempêtes solaires peuvent arriver de temps en temps sur les planètes mortes. Elles inondent le monde de radiations, pouvant endommager les mécanismes sensibles.
 HelpMenu.MeteorRain : Pluie de météores
 HelpMenu.MeteorRain.Desc : Les pluies de météores peuvent arriver de temps en temps dans les sauvegardes difficiles. Les météores chutant sur des installations peuvent leur causer de gros dégâts.
+
+//Évenements
+Events.EnnemyNear : Un ennemi a été détecté dans votre zone
+Events.SandstormApproaching : Une tempête de sable est en approche!
+Events.SolarStormDetected : Une tempête solaire a été détectée!
+Events.StormApproaching : Une tempête est en approche!
+Events.StormEnded : Fin de la tempête!
+Events.MeteorStormApproaching : Une pluie de météorites est en approche!
+Events.MeteorStormEnded : Fin de la pluie de météorites!

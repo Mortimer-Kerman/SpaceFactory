@@ -241,26 +241,42 @@ def HandleShortKeyInputs(key):
         global showUi
         showUi = not showUi
     if key == SettingsManager.GetKeybind("inv"):#si la clé pressée est associée à inv
-        UiManager.showMenu["inv"]=1-UiManager.showMenu["inv"]#Afficher/cacher l'inventaire
+        ToggleInv()#Afficher/cacher l'inventaire
+    if key == SettingsManager.GetKeybind("buildMenu"):#si la clé pressée est la touche du menu de construction...
+        ToggleSelect()#Afficher/cacher le menu de construction
     if key == SettingsManager.GetKeybind("opportunities"):#si la clé pressée est associée à opportunities
         OpportunitiesManager.OpenMap()#ouvrir les opportunités
-    if key == SettingsManager.GetKeybind("tasks"):#si la clé pressée est t
+    if key == SettingsManager.GetKeybind("tasks"):#si la clé pressée est la touche des tâches...
         TaskManager.showMenu()#afficher le menu de taches
     if key == pygame.K_ESCAPE:#si la clé pressée est ESCAPE
         if Pause():#On fait pause
             return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
     return False
-    
+
+def ToggleInv():
+    """
+    Ouvre ou ferme l'inventaire
+    """
+    UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)
+    UiManager.showMenu["select"]=0
+
+def ToggleSelect():
+    """
+    Ouvre ou ferme le menu de construction
+    """
+    UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)
+    UiManager.showMenu["inv"]=0
+
 def HandleMouseClicks(button,drone):
     """Gestion des clics"""
     global laser
     if button == 1: # 1 == left button
         if UiManager.IsClickOnUI():#si c'est un clic sur UI
             if UiManager.UIelements.get("select",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["select"], alors
-                UiManager.showMenu["select"]=1-UiManager.showMenu.get("select",0)#montrer le menu "select"
+                ToggleSelect()#montrer/cacher le menu de construction
                 Tutorial.IncreaseStep(5)
             elif UiManager.UIelements.get("inv",False):#si l'élément UI cliqué est inventaire
-                UiManager.showMenu["inv"]=1-UiManager.showMenu.get("inv",0)#montrer le menu "inv"
+                ToggleInv()#montrer/cacher le menu d'inventaire
             elif UiManager.UIelements.get("menu_icon",False):#Si l'élément d'UI cliqué est l'élément stocké à UiManager.UIelements["menu_icon"], alors
                 if Pause():#On fait pause
                     return True#Si la fonction pause indique vrai, la sauvegarde a été déchargée et il faut quitter
@@ -611,6 +627,7 @@ class Tutorial:
             #Si l'étape intermédiaire a dépassé la progression maximale, on passe a l'étape suivante
             if Tutorial.GetIntermediateStep() > maxProg:
                 Tutorial.NextGlobalStep()
+                Tutorial.SaveStep()
             return
         
         #On incrémente de 1 l'étape intermédiaire

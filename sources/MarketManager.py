@@ -32,7 +32,7 @@ def showMenu():
         UiManager.place_text(L.GetLoc("Market.Title"), 20, 50, 100,font=TextureManager.GetFont("nasalization",100)) # Affichage de du texte sur l'écran
         UiManager.place_text(L.GetLoc("Market.Motto"), 20, 150, 50) # Affichage de du texte sur l'écran
         for index,popup in enumerate(UiManager.UIPopup):#pour index , popup dans UiManager.UIPopup
-            popup.show(index)
+            popup.show(index,False)
             UiManager.UIelements["popup_area"]=pygame.Rect(UiManager.width-500,50,500,205*(index+1)).collidepoint(pygame.mouse.get_pos())#on stocke la zone de popup
     
     #On récupère une liste des items achetables, trié dans l'ordre croisant
@@ -167,10 +167,10 @@ def showMenu():
 def Buy():
     # Vérifie que l'utilisateur a sélectionné un item à acheter
     if currentItem is not None:
-        # Vérifie que l'utilisateur a suffisamment de "coins" pour acheter l'item
-        if marketItem[currentItem] <= SaveManager.mainData.coins:
-            # Réduit la quantité de "coins" du joueur et ajoute l'item à son inventaire
-            SaveManager.mainData.coins -= marketItem[currentItem]
+        # Vérifie que l'utilisateur a suffisamment d'argent pour acheter l'item
+        if marketItem[currentItem] <= SaveManager.mainData.coins or SaveManager.IsSandBox():
+            # Réduit la quantité d'argent du joueur
+            SaveManager.mainData.coins = max(SaveManager.mainData.coins - marketItem[currentItem], 0)
             
             if currentItem == "Settler":#Si un colon a été acheté, on le rajoute au montant de colons
                 SaveManager.mainData.settlers += 1
@@ -182,10 +182,9 @@ def Buy():
             # Met à jour le label affichant la quantité de "coins" du joueur
             LabelCoins.set_title(str(SaveManager.mainData.coins))
         else:
-            # Si le jouerai n'a pas suffisamment de "coins"
+            # Si le jouerai n'a pas suffisamment d'argent
             # affiche un message d'erreur
-            UiManager.Popup("Vous n'avez pas assez de coins")
-            print("Vous n'avez pas assez de coins")
+            UiManager.Popup(L.GetLoc('Market.NotEnoughMoney'))
 
 # Dictionnaire des prix des différents items
 price = {"Coal": 1, "Copper": 2, "Gold": 5, "M1": 8,"NanoM1":25,"M2":15,"MeltedCopper":4}

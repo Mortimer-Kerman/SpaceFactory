@@ -30,6 +30,7 @@ def DefaultSettingsInstance():
             "right": pygame.K_d,
             "rotate": pygame.K_r,
             "inv": pygame.K_i,
+            "buildMenu": pygame.K_c,
             "opportunities" : pygame.K_m,
             "tasks" : pygame.K_t
         }
@@ -167,7 +168,7 @@ def OpenSettings(background):
     bindings = GetSetting("keybinds")
     
     for key in bindings.keys():
-        frame = SettingsMenu.add.frame_h(300, 50, padding=0, align=pygame_menu.locals.ALIGN_LEFT)
+        frame = SettingsMenu.add.frame_h(500, 50, padding=0, align=pygame_menu.locals.ALIGN_LEFT)
         frame.relax(True)
         frame.pack(SettingsMenu.add.label(Localization.GetLoc('Settings.Keys.'+key)))
         

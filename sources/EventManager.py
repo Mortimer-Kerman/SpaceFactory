@@ -11,6 +11,7 @@ import FunctionUtils
 import AudioManager
 import PlanetGenerator
 import Stats
+import Localization
 #importation de la fonction cosinus du module système math
 from math import cos
 
@@ -131,14 +132,14 @@ class EventTemplate:
 class EnnemyAttack(EventTemplate):
     def Init():
         Ennemis.spawn()#apparition d'un ennemi
-        UiManager.Popup("Un ennemi a été détecté dans votre zone")
+        UiManager.Popup(Localization.GetLoc('Events.EnnemyNear'))
 
 class Sandstorm(EventTemplate):
     
     tex = None#Texture pour l'effet visuel
     
     def Init():
-        UiManager.Popup("Une tempête de sable est en approche!")
+        UiManager.Popup(Localization.GetLoc('Events.SandstormApproaching'))
         #Récupération d'une texture pour l'effet visuel
         Sandstorm.tex = pygame.transform.scale(TextureManager.GetTexture("ground/sand"),(UiManager.width,UiManager.height))
     
@@ -151,14 +152,14 @@ class Sandstorm(EventTemplate):
             UiManager.screen.blit(tex, (UiManager.width*(offset+i), 0))#afficher
     
     def End():
-        UiManager.Popup("Fin de la tempête!")
+        UiManager.Popup(Localization.GetLoc('Events.StormEnded'))
 
 class SolarStorm(EventTemplate):
     
     tex = None#Texture pour l'effet visuel
     
     def Init():
-        UiManager.Popup("Une tempête solaire a été détectée!")
+        UiManager.Popup(Localization.GetLoc('Events.SolarStormDetected'))
         #Récupération d'une texture pour l'effet visuel
         SolarStorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/radiationEffect"),(UiManager.width,UiManager.height))
         
@@ -168,14 +169,14 @@ class SolarStorm(EventTemplate):
         UiManager.screen.blit(tex, (0, 0))#afficher
         
     def End():
-        UiManager.Popup("Fin de la tempête!")
+        UiManager.Popup(Localization.GetLoc('Events.StormEnded'))
 
 class Storm(EventTemplate):
     
     tex = None#Texture pour l'effet visuel
     
     def Init():
-        UiManager.Popup("Une tempête est en approche!")
+        UiManager.Popup(Localization.GetLoc('Events.StormApproaching'))
         #Récupération d'une texture pour l'effet visuel
         Sandstorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/rain"),(UiManager.width,UiManager.height))
     
@@ -191,7 +192,7 @@ class Storm(EventTemplate):
                 UiManager.screen.blit(tex, (UiManager.width*(xOffset+x)+x, UiManager.height*(yOffset+y)+y))#afficher
     
     def End():
-        UiManager.Popup("Fin de la tempête!")
+        UiManager.Popup(Localization.GetLoc('Events.StormEnded'))
 
 class MeteorStorm(EventTemplate):
     
@@ -200,7 +201,7 @@ class MeteorStorm(EventTemplate):
     explosionsList = []#Liste des explosions ayant cours actuellement
     
     def Init():
-        UiManager.Popup("Une pluie de météorites est en approche!")
+        UiManager.Popup(Localization.GetLoc('Events.MeteorStormApproaching'))
         #Récupération d'une texture pour l'effet visuel
         MeteorStorm.tex = pygame.transform.scale(TextureManager.GetTexture("ui/meteorStorm"),(UiManager.width,UiManager.height))
         MeteorStorm.meteorsList = []
@@ -291,7 +292,7 @@ class MeteorStorm(EventTemplate):
             MeteorStorm.meteorsList.append([UiManager.ScreenPosToWorldPos([random.randint(-UiManager.width, 2*UiManager.width) for i in range(2)]),0])
     
     def End():
-        UiManager.Popup("Fin de la pluie de météorites!")
+        UiManager.Popup(Localization.GetLoc('Events.MeteorStormEnded'))
 
 
 class Events:

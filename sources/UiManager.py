@@ -330,7 +330,7 @@ def ItemMenu():
     #on dessine le petit triangle 
     pygame.draw.polygon(screen, (255,255,255),t[showMenu.get("select",0)])
     #on mets du texte
-    place_text("Sélectionner",width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.GetFont("aquire"))
+    place_text(Localization.GetLoc('Session.BuildMenu'),width-400,height-40-500*showMenu.get("select",0),100,(255,255,255),TextureManager.GetFont("aquire"))
     
     #On stocke la valeur bool en cas d'hover sur l'élément (ici le rectangle sous "forme2" du menu de sélection) dans UIelements["select"]
     UIelements["select2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,height-500*showMenu.get("select",0)),(width,height-500*showMenu.get("select",0)),(width,height),(width-500,height)]).collidepoint(pygame.mouse.get_pos())
@@ -352,7 +352,7 @@ def ItemMenu():
     screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*4,height-100*showMenu.get("select",0)))
     place_text("détruire",width-500+102*4,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
     #placement d'une aide
-    place_text("presse "+pygame.key.name(SettingsManager.GetKeybind("rotate"))+" pour retourner l'élément",width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(500,100))
+    place_text(Localization.GetLoc('Session.HowToRotate',pygame.key.name(SettingsManager.GetKeybind("rotate"))),width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(500,100))
     
 def CostMenu():
     """Menu d'affichage des coûts de fabrication d'un objet"""
@@ -378,7 +378,7 @@ def InvMenu():
     #on dessine le petit triangle 
     pygame.draw.polygon(screen, (255,255,255),t[showMenu.get("inv",0)])
     #on mets du texte
-    place_text("Inventaire",width-400,20+500*showMenu.get("inv",0),100,(255,255,255),TextureManager.GetFont("aquire"))
+    place_text(Localization.GetLoc('Session.Inv'),width-400,20+500*showMenu.get("inv",0),100,(255,255,255),TextureManager.GetFont("aquire"))
 
     UIelements["inv2"]=pygame.draw.polygon(screen, (98,99,102), [(width-500,500*showMenu.get("inv",0)),(width,500*showMenu.get("inv",0)),(width,0),(width-500,0)]).collidepoint(pygame.mouse.get_pos())
 
@@ -612,7 +612,12 @@ class Popup:
         self.d=d
         self.prog=p
         UIPopup.append(self)
-    def show(self,i):
+    def show(self,i,invOffset:bool=True):
+        
+        #Si il faut prendre en compte l'inventaire et qu'il est ouvert, on applique un décalage vertical pour que le popup ne soit pas derrière l'inventaire
+        if invOffset and showMenu["inv"]:
+            i += 2.44
+        
         self.sliding+= SaveManager.clock.get_time()
         if self.sliding > 500:
             self.sliding = 500
@@ -624,7 +629,7 @@ class Popup:
             UIelements["popup_"+str(i)]=a.collidepoint(pygame.mouse.get_pos()) if not self.d else False#on détecte les collisions uniquement si le mode d n'est pas activé
             place_text(self.text,width-self.sliding,50+205*i,26,(255,255,255),TextureManager.GetFont("nasalization"),n=30)
             if self.prog!=0:
-                pygame.draw.rect(screen, (255,255,255), pygame.Rect(width-self.sliding,50+200*i,500*self.prog,3))
+                pygame.draw.rect(screen, (255,255,255), pygame.Rect(width-self.sliding,50+205*i,500*self.prog,3))
             if not self.d:
                 if self.command is None:
                     UIelements["popup_close_button_"+str(i)]=pygame.draw.rect(screen, (37, 37, 40), pygame.Rect(width-self.sliding,225+205*i,50,25)).collidepoint(pygame.mouse.get_pos())
