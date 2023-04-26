@@ -182,7 +182,7 @@ def Buy():
             # Met à jour le label affichant la quantité de "coins" du joueur
             LabelCoins.set_title(str(SaveManager.mainData.coins))
         else:
-            # Si le jouerai n'a pas suffisamment d'argent
+            # Si le joueur n'a pas suffisamment d'argent
             # affiche un message d'erreur
             UiManager.Popup(L.GetLoc('Market.NotEnoughMoney'))
 
