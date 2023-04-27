@@ -523,6 +523,7 @@ doc={
      "CopperWall":{"c":{"MeltedCopper":50,"Copper":40}},
      "Turret":{"c":{"Copper":50,"Gold":50,"M1":20}},
      "NanoFabricator":{"c":{"Gold":20,"MeltedCopper":50}},
+     "Synthetron":{"c":{"NanoM1":50,"Copper":50}},
      "Coal":{"g":1},
      "Copper":{"g":2},
      "Gold":{"g":5},
