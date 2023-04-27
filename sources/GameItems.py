@@ -62,12 +62,15 @@ Laser={}#dictionnaire stockant tout les lasers affichés par les tourelles
 #Affichage dynamique du rendu
 RenderQueues = {}
 def AddToRender(order:int,action):
+    """Ajout au rendu dynamique"""
     if not order in RenderQueues:
         RenderQueues[order] = []
     RenderQueues[order].append(action)
 def ExecuteRender():
+    """Lancer le rendu dynamique"""
     for queue in sorted(RenderQueues):
         for action in RenderQueues[queue]:
+            #chaque action est stockée via un lambda
             action()
     RenderQueues.clear()
 
@@ -79,34 +82,37 @@ class Item:
         """
         Définition de l'objet
         """
+        #Variables par défaut
         self.name=name
         self.pos=pos
         self.metadata=metadata
         self.metadata["sorter_choice"]="Gold"
         self.metadata["biginv"]=self.metadata.get("biginv",[])
+        #Dictionnaire contenant les différents paterne de distribution
         giveTo={"Drill":[1,1,1,1],"0":[1,0,0,0],"2":[0,1,0,0],"1":[0,0,1,0],"3":[0,0,0,1],"Storage":[1,1,1,1],"Junction":[1,1,1,1],"Bridge":[1,1,1,1]}#[up down left right]
 
-        self.rotation=SaveManager.GetRotation()
-        if name in ["ConveyorBelt","Sorter"]:
-            name=str(self.rotation)
-        self.giveto=giveTo.get(name,[0,0,0,0])
-        if self.name in list(craft.keys()):
+        self.rotation=SaveManager.GetRotation()#on récupère la rotation actuelle
+        if name in ["ConveyorBelt","Sorter"]:#si le nom est ConveyorBelt ou Sorter
+            name=str(self.rotation)#on change le nom comme étant le type précis de la rotation
+        self.giveto=giveTo.get(name,[0,0,0,0])#on récupère le paterne de distribution
+        if self.name in list(craft.keys()):#si le nom est dans la liste des items servant aux crafts
             self.giveto=[1,1,1,1]
         if self.name == "Sorter":
-            if 1 in self.giveto[0:2]:
+            #S'il s'agit d'un Sorter, on va mettre en évidence le côté de distribution pour les items choisis
+            if 1 in self.giveto[0:2]:#si le paterne correspond pour up/down
                 self.giveto[0]*=2
                 self.giveto[1]*=2
                 self.giveto[2]=1
                 self.giveto[3]=1
-            elif 1 in self.giveto[2:4]:
+            elif 1 in self.giveto[2:4]:#si le paterne correspond pour left/right
                 self.giveto[0]=1
                 self.giveto[1]=1
                 self.giveto[2]*=2
                 self.giveto[3]*=2
-        if self.name=="Teleporter":
-            TeleportPoint.append(self.pos)
-        if self.name == "CopperWall":
-            self.metadata["pv"]=500
+        if self.name=="Teleporter":#si l'item est un Teleporter
+            TeleportPoint.append(self.pos)#on ajoute ses coordonnées aux points de téléportation
+        if self.name == "CopperWall":#si il s'agit d'un mur de cuivre
+            self.metadata["pv"]=500#on mets les pv à 500
     
     def ReadDictRepresentation(DictRepresentation:dict):
         """
