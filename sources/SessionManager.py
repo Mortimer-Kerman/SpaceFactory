@@ -252,12 +252,12 @@ def HandleShortKeyInputs(key):
     """Traitement des pressions de touches rapides"""
     if key == SettingsManager.GetKeybind("rotate"):#si la clé pressée est associée à rotate
         SaveManager.UpdateRotation()#mise à jour de la rotation
-    if key == pygame.K_F2:#si la clé pressé est F2
+    if key == SettingsManager.GetKeybind("screenshot"):#si la clé pressé est associée à la capture d'écran
         UiManager.TakeScreenshot()#prendre une capture d'écran
         #On en informe le joueur
         UiManager.Popup("Capture d'écran trouvable dans le dossier /Screenshots/")
-    if key == pygame.K_F1:
-        global showUi
+    if key == SettingsManager.GetKeybind("toggleHud"):#Si la clé pressée est associée au basculement du HUD
+        global showUi#On inverse showUi
         showUi = not showUi
     if key == SettingsManager.GetKeybind("inv"):#si la clé pressée est associée à inv
         ToggleInv()#Afficher/cacher l'inventaire
@@ -510,7 +510,7 @@ def TickModules():
     global screenshotKeyPressedLast
     
     #Est-ce que la touche de capture d'écran est pressée
-    screenshotKeyPressed = pygame.key.get_pressed()[pygame.K_F2]
+    screenshotKeyPressed = pygame.key.get_pressed()[SettingsManager.GetKeybind("screenshot")]
     
     #Si la touche de capture d'écran est pressée mais qu'elle n'était pas pressée à la frame précédente...
     if screenshotKeyPressed and not screenshotKeyPressedLast:

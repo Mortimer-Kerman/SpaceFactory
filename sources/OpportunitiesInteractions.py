@@ -72,37 +72,36 @@ class OpportunityInteraction:
         if oppDescCodes == None:
             oppDescCodes = opportunity.GetDescCodes()
         
-        applies = True
-        """
+        #On vérifie en cas de nécessité particulière pour un rover
         if Tags.ONROVER in self.tags:
             if self.tags[Tags.ONROVER] != opportunity.IsOnRover():
-                applies = False
-        
+                return False
+        #On vérifie en cas de nécessité particulière pour une planète morte
         if Tags.DEADPLANET in self.tags:
-                if self.tags[Tags.DEADPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead):
-                    applies = False
-        
+            if self.tags[Tags.DEADPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Dead):
+                return False
+        #On vérifie en cas de nécessité particulière pour une planète désertique
         if Tags.DESERTICPLANET in self.tags:
-                if self.tags[Tags.DESERTICPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Desertic):
-                    applies = False
-        
+            if self.tags[Tags.DESERTICPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.Desertic):
+                return False
+        #On vérifie en cas de nécessité particulière pour une planète vivante
         if Tags.LIVINGPLANET in self.tags:
-                if self.tags[Tags.LIVINGPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike):
-                    applies = False
-        
+            if self.tags[Tags.LIVINGPLANET] != (SaveManager.GetEnvironmentType() == PlanetGenerator.PlanetTypes.EarthLike):
+                return False
+        #On vérifie en cas de nécessité particulière pour un nombre minimal de membres
         if Tags.MINMEMBERS in self.tags:
             if self.tags[Tags.MINMEMBERS] > opportunity.GetMembersAmount():
-                applies = False
-        
+                return False
+        #On vérifie en cas de nécessité particulière pour un nombre maximal de membres
         if Tags.MAXMEMBERS in self.tags:
-                if self.tags[Tags.MAXMEMBERS] < opportunity.GetMembersAmount():
-                    applies = False
-        
+            if self.tags[Tags.MAXMEMBERS] < opportunity.GetMembersAmount():
+                return False
+        #On vérifie en cas de nécessité particulière pour un lieu précis
         if Tags.LOCATIONTYPE in self.tags:
             if oppDescCodes["place"] not in self.tags[Tags.LOCATIONTYPE]:
-                applies = False
-        """
-        return applies
+                return False
+        
+        return True
     
     def GetImage(self):
         """
@@ -443,14 +442,14 @@ interruptionInteractions=[
                                     lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b1.2","interactionBackgrounds/abseiling")),
                                 lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b1.1","interactionBackgrounds/icyPlain")),
                                       InteractionResult.AddDistanceToPath(o, 3),
-                                      InteractionResult.ResumeTravel(o)))
+                                      InteractionResult.ResumeTravel(o))),
                            ("OppInteractions.Interruption.4.b2",
                             lambda o:(InteractionResult.DoWithChance(o,0.5,
                                 lambda o:(InteractionResult.SetMembers(o, 1),
                                           InteractionResult.ReturnToBase(o),
                                           InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b2.1","interactionBackgrounds/fallingIcy")),
                                 lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b2.2","interactionBackgrounds/icyPlain")),
-                                      InteractionResult.ResumeTravel(o)))
+                                      InteractionResult.ResumeTravel(o))),
                            ("OppInteractions.Interruption.4.b3",
                             lambda o:(InteractionResult.DoWithChance(o,0.2,
                                 lambda o:(InteractionResult.AddMembers(o, -1),

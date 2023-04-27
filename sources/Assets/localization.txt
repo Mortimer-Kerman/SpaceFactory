@@ -90,6 +90,8 @@ Settings.Keys.inv : Inventaire
 Settings.Keys.buildMenu : Menu de construction
 Settings.Keys.opportunities : Opportunités
 Settings.Keys.tasks : Tâches
+Settings.Keys.screenshot : Capture d'écran
+Settings.Keys.toggleHud : Afficher/cacher le HUD
 Settings.EditKey : Changer la touche
 Settings.EditKey.Current : Touche actuelle: %$1
 Settings.Reset : Réinitialiser les paramètres
@@ -170,7 +172,7 @@ Items.delete : détruire
 //Description des items
 Items.d.Drill : La foreuse est une machine servant à extraire des minerais automatiquement
 Items.d.ConveyorBelt : Les tapis roulants sont un merveilleux moyen de déplacer des items d'une machine vers une autre
-Items.d.Storage : Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, clique sur un stockage pour récupérer son contenu dans votre inventaire]
+Items.d.Storage : Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, cliquez sur un stockage pour récupérer son contenu dans votre inventaire]
 Items.d.Junction : La jonction permet de lier deux tapis roulants
 Items.d.Sorter : Permet de trier les différents items
 Items.d.delete : Le menu de destruction permet de détruire un item
@@ -181,8 +183,8 @@ Items.d.M1 : Le M1 est un minerain alliage de zinc et de cobalt, qui, une fois r
 Items.d.Bridge : Permet de croiser deux tapis sans mélanger leur production
 Items.d.MolecularAssembler : L'Assembleur moléculaire est une machine qui modifie la composition moléculaire du M1 via de l'or
 Items.d.Furnace : Le four permet de faire fondre du cuivre, en brûlant du charbon
-Items.d.NanoFabricator : Le Fabricateur Nano permet de créer du nanoM1, en ajoutant du cuivre fondu à du M1.
-Items.d.SyntheticGold : L'Or Synthétique est un conducteur électrique, très utilisé pour la micro-électronique
+Items.d.NanoFabricator : Le Fabricateur Nano permet de créer du nanoM1, en ajoutant du cuivre fondu à du M1
+Items.d.SyntheticGold : L'Or synthétique est un conducteur électrique, très utilisé pour la micro-électronique
 Items.d.NanoM1 : Le nanoM1 est une forme transformée du M1 qui présente des capacités supraconductrices à température ambiante
 Items.d.Synthetron : Une machine permettant de synthétiser de l'or synthétique via du cuivre fondu et de l'or fondu
 Items.d.CopperM1 : Est ce du cuivre ou du M1, impossible de le savoir, ce minerai dispose de propriétés étonnantes

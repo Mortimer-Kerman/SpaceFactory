@@ -34,7 +34,9 @@ def DefaultSettingsInstance():
             "inv": pygame.K_i,
             "buildMenu": pygame.K_c,
             "opportunities" : pygame.K_m,
-            "tasks" : pygame.K_t
+            "tasks" : pygame.K_t,
+            "screenshot" : pygame.K_F2,
+            "toggleHud" : pygame.K_F1
         }
     }
 

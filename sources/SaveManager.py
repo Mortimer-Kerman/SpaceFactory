@@ -21,6 +21,7 @@ import FunctionUtils
 import AudioManager
 import SettingsManager
 import Stats
+import SessionManager
 
 SaveFileVersion="f0.20"
 
@@ -212,6 +213,7 @@ def Unload():
     SetSelectedItem(None)
     ResetRotation()
     AudioManager.StopGameSounds()
+    SessionManager.showUi = True
     print("File unloaded")
 
 def SaveExists(name:str):

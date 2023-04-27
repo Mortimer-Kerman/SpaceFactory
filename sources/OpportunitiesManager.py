@@ -100,7 +100,7 @@ def OpenMap():
         
         Ca veut donc dire que d'après la loi binomiale, même en faisant deux millions de tirages, les probabilités que ça arrive sont de un pourcent.
         
-        Si un utilisateur tombe sur ce bug et vient s'en plaindre, soit ce jeu a cartonné, soit il avait plus de chances de gagner à l'euromillion.
+        Si un utilisateur tombe sur cette éventualité et vient s'en plaindre, il avait plus de chances de gagner à l'euromillion.
         """
         
         #Création d'un bouton contenant le titre de l'opportunité
