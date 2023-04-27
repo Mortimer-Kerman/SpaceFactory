@@ -314,7 +314,7 @@ def Open(tab:str=None):
         button.apply()
     
     #Boucle du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),SessionManager.TickModules()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),SessionManager.TickModules()),clear_surface=False)
 
 def GetTabTitle(tab):
     if type(tab) == str:

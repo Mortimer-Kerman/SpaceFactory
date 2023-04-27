@@ -116,7 +116,7 @@ def OpenMainMenu():
     #On ajoute le bouton pour accéder aux crédits
     Menus.MainMenu.add.button(Localization.GetLoc('Game.Credits'), OpenCredits, font_size=20, align=pygame_menu.locals.ALIGN_LEFT).set_onselect(FunctionUtils.setSelectedFrame)
     
-    Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),pygame.key.set_repeat(1000)))#Boucle principale du Menu
+    Menus.MainMenu.mainloop(UiManager.screen, lambda : (UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),pygame.key.set_repeat(1000)),clear_surface=False)#Boucle principale du Menu
 
 def OpenSavesList():
     """
@@ -265,7 +265,7 @@ def OpenSavesList():
     bottomFrame.pack(Menus.SavesList.add.frame_v(35,50),align=pygame_menu.locals.ALIGN_CENTER)#Espace vide entre les deux boutons
     bottomFrame.pack(Menus.SavesList.add.button("Modifier",lambda:EditSave(selectedMap)), align=pygame_menu.locals.ALIGN_CENTER)#Bouton de modification
     
-    Menus.SavesList.mainloop(UiManager.screen, lambda:(UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()))#Boucle principale du Menu
+    Menus.SavesList.mainloop(UiManager.screen, lambda:(UiManager.DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons()),clear_surface=False)#Boucle principale du Menu
 
 def OpenSaveCreationMenu(defaultTuto:bool=False):
     """
@@ -394,7 +394,7 @@ def OpenSaveCreationMenu(defaultTuto:bool=False):
     CreateSaveButton = Menus.SaveCreation.add.button(Localization.GetLoc('Saves.NewSave.Create'), lambda : (SetCorrectPlanetMap(EnvironmentSlider.get_value(),GetSeedFromInput(),forceGenerate=True),TryCreateSave(saveNameInput)))
     
     #Boucle du menu
-    Menus.SaveCreation.mainloop(UiManager.screen, UiManager.DisplayBackground)
+    Menus.SaveCreation.mainloop(UiManager.screen, UiManager.DisplayBackground,clear_surface=False)
     
 def TryCreateSave(saveNameInput):
     """
@@ -516,7 +516,7 @@ def EditSave(saveName:str):
     line2.pack(menu.add.button(Localization.GetLoc('Game.Cancel'), menu.disable), align=pygame_menu.locals.ALIGN_RIGHT)#Bouton d'annulation
     
     #Boucle du menu
-    menu.mainloop(UiManager.screen, UiManager.DisplayBackground)
+    menu.mainloop(UiManager.screen, UiManager.DisplayBackground,clear_surface=False)
 
 def OpenCredits():
     
@@ -526,7 +526,7 @@ def OpenCredits():
     with open("Assets/credits.txt", "r", encoding="utf-8") as f:
         creditsMenu.add.label(f.read(), font_size=20)
     
-    creditsMenu.mainloop(UiManager.screen, UiManager.DisplayBackground)
+    creditsMenu.mainloop(UiManager.screen, UiManager.DisplayBackground,clear_surface=False)
 
 def Intro()->bool:
     """

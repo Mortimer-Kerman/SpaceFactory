@@ -471,7 +471,7 @@ def Pause():
     pauseMenu.add.button(L.GetLoc("Settings.Title"), lambda:SettingsManager.OpenSettings(DisplayPauseMenuBackground))#Bouton pour ouvrir les options
     pauseMenu.add.button(L.GetLoc("Game.MainMenu"), QuitGame)#Menu principal
     
-    pauseMenu.mainloop(UiManager.screen,DisplayPauseMenuBackground)#affiche le menu
+    pauseMenu.mainloop(UiManager.screen,DisplayPauseMenuBackground,clear_surface=False)#affiche le menu
     
     PauseMenuBackground = None
     return quitGame

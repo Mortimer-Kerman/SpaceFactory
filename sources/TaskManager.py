@@ -230,7 +230,7 @@ def showMenu():
     RefreshMenu()
     
     #Boucle du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),AudioManager.Tick(),SaveManager.TickClock()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),AudioManager.Tick(),SaveManager.TickClock()),clear_surface=False)
 
 def CreateTask(minimalLevel:int=0):
     """

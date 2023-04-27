@@ -226,7 +226,7 @@ def OpenSettings(background):
     SettingsMenu.add.vertical_margin(20)
     
     #Boucle du menu
-    SettingsMenu.mainloop(UiManager.screen, background)
+    SettingsMenu.mainloop(UiManager.screen, background,clear_surface=False)
 
 def ChangeKey(KeyButton,KeyId,background):
     """
@@ -265,4 +265,4 @@ def ChangeKey(KeyButton,KeyId,background):
                 KeyChanger.disable()
     
     #Boucle du menu
-    KeyChanger.mainloop(UiManager.screen, lambda:(background(),kLoop()))
+    KeyChanger.mainloop(UiManager.screen, lambda:(background(),kLoop()),clear_surface=False)

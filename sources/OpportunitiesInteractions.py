@@ -317,7 +317,7 @@ class InteractionResult:
         menu.add.button(Localization.GetLoc('Game.Ok'), menu.disable, font_size=20)
         
         #Boucle du menu
-        menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()))
+        menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()),clear_surface=False)
 
 onSiteInteractions=[
     OpportunityInteraction("OppInteractions.OnSite.1", "interactionBackgrounds/impactCrater",

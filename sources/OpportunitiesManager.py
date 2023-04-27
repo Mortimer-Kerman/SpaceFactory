@@ -204,7 +204,7 @@ def OpenMap():
             RefreshMenu()
     
     #Boucle de mise à jour du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick(),SessionManager.TickModules()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),MenuTick(),SessionManager.TickModules()),clear_surface=False)
 
 def RefreshMenu():
     """
@@ -396,7 +396,7 @@ def OpenExpeditionLauncher():
     EnsureValidity()
     
     #Boucle du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()),clear_surface=False)
 
 def CloseMap():
     """
@@ -981,7 +981,7 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
         bottomBar.pack(menu.add.button(Localization.GetLoc(option[0]),result,font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
     
     #Boucle du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()),clear_surface=False)
 
 
 

@@ -503,7 +503,7 @@ def interactItem(item):
         
         b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélecteur pour permettre de choisir l'élément trié
         
-        interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)#on lance le menu
+        interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground,clear_surface=False)#on lance le menu
     if item.name=="Teleporter":
         a=[[str(tuple(i))] for i in list(GameItems.TeleportPoint)]#On récupère la liste des éléments transportables
         
@@ -511,7 +511,7 @@ def interactItem(item):
         
         b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélecteur pour permettre de choisir l'élément trié
         
-        interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground)#on lance le menu
+        interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground,clear_surface=False)#on lance le menu
     if item.name in ["Storage"]:#si l'item peut interagir avec l'inventaire
         
         in_menu=1#booléen si l'on est dans le menu
@@ -721,8 +721,8 @@ def DisplayBackground():
     """
     Affichage du fond et mise à jour des modules
     """
-    MenuBackground.draw(screen)
     SessionManager.TickModules()
+    MenuBackground.draw(screen)
 
 def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground)->bool:
     """
@@ -763,7 +763,7 @@ def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackgrou
     bottomBar.pack(cancelButton, align=pygame_menu.locals.ALIGN_RIGHT)
     
     #Boucle du menu
-    WarnMenu.mainloop(screen, background)
+    WarnMenu.mainloop(screen, background,clear_surface=False)
     
     #Renvoie le résultat booléen de la confirmation une fois que le jeu est sorti de la boucle du menu
     return confirmed

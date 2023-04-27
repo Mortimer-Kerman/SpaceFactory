@@ -162,7 +162,7 @@ def showMenu():
     OpenItem(keys[0])
     
     #Boucle de mise à jour du menu
-    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),SessionManager.TickModules()))
+    menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),FunctionUtils.ManageEncapsulatedButtons(),SessionManager.TickModules()),clear_surface=False)
 
 def Buy():
     # Vérifie que l'utilisateur a sélectionné un item à acheter
