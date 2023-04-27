@@ -126,7 +126,7 @@ class Item:
         """
         Mise à jour de l'item
         """
-        self.metadata["g"]=0
+        self.metadata["g"]=0#Variable pour savoir si l'item a reçu/donné / sert à ralentir la transition entre items
         
         cam = SaveManager.GetCamPos()
         cam = [cam[0],cam[1]]
@@ -136,41 +136,46 @@ class Item:
         if not (-cam[0]+UiManager.width+200>=self.pos[0]*zoom>=-cam[0]-200 and -cam[1]+UiManager.height+200>=self.pos[1]*zoom>=-cam[1]-200):#si l'objet n'est pas visible
             return#quitter la fonction
         
-        order = 0 if self.name in ["ConveyorBelt","Sorter"] else 2
+        order = 0 if self.name in ["ConveyorBelt","Sorter"] else 2#S'il s'agit d'un ConveyorBelt ou d'un Sorter, ordre=0, sinon 2
         
+        #ajout au rendu dynamique
         AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name, zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))#afficher
-        
+        #si les pvs sont à 0, on ajoute une texture cassée
         if not self.metadata.get("pv",100):
             AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture("Broken", zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))#afficher
             return
-        if self.name == "Drill" and runtime == 0:
+        if self.name == "Drill" and runtime == 0:#s'il s'agit d'une foreuse, jouer le son associé
             AudioManager.PlaySound("Drill",self.pos)
         
         if self.name in ["ConveyorBelt","Sorter"]:
+            #On récupère la couleur d'item à afficher sur le ConveyorBelt, Sorter
             col=allTransportableItems
             
             if self.metadata.get("inv",None) is not None:
-                a=col.get(self.metadata.get("inv",(255,255,255)),False)
+                a=col.get(self.metadata.get("inv",(255,255,255)),(255,255,255))
+            else:
+                a=False
             if self.name=="Sorter":
                 a=col.get(self.metadata.get("sorter_choice",None),(255,255,255))
-            if a:
+
+            if a:#si un item n'est pas none
                 renderOffset = (0,0)
-                if Anim and self.name=="ConveyorBelt":
+                if Anim and self.name=="ConveyorBelt":#si les animations sont activées, et qu'il s'agit d'un ConveyorBelt
                     
-                    item=self.GetItemToGive()
+                    item=self.GetItemToGive()#On récupère l'item que l'on veut donner
                     renderOffset = (0,-runtime/50)
                     moving = True
-                    if item is None:
+                    if item is None:#s'il n'y a pas d'item, on ne bouge pas
                         renderOffset=(0,0)
                         moving = False
                     else:
-                        if item.metadata.get("inv",None) is not None:#si l'item n'a rien dans son inventaire
+                        if item.metadata.get("inv",None) is not None:#si l'item n'a pas rien dans son inventaire
                             renderOffset=(0,0)
                             moving = False
 
-                    if moving and runtime == 0:
+                    if moving and runtime == 0:#si l'on bouge
                         AudioManager.PlaySound("ConveyorBelt",self.pos)
-
+                    #calcul des mouvements
                     if self.rotation == 1:
                         renderOffset = (renderOffset[1],-renderOffset[0])
                     elif self.rotation == 2:
@@ -178,7 +183,9 @@ class Item:
                     elif self.rotation == 3:
                         renderOffset = (-renderOffset[1],renderOffset[0])
 
-                renderOffset = (renderOffset[0]*zoom,renderOffset[1]*zoom)            
+                renderOffset = (renderOffset[0]*zoom,renderOffset[1]*zoom)
+
+                #affichage des items           
                 AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom+renderOffset[0],
                                                                                  self.pos[1]*zoom+cam[1]+1/4*zoom+renderOffset[1]),
                                                                                 (self.pos[0]*zoom+cam[0]+3/4*zoom+renderOffset[0],
@@ -189,9 +196,11 @@ class Item:
                                                                                  self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1])]))
             
     def GetItemToGive(self):
+        """Renvoie l'item à donner"""
         g=self.giveto
         item=None
         if not self.name in ["Sorter","Bridge"]:
+            #On vérifie juste en haut, en bas, à gauche, à droite si il y a un item, et que son inventaire est bien vide
                 if g[0]:
                     item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
                     if item is not None:
@@ -209,6 +218,7 @@ class Item:
                     if item is not None:
                         if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
         elif self.name=="Sorter":
+            #On vérifie juste en haut, en bas, à gauche, à droite si il y a un item, et que son inventaire est bien vide, on ajoute aussi la considération de l'item à transmettre (type du Sorter ou non)
             a=self.metadata.get("sorter_choice")==self.metadata.get("inv")
             if ((g[0]==2 and a) or (g[0]==1 and not a)) and item is None:
                 item=SaveManager.GetItemAtPos((self.pos[0],self.pos[1]-1))#on récupère l'item du dessus
@@ -227,6 +237,7 @@ class Item:
                 if item is not None:
                     if item.giveto==[0,0,1,0] or item.metadata.get("inv",None) is not None:item=None
         elif self.name=="Bridge":
+            #on calcule juste de l'autre côté du dernier item reçu
             if len(self.metadata.get("last",self.pos))==2:
                 a=list(self.metadata.get("last",self.pos))
                 a[0]=FunctionUtils.signe(self.pos[0]-a[0]) if self.pos[0]-a[0]!=0 else 0
@@ -237,6 +248,7 @@ class Item:
         return item
     
     def Give(self):
+        """Permet de transmettre un item à une autre machine"""
         global Laser
         if not self.metadata.get("pv",100):
             return
