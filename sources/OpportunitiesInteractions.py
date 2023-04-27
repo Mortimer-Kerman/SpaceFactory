@@ -363,6 +363,25 @@ onSiteInteractions=[
                                       InteractionResult.ReturnToBase(o)),
                             (10,15)),
                            ),
+    OpportunityInteraction("OppInteractions.OnSite.3", "interactionBackgrounds/mesa",
+                           {},
+                           ("OppInteractions.OnSite.3.b1",
+                            lambda o:(InteractionResult.DoWithChance(o,0.3,
+                                lambda o:(InteractionResult.AddResourceToInv(o, None, (10,30),"rAmount"),
+                                          InteractionResult.AddMembers(o, -1),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.3.b1.1","interactionBackgrounds/cave")),
+                                lambda o:(InteractionResult.AddResourceToInv(o, None, (10,30),"rAmount"),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.3.b1.2","interactionBackgrounds/cave"))),
+                                      InteractionResult.ReturnToBase(o)),
+                            (3,5)),
+                           ("OppInteractions.OnSite.3.b2",
+                            lambda o:(InteractionResult.DoWithChance(o,0.6,
+                                lambda o:(InteractionResult.AddResourceToInv(o, None, (10,30),"rAmount"),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.3.b2.1","interactionBackgrounds/walkingDesert")),
+                                lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.3.b2.2","interactionBackgrounds/walkingDesert"))),
+                                      InteractionResult.ReturnToBase(o)),
+                            (6,10))
+                           ),
 ]
 
 interruptionInteractions=[

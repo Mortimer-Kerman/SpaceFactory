@@ -186,8 +186,8 @@ def Buy():
             # affiche un message d'erreur
             UiManager.Popup(L.GetLoc('Market.NotEnoughMoney'))
 
-# Dictionnaire des prix des différents items
-price = {"Coal": 1, "Copper": 2, "Gold": 5, "M1": 8,"NanoM1":25,"M2":15,"MeltedCopper":4,"MeltedGold":10}
+# Dictionnaire des prix de vente des différents items
+price = {"Coal":1,"Copper":2,"Gold":5,"M1":8,"MeltedCopper":4,"MeltedGold":10,"RefinedM1":16,"SyntheticGold":15,"NanoM1":20,"M2":25,"PlasmaGold":40}
 def Sell(item):
     # Ajoute le prix correspondant à la quantité de "coins" du joueur si l'item est dans le dictionnaire
     SaveManager.mainData.coins += price.get(item, 0)
