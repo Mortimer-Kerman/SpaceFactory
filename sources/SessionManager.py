@@ -427,13 +427,12 @@ def HandleMouseClicks(button,drone):
             if a != "Obstacle":
                 SaveManager.AddToInv(d=a)#Ajout à l'inventaire
                 UiManager.LightPopup(L.GetLoc("Items."+str(a))+" ajouté à l'inventaire")#Affiche la LightPopup lié au minage
+                Stats.IncreaseStat("Mined" + a)
                 if a == "Copper":
                     Tutorial.IncreaseStep(3)
-                    Stats.IncreaseStat("MinedCopper")
             else:
                 SaveManager.ClearObstacle(UiManager.GetMouseWorldPos())
-        
-
+                Stats.IncreaseStat("ObstaclesDestroyed")
     
     return False
 
@@ -531,6 +530,17 @@ class Tutorial:
                                                      (6,-5),(7,-5),(8,-5),(9,-5),(10,-5),
                                                      (0,-4),(10,-4),(0,-3),(10,-3),(0,-2),
                                                      (10,-2),(0,-1),(10,-1),(0, 0)]
+            
+            #tâche spéciale et spécifique aux tutoriels
+            task = {"id":0,"lv":0,"baseVal":0,"done":False,"claimed":False}
+            
+            #Si il n'y a aucune tâche dans la liste des tâches, on allonge la liste avec la tâche spéciale
+            if len(SaveManager.mainData.tasks) == 0:
+                SaveManager.mainData.tasks.append(task)
+            #Sinon, si l'id de la tâche au début de la liste des tâches n'est pas 0...
+            elif SaveManager.mainData.tasks[0]["id"] != 0:
+                #On met dans la liste des tâches la tâche spéciale
+                SaveManager.mainData.tasks[0] = task
     
     def SaveStep():
         """
@@ -686,6 +696,7 @@ class Tutorial:
         
         if globalStep == 23:
             Tutorial.popup.close()
+            Stats.SetStat("TutorialCompleted", 1)
         else:
             Tutorial.popup.setText(L.GetLoc("Tuto." + str(globalStep),*Tutorial.GetLocKeys()))
             Tutorial.popup.setProg(0)

@@ -963,7 +963,7 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
         #Si l'interaction est une interruption ou que la durée de l'activité est nulle...
         if interactionType == InteractionType.INTERRUPTION or activityTime == None:
             #Le résultat exécuté en pressant sur le bouton est l'exécution immédiate du résultat de l'opportunité
-            result = lambda res=option[1]:(menu.disable(),res(opportunity),opportunity.ResetLastInteraction())
+            result = lambda res=option[1]:(menu.disable(),res(opportunity),opportunity.ResetLastInteraction(),Stats.IncreaseStat("SolvedDilemmas"))
         else:
             #Fonction temporaire permettant de débuter le travail sur site
             def BeginOnSiteActivity(opportunity,duration:int):

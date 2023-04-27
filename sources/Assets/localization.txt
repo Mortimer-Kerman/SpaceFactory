@@ -341,11 +341,20 @@ Market.NotEnoughMoney : Vous n'avez pas assez d'argent!
 
 //TaskManager
 TaskMenu.Title : Menu de tâches
+TaskMenu.Reward : Récompense: %$1
+TaskMenu.ClickToGet : Cliquez pour récupérer %$1!
+TaskMenu.AlreadyGot : Tâche accomplie!
+Task.0 : Compléter entièrement le tutoriel
 Task.1 : Remplir entièrement un stockage de M1
 Task.2 : Envoyer %$1 expéditions
 Task.3 : Survivre a %$1 évenements
 Task.4 : Détruire %$1 ennemis
 Task.5 : Réparer %$1 machines
+Task.6 : Résoudre %$1 dilemmes d'opportunités
+Task.7 : Détruire %$1 obstacles
+Task.8 : Placer %$1 blocs de décoration
+Task.9 : Placer %$1 foreuses
+Task.10 : Placer %$1 tapis roulants
 
 //Menu d'aide
 HelpMenu.title : Menu d'aide
