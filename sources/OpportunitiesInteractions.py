@@ -334,6 +334,7 @@ class InteractionResult:
         #Boucle du menu
         menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()),clear_surface=False)
 
+#Liste des interactions sur site
 onSiteInteractions=[
     OpportunityInteraction("OppInteractions.OnSite.1", "interactionBackgrounds/impactCrater",
                            {Tags.LOCATIONTYPE:[4,7]},
@@ -391,6 +392,7 @@ onSiteInteractions=[
                            ),
 ]
 
+#Liste des interactions d'interruptions
 interruptionInteractions=[
     OpportunityInteraction("OppInteractions.Interruption.1", "interactionBackgrounds/sandstorm",
                            {Tags.ONROVER:True,Tags.DESERTICPLANET:True},
@@ -406,7 +408,7 @@ interruptionInteractions=[
                                       InteractionResult.ResumeTravel(o)))
                            ),
     OpportunityInteraction("OppInteractions.Interruption.2", "interactionBackgrounds/blockedWay",
-                           {Tags.ONROVER:False},
+                           {},
                            ("OppInteractions.Interruption.2.b1",
                             lambda o:(InteractionResult.AddDistanceToPath(o, 3),
                                       InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.2.b1.1","interactionBackgrounds/walkingDesert"),
@@ -440,6 +442,7 @@ interruptionInteractions=[
                                               InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b1.1","interactionBackgrounds/fallingIcy")),
                                     lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b1.2","interactionBackgrounds/abseiling")),
                                 lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b1.1","interactionBackgrounds/icyPlain")),
+                                      InteractionResult.AddDistanceToPath(o, 3),
                                       InteractionResult.ResumeTravel(o)))
                            ("OppInteractions.Interruption.4.b2",
                             lambda o:(InteractionResult.DoWithChance(o,0.5,
