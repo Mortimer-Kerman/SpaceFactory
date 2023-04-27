@@ -144,6 +144,7 @@ Items.Coal : Charbon
 Items.Copper : Cuivre
 Items.MeltedCopper : Cuivre fondu
 Items.Gold : Or
+Items.MeltedGold : Or fondu
 Items.M1 : M1
 Items.NanoM1 : nanoM1
 Items.NanoFabricator : Fabricateur Nano
@@ -160,7 +161,7 @@ Items.YellowBlock : Bloc jaune
 Items.GreenBlock : Bloc vert
 Items.BlackBlock : Bloc noir
 Items.WhiteBlock : Bloc blanc
-Item.RefinedM1 : M1 raffiné
+Items.RefinedM1 : M1 raffiné
 Items.M2 : M2
 Items.Settler : Colon
 Items.Rover : Rover
