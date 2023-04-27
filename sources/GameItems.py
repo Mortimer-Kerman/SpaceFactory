@@ -22,7 +22,7 @@ import pygame
 menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","CopperWall","Turret","NanoFabricator","Synthetron"]#éléments du menu de sélection
 
 #représentation des items sur un tapis roulant
-allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"MeltedGold":(210,160,50),"NanoM1":(50,10,110),"PlasmaGold":(220,170,44),"SyntheticGold":(230,130,50)}
+allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"RefinedM1":(68, 90, 100),"M2":(78,130,110),"MeltedCopper":(255,0,0),"MeltedGold":(210,160,50),"NanoM1":(50,10,110),"PlasmaGold":(220,170,44),"SyntheticGold":(230,130,50)}
 
 #Fonction expérimentale de téléportation
 TeleportPoint=[]
@@ -30,14 +30,11 @@ TeleportPoint=[]
 #Dictionnaire contenant toutes les recettes de crafts
 craft={
     #id_block:[{"c":(item 1, item 2),"r":résultat}]
-    "Furnace":[{"c":("Copper","Coal"),"r":"MeltedCopper"},{"c":("Gold","Coal"),"r":"MeltedGold"}],
-    "MolecularAssembler":[{"c":("M1","Gold"),"r":"M2"}],
-    "NanoFabricator":[{"c":("M1","MeltedCopper"),"r":"NanoM1"}],
-    "Synthetron":[{"c":("Copper","Gold"),"r":"SyntheticGold"}],
-    "QuantumFurnace": [{"c":("Copper","NanoM1"),"r":"CopperM1"}],
-    "PlasmaForge": [{"c":("M2","SyntheticGold"),"r":"PlasmaGold"}],
-    "GravityManipulator": [{"c":("M2","PlasmaGold"),"r":"GravitonCore"}]
-
+    "Furnace":[{"c":("Copper","Coal"),"r":"MeltedCopper"},{"c":("Gold","Coal"),"r":"MeltedGold"},{"c":("M1","Coal"),"r":"RefinedM1"}],
+    "MolecularAssembler":[{"c":("RefinedM1","MeltedGold"),"r":"M2"}],
+    "NanoFabricator":[{"c":("RefinedM1","MeltedCopper"),"r":"NanoM1"}],
+    "Synthetron":[{"c":("MeltedCopper","MeltedGold"),"r":"SyntheticGold"}],
+    "PlasmaForge": [{"c":("M2","SyntheticGold"),"r":"PlasmaGold"}]
 }
 #Liste des résultats de crafts
 craftResults=[]

@@ -1006,6 +1006,3 @@ def FormatTextWithRessource(text:str,rName:str)->str:
         #On utilise une expression régulière pour remplacer rName et les deux lettres avant par une apostrophe suivie de rName
         text = re.sub("[A-Za-z]\\s"+rName,"'"+rName,text)
     return text
-
-
-

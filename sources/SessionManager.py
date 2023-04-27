@@ -209,7 +209,7 @@ def HandleLongKeyInputs():
         camOffset[0]+=SaveManager.clock.get_time() / 2
         
     mouseDisplacement = pygame.mouse.get_rel()#On récupère le déplacement de la souris depuis la dernière frame
-    if mouseInputs[0] and not SaveManager.IsItemSelected() and not UiManager.IsClickOnUI():#Si le bouton gauche est enfoncé, qu'aucun objet n'est séléctionné et que le clic de souris n'est pas sur l'UI...
+    if mouseInputs[0] and not SomethingSelected() and not UiManager.IsClickOnUI():#Si le bouton gauche est enfoncé, qu'aucun objet n'est séléctionné et que le clic de souris n'est pas sur l'UI...
         #On ajoute le déplacement de la souris au déplacement de la caméra
         camOffset[0] += mouseDisplacement[0]
         camOffset[1] += mouseDisplacement[1]
@@ -240,6 +240,13 @@ def HandleLongKeyInputs():
             GameItems.Minerais.SpawnBorder()#on spawn les minerais aux bordures
 
 showUi = True    
+
+
+def SomethingSelected()->bool:
+    """
+    Dit si quelque chose est sélectionné
+    """
+    return UiManager.showMenu["delete"] == 1 or UiManager.showMenu["question"] == 1 or SaveManager.IsItemSelected()
 
 def HandleShortKeyInputs(key):
     """Traitement des pressions de touches rapides"""
@@ -485,6 +492,7 @@ def Pause():
     
     pauseMenu.mainloop(UiManager.screen,DisplayPauseMenuBackground,clear_surface=False)#affiche le menu
     
+    global PauseMenuBackground
     PauseMenuBackground = None
     return quitGame
 

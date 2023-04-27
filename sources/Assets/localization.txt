@@ -140,7 +140,6 @@ Items.Bridge : Pont
 Items.Furnace : Four
 Items.Market : Market
 Items.MolecularAssembler : Assembleur moléculaire
-Items.CoalCentral : Centrale à charbon
 Items.Coal : Charbon
 Items.Copper : Cuivre
 Items.MeltedCopper : Cuivre fondu
@@ -150,11 +149,9 @@ Items.NanoM1 : nanoM1
 Items.NanoFabricator : Fabricateur Nano
 Items.Synthetron : Synthetron
 Items.SyntheticGold : Or Synthétique
-Items.QuantumFurnace : Four Quantique
 Items.CopperM1 : CuivreM1
 Items.PlasmaForge : Forge à Plasma
-Items.GravityManipulator : Manipulateur de gravité
-Items.PlasmaGold : PlasmaGold
+Items.PlasmaGold : Or plasmique
 Items.CopperWall : Mur de Cuivre
 Items.Turret : Tourelle
 Items.RedBlock : Bloc rouge
@@ -163,6 +160,7 @@ Items.YellowBlock : Bloc jaune
 Items.GreenBlock : Bloc vert
 Items.BlackBlock : Bloc noir
 Items.WhiteBlock : Bloc blanc
+Item.RefinedM1 : M1 raffiné
 Items.M2 : M2
 Items.Settler : Colon
 Items.Rover : Rover
@@ -178,19 +176,17 @@ Items.d.delete : Le menu de destruction permet de détruire un item
 Items.d.Coal : Le charbon est un minerai qui peut servir de combustible
 Items.d.Copper : Le cuivre est le plus ancien métal utilisé par l’espèce humaine. Le point de fusion de ce minerai n'est pas trop élevé
 Items.d.Gold : L'or est un excellent conducteur électrique, c'est un minerai apprécié pour son fort éclat de "petit soleil"
-Items.d.M1 : M1, est un minerai, dont l'existence a été théorisée durant les années 1950 via l'un des premiers ordinateurs soviétiques, le M-1
+Items.d.M1 : Le M1 est un minerain alliage de zinc et de cobalt, qui, une fois raffiné et transformé, vaut très cher de par ses capacités supraconductrices au delà de 150K.
 Items.d.Bridge : Permet de croiser deux tapis sans mélanger leur production
 Items.d.MolecularAssembler : L'Assembleur moléculaire est une machine qui modifie la composition moléculaire du M1 via de l'or
 Items.d.Furnace : Le four permet de faire fondre du cuivre, en brûlant du charbon
 Items.d.NanoFabricator : Le Fabricateur Nano permet de créer du nanoM1, en ajoutant du cuivre fondu à du M1.
 Items.d.SyntheticGold : L'Or Synthétique est un conducteur électrique, très utilisé pour la micro-électronique
-Items.d.NanoM1 : Le nanoM1 est une forme transformée du minerai M1
-Items.d.Synthetron : Une machine permettant de synthétiser de l'Or Synthétique via du cuivre et de l'or
-Items.d.error : Une erreur est survenue : Item introuvable/non documenté
-Items.d.QuantumFurnace : Personne ne sait comment fonctionne cette machine, l'on sait juste qu'elle donne du CuivreM1 en échange de Cuivre et de NanoM1
+Items.d.NanoM1 : Le nanoM1 est une forme transformée du M1 qui présente des capacités supraconductrices à température ambiante
+Items.d.Synthetron : Une machine permettant de synthétiser de l'or synthétique via du cuivre fondu et de l'or fondu
 Items.d.CopperM1 : Est ce du cuivre ou du M1, impossible de le savoir, ce minerai dispose de propriétés étonnantes
-Items.d.PlasmaForge : La Forge à Plasma peut être fabriquée à l'aide du M2 et d'Or Synthétique, et elle produit du PlasmaGold.
-Items.d.PlasmaGold : Un minerai, dont la valeur est assez élevée, possède des propriétés supraconductrices très fortes
+Items.d.PlasmaForge : La Forge à Plasma produit de l'or plasmique à partir de M2 et d'or Synthétique
+Items.d.PlasmaGold : L'or plasmique est un excellent conducteur, qui, allié à des réseaux électriques conçus à partir de M1, peut emmagasiner une formidable quantité d'énergie.
 Items.d.CopperWall : Le mur de Cuivre est une protection qui peut retenir pendant plusieurs secondes des ennemis
 Items.d.Turret : Des lasers, automatiques (utilise de l'Or comme munition)
 Items.d.RedBlock : un bloc de décoration rouge, trouvable au market
@@ -203,6 +199,7 @@ Items.d.M2 : Un assemblage de M1 et d'Or
 Items.d.Market : Le market vous permet d'acheter divers éléments, comme des éléments de décoration, ou une Forge à Plasma
 Items.d.Settler : Les colons sont ici pour peupler ce monde. Ils seront l'avenir de l'humanité sur cette planète, et sont les plus aptes à explorer l'inconnu.
 Items.d.Rover : Un rover peut transporter des colons plus vite, plus loin, avec plus de sécurité. Utilisez les pour vos missions longue distance.
+Items.d.error : Une erreur est survenue : Item introuvable/non documenté
 
 //Opportunités
 Opportunities.Title : Opportunités

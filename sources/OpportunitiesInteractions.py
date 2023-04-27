@@ -256,8 +256,8 @@ class InteractionResult:
         amount peut être un entier ou un tuple pour une quantité aléatoire de resources (bornes inclues)
         amountCode peut être utilisé pour afficher la quantité récupérée avec OpenResultPanel.
         """
-        
-        if rName == None:
+        #Si rName est réglé sur None...
+        if rName == None:#on récupère la valeur de la ressource
             rName = opportunity.GetRessource()
         
         #Si cette ressource n'est pas déjà présente dans l'inventaire, on l'initialise à 0
@@ -284,7 +284,6 @@ class InteractionResult:
         """
         Ouvre un panneau de résultat d'interaction.
         """
-        
         #On récupère l'écran affiché et on l'assombrit
         screenFilter = pygame.Surface((UiManager.width,UiManager.height))
         screenFilter.set_alpha(50)
@@ -337,14 +336,14 @@ onSiteInteractions=[
                             None),
                            ("OppInteractions.OnSite.1.b2",
                             lambda o:(InteractionResult.DoWithChance(o,0.6,
-                                lambda o:(InteractionResult.AddResourceToInv(o, "Copper", (20,50),"rAmount"),
+                                lambda o:(InteractionResult.AddResourceToInv(o, None, (20,50),"rAmount"),
                                           InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b2.1","interactionBackgrounds/walkingDesert")),
                                 lambda o:(InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b2.2","interactionBackgrounds/walkingDesert"))),
                                       InteractionResult.ReturnToBase(o)),
                             (3,5)),
                            ("OppInteractions.OnSite.1.b3",
                             lambda o: InteractionResult.DoWithChance(o,0.6,
-                                lambda o:(InteractionResult.AddResourceToInv(o, "Copper", (70,130),"rAmount"),
+                                lambda o:(InteractionResult.AddResourceToInv(o, None, (70,130),"rAmount"),
                                           InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.1.b3.1","interactionBackgrounds/meteor"),
                                           InteractionResult.ReturnToBase(o)),
                                 lambda o:(InteractionResult.EndExpedition(o,False),
@@ -354,12 +353,12 @@ onSiteInteractions=[
     OpportunityInteraction("OppInteractions.OnSite.2", "interactionBackgrounds/greenValley",
                            {Tags.LIVINGPLANET:True},
                            ("OppInteractions.OnSite.2.b1",
-                            lambda o:(InteractionResult.AddResourceToInv(o, "Copper", (150,400),"rAmount"),
+                            lambda o:(InteractionResult.AddResourceToInv(o, None, (150,400),"rAmount"),
                                       InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.2.b1.1","interactionBackgrounds/mineJungle","rAmount"),
                                       InteractionResult.ReturnToBase(o)),
                             (20,30)),
                            ("OppInteractions.OnSite.2.b2",
-                            lambda o:(InteractionResult.AddResourceToInv(o, "Copper", (50,90),"rAmount"),
+                            lambda o:(InteractionResult.AddResourceToInv(o, None, (50,90),"rAmount"),
                                       InteractionResult.OpenResultPanel(o,"OppInteractions.OnSite.2.b2.1","interactionBackgrounds/greenValley","rAmount"),
                                       InteractionResult.ReturnToBase(o)),
                             (10,15)),
