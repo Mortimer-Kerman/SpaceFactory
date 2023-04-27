@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 #importation des bibliothèques externes
-import random
 import pygame
+
+import random
+#importation de la fonction cosinus du module système math
+from math import cos
 #importation des fichiers locaux
 import UiManager
 import SaveManager
@@ -12,8 +15,6 @@ import AudioManager
 import PlanetGenerator
 import Stats
 import Localization
-#importation de la fonction cosinus du module système math
-from math import cos
 
 EnnemisList=[]#Liste des ennemis
 

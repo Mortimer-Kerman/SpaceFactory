@@ -1,5 +1,6 @@
 #chargement des bibliothèques
 import pygame
+
 import random
 
 import UiManager

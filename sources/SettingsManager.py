@@ -6,8 +6,9 @@ Created on Fri Mar 10 17:51:59 2023
 """
 
 import pygame
-import json
 import pygame_menu
+
+import json
 
 import UiManager
 import Localization

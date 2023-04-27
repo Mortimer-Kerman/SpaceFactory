@@ -10,10 +10,8 @@ import pygame
 import pygame_menu
 
 from datetime import datetime
-import time
 import os
 import numpy as np
-import random
 
 import SaveManager
 import TextureManager
@@ -22,7 +20,6 @@ import SettingsManager
 import SessionManager
 import Localization
 import MarketManager
-import AudioManager
 import NoiseTools
 import PlanetGenerator
 import FunctionUtils

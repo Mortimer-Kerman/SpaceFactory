@@ -15,7 +15,6 @@ import GameItems
 import MarketManager
 import TextureManager
 import SessionManager
-import AudioManager
 
 #Onglets qui ne sont pas générés automatiquement
 MenuTabs = [

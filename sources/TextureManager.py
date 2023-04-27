@@ -7,6 +7,7 @@ Created on Wed Feb  8 16:21:49 2023
 
 #chargement des bibliothèques
 import pygame
+
 import os
 
 texturesPath = "./Assets/textures/"#le chemin des textures

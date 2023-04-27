@@ -5,11 +5,14 @@ Created on Thu Feb  9 18:05:51 2023
 @author: Thomas Sartre et François Patinec-Haxel
 """
 #importation des bibliothèques
+import pygame
+
+import random
+
 import SaveManager
 import UiManager
 import MarketManager
 import TextureManager
-import random
 import AudioManager
 import FunctionUtils
 import PlanetGenerator
@@ -17,7 +20,6 @@ import EventManager
 import Stats
 import SettingsManager
 
-import pygame
 
 menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Furnace","Market","CopperWall","Turret","NanoFabricator","Synthetron"]#éléments du menu de sélection
 

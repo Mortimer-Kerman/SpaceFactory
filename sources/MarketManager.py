@@ -3,6 +3,7 @@
 # Importation des bibliothèques et modules requis
 import pygame
 import pygame_menu
+
 import UiManager
 import TextureManager
 import SessionManager

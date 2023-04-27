@@ -6,14 +6,16 @@ Created on Tue Mar  6 21:18:31 2023
 """
 
 #Importation des bibliothèques nécessaires pour la génération
+import pygame
+
 import random
 import math
 from colorsys import hsv_to_rgb
 import numpy
+
 import NoiseTools
 import FunctionUtils
 
-import pygame
 
 #Les types de planète fournissent au générateur une direction globale dans sa manière de générer
 class PlanetTypes:
