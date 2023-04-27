@@ -231,7 +231,7 @@ class MeteorStorm(EventTemplate):
             #Si le météore est à la moitié de son âge...
             if meteor[1] > 0.5:
                 #On affiche une texture au point d'arrivée du météore pour prévenir l'utilisateur
-                UiManager.screen.blit(TextureManager.GetTexture("CrashArea",zoom*2),UiManager.WorldPosToScreenPos(pos))
+                UiManager.screen.blit(TextureManager.GetTexture("Meteor/CrashArea",zoom*2),UiManager.WorldPosToScreenPos(pos))
             
             #On affiche la texture du météore avec le décalage approprié
             UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture("Meteor/" + frame,zoom*4,verticalScale=zoom*8),25), UiManager.WorldPosToScreenPos((pos[0] + offset, pos[1] + (offset*2) + 1)))#afficher

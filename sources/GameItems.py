@@ -15,6 +15,7 @@ import FunctionUtils
 import PlanetGenerator
 import EventManager
 import Stats
+import SettingsManager
 
 import pygame
 
@@ -22,9 +23,6 @@ menuElements=["Drill","ConveyorBelt","Storage","Sorter","Junction","Bridge","Fur
 
 #représentation des items sur un tapis roulant
 allTransportableItems={"Gold":(219, 180, 44),"Copper":(196, 115, 53),"Coal":(0,10,0),"M1":(78, 100, 110),"M2":(78,130,110),"MeltedCopper":(255,0,0),"MeltedGold":(210,160,50),"NanoM1":(50,10,110),"PlasmaGold":(220,170,44),"SyntheticGold":(230,130,50)}
-
-#Affichage des animations de tapis
-Anim=1
 
 #Fonction expérimentale de téléportation
 TeleportPoint=[]
@@ -147,20 +145,20 @@ class Item:
         if self.name == "Drill" and runtime == 0:#s'il s'agit d'une foreuse, jouer le son associé
             AudioManager.PlaySound("Drill",self.pos)
         
+        #Si l'item est un tapis roulant ou un trieur...
         if self.name in ["ConveyorBelt","Sorter"]:
-            #On récupère la couleur d'item à afficher sur le ConveyorBelt, Sorter
-            col=allTransportableItems
+            #On récupère l'item dans l'inventaire temporaire
+            itemToDisplay = self.metadata.get("inv",None)
+            if self.name == "Sorter":#Si l'objet est un trieur, on récupère l'item dans son menu de choix de tri à la place
+                itemToDisplay = self.metadata.get("sorter_choice",None)
             
-            if self.metadata.get("inv",None) is not None:
-                a=col.get(self.metadata.get("inv",(255,255,255)),(255,255,255))
-            else:
-                a=False
-            if self.name=="Sorter":
-                a=col.get(self.metadata.get("sorter_choice",None),(255,255,255))
-
-            if a:#si un item n'est pas none
+            if itemToDisplay != None:#si l'item transporté n'est pas none
                 renderOffset = (0,0)
-                if Anim and self.name=="ConveyorBelt":#si les animations sont activées, et qu'il s'agit d'un ConveyorBelt
+                
+                #Est-ce que les tapis roulants doivent être détaillés
+                niceBelts = SettingsManager.GetSetting("conveyorBeltRender")
+                
+                if self.name=="ConveyorBelt":#si il s'agit d'un tapis roulant
                     
                     item=self.GetItemToGive()#On récupère l'item que l'on veut donner
                     renderOffset = (0,-runtime/50)
@@ -172,9 +170,15 @@ class Item:
                         if item.metadata.get("inv",None) is not None:#si l'item n'a pas rien dans son inventaire
                             renderOffset=(0,0)
                             moving = False
-
-                    if moving and runtime == 0:#si l'on bouge
-                        AudioManager.PlaySound("ConveyorBelt",self.pos)
+                    
+                    if moving:#Si le tapis roulant bouge...
+                        
+                        if niceBelts:#Si les tapis roulants doivent être détaillés, on affiche la texture de tapis roulant qui bouge
+                            AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture("ConveyorBelt/" + str((runtime//10)%5), zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))
+                        
+                        if runtime == 0:#Si runtime est à 0, on joue le son du tapis roulant
+                            AudioManager.PlaySound("ConveyorBelt",self.pos)
+                        
                     #calcul des mouvements
                     if self.rotation == 1:
                         renderOffset = (renderOffset[1],-renderOffset[0])
@@ -184,16 +188,25 @@ class Item:
                         renderOffset = (-renderOffset[1],renderOffset[0])
 
                 renderOffset = (renderOffset[0]*zoom,renderOffset[1]*zoom)
-
-                #affichage des items           
-                AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, a, [(self.pos[0]*zoom+cam[0]+1/2*zoom+renderOffset[0],
-                                                                                 self.pos[1]*zoom+cam[1]+1/4*zoom+renderOffset[1]),
-                                                                                (self.pos[0]*zoom+cam[0]+3/4*zoom+renderOffset[0],
-                                                                                 self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1]),
-                                                                                (self.pos[0]*zoom+cam[0]+1/2*zoom+renderOffset[0],
-                                                                                 self.pos[1]*zoom+cam[1]+3/4*zoom+renderOffset[1]),
-                                                                                (self.pos[0]*zoom+cam[0]+1/4*zoom+renderOffset[0],
-                                                                                 self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1])]))
+                
+                #affichage des items
+                
+                #Si les tapis roulants doivent être détaillés...
+                if niceBelts:
+                    AddToRender(1,lambda:UiManager.screen.blit(TextureManager.GetTexture(itemToDisplay, zoom/2, transportedItem=True), (self.pos[0]*zoom+cam[0]+1/4*zoom+renderOffset[0], self.pos[1]*zoom+cam[1]+1/4*zoom+renderOffset[1])))#afficher
+                #Sinon...
+                else:
+                    #Couleur de l'item à affcher
+                    col = allTransportableItems.get(itemToDisplay,(255,255,255))
+                    #Rendu
+                    AddToRender(1,lambda: pygame.draw.polygon(UiManager.screen, col, [(self.pos[0]*zoom+cam[0]+1/2*zoom+renderOffset[0],
+                                                                                     self.pos[1]*zoom+cam[1]+1/4*zoom+renderOffset[1]),
+                                                                                    (self.pos[0]*zoom+cam[0]+3/4*zoom+renderOffset[0],
+                                                                                     self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1]),
+                                                                                    (self.pos[0]*zoom+cam[0]+1/2*zoom+renderOffset[0],
+                                                                                     self.pos[1]*zoom+cam[1]+3/4*zoom+renderOffset[1]),
+                                                                                    (self.pos[0]*zoom+cam[0]+1/4*zoom+renderOffset[0],
+                                                                                     self.pos[1]*zoom+cam[1]+1/2*zoom+renderOffset[1])]))
             
     def GetItemToGive(self):
         """Renvoie l'item à donner"""

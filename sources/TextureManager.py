@@ -15,7 +15,7 @@ missingTexture = None#Si la texture n'existe pas
 
 loadedTextures = {"no":missingTexture}
 menuTextures = {}
-def GetTexture(textureName:str,scale:float=1,is_menu:bool=False,verticalScale:float=None)->pygame.Surface:
+def GetTexture(textureName:str,scale:float=1,is_menu:bool=False,verticalScale:float=None,transportedItem:bool=False)->pygame.Surface:
     """
     Permet d'obtenir la texture
     """
@@ -26,6 +26,10 @@ def GetTexture(textureName:str,scale:float=1,is_menu:bool=False,verticalScale:fl
         except:#en cas d'erreur
             textureName = "no.png"
     tex = loadedTextures[textureName]
+    
+    if transportedItem:#Si la texture est pour un item transporté, on ajoute invItem à la fin pour le démarquer de l'original dans le dictionnaire de zoom
+        textureName += "-invItem"
+    
     if scale != 1:#si la taille est différente de 1
         if textureName in zoomedTextures and not is_menu:#si textureName est dans zoomedTextures et n'est pas dans le menu
             tex = zoomedTextures[textureName]

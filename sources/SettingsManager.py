@@ -23,6 +23,7 @@ def DefaultSettingsInstance():
         "musicVolume": 70,
         "gameVolume": 100,
         "niceBiomeBorders": True,
+        "conveyorBeltRender" : True,
         "maxFps": 60,
         "keybinds": {
             "up": pygame.K_z,
@@ -177,7 +178,10 @@ def OpenSettings(background):
     SettingsMenu.add.range_slider(Localization.GetLoc('Settings.GameVolume'), GetSetting("gameVolume"), (0, 100), 1, value_format=lambda x: str(int(x)), onchange=lambda x:(pygame.mixer.Channel(0).set_volume(int(x)/150),SetSetting("gameVolume", int(x))), align=pygame_menu.locals.ALIGN_LEFT)
     
     #Paramètre pour les transitions douces entre les biomes
-    SettingsMenu.add.toggle_switch(Localization.GetLoc('Settings.NiceBiomeBorders'), GetSetting("niceBiomeBorders"), state_text=(Localization.GetLoc('Settings.NiceBiomeBorders.False'), Localization.GetLoc('Settings.NiceBiomeBorders.True')), onchange=lambda x:(SetSetting("niceBiomeBorders", x),UiManager.ForceBackgroundRefresh()),align=pygame_menu.locals.ALIGN_LEFT)
+    SettingsMenu.add.toggle_switch(Localization.GetLoc('Settings.NiceBiomeBorders'), GetSetting("niceBiomeBorders"), width=200, state_text=(Localization.GetLoc('Settings.NiceBiomeBorders.False'), Localization.GetLoc('Settings.NiceBiomeBorders.True')), onchange=lambda x:(SetSetting("niceBiomeBorders", x),UiManager.ForceBackgroundRefresh()),align=pygame_menu.locals.ALIGN_LEFT)
+    
+    #Paramètre pour l'animation des tapis roulants
+    SettingsMenu.add.toggle_switch(Localization.GetLoc('Settings.ConveyorBeltRender'), GetSetting("conveyorBeltRender"), width=200, state_text=(Localization.GetLoc('Settings.ConveyorBeltRender.False'), Localization.GetLoc('Settings.ConveyorBeltRender.True')), onchange=lambda x:(SetSetting("conveyorBeltRender", x),UiManager.ForceBackgroundRefresh()),align=pygame_menu.locals.ALIGN_LEFT)
     
     #Paramètre pour les FPS max
     SettingsMenu.add.range_slider(Localization.GetLoc('Settings.MaxFps'), GetSetting("maxFps"), (30, 201), 1, value_format=lambda x: str(int(x)) if int(x) < 201 else Localization.GetLoc('Settings.MaxFps.Unlimited'), onchange=lambda x:SetSetting("maxFps", int(x)), align=pygame_menu.locals.ALIGN_LEFT)
