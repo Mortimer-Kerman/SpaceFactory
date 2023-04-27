@@ -439,26 +439,38 @@ def HandleMouseClicks(button,drone):
 PauseMenuBackground = None#variable stockant le fond du menu de pause
         
 def DisplayPauseMenuBackground():
-    """Affiche le fond du menu de pause"""
+    """
+    Affiche le fond du menu de pause
+    """
     TickModules()#Actualisation de différents modules
     if PauseMenuBackground != None:#si le fond du menu de pause est différent de None
         UiManager.screen.blit(PauseMenuBackground,(0,0))#afficher le fond
-        
-def Pause():
-    """Affiche le menu de pause"""
-    
-    AudioManager.ClearUsedChannels()#On vide les canaux de son utilisés
-    
+
+def RefreshPauseMenuBackground():
+    """
+    Rafraichit le fond du menu de pause
+    """
     global PauseMenuBackground
     #création du fond de pause
     screenFilter = pygame.Surface((UiManager.width,UiManager.height))
     screenFilter.set_alpha(50)
     PauseMenuBackground = pygame.display.get_surface().copy()#copie de la surface
     PauseMenuBackground.blit(screenFilter,(0,0))#affichage
+
+def Pause():
+    """
+    Affiche le menu de pause
+    """
     
+    AudioManager.ClearUsedChannels()#On vide les canaux de son utilisés
+    
+    RefreshPauseMenuBackground()#Rafraîchissement du fond du menu de pause
+    
+    global quitGame
     quitGame = False
+    
+    #Fonction temporaire pour quitter la sauvegarde
     def QuitGame():
-        """Fonction pour quitter proprement le jeu"""
         pauseMenu.disable()#on désactive le menu de pause
         SaveManager.Unload()#on décharge la sauvegarde
         global quitGame

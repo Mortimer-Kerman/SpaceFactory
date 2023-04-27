@@ -484,12 +484,12 @@ def DisplayItemToPlace():
     screen.blit(tex, (pos[0]*zoom+cam[0], pos[1]*zoom+cam[1]))#on affiche
     
 def interactItem(item):
-    """Interface d'interaction avec des objets"""
-    #on définit le fond du menu (voir SessionManager)
-    screenFilter = pygame.Surface((width,height))
-    screenFilter.set_alpha(50)
-    SessionManager.PauseMenuBackground = pygame.display.get_surface().copy()
-    SessionManager.PauseMenuBackground.blit(screenFilter,(0,0))
+    """
+    Interface d'interaction avec des objets
+    """
+    
+    SessionManager.RefreshPauseMenuBackground()#Rafraîchissement du fond du menu de pause
+    
     #création du menu
     interactMenu = pygame_menu.Menu("Configurez cet élément", 400, 300, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)
     
