@@ -305,7 +305,7 @@ def UpdateBackground():
                             
                                 
                         screen.blit(TextureManager.GetTexture("ground/" + limitTex, zoom), (Xpos, Ypos))#placement du fond
-                    
+    
     unRefreshed = needsRefresh
     
 def ForceBackgroundRefresh():
@@ -491,19 +491,27 @@ def interactItem(item):
     SessionManager.RefreshPauseMenuBackground()#Rafraîchissement du fond du menu de pause
     
     #création du menu
-    interactMenu = pygame_menu.Menu("Configurez cet élément", 400, 300, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)
+    interactMenu = pygame_menu.Menu("Configurez cet élément", 600, 400, theme=pygame_menu.themes.THEME_DARK,onclose=pygame_menu.events.BACK)
     
-    interactMenu.add.button('Reprendre', interactMenu.disable)#Reprendre la partie
+    interactMenu.add.button(Localization.GetLoc('Game.Back'), interactMenu.disable, align=pygame_menu.locals.ALIGN_LEFT)#Reprendre la partie
+    
     b=None
     if item.name=="Sorter":#Si l'objet à éditer est un trieur...
         
-        a=[[str(i)] for i in list(GameItems.allTransportableItems.keys())]#On récupère la liste des éléments transportables
+        items=[str(i) for i in list(GameItems.allTransportableItems.keys())]#On récupère la liste des éléments transportables
         
-        chosenElement = [item.metadata["sorter_choice"]]#on affiche l'item choisit
+        translated = [[Localization.GetLoc('Items.' + i)] for i in items]#Noms traduits et formatés des items
         
-        b=interactMenu.add.selector("Choisissez : ",a,default=a.index(chosenElement))#On crée un sélecteur pour permettre de choisir l'élément trié
+        chosenElement = [Localization.GetLoc('Items.' + item.metadata["sorter_choice"])]#on affiche l'item choisit
+        
+        interactMenu.add.vertical_margin(97)
+        b=interactMenu.add.selector("Choisissez : ",translated,default=translated.index(chosenElement))#On crée un sélecteur pour permettre de choisir l'élément trié
+        interactMenu.add.vertical_margin(147)
         
         interactMenu.mainloop(screen,SessionManager.DisplayPauseMenuBackground,clear_surface=False)#on lance le menu
+        
+        return items[b.get_value()[1]]#On renvoie la valeur du menu d'interaction
+        
     if item.name=="Teleporter":
         a=[[str(tuple(i))] for i in list(GameItems.TeleportPoint)]#On récupère la liste des éléments transportables
         

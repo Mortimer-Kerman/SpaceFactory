@@ -335,8 +335,10 @@ class Item:
                 giver.metadata["inv"]=None
     
     def edit(self,a):
-        """Permet d'éditer l'item"""
-        if self.name == "Sorter":self.metadata["sorter_choice"]=a[0][0]
+        """
+        Permet d'éditer l'item
+        """
+        if self.name == "Sorter":self.metadata["sorter_choice"]=a
         if self.name == "Teleporter":
             pos=TeleportPoint[a[1]]
             SaveManager.SetCamPos(pos)

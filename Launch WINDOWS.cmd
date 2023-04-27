@@ -1,3 +1,8 @@
 pip install -r r.txt
 cd sources
-python main.py
+%@Try%
+  python main.py
+%@EndTry%
+:@Catch
+  python3 main.py
+:@EndCatch

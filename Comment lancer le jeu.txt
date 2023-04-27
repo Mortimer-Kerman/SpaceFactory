@@ -5,7 +5,7 @@ Si aucun des scripts ne fonctionne, merci de lancer le script via une ide comme 
 Requis pour le lancement : 
 -python >= 3.10
 -pygame >= 2.0.0
--pygame_menu >=4.3.6
+-pygame-menu >=4.3.6
 numpy >=1.21.5
 
 Un écran disposant d'une résolution supérieure à 800*600
