@@ -10,6 +10,7 @@ import pygame_menu
 
 import random
 from datetime import datetime, timedelta
+import re
 
 import SaveManager
 import UiManager
@@ -582,7 +583,7 @@ class Opportunity:
             "distance": random.randint(0, 4),
             "contains": random.randint(0, 6),
             "quantity": random.randint(0, 1),
-            "ressource": random.choice(["Gold","Coal","Copper","Iron","M1"])
+            "ressource": random.choice(["Gold","Coal","Copper","M1"])
         }
         
         
@@ -595,7 +596,7 @@ class Opportunity:
         
         #On récupère le texte traduit de la quantité et celui des ressources
         q = Localization.GetLoc("Opportunities.Quantity." + str(descCodes["quantity"]))
-        r = Localization.GetLoc("Items." + descCodes["ressource"])
+        r = Localization.GetLoc("Items." + descCodes["ressource"]).lower()
         #Si la première lettre des ressources est une voyelle, on ampute la quantité de deux lettres et on met une apostrophe.
         #Cela permet de ne pas écrire "quantités de or", mais "quantités d'or"
         if FunctionUtils.IsVowel(r[0]):
@@ -646,6 +647,12 @@ class Opportunity:
             possibleTitles.append(0)#Si la liste ne contient aucun titre, on rajoute le titre 0, le plus générique
         
         return Localization.GetLoc("Opportunities.Title." + str(random.choice(possibleTitles)))#On renvoie un titre traduit aléatoire dans la liste des titres
+    
+    def GetRessource(self)->str:
+        """
+        Renvoie le code de la ressource ciblée.
+        """
+        return self.GetDescCodes()["ressource"]
     
     def GetDistance(self)->int:
         """
@@ -880,6 +887,9 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
     Ouvre un menu permettant d'interagir avec les opportunités
     """
     
+    #Ressource ciblée par l'expédition et traduite
+    targetRessource = Localization.GetLoc('Items.' + opportunity.GetRessource()).lower()
+    
     #Graine totalement aléatoire
     random.seed(pygame.time.get_ticks())
     
@@ -927,14 +937,15 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
     
     #On crée plusieurs labels pour pouvoir y mettre la description
     label = menu.add.label("\n\n\n\n\n\n",font_size=15)
-    
+        
     #On sépare le message de l'interaction par lignes
     lines = interaction.GetMessage().split("\n")
     #Pour chaque ligne de la description...
     for i in range(7):
         #Si il y a une ligne correspondante dans la liste, on vient y mettre cette ligne
         if i < len(lines):
-            label[i].set_title(lines[i])
+            #Au passage, on replace %RESSOURCE% par la ressource ciblée dans la ligne
+            label[i].set_title(FormatTextWithRessource(lines[i],targetRessource))
         else:#Sinon, cette ligne est vide
             label[i].set_title('')
     
@@ -977,15 +988,24 @@ def PlayExpeditionInteraction(opportunity,interactionType:int):
             #Le résultat exécuté est le lancement de cette session de travail
             result = lambda choice=i,t=activityTime:(menu.disable(),opportunity.SetLastChoiceMade(choice),BeginOnSiteActivity(opportunity,t))
         
-        #On ajoute à la barre du bas un bouton avec le titre fourni exécutant le résultat calculé plus haut
-        bottomBar.pack(menu.add.button(Localization.GetLoc(option[0]),result,font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
+        #On ajoute à la barre du bas un bouton avec le titre fourni et reformatté avec la ressource ciblée exécutant le résultat calculé plus haut
+        bottomBar.pack(menu.add.button(FormatTextWithRessource(Localization.GetLoc(option[0]),targetRessource),result,font_size=20),align=pygame_menu.locals.ALIGN_CENTER)
     
     #Boucle du menu
     menu.mainloop(UiManager.screen, lambda:(DisplayBackground(),AudioManager.Tick()),clear_surface=False)
 
 
-
-
+def FormatTextWithRessource(text:str,rName:str)->str:
+    """
+    Formatte le texte en entrée en remplaçant %RESSOURCE% par rName et en s'assurant que les cas comme "de or" sont bien traités en "d'or".
+    """
+    #On remplace %RESSOURCE% par rName
+    text = text.replace("%RESSOURCE%",rName)
+    #Si la première lettre de rName est une voyelle...
+    if FunctionUtils.IsVowel(rName[0]):
+        #On utilise une expression régulière pour remplacer rName et les deux lettres avant par une apostrophe suivie de rName
+        text = re.sub("[A-Za-z]\\s"+rName,"'"+rName,text)
+    return text
 
 
 

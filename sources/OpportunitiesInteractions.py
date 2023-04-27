@@ -252,9 +252,14 @@ class InteractionResult:
         """
         Permet d'ajouter ou de retirer des ressources de l'inventaire de l'expédition.
         Utile pour simuler la découverte de ressources ou leur perte.
+        Si rName est réglé sur None, elle prendra la valeur de la ressource indiquée dans la description de l'opportunité.
         amount peut être un entier ou un tuple pour une quantité aléatoire de resources (bornes inclues)
         amountCode peut être utilisé pour afficher la quantité récupérée avec OpenResultPanel.
         """
+        
+        if rName == None:
+            rName = opportunity.GetRessource()
+        
         #Si cette ressource n'est pas déjà présente dans l'inventaire, on l'initialise à 0
         if not rName in opportunity.resources:
             opportunity.resources[rName] = 0
@@ -301,13 +306,17 @@ class InteractionResult:
         #On crée plusieurs labels pour pouvoir y mettre la description
         label = menu.add.label("\n\n\n\n\n\n",font_size=15)
         
+        #Ressource ciblée par l'expédition et traduite
+        targetRessource = Localization.GetLoc('Items.' + opportunity.GetRessource()).lower()
+        
         #On sépare le message de l'interaction par lignes
         lines = Localization.GetLoc(message,*[InteractionResult.locCodes.get(code,code) for code in args]).split("\n")
         #Pour chaque ligne de la description...
         for i in range(7):
             #Si il y a une ligne correspondante dans la liste, on vient y mettre cette ligne
             if i < len(lines):
-                label[i].set_title(lines[i])
+                #Au passage, on replace %RESSOURCE% par la ressource ciblée dans la ligne
+                label[i].set_title(OpportunitiesManager.FormatTextWithRessource(lines[i],targetRessource))
             else:#Sinon, cette ligne est vide
                 label[i].set_title('')
         

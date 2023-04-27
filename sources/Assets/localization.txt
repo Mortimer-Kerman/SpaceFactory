@@ -145,7 +145,6 @@ Items.Coal : Charbon
 Items.Copper : Cuivre
 Items.MeltedCopper : Cuivre fondu
 Items.Gold : Or
-Items.Iron : Fer
 Items.M1 : M1
 Items.NanoM1 : nanoM1
 Items.NanoFabricator : Fabricateur Nano
@@ -291,23 +290,32 @@ Opportunities.Title.6 : Découverte fortuite
 Opportunities.Title.7 : Données orbitales
 
 //Interactions avec les expéditions
+//Note : Ici, le texte admet un élément de formattage supplémentaire: Utiliser %RESSOURCE% permet de placer le nom de la ressource ciblée par l'expédition.
 OppInteractions.EveryoneDied : Il semblerait que tous les membres de l'expédition aient péri.%$rNous n'avons plus de communication avec eux, et il est impossible de leur envoyer du secours.%$r%$rNous nous souviendrons longtemps de leur sacrifice pour faire avancer l'exploration de ce monde.
 
 OppInteractions.OnSite.1 : L'équipe de reconnaissance est arrivée à hauteur du bassin d'impact!%$rCependant, une gigantesque masse ferreuse au centre du bassin provoque un champ magnétique qui brouille%$rtous les signaux radio. Au moment où l'équipe entrera dans la zone, elle perdra toute connexion avec la%$rbase. Si elle s'aventure longtemps dans la zone, elle ne pourra donc pas être prévenue en cas de%$rdanger, mais pourra peut-être découvrir plus de choses. Elle peut également rentrer et revenir plus tard.%$r%$rQue faire ?
 OppInteractions.OnSite.1.b1 : Rebrousser chemin
 OppInteractions.OnSite.1.b1.1 : L'expédition a fait demi-tour et rentre à la base. Vous pourrez revenir plus tard.
 OppInteractions.OnSite.1.b2 : Explorer la zone moins de 5h
-OppInteractions.OnSite.1.b2.1 : Après quelques heures d'exploration, pour ne pas se mettre en danger,%$rl'expédition est forçée de quitter la zone du cratère. Cependant, elle a pu découvrir%$rquelques gisements de cuivre (%$1) qu'elle rapporte à la base.
+OppInteractions.OnSite.1.b2.1 : Après quelques heures d'exploration, pour ne pas se mettre en danger,%$rl'expédition est forçée de quitter la zone du cratère. Cependant, elle a pu découvrir%$rquelques gisements de %RESSOURCE% (%$1) qu'elle rapporte à la base.
 OppInteractions.OnSite.1.b2.2 : Après quelques heures d'exploration, pour ne pas se mettre en danger,%$rl'expédition est forçée de quitter la zone du cratère. Cependant, elle n'a rien découvert%$rpendant son exploration et doit rentrer bredouille.
 OppInteractions.OnSite.1.b3 : Explorer la zone pendant 24h
-OppInteractions.OnSite.1.b3.1 : Après être restée 24h sans nouvelles, la base a repris contact avec l'équipe!%$rIls sont sortis du cratère sains et saufs et ont pu y découvrir de grandes quantités de%$rcuivre (%$1) qu'ils ramènent à la base. Avant de se remettre sur le chemin du retour,%$rles membres de l'expédition ont pu observer de loin la chute d'une météorite dans le cratère.
+OppInteractions.OnSite.1.b3.1 : Après être restée 24h sans nouvelles, la base a repris contact avec l'équipe!%$rIls sont sortis du cratère sains et saufs et ont pu y découvrir de grandes quantités de%$r%RESSOURCE% (%$1) qu'ils ramènent à la base. Avant de se remettre sur le chemin du retour,%$rles membres de l'expédition ont pu observer de loin la chute d'une météorite dans le cratère.
 OppInteractions.OnSite.1.b3.2 : 8h après être entré dans le bassin, des capteurs sismiques sur toute la planète ont%$renregistré un séisme de magnitude 9,7 sur l'échelle de Richter au cœur de la zone.%$rLes images satellites confirment l'impact d'une immense sidérite au cœur du bassin.%$r%$rLes membres de l'équipe sont tous déclarés comme morts.
 
-OppInteractions.OnSite.2 : L'équipe est arrivée à destination!%$rEn explorant, elle a rapidement remarqué un immense gisement de cuivre trônant au milieu de la vallée.%$rSon exploitation complète pourrait rapporter de grandes quantités de cuivre à la base, mais cela%$rdétruirait entièrement l'écosystème aux alentours. Il est également possible de n'en exploiter%$rqu'une partie, ce qui pourrait préserver la vallée.%$r%$rQue faire?
-OppInteractions.OnSite.2.b1 : Extraire le cuivre en totalité
-OppInteractions.OnSite.2.b1.1 : L'équipe a exploité le filon en totalité, au détriment de la faune locale, mais a pu en%$rextraire beaucoup de cuivre (%$1). Elle rentre à la base avec de grandes quantités de ressources.
+OppInteractions.OnSite.2 : L'équipe est arrivée à destination!%$rEn explorant, elle a rapidement remarqué un immense gisement de %RESSOURCE% trônant au milieu de la vallée.%$rSon exploitation complète pourrait rapporter de grandes quantités de %RESSOURCE% à la base, mais cela%$rdétruirait entièrement l'écosystème aux alentours. Il est également possible de n'en exploiter%$rqu'une partie, ce qui pourrait préserver la vallée.%$r%$rQue faire?
+OppInteractions.OnSite.2.b1 : Extraire le %RESSOURCE% en totalité
+OppInteractions.OnSite.2.b1.1 : L'équipe a exploité le filon en totalité, au détriment de la faune locale, mais a pu en%$rextraire beaucoup de %RESSOURCE% (%$1). Elle rentre à la base avec de grandes quantités de ressources.
 OppInteractions.OnSite.2.b2 : N'exploiter qu'une partie du filon
-OppInteractions.OnSite.2.b2.1 : L'équipe a pu extraire de petites quantités de cuivre (%$1), et en a également profité pour faire%$rdes prélèvement sur la flore locale. Elle rentre à la base avec des données prometteuses.
+OppInteractions.OnSite.2.b2.1 : L'équipe a pu extraire de petites quantités de %RESSOURCE% (%$1), et en a également profité pour faire%$rdes prélèvement sur la flore locale. Elle rentre à la base avec des données prometteuses.
+
+OppInteractions.OnSite.3 : L'équipe est arrivée à destination!%$rEn face d'elle s'étend un grand canyon, profond et étroit. Après un peu de reconaissance, ils ont repéré%$rune grotte au fond du canyon. Elle semble prometteuse, mais elle est difficile d'accès et l'expédition%$rpourrait s'y perdre. Il est également possible d'explorer la plaine aux alentours, mais ils ne pourront%$rpeut-être rien rapporter à la base.%$r%$rQue faire?
+OppInteractions.OnSite.3.b1 : Explorer la grotte
+OppInteractions.OnSite.3.b1.1 : Après quelques heures d'exploration de la grotte, l'équipe est tombé sur d'intéressants filons de %RESSOURCE%.%$rAlors qu'elle était en train d'en extraire, ils se sont aperçus qu'un membre manquait à l'appel. Ils l'ont%$rcherché sans relâche pendant plusieurs heures, sans succès.%$rIls rentrent à la base avec de petites quantités de %RESSOURCE% (%$1).
+OppInteractions.OnSite.3.b1.2 : Après quelques heures d'exploration de la grotte, l'équipe est tombé sur d'intéressants filons de %RESSOURCE%.%$rIls en ont extrait de petites quantités (%$1) et sont sur le chemin du retour.
+OppInteractions.OnSite.3.b2 : Explorer les alentours
+OppInteractions.OnSite.3.b2.1 : Après plusieurs heures à explorer les plaines aux alentours, l'équipe n'a toujours rien trouvé, et leurs%$rréserves ne leur permettent pas de pousser l'expédition plus loin. Ils doivent rentrer bredouilles à la base.
+OppInteractions.OnSite.3.b2.2 : Après quelques heures à explorer les plaines aux alentours, l'équipe a découvert d'intéressants filons%$rde %RESSOURCE%. Ils en ont extrait de petites quantités (%$1) et sont sur le chemin du retour.
 
 OppInteractions.Interruption.1 : L'expédition est prise dans une tempête de sable!%$rLa visibilité est nulle, la progression est au point mort et le châssis du rover commence à protester.%$rL'équipe de reconnaissance peut attendre la fin de la tempête dans le rover, mais il ne sera peut-être%$rplus en état de fonctionnement, et ils peuvent se retrouver bloqués par le sable accumulé autour.%$rIls peuvent également continuer à pied et abandonner le rover, mais leur progression sera ralentie.%$r%$rQue faire?
 OppInteractions.Interruption.1.b1 : Abandonner le rover
