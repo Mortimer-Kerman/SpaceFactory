@@ -237,6 +237,11 @@ def Tick():
     """
     Vérifie si des tâches sont accomplies
     """
+    
+    #Si aucune sauvegarde n'est chargée, on annule l'exécution
+    if SaveManager.SaveLoaded():
+        return
+    
     #Pour chaque évenement de changement des statistiques...
     for event in pygame.event.get(eventtype=Stats.STATS_CHANGED):
         #Données de changement de la statistique

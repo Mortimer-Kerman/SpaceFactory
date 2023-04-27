@@ -247,6 +247,8 @@ def HandleShortKeyInputs(key):
         SaveManager.UpdateRotation()#mise à jour de la rotation
     if key == pygame.K_F2:#si la clé pressé est F2
         UiManager.TakeScreenshot()#prendre une capture d'écran
+        #On en informe le joueur
+        UiManager.Popup("Capture d'écran trouvable dans le dossier /Screenshots/")
     if key == pygame.K_F1:
         global showUi
         showUi = not showUi
@@ -475,13 +477,28 @@ def Pause():
     PauseMenuBackground = None
     return quitGame
 
+#Variable disant si la touche de capture d'écran a été pressée à la touche précédente
+screenshotKeyPressedLast = False
+
 def TickModules():
     """
-    Exécute les fonctions de tick des différents modules
+    Exécute les fonctions de tick des différents modules et gère la prise de captures d'écrans dans les menus
     """
     SaveManager.TickClock()#Actualisation de l'horloge interne
     AudioManager.Tick()#Actualisation du son
     TaskManager.Tick()#Actualisation des tâches
+    
+    global screenshotKeyPressedLast
+    
+    #Est-ce que la touche de capture d'écran est pressée
+    screenshotKeyPressed = pygame.key.get_pressed()[pygame.K_F2]
+    
+    #Si la touche de capture d'écran est pressée mais qu'elle n'était pas pressée à la frame précédente...
+    if screenshotKeyPressed and not screenshotKeyPressedLast:
+        UiManager.TakeScreenshot()#On prend une capture d'écran
+    
+    #On met à jour la variable d'appui à la frame précédente
+    screenshotKeyPressedLast = screenshotKeyPressed
 
 class Tutorial:
     """

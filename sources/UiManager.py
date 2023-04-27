@@ -59,22 +59,27 @@ def DisplayUi():
     """
     forme(0,0,width,100,50,200)#forme affichée en haut de l'écran
     
-    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("ui/menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
-    UIelements["taskmenu_icon"]=screen.blit(TextureManager.GetTexture("ui/taskmenu_icon", 50, is_menu=True), (100, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
-    UIelements["opportunities_icon"]=screen.blit(TextureManager.GetTexture("ui/opportunities_icon", 50, is_menu=True), (150, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
-    UIelements["help_icon"]=screen.blit(TextureManager.GetTexture("ui/help_icon", 50, is_menu=True), (200, 0)).collidepoint(pygame.mouse.get_pos())#Icone du menu
+    UIelements["menu_icon"]=screen.blit(TextureManager.GetTexture("ui/menu_icon", 100, is_menu=True), (0, 0)).collidepoint(pygame.mouse.get_pos())#Bouton du menu de pause
+    UIelements["taskmenu_icon"]=screen.blit(TextureManager.GetTexture("ui/taskmenu_icon", 50, is_menu=True), (100, 0)).collidepoint(pygame.mouse.get_pos())#Bouton du menu de tâches
+    UIelements["opportunities_icon"]=screen.blit(TextureManager.GetTexture("ui/opportunities_icon", 50, is_menu=True), (150, 0)).collidepoint(pygame.mouse.get_pos())#Bouton du menu d'opportunités
+    UIelements["help_icon"]=screen.blit(TextureManager.GetTexture("ui/help_icon", 50, is_menu=True), (200, 0)).collidepoint(pygame.mouse.get_pos())#Bouton du menu d'aide
     
+    #Création d'une texture noire transparente
     blackHighlight = TextureManager.GetColorFilter((0,0,0), 1).copy()
     blackHighlight.set_alpha(50)
+    
+    #Si la souris est sur le bouton de pause, on place la texture noire dessus pour un effet de survol
     if UIelements["menu_icon"]:
         screen.blit(blackHighlight, (0, 0))
+    #On redimensionne la texture pour qu'elle fasse la taille des boutons suivants
     blackHighlight = pygame.transform.scale(blackHighlight,(50,50))
+    #Si la souris est sur le bouton de tâches, on ajoute l'effet de survol
     if UIelements["taskmenu_icon"]:
         screen.blit(blackHighlight, (100, 0))
-    if UIelements["taskmenu_icon"]:
-        screen.blit(blackHighlight, (100, 0))
+    #Si la souris est sur le bouton d'opportunités, on ajoute l'effet de survol
     if UIelements["opportunities_icon"]:
         screen.blit(blackHighlight, (150, 0))
+    #Si la souris est sur le bouton d'aide, on ajoute l'effet de survol
     if UIelements["help_icon"]:
         screen.blit(blackHighlight, (200, 0))
     
@@ -324,6 +329,10 @@ def ItemMenu():
     #On stocke la valeur bool en cas d'hover sur l'élément dans UIelements["select"]
     UIelements["select"]=forme2(width-500,height-500*showMenu.get("select",0),width,100,50,200,(98,99,102)).collidepoint(pygame.mouse.get_pos())
     
+    #Si la souris est sur cet élément...
+    if UIelements["select"]:#On le repasse en plus foncé pour un effet de survol
+        forme2(width-500,height-500*showMenu.get("select",0),width,100,50,200,(88,89,92))
+    
     #Différents points des petits triangles (t[0]=up t[1]=down)
     t=[[(width-450, height-45-500*showMenu.get("select",0)), (width-475, height-15-500*showMenu.get("select",0)), (width-425, height-15-500*showMenu.get("select",0))],
        [(width-450, height-15-500*showMenu.get("select",0)), (width-475, height-45-500*showMenu.get("select",0)), (width-425, height-45-500*showMenu.get("select",0))]]
@@ -339,19 +348,39 @@ def ItemMenu():
     for i,n in enumerate(menuElements):#pour chaque élément de menuElements
         #ajout du rect dans le dictionnaire de gestion d'éléments UI
         UIelements["selectElements_"+n]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100)).collidepoint(pygame.mouse.get_pos())
+        
+        #Si la souris est sur cet élément...
+        if UIelements["selectElements_"+n]:#On le repasse en plus foncé pour un effet de survol
+            pygame.draw.rect(screen, (37,38,41), pygame.Rect(width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5), 100, 100))
+        
         #affichage de l'objet
         screen.blit(TextureManager.GetTexture(n, 78, True),(width-500+11+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)))
         #placement du texte de l'objet
         place_text(Localization.GetLoc('Items.' + n),width-500+102*(i%5),height-500*showMenu.get("select",0)+102*(i//5)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
+    
     #placement du bouton question
     UIelements["selectElements_question"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
+    
+    #Si la souris est sur cet élément...
+    if UIelements["selectElements_question"]:#On le repasse en plus foncé pour un effet de survol
+        pygame.draw.rect(screen, (42,43,46), pygame.Rect(width-500+102*3,height-100*showMenu.get("select",0), 100, 100))
+    
+    #Icône et texte du bouton
     screen.blit(TextureManager.GetTexture("question", 78, True),(width-500+11+102*3,height-100*showMenu.get("select",0)))
     place_text("Interrogation",width-500+102*3,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
+    
     #placement du bouton delete
     UIelements["selectElements_delete"]=pygame.draw.rect(screen, (47,48,51), pygame.Rect(width-500+102*4,height-100*showMenu.get("select",0), 100, 100)).collidepoint(pygame.mouse.get_pos())
+    
+    #Si la souris est sur cet élément...
+    if UIelements["selectElements_delete"]:#On le repasse en plus foncé pour un effet de survol
+        pygame.draw.rect(screen, (37,38,41), pygame.Rect(width-500+102*4,height-100*showMenu.get("select",0), 100, 100))
+    
+    #Icône et texte du bouton
     screen.blit(TextureManager.GetTexture("detruire", 78, True),(width-500+11+102*4,height-100*showMenu.get("select",0)))
     place_text("détruire",width-500+102*4,height-100*showMenu.get("select",0)+80,20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(100,20))
     #placement d'une aide
+    
     place_text(Localization.GetLoc('Session.HowToRotate',pygame.key.name(SettingsManager.GetKeybind("rotate"))),width-500,height-120*showMenu.get("select",0),20,(255,255,255),TextureManager.GetFont("aquire"),auto_size=(500,100))
     
 def CostMenu():
@@ -371,7 +400,11 @@ def InvMenu():
     """Affichage de l'inventaire"""
     global UIelements
     UIelements["inv"]=forme(width-500,500*showMenu.get("inv",0),width,100,50,200,(98,99,102)).collidepoint(pygame.mouse.get_pos())
-
+    
+    #Si la souris est sur cet élément...
+    if UIelements["inv"]:#On le repasse en plus foncé pour un effet de survol
+        forme(width-500,500*showMenu.get("inv",0),width,100,50,200,(88,89,92))
+    
     #Différents points des petits triangles (t[0]=up t[1]=down)
     t=[[(width-450, 45+500*showMenu.get("inv",0)), (width-475, 15+500*showMenu.get("inv",0)), (width-425, 15+500*showMenu.get("inv",0))],
        [(width-450, 15+500*showMenu.get("inv",0)), (width-475, 45+500*showMenu.get("inv",0)), (width-425, 45+500*showMenu.get("inv",0))]]
@@ -685,44 +718,62 @@ class LightPopup:
 MenuBackground = pygame_menu.baseimage.BaseImage("./Assets/background.png", drawing_mode=101, drawing_offset=(0, 0), drawing_position='position-northwest', load_from_file=True, frombase64=False, image_id='')#on définit le fond des menus
 
 def DisplayBackground():
-    """Affichage du fond, et mise à jour des modules"""
+    """
+    Affichage du fond et mise à jour des modules
+    """
     MenuBackground.draw(screen)
     SessionManager.TickModules()
 
 def WarnUser(title:str, message:str, confirm, cancel, background=DisplayBackground)->bool:
-    """Menu de prévention pour s'assurer de l'action utilisateur"""
-    
+    """
+    Permet de demander confirmation à l'utilisateur pour effectuer une action. La confirmation est renvoyée par un booléen ou peut directement être exploitée par les lambdas confirm ou cancel.
+    """
+    #Création du menu
     WarnMenu = pygame_menu.Menu(title, 800, 300, theme=pygame_menu.themes.THEME_DARK)#le thème du menu
     
+    #Message d'avertissement en entrée
     WarnMenu.add.label(message)
     
+    #Barre du bas pour contenir les deux boutons
     bottomBar = WarnMenu.add.frame_h(800,50)
     bottomBar.relax(True)
     
+    #Variable stockant la confirmation de l'utilisateur
     global confirmed
     confirmed = False
+    
+    #Fonction temporaire pour confirmer et fermer le menu
     def setConfirmed():
         WarnMenu.disable()
         global confirmed
         confirmed = True
     
+    #Bouton de confirmation
     confirmButton = WarnMenu.add.button(Localization.GetLoc('Game.Confirm'), setConfirmed)
+    #Si un lambda de confirmation a été fourni, redéfinition de l'action de clic du bouton
     if confirm != None:
         confirmButton.set_onreturn(lambda:(setConfirmed(),confirm()))
     bottomBar.pack(confirmButton, align=pygame_menu.locals.ALIGN_LEFT)
     
+    #Bouton d'annulation
     cancelButton = WarnMenu.add.button(Localization.GetLoc('Game.Cancel'), WarnMenu.disable)
+    #Si un lambda d'annulation a été fourni, redéfinition de l'action de clic du bouton
     if cancel != None:
         confirmButton.set_onreturn(lambda:(WarnMenu.disable(),cancel()))
     bottomBar.pack(cancelButton, align=pygame_menu.locals.ALIGN_RIGHT)
     
+    #Boucle du menu
     WarnMenu.mainloop(screen, background)
     
+    #Renvoie le résultat booléen de la confirmation une fois que le jeu est sorti de la boucle du menu
     return confirmed
 
 def TakeScreenshot():
-    """Prendre une capture d'écran"""
+    """
+    Prendre une capture d'écran
+    """
+    #Si le dossier de captures d'écran n'existe pas le créer
     if not os.path.exists("Screenshots/"):
         os.makedirs("Screenshots/")
+    #Sauvegarde de ce qu'affiche l'écran dans un fichier à la date de création
     pygame.image.save(pygame.display.get_surface(), "Screenshots/screenshot_" + datetime.now().strftime("%Y%m%d%H%M%S%f") + ".png")
-    Popup("Capture d'écran trouvable dans le dossier /Screenshots/")
