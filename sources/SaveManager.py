@@ -270,7 +270,7 @@ def GetItems()->list:
 
 def PlaceItem(item):
     """
-    Ajoute un item aux items en retirant le coût en minerais
+    Ajoute un item aux items en retirant le coût en ressources
     """
     #Si le joueur n'est pas en mode bac à sable...
     if not IsSandBox():
@@ -281,17 +281,21 @@ def PlaceItem(item):
         for i,n in GameItems.doc.get(item.name,{"c":{}}).get("c",{}).items():
             for j in range(n):
                 a+=[GetFromInv(i)]
-        if all(a):
-            mainData.items[str(list(item.pos))]=item
-            FormatInv()
-            return True
-        mainData.inv=tempInv
-        UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
-        return False
-    #Si le joueur est en mode bac à sable, on place l'item sans se poser de questions
-    else:
-        mainData.items[str(list(item.pos))]=item
-        return True
+        if not all(a):
+            mainData.inv=tempInv
+            UiManager.Popup(L.GetLoc("SaveManager.GetFromInv.error"))
+            return False
+        FormatInv()
+    #On place l'item dans le dictionnaire d'items
+    mainData.items[str(list(item.pos))]=item
+    
+    #Si l'item est l'un des items suivants...
+    if item.name in ["RedBlock","BlueBlock","YellowBlock","GreenBlock","BlackBlock","WhiteBlock"]:
+        Stats.IncreaseStat("DecorationBlocksPlaced")#On incrémente la statistique de blocs décoratifs placés
+    
+    Stats.IncreaseStat(item.name + "sPlaced")#On incrémente la statistique de ce bloc spécifique placé
+    
+    return True
 
 def DeleteItem(pos):
     """

@@ -68,6 +68,24 @@ tasksDatabase=[
          "stat":"ObstaclesDestroyed",
          "target":lambda lv: 10 + 5 * lv,
     },
+    {
+         "title":"Task.8",
+         "reward":lambda lv: 5 + lv,
+         "stat":"DecorationBlocksPlaced",
+         "target":lambda lv: 10 + 5 * lv,
+    },
+    {
+         "title":"Task.9",
+         "reward":lambda lv: 5 + lv,
+         "stat":"DrillsPlaced",
+         "target":lambda lv: 10 + 5 * lv,
+    },
+    {
+         "title":"Task.10",
+         "reward":lambda lv: 5 + lv,
+         "stat":"ConveyorBeltsPlaced",
+         "target":lambda lv: 10 + 5 * lv,
+    },
 ]
 
 #Pour chaque tâche de la base de données...
