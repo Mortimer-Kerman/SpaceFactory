@@ -614,7 +614,8 @@ class Tutorial:
         if globalStep in [2,16,17,21,22,4,11]:
             Tutorial.IncreaseStep(globalStep)
         
-        if globalStep in [5,6,19,20]:
+        #Ces étapes sont celles qui surlignent un élément à l'écran. Elles ne peuvent donc s'activer sur si l'ui est visible.
+        if globalStep in [5,6,19,20] and showUi:
             s = pygame.Surface((UiManager.width,UiManager.height),pygame.SRCALPHA, 32).convert_alpha()
             if globalStep == 5:
                 #Surlignage du menu de construction
