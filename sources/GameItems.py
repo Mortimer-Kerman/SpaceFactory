@@ -250,62 +250,70 @@ class Item:
     def Give(self):
         """Permet de transmettre un item à une autre machine"""
         global Laser
-        if not self.metadata.get("pv",100):
+        if not self.metadata.get("pv",100):#si l'on ne dispose pas de pv, on quitte
             return
-        if self.metadata.get("g",0):
+        if self.metadata.get("g",0):#si un item a déjà été donné/reçu, on quitter
             return
         if self.name=="Turret" and self.IsInInv("Gold")!="NotIn":
+            #Calcul de la tourelle
             for c,a in enumerate(EventManager.EnnemisList):
-                if self.pos[0]-10<a.pos[0]<self.pos[0]+10 and self.pos[1]+10>a.pos[1]>self.pos[1]-10:
+                if self.pos[0]-10<a.pos[0]<self.pos[0]+10 and self.pos[1]+10>a.pos[1]>self.pos[1]-10:#on cherche une cible proche
                     Laser[str(self.pos)]=lambda:pygame.draw.polygon(UiManager.screen, (255, 0, 0), (UiManager.WorldPosToScreenPos(self.pos),UiManager.WorldPosToScreenPos(a.pos),(UiManager.WorldPosToScreenPos(a.pos)[0]-20,UiManager.WorldPosToScreenPos(a.pos)[1]-20)))
                     AudioManager.PlaySound("laser",self.pos)
                     a.pv-=5
                     self.GetFromInv("Gold")
                     if a.pv<=0:
+                        #"tuer" l'ennemi
                         del EventManager.EnnemisList[c]
                         del UiManager.UIelements["ennemi"+str(c)]
                         AudioManager.PlaySound("Explosion",self.pos)#jouer le son d'explosion
                 else:
                     Laser[str(self.pos)]=lambda:None
         if self.name=="Drill" and self.metadata.get("inv",None) is None:
+            #s'il s'agit d'une foreuse, et que son inventaire est vide
             if self.metadata.get("ores", None) is None:
-                self.metadata["ores"]=Minerais.Type(self.pos[0],self.pos[1])
-                if self.metadata["ores"] is False:self.metadata["ores"]=None
-            self.metadata["inv"]=self.metadata["ores"]
-        if self.name in ["Storage","Turret"]+list(craft.keys()):
+                self.metadata["ores"]=Minerais.Type(self.pos[0],self.pos[1])#On récupère le type de minerai
+                if self.metadata["ores"] is False:self.metadata["ores"]=None#si la foreuse n'est pas sur un minerais, on mets None dans cette variable
+            self.metadata["inv"]=self.metadata["ores"]#on ajoute le minerai dans la foreuse
+        if self.name in ["Storage","Turret"]+list(craft.keys()):#si l'item est un stockage, tourelle, ou est inclus dans la liste des crafts
             self.metadata["biginv"]=self.metadata.get("biginv",[])
-            if self.AddToInv(self.metadata.get("inv",None)):
-                self.metadata["inv"]=None
+            if self.AddToInv(self.metadata.get("inv",None)):#on ajoute l'item à l'inventaire
+                self.metadata["inv"]=None#si tout s'est bian passé, on retire l'item de l'inventaire
         if self.name=="Market" and self.metadata.get("inv",None) is not None:
+            #on vends le contenu au market
             MarketManager.Sell(self.metadata["inv"])
             self.metadata["inv"]=None
-        if self.name in list(craft.keys()):
+        if self.name in list(craft.keys()):#si on a un craft associé
             c=craft[self.name]
             for a in c:
                 if all(self.IsInInv(i)!="NotIn" for i in a["c"]):
                     if all(self.GetFromInv(i) for i in a["c"]):
+                        #si tous les ingrédients du crafts sont dans l'inventaire, on crée un item
                         self.metadata["inv"]=a["r"]
                         break
         
-        item=self.GetItemToGive()
-        if item is not None:
+        item=self.GetItemToGive()#on récupère l'item
+        if item is not None:#si l'item existe
             if item.metadata.get("inv",None) is None:#si l'item n'a rien dans son inventaire
-                if self.name=="Storage":
-                    a=self.IsInInv(None)
+                if self.name=="Storage":#si self est un stockage
+                    a=self.IsInInv(None)#si il y a un objet None dans l'inventaire, on le supprime
                     if a!="NotIn":
                         del self.metadata["biginv"][a]
+
+                    #on récupère, si possible, un item dans l'inventaire
                     try:
                         a=self.metadata["biginv"][0]["n"]
                     except:
                         a=None
-                    item.Obtain(a,self)
+                    item.Obtain(a,self)#on demande à l'item d'obtenir
                     if a is not None:
-                        self.GetFromInv(a)
+                        self.GetFromInv(a)#on récupère de l'inventaire
                 else:
                     item.Obtain(self.metadata.get("inv",None),self)
                     
     def Obtain(self,inv,giver):
-        if not self.metadata.get("pv",100):
+        """Obtiens un item"""
+        if not self.metadata.get("pv",100):#si l'item est cassé, on quitte
             return
         self.metadata["g"]=1
         if self.name in ["Junction","Bridge"]+list(craft.keys()) and list(self.metadata.get("last",[]))==list(giver.pos):
@@ -317,12 +325,14 @@ class Item:
                 giver.metadata["inv"]=None
     
     def edit(self,a):
+        """Permet d'éditer l'item"""
         if self.name == "Sorter":self.metadata["sorter_choice"]=a[0][0]
         if self.name == "Teleporter":
             pos=TeleportPoint[a[1]]
             SaveManager.SetCamPos(pos)
     
     def IsInInv(self,a,p=0):
+        """Est-ce dans l'inventaire de l'item?"""
         for i,e in enumerate(self.metadata["biginv"]):
             if e.get("n",False)==a:
                 if e["m"]+1<100 or p:
@@ -332,6 +342,7 @@ class Item:
         return "NotIn"
 
     def AddToInv(self,d):
+        """Ajout dans l'inventaire"""
         m1Amount = 0#Quantité de m1 dans l'inventaire
         #Pour chaque slot du grand inventaire...
         for slot in self.metadata["biginv"]:
@@ -352,6 +363,7 @@ class Item:
             self.metadata["biginv"]+=[{"n":d,"m":1}]            
             return True
     def GetFromInv(self,d):
+        """Récupère un item depuis l'inventaire"""
         a=self.IsInInv(d,1)
         if a!="NotIn":
             self.metadata["biginv"][a]["m"]-=1
@@ -506,5 +518,5 @@ doc={
      }
 
 def getPrice(type):
-    #UiManager.Popup(str(list(doc.get(type,{}).get("c",{}).items())))
+    """Récupération du prix de création"""
     return list(doc.get(type,{}).get("c",{}).items())
