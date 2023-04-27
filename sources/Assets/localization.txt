@@ -337,6 +337,18 @@ OppInteractions.Interruption.3.b2.1 : Alors qu'une petite bestiole s'approchait 
 OppInteractions.Interruption.3.b3 : Faire des prélèvements
 OppInteractions.Interruption.3.b3.1 : Alors qu'un scientifique s'approchait du cadavre pour faire des prélèvements, la créature s'est%$rsoudainement révillée et l'a attrapée avant de l'avaler d'un coup avant de pousser un terible rugissement%$ret de poursuivre les autres. En raison de la taille massive de la créature, les survivants%$ront réussi à la distancer, mais ils doivent maintenant%$rpoursuivre leur route sans leur collègue mort.
 
+OppInteractions.Interruption.4 : L'expédition est en train de traverser un glacier en pleine montagne.%$rAlors qu'ils achèvent l'ascension d'une paroi abrupte, les membres de l'équipe entendent un craquement.%$rLe morceau de glace sur lequel ils se trouvent risque de céder à tout instant, il faut donc quitter la zone.%$rCependant, au vu de leur position, ils n'ont pas beaucoup de choix possibles.%$r%$rQue faire?
+OppInteractions.Interruption.4.b1 : Redescendre la paroi
+OppInteractions.Interruption.4.b1.1 : Alors que l'équipe entamme sa descente en rappel, un des membres de l'expédition plante son ancragedans une fissure dans la glace. Soudainement, un pan entier du glacier s'effondre, emportant avec%$rlui trois membres de l'équipe dans le vide.%$r%$rLe reste de l'équipe est redescendue saine et sauve du glacier et%$rs'apprête à continuer la route en le contournant.
+OppInteractions.Interruption.4.b1.2 : Alors que l'équipe entamme sa descente en rappel, un des membres de l'expédition plante son ancrage%$rdans une fissure dans la glace. Soudainement, un pan entier du glacier s'effondre. Heureusement, aucune%$rvictime n'est à déplorer.%$r%$rL'équipe est redescendue du glacier et s'apprête à continuer la route en le contournant.
+OppInteractions.Interruption.4.b1.3 : L'équipe est redescendue saine et sauve du glacier et s'apprête à continuer la route en le contournant.
+OppInteractions.Interruption.4.b2 : Courir
+OppInteractions.Interruption.4.b2.1 : En courant, les membres de l'équipe ont provoqué des chocs et des vibrations dans la glace,%$rqui a brutalement cédé, précipitant toute l'expédition dans le vide.%$r%$rIl ne reste qu'un seul membre de l'expédition en vie, qui rentre à la base seul.
+OppInteractions.Interruption.4.b2.2 : Après quelques minutes de course sur la glace, l'équipe est sortie de la zone accidentée et peut%$rmaintenant continuer sa route.
+OppInteractions.Interruption.4.b3 : Continuer doucement
+OppInteractions.Interruption.4.b3.1 : Alors que l'expédition progressait sur un passage étroit, la glace a cédé sous les pieds d'un membre%$rde l'équipe, le précipitant dans le vide.%$r%$rLe reste de l'équipe est sain et sauf et continue la route.
+OppInteractions.Interruption.4.b3.2 : Après quelques minutes de marche à pas feutrés, l'équipe est sortie de la zone accidentée et peut%$rmaintenant continuer sa route.
+
 //Market
 Market.Title : GalacticMarket
 Market.Motto : Pour des achats intergalactiques!

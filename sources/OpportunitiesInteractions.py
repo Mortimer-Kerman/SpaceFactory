@@ -183,6 +183,13 @@ class InteractionResult:
         Utile pour simuler des membres intégrés à l'équipe ou alors, avec un nombre négatif, des membres abandonnés.
         """
         opportunity.team["members"] += amount
+    
+    def SetMembers(opportunity,amount:int):
+        """
+        Règle le nombre de membres de l'équipe.
+        Utile pour ne laisser par exemple qu'un survivant à une catastrophe.
+        """
+        opportunity.team["members"] = amount
 
     def EndExpedition(opportunity,recoverTeam:bool):
         """
@@ -424,7 +431,30 @@ interruptionInteractions=[
                                       InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.3.b3.1","interactionBackgrounds/runningJungle"),
                                       InteractionResult.ResumeTravel(o)))
                            ),
-    
+    OpportunityInteraction("OppInteractions.Interruption.4", "interactionBackgrounds/icyCliff",
+                           {Tags.ONROVER:False},
+                           ("OppInteractions.Interruption.4.b1",
+                            lambda o:(InteractionResult.DoWithChance(o, 0.6,
+                                lambda o: InteractionResult.DoWithChance(o, 0.5,
+                                    lambda o:(InteractionResult.AddMembers(o, -3),
+                                              InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b1.1","interactionBackgrounds/fallingIcy")),
+                                    lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b1.2","interactionBackgrounds/abseiling")),
+                                lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b1.1","interactionBackgrounds/icyPlain")),
+                                      InteractionResult.ResumeTravel(o)))
+                           ("OppInteractions.Interruption.4.b2",
+                            lambda o:(InteractionResult.DoWithChance(o,0.5,
+                                lambda o:(InteractionResult.SetMembers(o, 1),
+                                          InteractionResult.ReturnToBase(o),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b2.1","interactionBackgrounds/fallingIcy")),
+                                lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b2.2","interactionBackgrounds/icyPlain")),
+                                      InteractionResult.ResumeTravel(o)))
+                           ("OppInteractions.Interruption.4.b3",
+                            lambda o:(InteractionResult.DoWithChance(o,0.2,
+                                lambda o:(InteractionResult.AddMembers(o, -1),
+                                          InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b3.1","interactionBackgrounds/fallingIcy")),
+                                lambda o: InteractionResult.OpenResultPanel(o,"OppInteractions.Interruption.4.b3.2","interactionBackgrounds/icyPlain")),
+                                      InteractionResult.ResumeTravel(o)))
+                           ),
 ]
 
 
