@@ -288,6 +288,7 @@ Opportunities.Title.4 : La grande traversée
 Opportunities.Title.5 : Mirages et rumeurs
 Opportunities.Title.6 : Découverte fortuite
 Opportunities.Title.7 : Données orbitales
+Opportunities.Title.8 : Voyage au centre de la Terre
 
 //Interactions avec les expéditions
 //Note : Ici, le texte admet un élément de formattage supplémentaire: Utiliser %RESSOURCE% permet de placer le nom de la ressource ciblée par l'expédition.

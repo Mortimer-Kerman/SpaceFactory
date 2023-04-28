@@ -643,6 +643,8 @@ class Opportunity:
             possibleTitles.append(6)#Si la façon de découvrir est la façon 5, on rajoute le titre 6
         if descCodes["way"] == 0:
             possibleTitles.append(7)#Si la façon de découvrir est la façon 0, on rajoute le titre 7
+        if descCodes["place"] == 8:
+            possibleTitles.append(8)#Si le lieu cible est le lieu 8, on rajoute le titre 8
         if len(possibleTitles) == 0:
             possibleTitles.append(0)#Si la liste ne contient aucun titre, on rajoute le titre 0, le plus générique
         
