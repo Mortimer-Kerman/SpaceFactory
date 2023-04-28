@@ -47,7 +47,7 @@ Saves.Gamemode : Mode de jeu
 Saves.Gamemode.Career : Carrière
 Saves.Gamemode.Career.desc : Exploitez des ressources, confrontez vous au danger et développez%$rvotre usine et votre production pour vous enrichir.
 Saves.Gamemode.Sandbox : Bac à sable
-Saves.Gamemode.Sandbox.desc : Expérimentez, bâtissez les infrastructures les plus farfeulues%$ret les usines les plus extravagantes sans limites de ressources!
+Saves.Gamemode.Sandbox.desc : Expérimentez, bâtissez les infrastructures les plus farfelues%$ret les usines les plus extravagantes sans limites de ressources!
 Saves.Gamemode.Tutorial : Tutoriel
 Saves.Gamemode.Tutorial.desc : Apprenez à prendre en main les mécaniques basiques du jeu pour%$rpouvoir bâtir votre usine!
 Saves.NewSave : Nouvelle sauvegarde
@@ -56,7 +56,7 @@ Saves.NewSave.Seed : Graine:
 Saves.NewSave.Create : Créer
 Saves.NewSave.AlreadyExists : Ce nom existe déjà !
 Saves.Edit : Modifier la sauvegarde
-Saves.Edit.AlreadyExists : Ce nom de sauvegarde existe déjà!%$rSi vous confirmez, cette sauvegarde s'appelera:%$r%$1
+Saves.Edit.AlreadyExists : Ce nom de sauvegarde existe déjà!%$rSi vous confirmez, cette sauvegarde s’appellera:%$r%$1
 Saves.Edit.OpenFile : Ouvrir le fichier
 Saves.Edit.Duplicate : Dupliquer
 
@@ -179,7 +179,7 @@ Items.d.delete : Le menu de destruction permet de détruire un item
 Items.d.Coal : Le charbon est un minerai qui peut servir de combustible
 Items.d.Copper : Le cuivre est le plus ancien métal utilisé par l’espèce humaine. Le faible point de fusion de ce métal rend son travail aisé. Il est utilisé dans toutes sortes de circuits électriques.
 Items.d.Gold : L'or est un excellent conducteur électrique, c'est un minerai apprécié pour son fort éclat de "petit soleil"
-Items.d.M1 : Le M1 est un minerain alliage de zinc et de cobalt, qui, une fois raffiné et transformé, vaut très cher de par ses capacités supraconductrices au delà de 150K.
+Items.d.M1 : Le M1 est un minerai alliage de zinc et de cobalt, qui, une fois raffiné et transformé, vaut très cher de par ses capacités supraconductrices au delà de 150K.
 Items.d.Bridge : Permet de croiser deux tapis sans mélanger leur production
 Items.d.MolecularAssembler : L'Assembleur moléculaire est une machine qui modifie la composition moléculaire du M1 via de l'or
 Items.d.Furnace : Le four permet de faire fondre du cuivre, en brûlant du charbon
@@ -291,7 +291,7 @@ Opportunities.Title.7 : Données orbitales
 Opportunities.Title.8 : Voyage au centre de la Terre
 
 //Interactions avec les expéditions
-//Note : Ici, le texte admet un élément de formattage supplémentaire: Utiliser %RESSOURCE% permet de placer le nom de la ressource ciblée par l'expédition.
+//Note : Ici, le texte admet un élément de formatage supplémentaire: Utiliser %RESSOURCE% permet de placer le nom de la ressource ciblée par l'expédition.
 OppInteractions.EveryoneDied : Il semblerait que tous les membres de l'expédition aient péri.%$rNous n'avons plus de communication avec eux, et il est impossible de leur envoyer du secours.%$r%$rNous nous souviendrons longtemps de leur sacrifice pour faire avancer l'exploration de ce monde.
 
 OppInteractions.OnSite.1 : L'équipe de reconnaissance est arrivée à hauteur du bassin d'impact!%$rCependant, une gigantesque masse ferreuse au centre du bassin provoque un champ magnétique qui brouille%$rtous les signaux radio. Au moment où l'équipe entrera dans la zone, elle perdra toute connexion avec la%$rbase. Si elle s'aventure longtemps dans la zone, elle ne pourra donc pas être prévenue en cas de%$rdanger, mais pourra peut-être découvrir plus de choses. Elle peut également rentrer et revenir plus tard.%$r%$rQue faire ?
@@ -336,14 +336,14 @@ OppInteractions.Interruption.3 : En traversant une vallée escarpée, l'expédit
 OppInteractions.Interruption.3.b1 : Passer son chemin
 OppInteractions.Interruption.3.b1.1 : L'équipe a repris la route, laissant la créature derrière elle.
 OppInteractions.Interruption.3.b2 : Observer de loin
-OppInteractions.Interruption.3.b2.1 : Alors qu'une petite bestiole s'approchait du cadavre pour lui picorer l'oreille, la créature s'est%$rsoudainement révillée et l'a attrapée avant de l'avaler d'un coup. Cette créature fait donc le mort pour%$rattirer des charognards pour les attraper sans consommer beaucoup d'énergie.
+OppInteractions.Interruption.3.b2.1 : Alors qu'une petite bestiole s'approchait du cadavre pour lui picorer l'oreille, la créature s'est%$rsoudainement réveillée et l'a attrapée avant de l'avaler d'un coup. Cette créature fait donc le mort pour%$rattirer des charognards pour les attraper sans consommer beaucoup d'énergie.
 OppInteractions.Interruption.3.b3 : Faire des prélèvements
-OppInteractions.Interruption.3.b3.1 : Alors qu'un scientifique s'approchait du cadavre pour faire des prélèvements, la créature s'est%$rsoudainement révillée et l'a attrapée avant de l'avaler d'un coup avant de pousser un terible rugissement%$ret de poursuivre les autres. En raison de la taille massive de la créature, les survivants%$ront réussi à la distancer, mais ils doivent maintenant%$rpoursuivre leur route sans leur collègue mort.
+OppInteractions.Interruption.3.b3.1 : Alors qu'un scientifique s'approchait du cadavre pour faire des prélèvements, la créature s'est%$rsoudainement réveillée et l'a attrapée avant de l'avaler d'un coup avant de pousser un terible rugissement%$ret de poursuivre les autres. En raison de la taille massive de la créature, les survivants%$ront réussi à la distancer, mais ils doivent maintenant%$rpoursuivre leur route sans leur collègue mort.
 
 OppInteractions.Interruption.4 : L'expédition est en train de traverser un glacier en pleine montagne.%$rAlors qu'ils achèvent l'ascension d'une paroi abrupte, les membres de l'équipe entendent un craquement.%$rLe morceau de glace sur lequel ils se trouvent risque de céder à tout instant, il faut donc quitter la zone.%$rCependant, au vu de leur position, ils n'ont pas beaucoup de choix possibles.%$r%$rQue faire?
 OppInteractions.Interruption.4.b1 : Redescendre la paroi
-OppInteractions.Interruption.4.b1.1 : Alors que l'équipe entamme sa descente en rappel, un des membres de l'expédition plante son ancragedans une fissure dans la glace. Soudainement, un pan entier du glacier s'effondre, emportant avec%$rlui trois membres de l'équipe dans le vide.%$r%$rLe reste de l'équipe est redescendue saine et sauve du glacier et%$rs'apprête à continuer la route en le contournant.
-OppInteractions.Interruption.4.b1.2 : Alors que l'équipe entamme sa descente en rappel, un des membres de l'expédition plante son ancrage%$rdans une fissure dans la glace. Soudainement, un pan entier du glacier s'effondre. Heureusement, aucune%$rvictime n'est à déplorer.%$r%$rL'équipe est redescendue du glacier et s'apprête à continuer la route en le contournant.
+OppInteractions.Interruption.4.b1.1 : Alors que l'équipe entame sa descente en rappel, un des membres de l'expédition plante son ancragedans une fissure dans la glace. Soudainement, un pan entier du glacier s'effondre, emportant avec%$rlui trois membres de l'équipe dans le vide.%$r%$rLe reste de l'équipe est redescendue saine et sauve du glacier et%$rs'apprête à continuer la route en le contournant.
+OppInteractions.Interruption.4.b1.2 : Alors que l'équipe entame sa descente en rappel, un des membres de l'expédition plante son ancrage%$rdans une fissure dans la glace. Soudainement, un pan entier du glacier s'effondre. Heureusement, aucune%$rvictime n'est à déplorer.%$r%$rL'équipe est redescendue du glacier et s'apprête à continuer la route en le contournant.
 OppInteractions.Interruption.4.b1.3 : L'équipe est redescendue saine et sauve du glacier et s'apprête à continuer la route en le contournant.
 OppInteractions.Interruption.4.b2 : Courir
 OppInteractions.Interruption.4.b2.1 : En courant, les membres de l'équipe ont provoqué des chocs et des vibrations dans la glace,%$rqui a brutalement cédé, précipitant toute l'expédition dans le vide.%$r%$rIl ne reste qu'un seul membre de l'expédition en vie, qui rentre à la base seul.
@@ -368,7 +368,7 @@ TaskMenu.AlreadyGot : Tâche accomplie!
 Task.0 : Compléter entièrement le tutoriel
 Task.1 : Remplir entièrement un stockage de M1
 Task.2 : Envoyer %$1 expéditions
-Task.3 : Survivre a %$1 évenements
+Task.3 : Survivre a %$1 événements
 Task.4 : Détruire %$1 ennemis
 Task.5 : Réparer %$1 machines
 Task.6 : Résoudre %$1 dilemmes d'opportunités
