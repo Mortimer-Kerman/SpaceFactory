@@ -114,7 +114,7 @@ Tuto.2 : Vous pouvez également déplacer la caméra en utilisant les touches %$
 Tuto.3 : Pour survivre, vous aurez besoin de ressources. Faites un clic gauche sur un minerai de cuivre jusqu'à ce que vous en ayez assez.
 Tuto.4 : Le minerai que vous récoltez arrive dans votre inventaire, qui peut s'ouvrir en haut à droite de l'écran ou avec la touche %$1.
 Tuto.5 : Bien! Cependant, si un si petit drone pouvait s'occuper seul de l'exploitation minière entère de cette région, ça se saurait. Il faudra donc automatiser notre production. Ouvrez le menu de construction.
-Tuto.6 : Sélectionnez maintenant la foreuse. Certains objets de l'inventaire peuvent également être placés en faisant un clic droit dessus.
+Tuto.6 : Sélectionnez maintenant la foreuse. Certains objets de l'inventaire peuvent également être placés en faisant un clic gauche dessus.
 Tuto.7 : Maintenant, faites un clic droit sur le minerai de cuivre pour la placer.
 Tuto.8 : Notre foreuse fonctionne! Cependant, ce qu'elle récolte n'est pas récupérable directement. Pour le récupérer, construisez un chemin de tapis roulants. Vous pouvez maintenir Maj quand vous construisez un objet pour en placer plusieurs.
 Tuto.9 : Appuyez sur %$1 pour tourner les tapis roulants que vous placez dans la bonne direction.
