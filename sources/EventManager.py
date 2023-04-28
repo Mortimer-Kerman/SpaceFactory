@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Fri Apr  14 13:38:21 2023
+
+@author: Thomas Sartre et François Patinec-Haxel
+"""
 
 #importation des bibliothèques externes
 import pygame
