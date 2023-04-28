@@ -209,6 +209,7 @@ def Unload():
     mainData = None
     TextureManager.RefreshZoom()
     UiManager.UIPopup.clear()
+    UiManager.UiLightPopup.clear()
     GameItems.Minerais.Clear()
     UiManager.chunkTex.clear()
     SetSelectedItem(None)

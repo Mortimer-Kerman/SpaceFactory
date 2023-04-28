@@ -157,34 +157,33 @@ class Item:
                 #Est-ce que les tapis roulants doivent être détaillés
                 niceBelts = SettingsManager.GetSetting("conveyorBeltRender")
                 
+                item=self.GetItemToGive()#On récupère l'item que l'on veut donner
                 if self.name=="ConveyorBelt":#si il s'agit d'un tapis roulant
-                    
-                    item=self.GetItemToGive()#On récupère l'item que l'on veut donner
                     renderOffset = (0,-runtime/50)
-                    moving = True
-                    if item is None:#s'il n'y a pas d'item, on ne bouge pas
+                moving = True
+                if item is None:#s'il n'y a pas d'item, on ne bouge pas
+                    renderOffset=(0,0)
+                    moving = False
+                else:
+                    if item.metadata.get("inv",None) is not None:#si l'item n'a pas rien dans son inventaire
                         renderOffset=(0,0)
                         moving = False
-                    else:
-                        if item.metadata.get("inv",None) is not None:#si l'item n'a pas rien dans son inventaire
-                            renderOffset=(0,0)
-                            moving = False
+                
+                if moving:#Si le tapis roulant bouge...
                     
-                    if moving:#Si le tapis roulant bouge...
-                        
-                        if niceBelts:#Si les tapis roulants doivent être détaillés, on affiche la texture de tapis roulant qui bouge
-                            AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture("ConveyorBelt/" + str((runtime//10)%5), zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))
-                        
-                        if runtime == 0:#Si runtime est à 0, on joue le son du tapis roulant
-                            AudioManager.PlaySound("ConveyorBelt",self.pos)
-                        
-                    #calcul des mouvements
-                    if self.rotation == 1:
-                        renderOffset = (renderOffset[1],-renderOffset[0])
-                    elif self.rotation == 2:
-                        renderOffset = (-renderOffset[0],-renderOffset[1])
-                    elif self.rotation == 3:
-                        renderOffset = (-renderOffset[1],renderOffset[0])
+                    if niceBelts:#Si les tapis roulants doivent être détaillés, on affiche la texture de tapis roulant qui bouge
+                        AddToRender(order,lambda:UiManager.screen.blit(pygame.transform.rotate(TextureManager.GetTexture(self.name + "/" + str((runtime//10)%5), zoom),90*self.rotation), (self.pos[0]*zoom+cam[0], self.pos[1]*zoom+cam[1])))
+                    
+                    if runtime == 0:#Si runtime est à 0, on joue le son du tapis roulant
+                        AudioManager.PlaySound("ConveyorBelt",self.pos)
+                    
+                #calcul des mouvements
+                if self.rotation == 1:
+                    renderOffset = (renderOffset[1],-renderOffset[0])
+                elif self.rotation == 2:
+                    renderOffset = (-renderOffset[0],-renderOffset[1])
+                elif self.rotation == 3:
+                    renderOffset = (-renderOffset[1],renderOffset[0])
 
                 renderOffset = (renderOffset[0]*zoom,renderOffset[1]*zoom)
                 
