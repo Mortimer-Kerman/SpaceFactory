@@ -623,7 +623,7 @@ class Tutorial:
             if globalStep == 6:
                 #Surlignage du bouton pour séléctionner la foreuse
                 pygame.draw.polygon(s,(255,255,0,100),[(UiManager.width-500,UiManager.height-500),(UiManager.width-400,UiManager.height-500),(UiManager.width-400,UiManager.height-400),(UiManager.width-500,UiManager.height-400)])
-            if globalStep == 20:
+            if globalStep == 19:
                 #Surlignage du bouton de tâches
                 pygame.draw.polygon(s,(255,255,0,100),[(100,0),(150,0),(150,50),(100,50)])
             if globalStep == 20:
