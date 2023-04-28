@@ -174,10 +174,10 @@ Items.d.Drill : La foreuse est une machine servant à extraire des minerais auto
 Items.d.ConveyorBelt : Les tapis roulants sont un merveilleux moyen de déplacer des items d'une machine vers une autre
 Items.d.Storage : Le stockage permet, comme son nom l'indique, de stocker des items [les items sont stockés en dehors de l'inventaire, cliquez sur un stockage pour récupérer son contenu dans votre inventaire]
 Items.d.Junction : La jonction permet de gérer le flux de plusieurs chemins de tapis roulants pour les emmener sur un chemin unique.
-Items.d.Sorter : Permet de trier les différents items
+Items.d.Sorter : Le trieur permet de trier les différents items entre deux chemins de tapis roulants. Les items choisis iront tout droit et les autres ressortiront par le côté rouge.
 Items.d.delete : Le menu de destruction permet de détruire un item
 Items.d.Coal : Le charbon est un minerai qui peut servir de combustible
-Items.d.Copper : Le cuivre est le plus ancien métal utilisé par l’espèce humaine. Le point de fusion de ce minerai n'est pas trop élevé
+Items.d.Copper : Le cuivre est le plus ancien métal utilisé par l’espèce humaine. Le faible point de fusion de ce métal rend son travail aisé. Il est utilisé dans toutes sortes de circuits électriques.
 Items.d.Gold : L'or est un excellent conducteur électrique, c'est un minerai apprécié pour son fort éclat de "petit soleil"
 Items.d.M1 : Le M1 est un minerain alliage de zinc et de cobalt, qui, une fois raffiné et transformé, vaut très cher de par ses capacités supraconductrices au delà de 150K.
 Items.d.Bridge : Permet de croiser deux tapis sans mélanger leur production
