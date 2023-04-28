@@ -1,4 +1,9 @@
-# -*- coding: utf-8 -*-*
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Apr  3 17:54:28 2023
+
+@author: Thomas Sartre et François Patinec-Haxel
+"""
 import pygame
 import pygame_menu
 
@@ -13,7 +18,30 @@ import FunctionUtils
 import SessionManager
 import Stats
 
+"""
+La liste ci-dessous est la base de données des différentes descriptions de tâches possibles:
 
+L'ID associé à une tâche est simplement son indice dans la liste
+
+Les différents paramètres:
+    title: Le code de traduction du titre de la tâche
+    reward: Une fonction lambda prenant en paramètre le niveau de la tâche et renvoyant le montant de la récompense
+    stat: La statistique associée à cette tâche qu'il faut amener à modifier pour compléter la tâche
+    target: Une fonction lambda avec le niveau de la tâche disant de combien il faut augmenter la statistique pour compléter la tâche
+    absolute (optionnel, défaut=False): Si réglé sur True, la valeur de target ne sera pas calculée sur combien il faut augmenter mais quelle valeur il faut atteindre
+    minLv (optionnel, défaut=0): Le niveau minimal à atteindre pour que cette tâche puisse être proposée
+    getOnce (optionnel, défaut=False): Si réglé sur True, cette tâche ne pourra être proposée qu'une fois et ne sera plus proposé ensuite dans cette sauvegarde
+
+Note:
+    Il faut faire la distinction entre la description d'une tâche et une tâche en elle même.
+    Une tâche, c'est l'élément qui supporte le niveau, la valeur à atteindre, est-ce qu'elle est complétée.
+    La description d'une tâche, c'est juste un support sur la base duquel une tâche est générée puis affichée.
+    
+    Ainsi, le niveau d'une tâche représente sa difficulté, et chaque tâche a un niveau évoluant indépendamment.
+    Au début d'une partie, les niveaux des tâches sont proches de 0 (généralement entre 0 et 2), puis ils vont augmenter
+    de manière linéaire à chaque complétion, mais avec des fluctuations aléatoires.
+    Cela devient donc possible qu'à partir d'un moment, une des tâches devienne sensiblement plus difficile que les autres.
+"""
 tasksDatabase=[
     {
          "title":"Task.0",
